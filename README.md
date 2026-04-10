@@ -318,7 +318,78 @@ public struct TextBuilder : IDisposable
 public readonly struct Utf8Text
 public readonly struct Utf16Text
 public readonly struct Utf32Text
+
+public sealed class LinkedTextUtf16
+public readonly struct LinkedTextUtf16Span
+public struct LinkedTextUtf16.Owned : IDisposable
+
+public sealed class LinkedTextUtf8
+public readonly struct LinkedTextUtf8Span
+public struct LinkedTextUtf8.Owned : IDisposable
 ```
+
+## LinkedText
+
+Segmented text types that hold references to original string segments without copying. Instead of `$"{a} - {b}"` allocating `a.Length + b.Length + 3` chars, LinkedText stores each piece as a separate `ReadOnlyMemory<T>` segment.
+
+**`LinkedTextUtf16`** — `sealed class`. Immutable segment storage for UTF-16 (`ReadOnlyMemory<char>`). Uses `[InlineArray(8)]` on .NET 8+ for up to 8 segments with zero extra allocation, overflow to `ArrayPool` beyond that.
+
+**`LinkedTextUtf16Span`** — `readonly struct`. Non-owning view with zero-alloc slicing, segment enumeration, and `ReadOnlySequence<char>` interop.
+
+**`LinkedTextUtf8`** / **`LinkedTextUtf8Span`** — Same design for UTF-8 (`ReadOnlyMemory<byte>`). Produces `ReadOnlySequence<byte>` for STJ/Pipelines.
+
+### Construction
+
+```csharp
+// From strings
+var linked = LinkedTextUtf16.Create("hello", " - ", "world");
+
+// From Text (transcodes if needed)
+var utf8 = Text.FromUtf8("café"u8);
+var linked = LinkedTextUtf16.Create(utf8, Text.From(" in Paris"));
+
+// String interpolation (.NET 6+) — zero-copy for string holes
+var linked = LinkedTextUtf16.Create($"Hello {name}, count={count}");
+
+// Pooled — object and buffers returned on dispose
+using var owned = LinkedTextUtf16.CreateOwned($"Hello {name}!");
+```
+
+### Operations
+
+```csharp
+// Span view
+LinkedTextUtf16Span span = linked.AsSpan();
+
+// Slicing — zero-alloc, adjusts segment boundaries
+LinkedTextUtf16Span sub = span.Slice(3, 7);
+LinkedTextUtf16Span sub = span[3..10];
+
+// Segment enumeration
+foreach (ReadOnlyMemory<char> segment in span.EnumerateSegments())
+{
+    // each segment is a slice of the original data
+}
+
+// ReadOnlySequence interop (lazy, cached)
+ReadOnlySequence<char> seq = linked.AsSequence();
+
+// Materialization
+string s = span.ToString();
+span.WriteTo(bufferWriter);
+```
+
+### Pooling (arena model)
+
+The `Owned` struct manages all rented resources. On dispose, it returns the `LinkedText` instance (object pool), overflow arrays (`ArrayPool`), sequence nodes (node pool), and format buffer — all at once.
+
+```csharp
+using var owned = LinkedTextUtf16.CreateOwned($"Hello {name}!");
+// use owned.AsSpan()...
+// owned.Dispose() returns everything to pools
+```
+
+After warmup, `CreateOwned` with string interpolation is **zero-alloc**: the `LinkedTextUtf16` instance is reused from the pool, string holes are zero-copy, and non-string values (`int`, `DateTime`, etc.) are formatted directly into a retained format buffer via `ISpanFormattable`.
 
 ## Scope
 
@@ -335,6 +406,8 @@ What Glot provides:
 - Parsing: primitives and `ISpanParsable<T>` / `IUtf8SpanParsable<T>`
 - Typed and untyped span access
 - Pool-backed buffer management
+- Segmented text: `LinkedTextUtf16`, `LinkedTextUtf8` with zero-copy string interpolation
+- Arena-style pooling for linked text (object, array, and node pools)
 
 What Glot does not provide:
 - Culture-aware operations (ordinal only)
