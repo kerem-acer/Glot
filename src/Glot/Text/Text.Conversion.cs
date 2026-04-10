@@ -8,7 +8,7 @@ public readonly partial struct Text
     /// </summary>
     public override string ToString()
     {
-        if (_data is string s && _start == 0 && _byteLength == s.Length * 2)
+        if (_data is string s && _start == 0 && ByteLength == s.Length * 2)
         {
             return s;
         }
@@ -24,11 +24,19 @@ public readonly partial struct Text
     /// <inheritdoc cref="ToString()"/>
     public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
 
+    /// <summary>Encodes this text as UTF-16 chars into <paramref name="destination"/>.</summary>
+    /// <returns>The number of chars written.</returns>
+    public int EncodeToUtf16(Span<char> destination) => AsSpan().EncodeToUtf16(destination);
+
+    /// <summary>Encodes this text as UTF-8 bytes into <paramref name="destination"/>.</summary>
+    /// <returns>The number of bytes written.</returns>
+    public int EncodeToUtf8(Span<byte> destination) => AsSpan().EncodeToUtf8(destination);
+
     /// <summary>Writes the text as UTF-16 chars to <paramref name="destination"/>.</summary>
     public bool TryFormat(Span<char> destination, out int charsWritten,
         ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
     {
-        if (_data is string s && _start == 0 && _byteLength == s.Length * 2)
+        if (_data is string s && _start == 0 && ByteLength == s.Length * 2)
         {
             if (s.AsSpan().TryCopyTo(destination))
             {

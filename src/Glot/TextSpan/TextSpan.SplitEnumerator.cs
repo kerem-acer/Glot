@@ -17,9 +17,9 @@ public readonly ref partial struct TextSpan
 
         internal SplitEnumerator(TextSpan text, TextSpan separator)
         {
-            _remaining = text._bytes;
+            _remaining = text.Bytes;
             _encoding = text.Encoding;
-            _separatorBytes = separator._bytes;
+            _separatorBytes = separator.Bytes;
             _separatorEncoding = separator.Encoding;
             _currentBytes = default;
             _currentRuneCount = 0;

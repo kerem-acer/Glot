@@ -17,7 +17,6 @@ public readonly partial struct LinkedTextUtf8Span
         readonly int _endSegment;
         readonly int _endIndex;
         int _currentSegment;
-        ReadOnlyMemory<byte> _current;
         bool _started;
 
         internal SegmentEnumerator(LinkedTextUtf8Span span)
@@ -28,12 +27,12 @@ public readonly partial struct LinkedTextUtf8Span
             _endSegment = span._endSegment;
             _endIndex = span._endIndex;
             _currentSegment = span._startSegment;
-            _current = default;
+            Current = default;
             _started = false;
         }
 
         /// <summary>Gets the current segment.</summary>
-        public readonly ReadOnlyMemory<byte> Current => _current;
+        public ReadOnlyMemory<byte> Current { get; private set; }
 
         /// <summary>Advances to the next segment.</summary>
         public bool MoveNext()
@@ -43,32 +42,35 @@ public readonly partial struct LinkedTextUtf8Span
                 return false;
             }
 
-            if (!_started)
+            while (true)
             {
-                _started = true;
-                _currentSegment = _startSegment;
-            }
-            else
-            {
-                _currentSegment++;
-            }
+                if (!_started)
+                {
+                    _started = true;
+                    _currentSegment = _startSegment;
+                }
+                else
+                {
+                    _currentSegment++;
+                }
 
-            if (_currentSegment > _endSegment)
-            {
-                return false;
+                if (_currentSegment > _endSegment)
+                {
+                    return false;
+                }
+
+                var segMem = _data.GetSegment(_currentSegment);
+                var sliceStart = _currentSegment == _startSegment ? _startIndex : 0;
+                var sliceEnd = _currentSegment == _endSegment ? _endIndex : segMem.Length;
+
+                if (sliceStart == sliceEnd)
+                {
+                    continue;
+                }
+
+                Current = segMem.Slice(sliceStart, sliceEnd - sliceStart);
+                return true;
             }
-
-            var segMem = _data.GetSegment(_currentSegment);
-            var sliceStart = _currentSegment == _startSegment ? _startIndex : 0;
-            var sliceEnd = _currentSegment == _endSegment ? _endIndex : segMem.Length;
-
-            if (sliceStart == sliceEnd)
-            {
-                return false;
-            }
-
-            _current = segMem.Slice(sliceStart, sliceEnd - sliceStart);
-            return true;
         }
 
         /// <summary>Returns this enumerator (enables <c>foreach</c>).</summary>

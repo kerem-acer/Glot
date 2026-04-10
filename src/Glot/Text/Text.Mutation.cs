@@ -245,8 +245,15 @@ public readonly partial struct Text
     /// <summary>Concatenates <see cref="Text"/> values into a new <see cref="Text"/>.</summary>
     public static Text Concat(params ReadOnlySpan<Text> values)
     {
-        if (values.IsEmpty) return Empty;
-        if (values.Length == 1) return values[0];
+        if (values.IsEmpty)
+        {
+            return Empty;
+        }
+
+        if (values.Length == 1)
+        {
+            return values[0];
+        }
 
         var encoding = TextEncoding.Utf8;
         for (var i = 0; i < values.Length; i++)
@@ -272,7 +279,10 @@ public readonly partial struct Text
     /// <summary>Like <see cref="Concat(ReadOnlySpan{Text})"/> but returns a pooled <see cref="OwnedText"/>.</summary>
     public static OwnedText ConcatPooled(params ReadOnlySpan<Text> values)
     {
-        if (values.IsEmpty) return default;
+        if (values.IsEmpty)
+        {
+            return default;
+        }
 
         var encoding = TextEncoding.Utf8;
         for (var i = 0; i < values.Length; i++)

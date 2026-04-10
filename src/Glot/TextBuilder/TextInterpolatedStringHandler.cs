@@ -51,7 +51,7 @@ public ref struct TextInterpolatedStringHandler : IDisposable
 
     // Formatted holes — generic
 
-    /// <summary>Appends a formatted value. Uses <see cref="IUtf8SpanFormattable"/>, <see cref="ISpanFormattable"/>, or <see cref="IFormattable"/> when available.</summary>
+    /// <summary>Appends a formatted value. Uses IUtf8SpanFormattable, <see cref="ISpanFormattable"/>, or <see cref="IFormattable"/> when available.</summary>
     public void AppendFormatted<T>(T value) => AppendFormattedCore(value, 0, null);
 
     /// <summary>Appends a formatted value with a format specifier.</summary>

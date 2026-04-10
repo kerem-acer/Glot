@@ -4,239 +4,318 @@ namespace Glot;
 
 public sealed partial class LinkedTextUtf16
 {
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from a single string.</summary>
-    public static LinkedTextUtf16 Create(string value)
+    LinkedTextUtf16(ReadOnlySpan<string> segments)
     {
-        if (string.IsNullOrEmpty(value))
+        var count = 0;
+        var totalLength = 0;
+
+        foreach (var t in segments)
         {
-            return Empty;
-        }
-
-        return Create(value.AsMemory());
-    }
-
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from a single memory segment.</summary>
-    public static LinkedTextUtf16 Create(ReadOnlyMemory<char> segment)
-    {
-        if (segment.IsEmpty)
-        {
-            return Empty;
-        }
-
-        var lt = new LinkedTextUtf16();
-        lt.AddSegment(segment);
-        return lt;
-    }
-
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from two strings.</summary>
-    public static LinkedTextUtf16 Create(string s1, string s2)
-    {
-        var lt = new LinkedTextUtf16();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        return lt._segmentCount == 0 ? Empty : lt;
-    }
-
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from three strings.</summary>
-    public static LinkedTextUtf16 Create(string s1, string s2, string s3)
-    {
-        var lt = new LinkedTextUtf16();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        if (!string.IsNullOrEmpty(s3)) lt.AddSegment(s3.AsMemory());
-        return lt._segmentCount == 0 ? Empty : lt;
-    }
-
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from four strings.</summary>
-    public static LinkedTextUtf16 Create(string s1, string s2, string s3, string s4)
-    {
-        var lt = new LinkedTextUtf16();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        if (!string.IsNullOrEmpty(s3)) lt.AddSegment(s3.AsMemory());
-        if (!string.IsNullOrEmpty(s4)) lt.AddSegment(s4.AsMemory());
-        return lt._segmentCount == 0 ? Empty : lt;
-    }
-
-#if NET9_0_OR_GREATER
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from multiple strings.</summary>
-    public static LinkedTextUtf16 Create(params ReadOnlySpan<string> segments)
-    {
-        var lt = new LinkedTextUtf16();
-        lt.EnsureCapacity(segments.Length);
-        for (var i = 0; i < segments.Length; i++)
-        {
-            if (!string.IsNullOrEmpty(segments[i]))
+            if (string.IsNullOrEmpty(t))
             {
-                lt.AddSegment(segments[i].AsMemory());
+                continue;
             }
+
+            count++;
+            totalLength += t.Length;
         }
 
-        return lt._segmentCount == 0 ? Empty : lt;
-    }
-
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from multiple memory segments.</summary>
-    public static LinkedTextUtf16 Create(params ReadOnlySpan<ReadOnlyMemory<char>> segments)
-    {
-        var lt = new LinkedTextUtf16();
-        lt.EnsureCapacity(segments.Length);
-        for (var i = 0; i < segments.Length; i++)
+        if (count == 0)
         {
-            if (!segments[i].IsEmpty)
-            {
-                lt.AddSegment(segments[i]);
-            }
+            return;
         }
 
-        return lt._segmentCount == 0 ? Empty : lt;
-    }
+        var segIndex = 0;
+#if NET8_0_OR_GREATER
+        var overflowCount = count > InlineCapacity ? count - InlineCapacity : 0;
+#else
+        var overflowCount = count;
 #endif
 
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from a single <see cref="Text"/>. Transcodes if needed.</summary>
-    public static LinkedTextUtf16 Create(Text value)
+        if (overflowCount > 0)
+        {
+            _overflowSegments = ArrayPool<ReadOnlyMemory<char>>.Shared.Rent(overflowCount);
+        }
+
+        foreach (var t in segments)
+        {
+            if (string.IsNullOrEmpty(t))
+            {
+                continue;
+            }
+
+#if NET8_0_OR_GREATER
+            if (segIndex < InlineCapacity)
+            {
+                _inlineSegments[segIndex] = t.AsMemory();
+            }
+            else
+            {
+                _overflowSegments![segIndex - InlineCapacity] = t.AsMemory();
+            }
+#else
+            _overflowSegments![segIndex] = t.AsMemory();
+#endif
+            segIndex++;
+        }
+
+        SegmentCount = count;
+        Length = totalLength;
+    }
+
+    LinkedTextUtf16(ReadOnlySpan<ReadOnlyMemory<char>> segments)
     {
-        if (value.IsEmpty)
+        var count = 0;
+        var totalLength = 0;
+
+        foreach (var t in segments)
+        {
+            if (t.IsEmpty)
+            {
+                continue;
+            }
+
+            count++;
+            totalLength += t.Length;
+        }
+
+        if (count == 0)
+        {
+            return;
+        }
+
+        var segIndex = 0;
+#if NET8_0_OR_GREATER
+        var overflowCount = count > InlineCapacity ? count - InlineCapacity : 0;
+#else
+        var overflowCount = count;
+#endif
+
+        if (overflowCount > 0)
+        {
+            _overflowSegments = ArrayPool<ReadOnlyMemory<char>>.Shared.Rent(overflowCount);
+        }
+
+        foreach (var t in segments)
+        {
+            if (t.IsEmpty)
+            {
+                continue;
+            }
+
+#if NET8_0_OR_GREATER
+            if (segIndex < InlineCapacity)
+            {
+                _inlineSegments[segIndex] = t;
+            }
+            else
+            {
+                _overflowSegments![segIndex - InlineCapacity] = t;
+            }
+#else
+            _overflowSegments![segIndex] = t;
+#endif
+            segIndex++;
+        }
+
+        SegmentCount = count;
+        Length = totalLength;
+    }
+
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from strings.</summary>
+    public static LinkedTextUtf16 Create(params ReadOnlySpan<string> segments)
+    {
+        foreach (var t in segments)
+        {
+            if (!string.IsNullOrEmpty(t))
+            {
+                return new LinkedTextUtf16(segments);
+            }
+        }
+
+        return Empty;
+    }
+
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from memory segments.</summary>
+    public static LinkedTextUtf16 Create(params ReadOnlySpan<ReadOnlyMemory<char>> segments)
+    {
+        foreach (var t in segments)
+        {
+            if (!t.IsEmpty)
+            {
+                return new LinkedTextUtf16(segments);
+            }
+        }
+
+        return Empty;
+    }
+
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from <see cref="Text"/> values. Transcodes if needed.</summary>
+    public static LinkedTextUtf16 Create(params ReadOnlySpan<Text> segments)
+    {
+        var hasContent = false;
+        foreach (var t in segments)
+        {
+            if (!t.IsEmpty)
+            {
+                hasContent = true;
+                break;
+            }
+        }
+
+        if (!hasContent)
         {
             return Empty;
         }
 
-        var lt = new LinkedTextUtf16();
-        lt.AppendTextSpan(value.AsSpan());
-        return lt;
+        var linked = new LinkedTextUtf16();
+        linked.PopulateTexts(segments);
+        return linked;
     }
 
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from two <see cref="Text"/> values.</summary>
-    public static LinkedTextUtf16 Create(Text t1, Text t2)
+    /// <summary>Creates a pooled <see cref="LinkedTextUtf16Owned"/> from strings.</summary>
+    public static LinkedTextUtf16Owned CreateOwned(params ReadOnlySpan<string> segments)
     {
-        var lt = new LinkedTextUtf16();
-        if (!t1.IsEmpty) lt.AppendTextSpan(t1.AsSpan());
-        if (!t2.IsEmpty) lt.AppendTextSpan(t2.AsSpan());
-        return lt._segmentCount == 0 ? Empty : lt;
+        var linked = Pool.Get();
+        linked.PopulateStrings(segments);
+        return new LinkedTextUtf16Owned(linked);
     }
 
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from three <see cref="Text"/> values.</summary>
-    public static LinkedTextUtf16 Create(Text t1, Text t2, Text t3)
+    /// <summary>Creates a pooled <see cref="LinkedTextUtf16Owned"/> from memory segments.</summary>
+    public static LinkedTextUtf16Owned CreateOwned(params ReadOnlySpan<ReadOnlyMemory<char>> segments)
     {
-        var lt = new LinkedTextUtf16();
-        if (!t1.IsEmpty) lt.AppendTextSpan(t1.AsSpan());
-        if (!t2.IsEmpty) lt.AppendTextSpan(t2.AsSpan());
-        if (!t3.IsEmpty) lt.AppendTextSpan(t3.AsSpan());
-        return lt._segmentCount == 0 ? Empty : lt;
+        var linked = Pool.Get();
+        linked.Populate(segments);
+        return new LinkedTextUtf16Owned(linked);
     }
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from a single <see cref="Text"/>.</summary>
-    public static Owned CreateOwned(Text value)
+    /// <summary>Creates a pooled <see cref="LinkedTextUtf16Owned"/> from <see cref="Text"/> values.</summary>
+    public static LinkedTextUtf16Owned CreateOwned(params ReadOnlySpan<Text> segments)
     {
-        var lt = Rent();
-        if (!value.IsEmpty) lt.AppendTextSpan(value.AsSpan());
-        return new Owned(lt);
+        var linked = Pool.Get();
+        linked.PopulateTexts(segments);
+        return new LinkedTextUtf16Owned(linked);
     }
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from two <see cref="Text"/> values.</summary>
-    public static Owned CreateOwned(Text t1, Text t2)
+    void PopulateTexts(ReadOnlySpan<Text> segments)
     {
-        var lt = Rent();
-        if (!t1.IsEmpty) lt.AppendTextSpan(t1.AsSpan());
-        if (!t2.IsEmpty) lt.AppendTextSpan(t2.AsSpan());
-        return new Owned(lt);
+        foreach (var t in segments)
+        {
+            if (!t.IsEmpty)
+            {
+                AppendTextSpan(t.AsSpan());
+            }
+        }
     }
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from three <see cref="Text"/> values.</summary>
-    public static Owned CreateOwned(Text t1, Text t2, Text t3)
+    void PopulateStrings(ReadOnlySpan<string> segments)
     {
-        var lt = Rent();
-        if (!t1.IsEmpty) lt.AppendTextSpan(t1.AsSpan());
-        if (!t2.IsEmpty) lt.AppendTextSpan(t2.AsSpan());
-        if (!t3.IsEmpty) lt.AppendTextSpan(t3.AsSpan());
-        return new Owned(lt);
+        foreach (var t in segments)
+        {
+            if (string.IsNullOrEmpty(t))
+            {
+                continue;
+            }
+
+#if NET8_0_OR_GREATER
+            if (SegmentCount < InlineCapacity)
+            {
+                _inlineSegments[SegmentCount] = t.AsMemory();
+            }
+            else
+            {
+                var overflowIndex = SegmentCount - InlineCapacity;
+                EnsureOverflowCapacity(overflowIndex + 1);
+                _overflowSegments![overflowIndex] = t.AsMemory();
+            }
+#else
+            EnsureOverflowCapacity(SegmentCount + 1);
+            _overflowSegments![SegmentCount] = t.AsMemory();
+#endif
+
+            SegmentCount++;
+            Length += t.Length;
+        }
     }
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from a single string.</summary>
-    public static Owned CreateOwned(string value)
+    void Populate(ReadOnlySpan<ReadOnlyMemory<char>> segments)
     {
-        var lt = Rent();
-        if (!string.IsNullOrEmpty(value)) lt.AddSegment(value.AsMemory());
-        return new Owned(lt);
-    }
+        foreach (var t in segments)
+        {
+            if (t.IsEmpty)
+            {
+                continue;
+            }
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from two strings.</summary>
-    public static Owned CreateOwned(string s1, string s2)
-    {
-        var lt = Rent();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        return new Owned(lt);
-    }
+#if NET8_0_OR_GREATER
+            if (SegmentCount < InlineCapacity)
+            {
+                _inlineSegments[SegmentCount] = t;
+            }
+            else
+            {
+                var overflowIndex = SegmentCount - InlineCapacity;
+                EnsureOverflowCapacity(overflowIndex + 1);
+                _overflowSegments![overflowIndex] = t;
+            }
+#else
+            EnsureOverflowCapacity(SegmentCount + 1);
+            _overflowSegments![SegmentCount] = t;
+#endif
 
-    /// <summary>Creates a pooled <see cref="Owned"/> from three strings.</summary>
-    public static Owned CreateOwned(string s1, string s2, string s3)
-    {
-        var lt = Rent();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        if (!string.IsNullOrEmpty(s3)) lt.AddSegment(s3.AsMemory());
-        return new Owned(lt);
-    }
-
-    /// <summary>Creates a pooled <see cref="Owned"/> from four strings.</summary>
-    public static Owned CreateOwned(string s1, string s2, string s3, string s4)
-    {
-        var lt = Rent();
-        if (!string.IsNullOrEmpty(s1)) lt.AddSegment(s1.AsMemory());
-        if (!string.IsNullOrEmpty(s2)) lt.AddSegment(s2.AsMemory());
-        if (!string.IsNullOrEmpty(s3)) lt.AddSegment(s3.AsMemory());
-        if (!string.IsNullOrEmpty(s4)) lt.AddSegment(s4.AsMemory());
-        return new Owned(lt);
+            SegmentCount++;
+            Length += t.Length;
+        }
     }
 
     void AddSegment(ReadOnlyMemory<char> segment)
     {
-        EnsureCapacity(_segmentCount + 1);
 #if NET8_0_OR_GREATER
-        if (_overflowSegments is null)
+        if (SegmentCount < InlineCapacity)
         {
-            _inlineSegments[_segmentCount] = segment;
+            _inlineSegments[SegmentCount] = segment;
         }
         else
         {
-            _overflowSegments[_segmentCount] = segment;
+            var overflowIndex = SegmentCount - InlineCapacity;
+            EnsureOverflowCapacity(overflowIndex + 1);
+            _overflowSegments![overflowIndex] = segment;
         }
 #else
-        _overflowSegments![_segmentCount] = segment;
+        EnsureOverflowCapacity(SegmentCount + 1);
+        _overflowSegments![SegmentCount] = segment;
 #endif
-        _segmentCount++;
-        _totalLength += segment.Length;
+
+        SegmentCount++;
+        Length += segment.Length;
     }
 
-    void EnsureCapacity(int required)
+    internal void EnsureCapacity(int required)
+    {
+#if NET8_0_OR_GREATER
+        if (required <= InlineCapacity)
+        {
+            return;
+        }
+
+        EnsureOverflowCapacity(required - InlineCapacity);
+#else
+        EnsureOverflowCapacity(required);
+#endif
+    }
+
+    void EnsureOverflowCapacity(int required)
     {
         if (_overflowSegments is not null && required <= _overflowSegments.Length)
         {
             return;
         }
 
-#if NET8_0_OR_GREATER
-        if (_overflowSegments is null && required <= InlineCapacity)
-        {
-            return;
-        }
-#endif
-
         var newArr = ArrayPool<ReadOnlyMemory<char>>.Shared.Rent(Math.Max(required, 8));
 
-#if NET8_0_OR_GREATER
-        if (_overflowSegments is null)
-        {
-            for (var i = 0; i < _segmentCount; i++)
-            {
-                newArr[i] = _inlineSegments[i];
-            }
-        }
-        else
-#endif
         if (_overflowSegments is not null)
         {
-            Array.Copy(_overflowSegments, newArr, _segmentCount);
+            Array.Copy(_overflowSegments, newArr, _overflowSegments.Length < newArr.Length ? _overflowSegments.Length : newArr.Length);
             ArrayPool<ReadOnlyMemory<char>>.Shared.Return(_overflowSegments, clearArray: true);
         }
 

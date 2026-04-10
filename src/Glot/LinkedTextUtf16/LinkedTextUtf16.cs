@@ -1,4 +1,7 @@
 using System.Buffers;
+#if NET6_0_OR_GREATER
+using System.Runtime.CompilerServices;
+#endif
 
 namespace Glot;
 
@@ -7,6 +10,9 @@ namespace Glot;
 /// Holds <see cref="ReadOnlyMemory{T}"/> references to the original data
 /// without copying character data.
 /// </summary>
+#if NET6_0_OR_GREATER
+[InterpolatedStringHandler]
+#endif
 public sealed partial class LinkedTextUtf16
 {
 #if NET8_0_OR_GREATER
@@ -15,17 +21,17 @@ public sealed partial class LinkedTextUtf16
     ReadOnlyMemory<char>[]? _overflowSegments;
     char[]? _formatBuffer;
     int _formatPosition;
-    int _segmentCount;
-    int _totalLength;
 
     /// <summary>The number of segments in this linked text.</summary>
-    public int SegmentCount => _segmentCount;
+    public int SegmentCount { get; private set; }
 
     /// <summary>The total number of chars across all segments.</summary>
-    public int Length => _totalLength;
+    public int Length { get; private set; }
 
     /// <summary>Returns <c>true</c> if this linked text has no content.</summary>
-    public bool IsEmpty => _totalLength == 0;
+    public bool IsEmpty => Length == 0;
+
+    LinkedTextUtf16() { }
 
     /// <summary>An empty <see cref="LinkedTextUtf16"/>.</summary>
     public static LinkedTextUtf16 Empty { get; } = new();
@@ -34,12 +40,12 @@ public sealed partial class LinkedTextUtf16
     internal ReadOnlyMemory<char> GetSegment(int index)
     {
 #if NET8_0_OR_GREATER
-        if (_overflowSegments is null)
+        if (index < InlineCapacity)
         {
             return _inlineSegments[index];
         }
 #endif
-        return _overflowSegments![index];
+        return _overflowSegments![index - InlineCapacity];
     }
 
     void EnsureFormatBuffer(int additionalChars)
@@ -107,11 +113,11 @@ public sealed partial class LinkedTextUtf16
     /// <summary>Creates a <see cref="LinkedTextUtf16Span"/> covering all content.</summary>
     public LinkedTextUtf16Span AsSpan()
     {
-        if (_segmentCount == 0)
+        if (SegmentCount == 0)
         {
             return default;
         }
 
-        return new LinkedTextUtf16Span(this, 0, 0, _segmentCount - 1, GetSegment(_segmentCount - 1).Length);
+        return new LinkedTextUtf16Span(this, 0, 0, SegmentCount - 1, GetSegment(SegmentCount - 1).Length);
     }
 }

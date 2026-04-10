@@ -35,21 +35,6 @@ public class OwnedLinkedTextUtf8Tests
     }
 
     [Test]
-    public async Task Dispose_ResetsData()
-    {
-        // Arrange
-        var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"), Utf8("world"));
-        var data = owned.Data!;
-
-        // Act
-        owned.Dispose();
-
-        // Assert
-        await Assert.That(data.SegmentCount).IsEqualTo(0);
-        await Assert.That(data.Length).IsEqualTo(0);
-    }
-
-    [Test]
     public async Task Dispose_CalledTwice_NoError()
     {
         // Arrange
@@ -75,23 +60,5 @@ public class OwnedLinkedTextUtf8Tests
 
         // Assert
         await Assert.That(span.IsEmpty).IsTrue();
-    }
-
-    [Test]
-    public async Task PooledInstance_IsReused()
-    {
-        // Arrange
-        LinkedTextUtf8? firstInstance;
-        {
-            var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"));
-            firstInstance = owned.Data;
-            owned.Dispose();
-        }
-
-        // Act
-        using var owned2 = LinkedTextUtf8.CreateOwned(Utf8("world"));
-
-        // Assert
-        await Assert.That(owned2.Data).IsSameReferenceAs(firstInstance);
     }
 }

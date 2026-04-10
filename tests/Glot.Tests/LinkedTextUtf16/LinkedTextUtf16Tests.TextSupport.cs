@@ -138,8 +138,8 @@ public partial class LinkedTextUtf16Tests
         var text = Text.FromUtf8("world"u8);
         var span = text.AsSpan();
 
-        // Act
-        var linked = LinkedTextUtf16.Create($"Hello {span}!");
+        // Act — direct assignment uses LinkedTextUtf16 as handler (supports ref struct TextSpan)
+        LinkedTextUtf16 linked = $"Hello {span}!";
 
         // Assert
         await Assert.That(linked.AsSpan().ToString()).IsEqualTo("Hello world!");

@@ -11,7 +11,6 @@ public readonly partial struct LinkedTextUtf8Span
     readonly int _startIndex;
     readonly int _endSegment;
     readonly int _endIndex;
-    readonly int _length;
 
     internal LinkedTextUtf8Span(
         LinkedTextUtf8 data, int startSegment, int startIndex, int endSegment, int endIndex)
@@ -21,7 +20,7 @@ public readonly partial struct LinkedTextUtf8Span
         _startIndex = startIndex;
         _endSegment = endSegment;
         _endIndex = endIndex;
-        _length = ComputeLength(data, startSegment, startIndex, endSegment, endIndex);
+        Length = ComputeLength(data, startSegment, startIndex, endSegment, endIndex);
     }
 
     internal LinkedTextUtf8Span(
@@ -32,21 +31,21 @@ public readonly partial struct LinkedTextUtf8Span
         _startIndex = startIndex;
         _endSegment = endSegment;
         _endIndex = endIndex;
-        _length = length;
+        Length = length;
     }
 
     /// <summary>The total number of bytes in this span.</summary>
-    public int Length => _length;
+    public int Length { get; }
 
     /// <summary>Returns <c>true</c> if this span has no content.</summary>
-    public bool IsEmpty => _length == 0;
+    public bool IsEmpty => Length == 0;
 
     /// <summary>Gets the byte at the specified index.</summary>
     public byte this[int index]
     {
         get
         {
-            if ((uint)index >= (uint)_length)
+            if ((uint)index >= (uint)Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }

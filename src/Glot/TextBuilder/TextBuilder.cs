@@ -17,39 +17,36 @@ public struct TextBuilder : IDisposable
     const int DefaultCapacity = 256;
 
     byte[] _buffer;
-    int _position;
-    int _runeCount;
-    readonly TextEncoding _encoding;
 
     /// <summary>Creates a builder with the specified target encoding. Uses default initial capacity of 256 bytes.</summary>
     public TextBuilder(TextEncoding encoding)
     {
         _buffer = ArrayPool<byte>.Shared.Rent(DefaultCapacity);
-        _position = 0;
-        _runeCount = 0;
-        _encoding = encoding;
+        ByteLength = 0;
+        RuneLength = 0;
+        Encoding = encoding;
     }
 
     /// <summary>Creates a builder with the specified initial capacity and target encoding.</summary>
     public TextBuilder(int initialCapacity, TextEncoding encoding = TextEncoding.Utf8)
     {
         _buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
-        _position = 0;
-        _runeCount = 0;
-        _encoding = encoding;
+        ByteLength = 0;
+        RuneLength = 0;
+        Encoding = encoding;
     }
 
     /// <summary>The target encoding for this builder.</summary>
-    public readonly TextEncoding Encoding => _encoding;
+    public readonly TextEncoding Encoding { get; }
 
     /// <summary>The number of bytes written so far.</summary>
-    public readonly int ByteLength => _position;
+    public int ByteLength { get; private set; }
 
     /// <summary>The number of runes written so far.</summary>
-    public readonly int RuneLength => _runeCount;
+    public int RuneLength { get; private set; }
 
     /// <summary>Returns <c>true</c> if no content has been written.</summary>
-    public readonly bool IsEmpty => _position == 0;
+    public readonly bool IsEmpty => ByteLength == 0;
 
     // Append — Text / TextSpan
 
@@ -64,10 +61,10 @@ public struct TextBuilder : IDisposable
             return;
         }
 
-        if (value.Encoding == _encoding)
+        if (value.Encoding == Encoding)
         {
             AppendBytes(value.Bytes);
-            _runeCount += value.RuneLength;
+            RuneLength += value.RuneLength;
             return;
         }
 
@@ -99,10 +96,10 @@ public struct TextBuilder : IDisposable
             return;
         }
 
-        if (encoding == _encoding)
+        if (encoding == Encoding)
         {
             AppendBytes(value);
-            _runeCount += RuneCount.Count(value, encoding);
+            RuneLength += RuneCount.Count(value, encoding);
             return;
         }
 
@@ -118,11 +115,11 @@ public struct TextBuilder : IDisposable
     /// <summary>Appends a single Unicode rune in the target encoding.</summary>
     public void AppendRune(Rune rune)
     {
-        var byteCount = rune.GetByteCount(_encoding);
-        EnsureCapacity(_position + byteCount);
-        rune.EncodeTo(_buffer.AsSpan(_position), _encoding);
-        _position += byteCount;
-        _runeCount++;
+        var byteCount = rune.GetByteCount(Encoding);
+        EnsureCapacity(ByteLength + byteCount);
+        rune.EncodeTo(_buffer.AsSpan(ByteLength), Encoding);
+        ByteLength += byteCount;
+        RuneLength++;
     }
 
     /// <summary>Appends a newline (<c>\n</c>) in the target encoding.</summary>
@@ -133,14 +130,14 @@ public struct TextBuilder : IDisposable
     /// <summary>Creates a <see cref="Text"/> by copying the current content to an exact-size array.</summary>
     public readonly Text ToText()
     {
-        if (_position == 0)
+        if (ByteLength == 0)
         {
             return Text.Empty;
         }
 
-        var bytes = new byte[_position];
-        _buffer.AsSpan(0, _position).CopyTo(bytes);
-        return new Text(bytes, 0, _position, _encoding, _runeCount);
+        var bytes = new byte[ByteLength];
+        _buffer.AsSpan(0, ByteLength).CopyTo(bytes);
+        return new Text(bytes, 0, ByteLength, Encoding, RuneLength);
     }
 
     /// <summary>
@@ -149,21 +146,21 @@ public struct TextBuilder : IDisposable
     /// </summary>
     public OwnedText ToOwnedText()
     {
-        if (_position == 0)
+        if (ByteLength == 0)
         {
             return default;
         }
 
-        var result = OwnedText.Create(_buffer, _position, _encoding);
+        var result = OwnedText.Create(_buffer, ByteLength, Encoding);
         _buffer = ArrayPool<byte>.Shared.Rent(DefaultCapacity);
-        _position = 0;
-        _runeCount = 0;
+        ByteLength = 0;
+        RuneLength = 0;
         return result;
     }
 
     /// <summary>Returns a <see cref="TextSpan"/> view of the current content. Valid until the next mutation.</summary>
     public readonly TextSpan AsSpan()
-        => new(_buffer.AsSpan(0, _position), _encoding, _runeCount);
+        => new(_buffer.AsSpan(0, ByteLength), Encoding, RuneLength);
 
     /// <summary>Converts the current content to a string.</summary>
     public override readonly string ToString() => AsSpan().ToString();
@@ -173,8 +170,8 @@ public struct TextBuilder : IDisposable
     /// <summary>Resets the builder to empty, keeping the current buffer for reuse.</summary>
     public void Clear()
     {
-        _position = 0;
-        _runeCount = 0;
+        ByteLength = 0;
+        RuneLength = 0;
     }
 
     /// <summary>Returns the pooled buffer to <see cref="ArrayPool{T}"/>.</summary>
@@ -182,8 +179,8 @@ public struct TextBuilder : IDisposable
     {
         var buffer = _buffer;
         _buffer = null!;
-        _position = 0;
-        _runeCount = 0;
+        ByteLength = 0;
+        RuneLength = 0;
 
         if (buffer is not null)
         {
@@ -195,9 +192,9 @@ public struct TextBuilder : IDisposable
 
     void AppendBytes(ReadOnlySpan<byte> bytes)
     {
-        EnsureCapacity(_position + bytes.Length);
-        bytes.CopyTo(_buffer.AsSpan(_position));
-        _position += bytes.Length;
+        EnsureCapacity(ByteLength + bytes.Length);
+        bytes.CopyTo(_buffer.AsSpan(ByteLength));
+        ByteLength += bytes.Length;
     }
 
     void EnsureCapacity(int required)
@@ -209,7 +206,7 @@ public struct TextBuilder : IDisposable
 
         var newSize = Math.Max(_buffer.Length * 2, required);
         var newBuffer = ArrayPool<byte>.Shared.Rent(newSize);
-        _buffer.AsSpan(0, _position).CopyTo(newBuffer);
+        _buffer.AsSpan(0, ByteLength).CopyTo(newBuffer);
         ArrayPool<byte>.Shared.Return(_buffer);
         _buffer = newBuffer;
     }

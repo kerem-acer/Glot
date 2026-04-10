@@ -18,7 +18,6 @@ public readonly ref partial struct TextSpan
     , IComparable<TextSpan>
 #endif
 {
-    readonly ReadOnlySpan<byte> _bytes;
     readonly EncodedLength _encodedLength;
 
     /// <summary>
@@ -27,13 +26,13 @@ public readonly ref partial struct TextSpan
     /// </summary>
     public TextSpan(ReadOnlySpan<byte> bytes, TextEncoding encoding)
     {
-        _bytes = bytes;
+        Bytes = bytes;
         _encodedLength = new EncodedLength(encoding, RuneCount.Count(bytes, encoding));
     }
 
     internal TextSpan(ReadOnlySpan<byte> bytes, TextEncoding encoding, int runeLength)
     {
-        _bytes = bytes;
+        Bytes = bytes;
         _encodedLength = new EncodedLength(encoding, runeLength);
     }
 
@@ -46,16 +45,16 @@ public readonly ref partial struct TextSpan
         => new(bytes, encoding, 0);
 
     /// <summary>The raw underlying bytes, regardless of encoding.</summary>
-    public ReadOnlySpan<byte> Bytes => _bytes;
+    public ReadOnlySpan<byte> Bytes { get; }
 
     /// <summary>The number of bytes in this span.</summary>
-    public int ByteLength => _bytes.Length;
+    public int ByteLength => Bytes.Length;
 
     /// <summary>The Unicode encoding of the text in this span.</summary>
     public TextEncoding Encoding => _encodedLength.Encoding;
 
     /// <summary>Returns <c>true</c> if this span contains no bytes.</summary>
-    public bool IsEmpty => _bytes.IsEmpty;
+    public bool IsEmpty => Bytes.IsEmpty;
 
     /// <summary>The number of Unicode runes (scalar values) in this span. O(1) — computed at construction.</summary>
     public int RuneLength => _encodedLength.RuneLength;

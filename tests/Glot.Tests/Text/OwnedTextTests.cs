@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Glot.Tests;
 
 public class OwnedTextTests

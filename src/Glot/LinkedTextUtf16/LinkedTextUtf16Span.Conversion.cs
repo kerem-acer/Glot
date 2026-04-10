@@ -24,7 +24,7 @@ public readonly partial struct LinkedTextUtf16Span
         }
 
 #if NET6_0_OR_GREATER
-        return string.Create(_length, this, static (dest, span) =>
+        return string.Create(Length, this, static (dest, span) =>
         {
             var offset = 0;
             foreach (var segment in span.EnumerateSegments())
@@ -34,7 +34,7 @@ public readonly partial struct LinkedTextUtf16Span
             }
         });
 #else
-        var buffer = new char[_length];
+        var buffer = new char[Length];
         var offset = 0;
         foreach (var segment in EnumerateSegments())
         {

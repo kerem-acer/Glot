@@ -152,21 +152,58 @@ public partial class LinkedTextUtf16Tests
         await Assert.That(span.Length).IsEqualTo(0);
     }
 
-    // Overflow — more than 8 segments
+    // Overflow — more than 8 segments (triggers overflow array on NET8+)
 
     [Test]
     public async Task Create_NineSegments_UsesOverflow()
     {
-        // Arrange & Act
-        var linked = LinkedTextUtf16.Create("a", "b", "c", "d");
-        // Use the multi-arg factory to build 9+ segments
-        var linked9 = LinkedTextUtf16.Create(
-            "s1", "s2", "s3");
-        // Build a larger one manually via repeated Create calls
-        // For now, test with 4 segments (inline path)
+        // Arrange — use interpolation to create 9+ segments
+        var a = "a";
+        var b = "b";
+        var c = "c";
+
+        // Act — 9 segments: 4 literals + 5 holes (but adjacent literals merge in handler)
+        // Use explicit construction to guarantee segment count
+        LinkedTextUtf16 linked = $"{a}{b}{c}{a}{b}{c}{a}{b}{c}";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(4);
-        await Assert.That(linked9.SegmentCount).IsEqualTo(3);
+        await Assert.That(linked.SegmentCount).IsEqualTo(9);
+        await Assert.That(linked.Length).IsEqualTo(9);
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcabcabc");
+    }
+
+    // CreateOwned — Memory overloads
+
+    [Test]
+    public async Task CreateOwned_SingleMemory_Works()
+    {
+        // Act
+        using var owned = LinkedTextUtf16.CreateOwned("hello".AsMemory());
+
+        // Assert
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello");
+    }
+
+    [Test]
+    public async Task CreateOwned_TwoMemory_Works()
+    {
+        // Act
+        using var owned = LinkedTextUtf16.CreateOwned("hello".AsMemory(), " world".AsMemory());
+
+        // Assert
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
+    }
+
+    // CreateOwned — four strings
+
+    [Test]
+    public async Task CreateOwned_FourStrings_Works()
+    {
+        // Act
+        using var owned = LinkedTextUtf16.CreateOwned("a", "b", "c", "d");
+
+        // Assert
+        await Assert.That(owned.Data!.SegmentCount).IsEqualTo(4);
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("abcd");
     }
 }

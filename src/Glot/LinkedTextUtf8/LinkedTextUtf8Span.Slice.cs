@@ -10,18 +10,18 @@ public readonly partial struct LinkedTextUtf8Span
             return this;
         }
 
-        if (offset == _length)
+        if (offset == Length)
         {
             return default;
         }
 
-        if ((uint)offset > (uint)_length)
+        if ((uint)offset > (uint)Length)
         {
             throw new ArgumentOutOfRangeException(nameof(offset));
         }
 
         var (seg, idx) = FindPosition(offset);
-        return new LinkedTextUtf8Span(_data!, seg, idx, _endSegment, _endIndex, _length - offset);
+        return new LinkedTextUtf8Span(_data!, seg, idx, _endSegment, _endIndex, Length - offset);
     }
 
     /// <summary>Returns a sub-span of the specified length starting at the given byte offset.</summary>
@@ -32,17 +32,17 @@ public readonly partial struct LinkedTextUtf8Span
             return default;
         }
 
-        if (offset == 0 && count == _length)
+        if (offset == 0 && count == Length)
         {
             return this;
         }
 
-        if ((uint)offset > (uint)_length)
+        if ((uint)offset > (uint)Length)
         {
             throw new ArgumentOutOfRangeException(nameof(offset));
         }
 
-        if ((uint)count > (uint)(_length - offset))
+        if ((uint)count > (uint)(Length - offset))
         {
             throw new ArgumentOutOfRangeException(nameof(count));
         }
@@ -52,17 +52,15 @@ public readonly partial struct LinkedTextUtf8Span
         return new LinkedTextUtf8Span(_data!, startSeg, startIdx, endSeg, endIdx, count);
     }
 
-#if NET6_0_OR_GREATER
     /// <summary>Slices by range.</summary>
     public LinkedTextUtf8Span this[Range range]
     {
         get
         {
-            var (offset, count) = range.GetOffsetAndLength(_length);
+            var (offset, count) = range.GetOffsetAndLength(Length);
             return Slice(offset, count);
         }
     }
-#endif
 
     (int segment, int index) FindPosition(int byteOffset)
     {

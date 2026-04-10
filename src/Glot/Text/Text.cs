@@ -25,14 +25,13 @@ public readonly partial struct Text :
 {
     readonly object? _data;
     readonly int _start;
-    readonly int _byteLength;
     readonly EncodedLength _encodedLength;
 
     internal Text(object? data, int start, int byteLength, TextEncoding encoding, int runeLength)
     {
         _data = data;
         _start = start;
-        _byteLength = byteLength;
+        ByteLength = byteLength;
         _encodedLength = new EncodedLength(encoding, runeLength);
     }
 
@@ -43,10 +42,10 @@ public readonly partial struct Text :
     public int RuneLength => _encodedLength.RuneLength;
 
     /// <summary>The number of bytes in the encoded representation.</summary>
-    public int ByteLength => _byteLength;
+    public int ByteLength { get; }
 
     /// <summary>Returns <c>true</c> if this value contains no text.</summary>
-    public bool IsEmpty => _byteLength == 0;
+    public bool IsEmpty => ByteLength == 0;
 
     /// <summary>The raw underlying bytes, regardless of encoding.</summary>
     public ReadOnlySpan<byte> Bytes => AsSpan().Bytes;
@@ -61,13 +60,13 @@ public readonly partial struct Text :
     public TextSpan AsSpan() => _data switch
     {
         byte[] bytes => new TextSpan(
-            bytes.AsSpan(_start, _byteLength), Encoding, RuneLength),
+            bytes.AsSpan(_start, ByteLength), Encoding, RuneLength),
         string s => new TextSpan(
-            MemoryMarshal.AsBytes(s.AsSpan()).Slice(_start, _byteLength), Encoding, RuneLength),
+            MemoryMarshal.AsBytes(s.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
         char[] chars => new TextSpan(
-            MemoryMarshal.AsBytes(chars.AsSpan()).Slice(_start, _byteLength), Encoding, RuneLength),
+            MemoryMarshal.AsBytes(chars.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
         int[] ints => new TextSpan(
-            MemoryMarshal.AsBytes(ints.AsSpan()).Slice(_start, _byteLength), Encoding, RuneLength),
+            MemoryMarshal.AsBytes(ints.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
         _ => default,
     };
 

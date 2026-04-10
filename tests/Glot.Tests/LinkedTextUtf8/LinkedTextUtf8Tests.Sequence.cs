@@ -61,4 +61,26 @@ public partial class LinkedTextUtf8Tests
         await Assert.That(seq1.Start.Equals(seq2.Start)).IsTrue();
         await Assert.That(seq1.End.Equals(seq2.End)).IsTrue();
     }
+
+    [Test]
+    public async Task AsSequence_ConcurrentCalls_NoNodeLeak()
+    {
+        // Arrange
+        var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
+
+        // Act
+        var tasks = new Task<ReadOnlySequence<byte>>[8];
+        for (var i = 0; i < tasks.Length; i++)
+        {
+            tasks[i] = Task.Run(linked.AsSequence);
+        }
+
+        var results = await Task.WhenAll(tasks);
+
+        // Assert
+        for (var i = 0; i < results.Length; i++)
+        {
+            await Assert.That(results[i].Length).IsEqualTo(13);
+        }
+    }
 }

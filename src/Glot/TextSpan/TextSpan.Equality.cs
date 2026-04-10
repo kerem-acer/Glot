@@ -10,11 +10,11 @@ public readonly ref partial struct TextSpan
     {
         if (Encoding == other.Encoding)
         {
-            return _bytes.SequenceEqual(other._bytes);
+            return Bytes.SequenceEqual(other.Bytes);
         }
 
-        var a = _bytes;
-        var b = other._bytes;
+        var a = Bytes;
+        var b = other.Bytes;
 
         while (!a.IsEmpty && !b.IsEmpty)
         {
@@ -52,7 +52,7 @@ public readonly ref partial struct TextSpan
     public override int GetHashCode()
     {
         var hash = new HashCode();
-        var remaining = _bytes;
+        var remaining = Bytes;
 
         while (!remaining.IsEmpty)
         {
@@ -67,8 +67,8 @@ public readonly ref partial struct TextSpan
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(TextSpan other)
     {
-        var a = _bytes;
-        var b = other._bytes;
+        var a = Bytes;
+        var b = other.Bytes;
 
         while (!a.IsEmpty && !b.IsEmpty)
         {

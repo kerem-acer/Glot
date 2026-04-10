@@ -10,7 +10,7 @@ public readonly ref partial struct TextSpan
     /// <summary>Removes leading whitespace runes. Returns a non-copying sub-span.</summary>
     public TextSpan TrimStart()
     {
-        var remaining = _bytes;
+        var remaining = Bytes;
         var trimmedRunes = 0;
 
         while (!remaining.IsEmpty)
@@ -31,7 +31,7 @@ public readonly ref partial struct TextSpan
     /// <summary>Removes trailing whitespace runes. Returns a non-copying sub-span.</summary>
     public TextSpan TrimEnd()
     {
-        var bytes = _bytes;
+        var bytes = Bytes;
         var trimmedRunes = 0;
 
         while (!bytes.IsEmpty)

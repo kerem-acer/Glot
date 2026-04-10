@@ -1,4 +1,5 @@
 using System.Buffers;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Glot;
 
@@ -9,8 +10,8 @@ public sealed partial class LinkedTextUtf16
 
     /// <summary>
     /// Returns a <see cref="ReadOnlySequence{T}"/> over this linked text's segments.
-    /// Lazily constructed and cached. Thread-safe via benign race (worst case: two threads
-    /// both build, one write wins, both get valid sequences).
+    /// Lazily constructed and cached. Thread-safe: if two threads race, the loser
+    /// returns its nodes to the pool.
     /// </summary>
     public ReadOnlySequence<char> AsSequence()
     {
@@ -19,32 +20,54 @@ public sealed partial class LinkedTextUtf16
             return cached;
         }
 
-        if (_segmentCount == 0)
+        if (SegmentCount == 0)
         {
             return ReadOnlySequence<char>.Empty;
         }
 
-        if (_segmentCount == 1)
+        if (SegmentCount == 1)
         {
             var seq = new ReadOnlySequence<char>(GetSegment(0));
             _cachedSequence = seq;
             return seq;
         }
 
-        var head = SequenceSegmentNode.Rent();
+        var head = SequenceSegmentNode.NodePool.Get();
         head.SetMemory(GetSegment(0));
         var tail = head;
 
-        for (var i = 1; i < _segmentCount; i++)
+        for (var i = 1; i < SegmentCount; i++)
         {
-            var next = SequenceSegmentNode.Rent();
+            var next = SequenceSegmentNode.NodePool.Get();
             next.SetMemory(GetSegment(i));
             tail.SetNext(next);
             tail = next;
         }
 
-        _cachedSequenceHead = head;
         var sequence = new ReadOnlySequence<char>(head, 0, tail, tail.Memory.Length);
+
+        var existing = Interlocked.CompareExchange(ref _cachedSequenceHead, head, null);
+        if (existing is not null)
+        {
+            // Another thread won — return our nodes to the pool
+            var node = head;
+            while (node is not null)
+            {
+                var next = node.NextNode;
+                SequenceSegmentNode.NodePool.Return(node);
+                node = next;
+            }
+
+            // Rebuild from the winner's nodes
+            var existingTail = existing;
+            while (existingTail.NextNode is { } n)
+            {
+                existingTail = n;
+            }
+
+            return new ReadOnlySequence<char>(existing, 0, existingTail, existingTail.Memory.Length);
+        }
+
         _cachedSequence = sequence;
         return sequence;
     }
@@ -55,7 +78,7 @@ public sealed partial class LinkedTextUtf16
         while (node is not null)
         {
             var next = node.NextNode;
-            SequenceSegmentNode.Return(node);
+            SequenceSegmentNode.NodePool.Return(node);
             node = next;
         }
 
@@ -64,39 +87,20 @@ public sealed partial class LinkedTextUtf16
 
     internal sealed class SequenceSegmentNode : ReadOnlySequenceSegment<char>
     {
-        static SequenceSegmentNode? s_pool;
+        internal static readonly ObjectPool<SequenceSegmentNode> NodePool =
+            new DefaultObjectPool<SequenceSegmentNode>(new NodePolicy(), 64);
 
-        internal static SequenceSegmentNode Rent()
+        sealed class NodePolicy : PooledObjectPolicy<SequenceSegmentNode>
         {
-            SequenceSegmentNode? node;
-            do
+            public override SequenceSegmentNode Create() => new();
+
+            public override bool Return(SequenceSegmentNode obj)
             {
-                node = Volatile.Read(ref s_pool);
-                if (node is null)
-                {
-                    return new SequenceSegmentNode();
-                }
+                obj.Memory = default;
+                obj.RunningIndex = 0;
+                obj.Next = null;
+                return true;
             }
-            while (Interlocked.CompareExchange(ref s_pool, node.NextNode, node) != node);
-
-            node.Memory = default;
-            node.RunningIndex = 0;
-            node.Next = null;
-            return node;
-        }
-
-        internal static void Return(SequenceSegmentNode node)
-        {
-            node.Memory = default;
-            node.RunningIndex = 0;
-
-            SequenceSegmentNode? current;
-            do
-            {
-                current = Volatile.Read(ref s_pool);
-                node.Next = current;
-            }
-            while (Interlocked.CompareExchange(ref s_pool, node, current) != current);
         }
 
         internal void SetMemory(ReadOnlyMemory<char> memory)

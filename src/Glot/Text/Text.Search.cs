@@ -122,7 +122,7 @@ public readonly partial struct Text
     {
         var span = AsSpan();
         var byteOffset = RuneIndex.ToByteOffset(span.Bytes, Encoding, runeOffset);
-        return new Text(_data, _start + byteOffset, _byteLength - byteOffset, Encoding, RuneLength - runeOffset);
+        return new Text(_data, _start + byteOffset, ByteLength - byteOffset, Encoding, RuneLength - runeOffset);
     }
 
     public Text RuneSlice(int runeOffset, int runeCount)

@@ -17,27 +17,25 @@ public readonly partial struct LinkedTextUtf8Span
         {
             var seg = _data!.GetSegment(_startSegment);
             var slice = seg.Span.Slice(_startIndex, _endIndex - _startIndex);
-#if NET6_0_OR_GREATER
             return Encoding.UTF8.GetString(slice);
-#else
-            return Encoding.UTF8.GetString(slice.ToArray());
-#endif
         }
 
-        // Multi-segment: copy bytes to contiguous buffer, then decode
-        var buffer = new byte[_length];
-        var offset = 0;
+        // Count chars first, then decode directly into string
+        var charCount = 0;
         foreach (var segment in EnumerateSegments())
         {
-            segment.Span.CopyTo(buffer.AsSpan(offset));
-            offset += segment.Length;
+            charCount += Encoding.UTF8.GetCharCount(segment.Span);
         }
 
-#if NET6_0_OR_GREATER
-        return Encoding.UTF8.GetString(buffer);
-#else
-        return Encoding.UTF8.GetString(buffer);
-#endif
+        return string.Create(charCount, this, static (dest, span) =>
+        {
+            var offset = 0;
+            foreach (var segment in span.EnumerateSegments())
+            {
+                var written = Encoding.UTF8.GetChars(segment.Span, dest[offset..]);
+                offset += written;
+            }
+        });
     }
 
     /// <summary>Writes all segments to the specified buffer writer without intermediate allocation.</summary>

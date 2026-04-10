@@ -73,4 +73,42 @@ public partial class LinkedTextUtf16Tests
         await Assert.That(seq1.Start.Equals(seq2.Start)).IsTrue();
         await Assert.That(seq1.End.Equals(seq2.End)).IsTrue();
     }
+
+    [Test]
+    public async Task AsSequence_ConcurrentCalls_NoNodeLeak()
+    {
+        // Arrange
+        var linked = LinkedTextUtf16.Create("hello", " - ", "world");
+
+        // Act — race multiple threads
+        var tasks = new Task<ReadOnlySequence<char>>[8];
+        for (var i = 0; i < tasks.Length; i++)
+        {
+            tasks[i] = Task.Run(linked.AsSequence);
+        }
+
+        var results = await Task.WhenAll(tasks);
+
+        // Assert — all results valid
+        for (var i = 0; i < results.Length; i++)
+        {
+            await Assert.That(results[i].Length).IsEqualTo(13);
+        }
+    }
+
+    [Test]
+    public async Task SequenceNodePool_CappedAfterManySequences()
+    {
+        // Arrange — create many sequences to exercise node pool
+        for (var i = 0; i < 100; i++)
+        {
+            var lt = LinkedTextUtf16.Create("a", "b", "c");
+            _ = lt.AsSequence();
+        }
+
+        // Assert — pool still works
+        var lt2 = LinkedTextUtf16.Create("x", "y");
+        var seq = lt2.AsSequence();
+        await Assert.That(seq.Length).IsEqualTo(2);
+    }
 }

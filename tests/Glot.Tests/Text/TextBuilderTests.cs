@@ -54,7 +54,7 @@ public class TextBuilderTests
 
         // Act
         builder.Append("");
-        builder.Append((string)null!);
+        builder.Append(null!);
 
         // Assert
         await Assert.That(builder.IsEmpty).IsTrue();

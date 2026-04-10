@@ -1,49 +1,20 @@
 using System.Buffers;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Glot;
 
 public sealed partial class LinkedTextUtf16
 {
-    static LinkedTextUtf16? s_pool;
-
-    static LinkedTextUtf16 Rent()
-    {
-        LinkedTextUtf16? node;
-        do
-        {
-            node = Volatile.Read(ref s_pool);
-            if (node is null)
-            {
-                return new LinkedTextUtf16();
-            }
-        }
-        while (Interlocked.CompareExchange(ref s_pool, node._poolNext, node) != node);
-
-        node._poolNext = null;
-        return node;
-    }
-
-    static void Return(LinkedTextUtf16 instance)
-    {
-        instance.Reset();
-
-        LinkedTextUtf16? current;
-        do
-        {
-            current = Volatile.Read(ref s_pool);
-            instance._poolNext = current;
-        }
-        while (Interlocked.CompareExchange(ref s_pool, instance, current) != current);
-    }
-
-    LinkedTextUtf16? _poolNext; // intrusive linked list for lock-free pool
+    internal static readonly ObjectPool<LinkedTextUtf16> Pool =
+        new DefaultObjectPool<LinkedTextUtf16>(new Policy(), 32);
 
     void Reset()
     {
 #if NET8_0_OR_GREATER
-        if (_overflowSegments is null && _segmentCount > 0)
+        if (SegmentCount > 0)
         {
-            ((Span<ReadOnlyMemory<char>>)_inlineSegments)[.._segmentCount].Clear();
+            var inlineCount = Math.Min(SegmentCount, InlineCapacity);
+            ((Span<ReadOnlyMemory<char>>)_inlineSegments)[..inlineCount].Clear();
         }
 #endif
 
@@ -57,61 +28,19 @@ public sealed partial class LinkedTextUtf16
 
         ReturnSequenceNodes();
 
-        _segmentCount = 0;
-        _totalLength = 0;
+        SegmentCount = 0;
+        Length = 0;
         _cachedSequence = null;
     }
 
-    /// <summary>
-    /// A disposable handle that returns the <see cref="LinkedTextUtf16"/> and all its
-    /// rented resources (overflow arrays, sequence nodes) to their pools on dispose.
-    /// </summary>
-    public struct Owned : IDisposable
+    sealed class Policy : PooledObjectPolicy<LinkedTextUtf16>
     {
-        LinkedTextUtf16? _data;
+        public override LinkedTextUtf16 Create() => new();
 
-        internal Owned(LinkedTextUtf16 data)
+        public override bool Return(LinkedTextUtf16 obj)
         {
-            _data = data;
-        }
-
-        /// <summary>Returns <c>true</c> if this instance has been disposed or is default.</summary>
-        public readonly bool IsDisposed => _data is null;
-
-        /// <summary>The total char count.</summary>
-        public readonly int Length => _data?.Length ?? 0;
-
-        /// <summary>Returns <c>true</c> if empty or disposed.</summary>
-        public readonly bool IsEmpty => _data is null || _data.IsEmpty;
-
-        /// <summary>The underlying <see cref="LinkedTextUtf16"/>. Valid only while not disposed.</summary>
-        public readonly LinkedTextUtf16? Data => _data;
-
-        /// <summary>Returns a <see cref="LinkedTextUtf16Span"/> over the full content.</summary>
-        public readonly LinkedTextUtf16Span AsSpan()
-        {
-            if (_data is null)
-            {
-                return default;
-            }
-
-            return _data.AsSpan();
-        }
-
-        /// <summary>
-        /// Returns overflow array to <see cref="ArrayPool{T}"/>, sequence nodes to their pool,
-        /// and the <see cref="LinkedTextUtf16"/> instance to the object pool.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_data is null)
-            {
-                return;
-            }
-
-            var data = _data;
-            _data = null;
-            LinkedTextUtf16.Return(data);
+            obj.Reset();
+            return true;
         }
     }
 }

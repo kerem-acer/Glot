@@ -1,5 +1,7 @@
+#if NET6_0_OR_GREATER
 using System.Numerics;
 using System.Runtime.CompilerServices;
+#endif
 using System.Runtime.InteropServices;
 using static Glot.EncodingConstants;
 

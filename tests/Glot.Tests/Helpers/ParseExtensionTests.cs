@@ -94,11 +94,11 @@ public class ParseExtensionTests
     public async Task Guid_TryParse_FromText()
     {
         // Arrange
-        var expected = System.Guid.Parse("12345678-1234-1234-1234-123456789abc");
+        var expected = Guid.Parse("12345678-1234-1234-1234-123456789abc");
         var text = Text.From("12345678-1234-1234-1234-123456789abc");
 
         // Act
-        var success = System.Guid.TryParse(text, out var result);
+        var success = Guid.TryParse(text, out var result);
 
         // Assert
         await Assert.That(success).IsTrue();
@@ -114,7 +114,7 @@ public class ParseExtensionTests
         var text = Text.From("2026-04-10");
 
         // Act
-        var result = System.DateTime.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
+        var result = DateTime.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
 
         // Assert
         await Assert.That(result.Year).IsEqualTo(2026);
@@ -168,11 +168,11 @@ public class ParseExtensionTests
     public async Task Guid_TryParseUtf8_Succeeds()
     {
         // Arrange
-        var expected = System.Guid.Parse("12345678-1234-1234-1234-123456789abc");
+        var expected = Guid.Parse("12345678-1234-1234-1234-123456789abc");
         var text = Text.FromUtf8("12345678-1234-1234-1234-123456789abc"u8);
 
         // Act
-        var success = System.Guid.TryParseUtf8(text, out var result);
+        var success = Guid.TryParseUtf8(text, out var result);
 
         // Assert
         await Assert.That(success).IsTrue();

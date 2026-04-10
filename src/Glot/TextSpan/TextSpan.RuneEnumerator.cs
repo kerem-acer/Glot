@@ -5,7 +5,7 @@ namespace Glot;
 public readonly ref partial struct TextSpan
 {
     /// <summary>Returns a zero-allocation enumerator over the runes in this span.</summary>
-    public RuneEnumerator EnumerateRunes() => new(_bytes, Encoding);
+    public RuneEnumerator EnumerateRunes() => new(Bytes, Encoding);
 
     /// <summary>A zero-allocation enumerator that yields each <see cref="Rune"/> in a <see cref="TextSpan"/>.</summary>
     public ref struct RuneEnumerator

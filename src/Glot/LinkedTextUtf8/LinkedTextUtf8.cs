@@ -11,17 +11,17 @@ public sealed partial class LinkedTextUtf8
     InlineSegmentBuffer _inlineSegments;
 #endif
     ReadOnlyMemory<byte>[]? _overflowSegments;
-    int _segmentCount;
-    int _totalLength;
+
+    LinkedTextUtf8() { }
 
     /// <summary>The number of segments in this linked text.</summary>
-    public int SegmentCount => _segmentCount;
+    public int SegmentCount { get; private set; }
 
     /// <summary>The total number of bytes across all segments.</summary>
-    public int Length => _totalLength;
+    public int Length { get; private set; }
 
     /// <summary>Returns <c>true</c> if this linked text has no content.</summary>
-    public bool IsEmpty => _totalLength == 0;
+    public bool IsEmpty => Length == 0;
 
     /// <summary>An empty <see cref="LinkedTextUtf8"/>.</summary>
     public static LinkedTextUtf8 Empty { get; } = new();
@@ -30,22 +30,27 @@ public sealed partial class LinkedTextUtf8
     internal ReadOnlyMemory<byte> GetSegment(int index)
     {
 #if NET8_0_OR_GREATER
-        if (_overflowSegments is null)
+        if (index < InlineCapacity)
         {
             return _inlineSegments[index];
         }
 #endif
-        return _overflowSegments![index];
+        return _overflowSegments![index - InlineCapacity];
     }
 
     /// <summary>Creates a <see cref="LinkedTextUtf8Span"/> covering all content.</summary>
     public LinkedTextUtf8Span AsSpan()
     {
-        if (_segmentCount == 0)
+        if (SegmentCount == 0)
         {
             return default;
         }
 
-        return new LinkedTextUtf8Span(this, 0, 0, _segmentCount - 1, GetSegment(_segmentCount - 1).Length);
+        return new LinkedTextUtf8Span(
+            this,
+            0,
+            0,
+            SegmentCount - 1,
+            GetSegment(SegmentCount - 1).Length);
     }
 }

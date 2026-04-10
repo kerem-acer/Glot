@@ -14,7 +14,10 @@ public partial class PrimitiveParseExtensionTests
     {
         var runes = new List<int>();
         foreach (var rune in s.EnumerateRunes())
+        {
             runes.Add(rune.Value);
+        }
+
         return [.. runes];
     }
 

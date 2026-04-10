@@ -15,13 +15,12 @@ namespace Glot;
 public readonly struct OwnedText : IDisposable
 {
     readonly object? _buffer; // byte[], char[], or int[] — returned to the appropriate ArrayPool on dispose
-    readonly int _byteLength;
     readonly EncodedLength _encodedLength;
 
     OwnedText(object buffer, int byteLength, TextEncoding encoding, int runeLength)
     {
         _buffer = buffer;
-        _byteLength = byteLength;
+        ByteLength = byteLength;
         _encodedLength = new EncodedLength(encoding, runeLength);
     }
 
@@ -32,16 +31,16 @@ public readonly struct OwnedText : IDisposable
     public int RuneLength => _encodedLength.RuneLength;
 
     /// <summary>The number of bytes in the encoded representation.</summary>
-    public int ByteLength => _byteLength;
+    public int ByteLength { get; }
 
     /// <summary>Returns <c>true</c> if this value contains no text.</summary>
-    public bool IsEmpty => _byteLength == 0;
+    public bool IsEmpty => ByteLength == 0;
 
     /// <summary>
     /// Returns a <see cref="Glot.Text"/> view over the pooled buffer. O(1).
     /// The returned value is valid only while this <see cref="OwnedText"/> has not been disposed.
     /// </summary>
-    public Text Text => new(_buffer, 0, _byteLength, Encoding, RuneLength);
+    public Text Text => new(_buffer, 0, ByteLength, Encoding, RuneLength);
 
     /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying bytes into a pooled buffer.</summary>
     public static OwnedText FromUtf8(ReadOnlySpan<byte> value)
@@ -106,9 +105,15 @@ public readonly struct OwnedText : IDisposable
     {
         switch (_buffer)
         {
-            case byte[] bytes: ArrayPool<byte>.Shared.Return(bytes); break;
-            case char[] chars: ArrayPool<char>.Shared.Return(chars); break;
-            case int[] ints: ArrayPool<int>.Shared.Return(ints); break;
+            case byte[] bytes:
+                ArrayPool<byte>.Shared.Return(bytes);
+                break;
+            case char[] chars:
+                ArrayPool<char>.Shared.Return(chars);
+                break;
+            case int[] ints:
+                ArrayPool<int>.Shared.Return(ints);
+                break;
         }
     }
 }

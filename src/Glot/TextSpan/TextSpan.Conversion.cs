@@ -7,16 +7,16 @@ public readonly ref partial struct TextSpan
     /// <summary>Converts this span to a <see cref="string"/>. Allocates for non-string-backed data.</summary>
     public override string ToString()
     {
-        if (_bytes.IsEmpty)
+        if (Bytes.IsEmpty)
         {
             return string.Empty;
         }
 
         return Encoding switch
         {
-            TextEncoding.Utf8 => System.Text.Encoding.UTF8.GetString(_bytes),
-            TextEncoding.Utf16 => MemoryMarshal.Cast<byte, char>(_bytes).ToString(),
-            TextEncoding.Utf32 => System.Text.Encoding.UTF32.GetString(_bytes),
+            TextEncoding.Utf8 => System.Text.Encoding.UTF8.GetString(Bytes),
+            TextEncoding.Utf16 => MemoryMarshal.Cast<byte, char>(Bytes).ToString(),
+            TextEncoding.Utf32 => System.Text.Encoding.UTF32.GetString(Bytes),
             _ => throw new InvalidEncodingException(Encoding),
         };
     }
@@ -45,9 +45,9 @@ public readonly ref partial struct TextSpan
     {
         if (Encoding == TextEncoding.Utf8)
         {
-            if (_bytes.TryCopyTo(utf8Destination))
+            if (Bytes.TryCopyTo(utf8Destination))
             {
-                bytesWritten = _bytes.Length;
+                bytesWritten = Bytes.Length;
                 return true;
             }
 
@@ -68,8 +68,8 @@ public readonly ref partial struct TextSpan
     }
 
     /// <summary>Reinterprets the underlying bytes as <see cref="char"/> elements. Zero-copy cast — no encoding validation.</summary>
-    public ReadOnlySpan<char> Chars => MemoryMarshal.Cast<byte, char>(_bytes);
+    public ReadOnlySpan<char> Chars => MemoryMarshal.Cast<byte, char>(Bytes);
 
     /// <summary>Reinterprets the underlying bytes as <see cref="int"/> elements. Zero-copy cast — no encoding validation.</summary>
-    public ReadOnlySpan<int> Ints => MemoryMarshal.Cast<byte, int>(_bytes);
+    public ReadOnlySpan<int> Ints => MemoryMarshal.Cast<byte, int>(Bytes);
 }

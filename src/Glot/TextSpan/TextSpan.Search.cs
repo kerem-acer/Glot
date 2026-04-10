@@ -33,7 +33,7 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.Count(_bytes[..bytePos], Encoding);
+        return RuneCount.Count(Bytes[..bytePos], Encoding);
     }
 
     public int RuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -59,7 +59,7 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.Count(_bytes[..bytePos], Encoding);
+        return RuneCount.Count(Bytes[..bytePos], Encoding);
     }
 
     public int LastRuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -105,10 +105,10 @@ public readonly ref partial struct TextSpan
 
         if (Encoding == value.Encoding)
         {
-            return _bytes.StartsWith(value._bytes);
+            return Bytes.StartsWith(value.Bytes);
         }
 
-        return RunePrefix.TryMatch(_bytes, Encoding, value._bytes, value.Encoding, out _);
+        return RunePrefix.TryMatch(Bytes, Encoding, value.Bytes, value.Encoding, out _);
     }
 
     public bool StartsWith(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -130,12 +130,12 @@ public readonly ref partial struct TextSpan
 
         if (Encoding == value.Encoding)
         {
-            return _bytes.EndsWith(value._bytes);
+            return Bytes.EndsWith(value.Bytes);
         }
 
         // Cross-encoding: compare from the end, rune by rune. No offset calculation needed.
-        var s = _bytes;
-        var v = value._bytes;
+        var s = Bytes;
+        var v = value.Bytes;
 
         while (!v.IsEmpty)
         {
@@ -190,17 +190,17 @@ public readonly ref partial struct TextSpan
             return 0;
         }
 
-        return Encoding == value.Encoding ? _bytes.IndexOf(value._bytes) : IndexOfCrossEncoding(value);
+        return Encoding == value.Encoding ? Bytes.IndexOf(value.Bytes) : IndexOfCrossEncoding(value);
     }
 
     int LastIndexOfByteOffset(TextSpan value)
     {
         if (value.IsEmpty)
         {
-            return _bytes.Length;
+            return Bytes.Length;
         }
 
-        return Encoding == value.Encoding ? _bytes.LastIndexOf(value._bytes) : LastIndexOfCrossEncoding(value);
+        return Encoding == value.Encoding ? Bytes.LastIndexOf(value.Bytes) : LastIndexOfCrossEncoding(value);
     }
 
     // Cross-encoding search: encode as many value runes as fit in the limit, in this encoding.
@@ -208,7 +208,7 @@ public readonly ref partial struct TextSpan
 
     int IndexOfCrossEncoding(TextSpan value)
     {
-        var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value._bytes.Length, 4));
+        var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
         Span<byte> patternBuf = stackalloc byte[patternBufLen];
         var patternLen = value.Transcode(
             patternBuf,
@@ -221,21 +221,21 @@ public readonly ref partial struct TextSpan
         return Encoding switch
         {
             TextEncoding.Utf8 => FindForward(
-                _bytes,
+                Bytes,
                 pattern,
                 1,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf16 => FindForward(
-                MemoryMarshal.Cast<byte, char>(_bytes),
+                MemoryMarshal.Cast<byte, char>(Bytes),
                 MemoryMarshal.Cast<byte, char>(pattern),
                 2,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf32 => FindForward(
-                MemoryMarshal.Cast<byte, int>(_bytes),
+                MemoryMarshal.Cast<byte, int>(Bytes),
                 MemoryMarshal.Cast<byte, int>(pattern),
                 4,
                 value,
@@ -247,7 +247,7 @@ public readonly ref partial struct TextSpan
 
     int LastIndexOfCrossEncoding(TextSpan value)
     {
-        var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value._bytes.Length, 4));
+        var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
         Span<byte> patternBuf = stackalloc byte[patternBufLen];
         var patternLen = value.Transcode(
             patternBuf,
@@ -260,21 +260,21 @@ public readonly ref partial struct TextSpan
         return Encoding switch
         {
             TextEncoding.Utf8 => FindBackward(
-                _bytes,
+                Bytes,
                 pattern,
                 1,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf16 => FindBackward(
-                MemoryMarshal.Cast<byte, char>(_bytes),
+                MemoryMarshal.Cast<byte, char>(Bytes),
                 MemoryMarshal.Cast<byte, char>(pattern),
                 2,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf32 => FindBackward(
-                MemoryMarshal.Cast<byte, int>(_bytes),
+                MemoryMarshal.Cast<byte, int>(Bytes),
                 MemoryMarshal.Cast<byte, int>(pattern),
                 4,
                 value,
@@ -357,7 +357,7 @@ public readonly ref partial struct TextSpan
     // Verify remainder of value after the prefix already matched via SIMD.
     bool VerifyRuneSuffix(int remainderByteOffset, TextSpan value, int valuePrefixByteLen)
     {
-        var valueRemainder = value._bytes[valuePrefixByteLen..];
+        var valueRemainder = value.Bytes[valuePrefixByteLen..];
 
         if (valueRemainder.IsEmpty)
         {
@@ -365,7 +365,7 @@ public readonly ref partial struct TextSpan
         }
 
         return RunePrefix.TryMatch(
-            _bytes[remainderByteOffset..],
+            Bytes[remainderByteOffset..],
             Encoding,
             valueRemainder,
             value.Encoding,

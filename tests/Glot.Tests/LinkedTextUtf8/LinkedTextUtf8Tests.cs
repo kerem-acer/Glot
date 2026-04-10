@@ -136,4 +136,30 @@ public partial class LinkedTextUtf8Tests
         await Assert.That(segments[1]).IsEqualTo(" - ");
         await Assert.That(segments[2]).IsEqualTo("world");
     }
+
+    // Four-arg factory
+
+    [Test]
+    public async Task Create_FourSegments_StoresAll()
+    {
+        // Act
+        var linked = LinkedTextUtf8.Create(Utf8("a"), Utf8("b"), Utf8("c"), Utf8("d"));
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsEqualTo(4);
+        await Assert.That(linked.Length).IsEqualTo(4);
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcd");
+    }
+
+    // Empty segment filtering
+
+    [Test]
+    public async Task Create_EmptySegment_Filtered()
+    {
+        // Act
+        var linked = LinkedTextUtf8.Create(ReadOnlyMemory<byte>.Empty);
+
+        // Assert
+        await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf8.Empty);
+    }
 }

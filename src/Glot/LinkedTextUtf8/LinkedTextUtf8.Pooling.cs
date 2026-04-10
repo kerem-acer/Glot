@@ -1,49 +1,20 @@
 using System.Buffers;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Glot;
 
 public sealed partial class LinkedTextUtf8
 {
-    static LinkedTextUtf8? s_pool;
-
-    static LinkedTextUtf8 Rent()
-    {
-        LinkedTextUtf8? node;
-        do
-        {
-            node = Volatile.Read(ref s_pool);
-            if (node is null)
-            {
-                return new LinkedTextUtf8();
-            }
-        }
-        while (Interlocked.CompareExchange(ref s_pool, node._poolNext, node) != node);
-
-        node._poolNext = null;
-        return node;
-    }
-
-    static void Return(LinkedTextUtf8 instance)
-    {
-        instance.Reset();
-
-        LinkedTextUtf8? current;
-        do
-        {
-            current = Volatile.Read(ref s_pool);
-            instance._poolNext = current;
-        }
-        while (Interlocked.CompareExchange(ref s_pool, instance, current) != current);
-    }
-
-    LinkedTextUtf8? _poolNext;
+    internal static readonly ObjectPool<LinkedTextUtf8> Pool =
+        new DefaultObjectPool<LinkedTextUtf8>(new Policy(), 32);
 
     void Reset()
     {
 #if NET8_0_OR_GREATER
-        if (_overflowSegments is null && _segmentCount > 0)
+        if (SegmentCount > 0)
         {
-            ((Span<ReadOnlyMemory<byte>>)_inlineSegments)[.._segmentCount].Clear();
+            var inlineCount = Math.Min(SegmentCount, InlineCapacity);
+            ((Span<ReadOnlyMemory<byte>>)_inlineSegments)[..inlineCount].Clear();
         }
 #endif
 
@@ -55,60 +26,19 @@ public sealed partial class LinkedTextUtf8
 
         ReturnSequenceNodes();
 
-        _segmentCount = 0;
-        _totalLength = 0;
+        SegmentCount = 0;
+        Length = 0;
         _cachedSequence = null;
     }
 
-    /// <summary>
-    /// A disposable handle that returns the <see cref="LinkedTextUtf8"/> and all its
-    /// rented resources to their pools on dispose.
-    /// </summary>
-    public struct Owned : IDisposable
+    sealed class Policy : PooledObjectPolicy<LinkedTextUtf8>
     {
-        LinkedTextUtf8? _data;
+        public override LinkedTextUtf8 Create() => new();
 
-        internal Owned(LinkedTextUtf8 data)
+        public override bool Return(LinkedTextUtf8 obj)
         {
-            _data = data;
-        }
-
-        /// <summary>Returns <c>true</c> if this instance has been disposed or is default.</summary>
-        public readonly bool IsDisposed => _data is null;
-
-        /// <summary>The total byte count.</summary>
-        public readonly int Length => _data?.Length ?? 0;
-
-        /// <summary>Returns <c>true</c> if empty or disposed.</summary>
-        public readonly bool IsEmpty => _data is null || _data.IsEmpty;
-
-        /// <summary>The underlying <see cref="LinkedTextUtf8"/>. Valid only while not disposed.</summary>
-        public readonly LinkedTextUtf8? Data => _data;
-
-        /// <summary>Returns a <see cref="LinkedTextUtf8Span"/> over the full content.</summary>
-        public readonly LinkedTextUtf8Span AsSpan()
-        {
-            if (_data is null)
-            {
-                return default;
-            }
-
-            return _data.AsSpan();
-        }
-
-        /// <summary>
-        /// Returns all rented resources to their pools.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_data is null)
-            {
-                return;
-            }
-
-            var data = _data;
-            _data = null;
-            LinkedTextUtf8.Return(data);
+            obj.Reset();
+            return true;
         }
     }
 }
