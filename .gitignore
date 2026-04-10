@@ -1,0 +1,15 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+CoverageReport/
+*.DotSettings.user
+coverage*.xml
+TestResults/
+*.nupkg
+
+# Verify
+*.received.*
+*.received/
