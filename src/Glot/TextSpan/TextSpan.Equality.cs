@@ -8,6 +8,10 @@ public readonly ref partial struct TextSpan
     /// <summary>Returns <c>true</c> if this span and <paramref name="other"/> contain the same rune sequence, regardless of encoding.</summary>
     public bool Equals(TextSpan other)
     {
+        // Same-encoding: byte equality implies rune equality. This assumes well-formed
+        // input — two different malformed byte sequences could be byte-unequal yet decode
+        // to the same replacement-char sequence. The library treats ordinal byte identity
+        // as canonical for same-encoding comparison.
         if (Encoding == other.Encoding)
         {
             return Bytes.SequenceEqual(other.Bytes);
@@ -49,14 +53,21 @@ public readonly ref partial struct TextSpan
     public override bool Equals(object? obj) => false;
 
     /// <summary>Returns an encoding-independent hash code based on the rune sequence.</summary>
-    public override int GetHashCode()
+    public override int GetHashCode() => ComputeHashCode(Bytes, Encoding);
+
+    internal static int ComputeHashCode(ReadOnlySpan<byte> bytes, TextEncoding encoding)
     {
+        if (bytes.IsEmpty)
+        {
+            return 0;
+        }
+
         var hash = new HashCode();
-        var remaining = Bytes;
+        var remaining = bytes;
 
         while (!remaining.IsEmpty)
         {
-            Rune.TryDecodeFirst(remaining, Encoding, out var rune, out var consumed);
+            Rune.TryDecodeFirst(remaining, encoding, out var rune, out var consumed);
             hash.Add(rune.Value);
             remaining = remaining[consumed..];
         }
@@ -67,6 +78,12 @@ public readonly ref partial struct TextSpan
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(TextSpan other)
     {
+        // UTF-8 byte ordering preserves Unicode scalar value ordering
+        if (Encoding == other.Encoding && Encoding == TextEncoding.Utf8)
+        {
+            return Bytes.SequenceCompareTo(other.Bytes);
+        }
+
         var a = Bytes;
         var b = other.Bytes;
 
@@ -85,17 +102,7 @@ public readonly ref partial struct TextSpan
             b = b[cb..];
         }
 
-        if (a.IsEmpty && b.IsEmpty)
-        {
-            return 0;
-        }
-
-        if (a.IsEmpty)
-        {
-            return -1;
-        }
-
-        return 1;
+        return a.Length.CompareTo(b.Length);
     }
 
     /// <inheritdoc cref="Equals(TextSpan)"/>

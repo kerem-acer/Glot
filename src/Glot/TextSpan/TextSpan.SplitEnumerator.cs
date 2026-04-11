@@ -4,7 +4,10 @@ namespace Glot;
 
 public readonly ref partial struct TextSpan
 {
-    /// <summary>A zero-allocation enumerator that yields <see cref="TextSpan"/> segments separated by a delimiter.</summary>
+    /// <summary>
+    /// A zero-allocation enumerator that yields <see cref="TextSpan"/> segments separated by a delimiter.
+    /// An empty separator yields the entire span as a single segment (no splitting).
+    /// </summary>
     public ref struct SplitEnumerator
     {
         ReadOnlySpan<byte> _remaining;

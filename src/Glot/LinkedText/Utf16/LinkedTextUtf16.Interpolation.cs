@@ -42,9 +42,24 @@ public sealed partial class LinkedTextUtf16
         }
     }
 
-    /// <summary>Appends a <see cref="Text"/> value. Transcodes to UTF-16 if needed.</summary>
+    /// <summary>Appends a <see cref="Text"/> value. Zero-copy when already UTF-16, transcodes otherwise.</summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public void AppendFormatted(Text value) => AppendTextSpan(value.AsSpan());
+    public void AppendFormatted(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return;
+        }
+
+        if (value.TryGetUtf16Memory(out var memory))
+        {
+            AddSegment(memory);
+        }
+        else
+        {
+            AppendTextSpan(value.AsSpan());
+        }
+    }
 
     /// <summary>Appends a <see cref="TextSpan"/> value. Transcodes to UTF-16 if needed.</summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -69,19 +84,17 @@ public sealed partial class LinkedTextUtf16
         if (value is ISpanFormattable spanFormattable)
         {
             EnsureFormatBuffer(256);
-            var dest = _formatBuffer.AsSpan(_formatPosition);
-            if (spanFormattable.TryFormat(dest, out var written, format, null))
-            {
-                AddFormattedSegment(written);
-                return;
-            }
 
-            EnsureFormatBuffer(dest.Length * 2);
-            dest = _formatBuffer.AsSpan(_formatPosition);
-            if (spanFormattable.TryFormat(dest, out written, format, null))
+            while (true)
             {
-                AddFormattedSegment(written);
-                return;
+                var dest = _formatBuffer.AsSpan(_formatPosition);
+                if (spanFormattable.TryFormat(dest, out var written, format, null))
+                {
+                    AddFormattedSegment(written);
+                    return;
+                }
+
+                EnsureFormatBuffer(dest.Length * 2);
             }
         }
 

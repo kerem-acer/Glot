@@ -13,8 +13,16 @@ public sealed partial class LinkedTextUtf16
     /// Lazily constructed and cached. Thread-safe: if two threads race, the loser
     /// returns its nodes to the pool.
     /// </summary>
+    /// <remarks>
+    /// Thread-safety note: this uses <see cref="Thread.MemoryBarrier"/> around reads/writes
+    /// of <c>_cachedSequence</c> and <see cref="Interlocked.CompareExchange{T}"/> on
+    /// <c>_cachedSequenceHead</c> to handle concurrent construction. The pattern is fragile —
+    /// a future refactor should consider <c>Volatile.Read</c>/<c>Volatile.Write</c> for
+    /// <c>_cachedSequence</c> to make ordering guarantees more explicit and less error-prone.
+    /// </remarks>
     public ReadOnlySequence<char> AsSequence()
     {
+        Thread.MemoryBarrier();
         if (_cachedSequence is { } cached)
         {
             return cached;
@@ -29,6 +37,7 @@ public sealed partial class LinkedTextUtf16
         {
             var seq = new ReadOnlySequence<char>(GetSegment(0));
             _cachedSequence = seq;
+            Thread.MemoryBarrier();
             return seq;
         }
 
@@ -69,6 +78,7 @@ public sealed partial class LinkedTextUtf16
         }
 
         _cachedSequence = sequence;
+        Thread.MemoryBarrier();
         return sequence;
     }
 

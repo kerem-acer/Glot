@@ -85,7 +85,7 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task ReplacePooled_NoMatch_ReturnsDefault()
+    public async Task ReplacePooled_NoMatch_ReturnsCopy()
     {
         // Arrange
         var text = Text.From("Hello");
@@ -94,7 +94,7 @@ public partial class TextTests
         using var result = text.ReplacePooled("xyz", "abc");
 
         // Assert
-        await Assert.That(result.IsEmpty).IsTrue();
+        await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
     }
 
     // Insert
@@ -167,7 +167,7 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task InsertPooled_EmptyValue_ReturnsDefault()
+    public async Task InsertPooled_EmptyValue_ReturnsCopy()
     {
         // Arrange
         var text = Text.From("Hello");
@@ -176,7 +176,7 @@ public partial class TextTests
         using var result = text.InsertPooled(2, Text.Empty);
 
         // Assert
-        await Assert.That(result.IsEmpty).IsTrue();
+        await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
     }
 
     // Remove
@@ -262,7 +262,7 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task RemovePooled_ZeroCount_ReturnsDefault()
+    public async Task RemovePooled_ZeroCount_ReturnsCopy()
     {
         // Arrange
         var text = Text.From("Hello");
@@ -271,7 +271,7 @@ public partial class TextTests
         using var result = text.RemovePooled(2, 0);
 
         // Assert
-        await Assert.That(result.IsEmpty).IsTrue();
+        await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
     }
 
     // ToUpperInvariant
@@ -395,7 +395,7 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task ToUpperInvariantPooled_NoChange_ReturnsDefault()
+    public async Task ToUpperInvariantPooled_NoChange_ReturnsCopy()
     {
         // Arrange
         var text = Text.From("HELLO");
@@ -404,7 +404,7 @@ public partial class TextTests
         using var result = text.ToUpperInvariantPooled();
 
         // Assert
-        await Assert.That(result.IsEmpty).IsTrue();
+        await Assert.That(result.Text.ToString()).IsEqualTo("HELLO");
     }
 
     // Round-trip

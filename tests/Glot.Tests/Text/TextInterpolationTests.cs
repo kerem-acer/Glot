@@ -1,12 +1,12 @@
 namespace Glot.Tests;
 
-public class TextInterpolationTests
+public partial class TextInterpolationTests
 {
     [Test]
     public async Task Format_LiteralOnly_ReturnsText()
     {
         // Act
-        var result = Text.Format($"Hello");
+        var result = Text.Create($"Hello");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Hello");
@@ -20,7 +20,7 @@ public class TextInterpolationTests
         var name = "World";
 
         // Act
-        var result = Text.Format($"Hello {name}");
+        var result = Text.Create($"Hello {name}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Hello World");
@@ -30,7 +30,7 @@ public class TextInterpolationTests
     public async Task Format_IntHole_Interpolates()
     {
         // Act
-        var result = Text.Format($"Count: {42}");
+        var result = Text.Create($"Count: {42}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Count: 42");
@@ -43,7 +43,7 @@ public class TextInterpolationTests
         var expected = $"Price: {1.5:F2}"; // use runtime's formatting as reference
 
         // Act
-        var result = Text.Format($"Price: {1.5:F2}");
+        var result = Text.Create($"Price: {1.5:F2}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo(expected);
@@ -53,7 +53,7 @@ public class TextInterpolationTests
     public async Task Format_RightAlignment_PadsLeft()
     {
         // Act
-        var result = Text.Format($"{"hi",10}");
+        var result = Text.Create($"{"hi",10}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("        hi");
@@ -63,7 +63,7 @@ public class TextInterpolationTests
     public async Task Format_LeftAlignment_PadsRight()
     {
         // Act
-        var result = Text.Format($"{"hi",-10}");
+        var result = Text.Create($"{"hi",-10}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("hi        ");
@@ -76,7 +76,7 @@ public class TextInterpolationTests
         var prefix = Text.FromUtf8("Hello"u8);
 
         // Act
-        var result = Text.Format($"{prefix} World!");
+        var result = Text.Create($"{prefix} World!");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Hello World!");
@@ -91,7 +91,7 @@ public class TextInterpolationTests
         var c = 3;
 
         // Act
-        var result = Text.Format($"{a} + {b} = {c}");
+        var result = Text.Create($"{a} + {b} = {c}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("1 + 2 = 3");
@@ -104,7 +104,7 @@ public class TextInterpolationTests
         var name = "World";
 
         // Act
-        var result = Text.Format(TextEncoding.Utf16, $"Hello {name}");
+        var result = Text.Create(TextEncoding.Utf16, $"Hello {name}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Hello World");
@@ -118,7 +118,7 @@ public class TextInterpolationTests
         var name = "World";
 
         // Act
-        using var result = Text.FormatPooled($"Hello {name}");
+        using var result = Text.CreatePooled($"Hello {name}");
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello World");
@@ -131,7 +131,7 @@ public class TextInterpolationTests
         string? value = null;
 
         // Act
-        var result = Text.Format($"Value: {value}");
+        var result = Text.Create($"Value: {value}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Value: ");
@@ -141,7 +141,7 @@ public class TextInterpolationTests
     public async Task Format_EmptyInterpolation_ReturnsEmpty()
     {
         // Act
-        var result = Text.Format($"");
+        var result = Text.Create($"");
 
         // Assert
         await Assert.That(result.IsEmpty).IsTrue();
@@ -154,7 +154,7 @@ public class TextInterpolationTests
         ReadOnlySpan<char> name = "World";
 
         // Act
-        var result = Text.Format($"Hello {name}");
+        var result = Text.Create($"Hello {name}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Hello World");
@@ -164,7 +164,7 @@ public class TextInterpolationTests
     public async Task Format_BoolHole_Interpolates()
     {
         // Act
-        var result = Text.Format($"Active: {true}");
+        var result = Text.Create($"Active: {true}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("Active: True");
@@ -174,7 +174,7 @@ public class TextInterpolationTests
     public async Task Format_AlignmentWithFormat_Works()
     {
         // Act
-        var result = Text.Format($"{42,10:D5}");
+        var result = Text.Create($"{42,10:D5}");
 
         // Assert
         await Assert.That(result.ToString()).IsEqualTo("     00042");
@@ -184,7 +184,7 @@ public class TextInterpolationTests
     public async Task FormatPooled_ExplicitEncoding_Works()
     {
         // Act
-        using var result = Text.FormatPooled(TextEncoding.Utf32, $"Hi {42}");
+        using var result = Text.CreatePooled(TextEncoding.Utf32, $"Hi {42}");
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hi 42");

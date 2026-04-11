@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Glot.Tests;
 
-public class TextBuilderTests
+public partial class TextBuilderTests
 {
     [Test]
     public async Task DefaultEncoding_IsUtf8()

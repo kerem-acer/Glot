@@ -10,7 +10,7 @@ public readonly partial struct Text
     {
         if (other is null)
         {
-            return IsEmpty;
+            return false;
         }
 
         return AsSpan().Equals(other.AsSpan());
@@ -31,8 +31,13 @@ public readonly partial struct Text
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Text other && Equals(other);
 
-    /// <summary>Returns an encoding-independent hash code based on the rune sequence.</summary>
-    public override int GetHashCode() => AsSpan().GetHashCode();
+    /// <summary>Returns an encoding-independent hash code based on the rune sequence. O(1) for factory-created values; O(n) for sliced values.</summary>
+    /// <remarks>
+    /// Factory methods store the hash with <c>| 1</c> so it is never 0. A zero <c>_hashCode</c>
+    /// means "not cached" (e.g. after slicing), triggering a recompute here.
+    /// </remarks>
+    public override int GetHashCode()
+        => _hashCode != 0 ? _hashCode : TextSpan.ComputeHashCode(AsSpan().Bytes, Encoding) | 1;
 
     /// <summary>Compares two texts lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(Text other) => AsSpan().CompareTo(other.AsSpan());

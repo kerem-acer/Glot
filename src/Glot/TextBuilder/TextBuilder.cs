@@ -64,7 +64,9 @@ public struct TextBuilder : IDisposable
         if (value.Encoding == Encoding)
         {
             AppendBytes(value.Bytes);
-            RuneLength += value.RuneLength;
+            RuneLength += !value.IsEmpty && value.RuneLength == 0
+                ? RuneCount.Count(value.Bytes, value.Encoding)
+                : value.RuneLength;
             return;
         }
 
@@ -84,8 +86,7 @@ public struct TextBuilder : IDisposable
             return;
         }
 
-        Append(new TextSpan(
-            MemoryMarshal.AsBytes(value.AsSpan()), TextEncoding.Utf16, 0));
+        Append(MemoryMarshal.AsBytes(value.AsSpan()), TextEncoding.Utf16);
     }
 
     /// <summary>Appends raw bytes in the specified encoding, transcoding if needed.</summary>
@@ -197,6 +198,16 @@ public struct TextBuilder : IDisposable
         ByteLength += bytes.Length;
     }
 
+    /// <summary>
+    /// Appends raw bytes that are already in the builder's encoding, with a pre-computed rune count.
+    /// Callers must ensure the encoding matches and the rune count is correct.
+    /// </summary>
+    internal void AppendCounted(ReadOnlySpan<byte> value, int runeCount)
+    {
+        AppendBytes(value);
+        RuneLength += runeCount;
+    }
+
     void EnsureCapacity(int required)
     {
         if (required <= _buffer.Length)
@@ -204,7 +215,7 @@ public struct TextBuilder : IDisposable
             return;
         }
 
-        var newSize = Math.Max(_buffer.Length * 2, required);
+        var newSize = Math.Max((int)Math.Min((long)_buffer.Length * 2, int.MaxValue), required);
         var newBuffer = ArrayPool<byte>.Shared.Rent(newSize);
         _buffer.AsSpan(0, ByteLength).CopyTo(newBuffer);
         ArrayPool<byte>.Shared.Return(_buffer);

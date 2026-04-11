@@ -24,7 +24,12 @@ public sealed partial class LinkedTextUtf16
             _overflowSegments = null;
         }
 
-        _formatPosition = 0;
+        if (_formatBuffer is not null)
+        {
+            ArrayPool<char>.Shared.Return(_formatBuffer);
+            _formatBuffer = null;
+            _formatPosition = 0;
+        }
 
         ReturnSequenceNodes();
 

@@ -199,9 +199,53 @@ public ref struct TextInterpolatedStringHandler : IDisposable
 
     void AppendSpaces(int count)
     {
-        for (var i = 0; i < count; i++)
+        const int maxBatch = 256;
+
+        switch (_builder.Encoding)
         {
-            _builder.AppendRune(new System.Text.Rune(' '));
+            case TextEncoding.Utf8:
+            {
+                Span<byte> buf = stackalloc byte[Math.Min(count, maxBatch)];
+                buf.Fill((byte)' ');
+                var remaining = count;
+                while (remaining > 0)
+                {
+                    var batch = Math.Min(remaining, buf.Length);
+                    _builder.Append(buf[..batch]);
+                    remaining -= batch;
+                }
+                break;
+            }
+
+            case TextEncoding.Utf16:
+            {
+                Span<char> buf = stackalloc char[Math.Min(count, maxBatch / 2)];
+                buf.Fill(' ');
+                var remaining = count;
+                while (remaining > 0)
+                {
+                    var batch = Math.Min(remaining, buf.Length);
+                    _builder.Append(buf[..batch]);
+                    remaining -= batch;
+                }
+                break;
+            }
+
+            case TextEncoding.Utf32:
+            {
+                Span<int> buf = stackalloc int[Math.Min(count, maxBatch / 4)];
+                buf.Fill(' ');
+                var remaining = count;
+                while (remaining > 0)
+                {
+                    var batch = Math.Min(remaining, buf.Length);
+                    _builder.Append(
+                        System.Runtime.InteropServices.MemoryMarshal.AsBytes(buf[..batch]),
+                        TextEncoding.Utf32);
+                    remaining -= batch;
+                }
+                break;
+            }
         }
     }
 }

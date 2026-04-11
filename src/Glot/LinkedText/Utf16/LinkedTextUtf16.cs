@@ -57,7 +57,7 @@ public sealed partial class LinkedTextUtf16
             return;
         }
 
-        var newSize = Math.Max(required, _formatBuffer is null ? 256 : _formatBuffer.Length * 2);
+        var newSize = Math.Max(required, _formatBuffer is null ? 256 : (int)Math.Min((long)_formatBuffer.Length * 2, int.MaxValue));
         var newBuffer = ArrayPool<char>.Shared.Rent(newSize);
 
         if (_formatBuffer is not null)
@@ -109,6 +109,9 @@ public sealed partial class LinkedTextUtf16
         var memory = new ReadOnlyMemory<char>(_formatBuffer, start, totalChars);
         AddSegment(memory);
     }
+
+    /// <summary>Returns a zero-allocation enumerator over all segments.</summary>
+    public LinkedTextUtf16Span.SegmentEnumerator EnumerateSegments() => AsSpan().EnumerateSegments();
 
     /// <summary>Creates a <see cref="LinkedTextUtf16Span"/> covering all content.</summary>
     public LinkedTextUtf16Span AsSpan()

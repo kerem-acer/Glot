@@ -41,7 +41,11 @@ public readonly partial struct LinkedTextUtf16Span
     /// <summary>Returns <c>true</c> if this span has no content.</summary>
     public bool IsEmpty => Length == 0;
 
-    /// <summary>Gets the char at the specified index.</summary>
+    /// <summary>Gets the char at the specified index. O(n) — walks segments from the start.</summary>
+    /// <remarks>
+    /// For sequential access, use <see cref="EnumerateSegments"/> instead of a for-loop
+    /// with this indexer, which would be O(n²) over the full span.
+    /// </remarks>
     public char this[int index]
     {
         get

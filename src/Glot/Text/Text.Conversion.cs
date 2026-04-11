@@ -33,9 +33,12 @@ public readonly partial struct Text
     public int EncodeToUtf8(Span<byte> destination) => AsSpan().EncodeToUtf8(destination);
 
     /// <summary>Writes the text as UTF-16 chars to <paramref name="destination"/>.</summary>
-    public bool TryFormat(Span<char> destination, out int charsWritten,
-        ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+    public bool TryFormat(Span<char> destination,
+        out int charsWritten,
+        ReadOnlySpan<char> format = default,
+        IFormatProvider? provider = null)
     {
+        // Fast path: direct string copy avoids AsSpan() overhead
         if (_data is string s && _start == 0 && ByteLength == s.Length * 2)
         {
             if (s.AsSpan().TryCopyTo(destination))
@@ -48,44 +51,21 @@ public readonly partial struct Text
             return false;
         }
 
-        var str = ToString();
-        if (str.AsSpan().TryCopyTo(destination))
-        {
-            charsWritten = str.Length;
-            return true;
-        }
-
-        charsWritten = 0;
-        return false;
+        return AsSpan().TryFormat(
+            destination,
+            out charsWritten,
+            format,
+            provider);
     }
 
-    /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>. Direct copy when UTF-8 backed; transcodes otherwise.</summary>
-    public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten,
-        ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-    {
-        var span = AsSpan();
-
-        if (Encoding == TextEncoding.Utf8)
-        {
-            if (span.Bytes.TryCopyTo(utf8Destination))
-            {
-                bytesWritten = span.ByteLength;
-                return true;
-            }
-
-            bytesWritten = 0;
-            return false;
-        }
-
-        var str = ToString();
-        var byteCount = System.Text.Encoding.UTF8.GetByteCount(str);
-        if (byteCount > utf8Destination.Length)
-        {
-            bytesWritten = 0;
-            return false;
-        }
-
-        bytesWritten = System.Text.Encoding.UTF8.GetBytes(str.AsSpan(), utf8Destination);
-        return true;
-    }
+    /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>. Direct copy when UTF-8 backed; transcodes rune-by-rune otherwise (zero-alloc).</summary>
+    public bool TryFormat(Span<byte> utf8Destination,
+        out int bytesWritten,
+        ReadOnlySpan<char> format = default,
+        IFormatProvider? provider = null)
+        => AsSpan().TryFormat(
+            utf8Destination,
+            out bytesWritten,
+            format,
+            provider);
 }

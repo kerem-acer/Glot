@@ -244,10 +244,10 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task Equals_NullString_EmptyText_ReturnsTrue()
+    public async Task Equals_NullString_EmptyText_ReturnsFalse()
     {
         // Act & Assert
-        await Assert.That(Text.Empty.Equals((string?)null)).IsTrue();
+        await Assert.That(Text.Empty.Equals((string?)null)).IsFalse();
     }
 
     [Test]

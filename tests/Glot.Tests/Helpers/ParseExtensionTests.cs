@@ -1,6 +1,6 @@
 namespace Glot.Tests;
 
-public class ParseExtensionTests
+public partial class ParseExtensionTests
 {
     // int
 

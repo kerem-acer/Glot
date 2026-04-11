@@ -120,6 +120,11 @@ public readonly partial struct Text
     /// <summary>Returns a non-copying sub-view starting at <paramref name="runeOffset"/>.</summary>
     public Text RuneSlice(int runeOffset)
     {
+        if ((uint)runeOffset > (uint)RuneLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(runeOffset));
+        }
+
         var span = AsSpan();
         var byteOffset = RuneIndex.ToByteOffset(span.Bytes, Encoding, runeOffset);
         return new Text(_data, _start + byteOffset, ByteLength - byteOffset, Encoding, RuneLength - runeOffset);
@@ -127,6 +132,16 @@ public readonly partial struct Text
 
     public Text RuneSlice(int runeOffset, int runeCount)
     {
+        if ((uint)runeOffset > (uint)RuneLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(runeOffset));
+        }
+
+        if ((uint)runeCount > (uint)(RuneLength - runeOffset))
+        {
+            throw new ArgumentOutOfRangeException(nameof(runeCount));
+        }
+
         var span = AsSpan();
         var byteOffset = RuneIndex.ToByteOffset(span.Bytes, Encoding, runeOffset);
         var byteCount = RuneIndex.ToByteOffset(span.Bytes[byteOffset..], Encoding, runeCount);
@@ -135,12 +150,27 @@ public readonly partial struct Text
 
     public Text ByteSlice(int byteOffset)
     {
+        if ((uint)byteOffset > (uint)ByteLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(byteOffset));
+        }
+
         var sliced = AsSpan().ByteSlice(byteOffset);
         return new Text(_data, _start + byteOffset, sliced.ByteLength, sliced.Encoding, sliced.RuneLength);
     }
 
     public Text ByteSlice(int byteOffset, int byteCount)
     {
+        if ((uint)byteOffset > (uint)ByteLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(byteOffset));
+        }
+
+        if ((uint)byteCount > (uint)(ByteLength - byteOffset))
+        {
+            throw new ArgumentOutOfRangeException(nameof(byteCount));
+        }
+
         var sliced = AsSpan().ByteSlice(byteOffset, byteCount);
         return new Text(_data, _start + byteOffset, byteCount, sliced.Encoding, sliced.RuneLength);
     }

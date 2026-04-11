@@ -5,6 +5,10 @@ namespace Glot;
 
 public readonly ref partial struct TextSpan
 {
+    // Maximum bytes to stack-allocate for the cross-encoding search pattern.
+    // When the search value exceeds this limit in the target encoding, only a prefix
+    // is used for SIMD scanning; each hit is verified rune-by-rune for the remainder.
+    // 512 bytes covers patterns up to ~128 runes (UTF-32) or ~512 ASCII chars (UTF-8).
     const int CrossEncodingPatternLimit = 512;
 
     /// <summary>Returns <c>true</c> if this span contains the specified value, compared rune-by-rune across encodings.</summary>

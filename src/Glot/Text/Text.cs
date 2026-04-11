@@ -26,13 +26,24 @@ public readonly partial struct Text :
     readonly object? _data;
     readonly int _start;
     readonly EncodedLength _encodedLength;
+    readonly int _hashCode;
 
-    internal Text(object? data, int start, int byteLength, TextEncoding encoding, int runeLength)
+    internal Text(object? data, int start, int byteLength, TextEncoding encoding, int runeLength, int hashCode = 0)
     {
         _data = data;
         _start = start;
         ByteLength = byteLength;
         _encodedLength = new EncodedLength(encoding, runeLength);
+        _hashCode = hashCode;
+    }
+
+    internal Text(object data, int start, ReadOnlySpan<byte> bytes, TextEncoding encoding)
+    {
+        _data = data;
+        _start = start;
+        ByteLength = bytes.Length;
+        _encodedLength = new EncodedLength(encoding, RuneCount.Count(bytes, encoding));
+        _hashCode = TextSpan.ComputeHashCode(bytes, encoding) | 1;
     }
 
     /// <summary>The Unicode encoding of the text.</summary>
@@ -67,8 +78,40 @@ public readonly partial struct Text :
             MemoryMarshal.AsBytes(chars.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
         int[] ints => new TextSpan(
             MemoryMarshal.AsBytes(ints.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
-        _ => default,
+        null => default,
+        _ => throw new InvalidOperationException($"Unexpected backing type: {_data.GetType()}"),
     };
+
+    internal bool TryGetUtf8Memory(out ReadOnlyMemory<byte> memory)
+    {
+        if (Encoding == TextEncoding.Utf8 && _data is byte[] bytes)
+        {
+            memory = new ReadOnlyMemory<byte>(bytes, _start, ByteLength);
+            return true;
+        }
+
+        memory = default;
+        return false;
+    }
+
+    internal bool TryGetUtf16Memory(out ReadOnlyMemory<char> memory)
+    {
+        if (Encoding == TextEncoding.Utf16)
+        {
+            switch (_data)
+            {
+                case string s:
+                    memory = s.AsMemory(_start / 2, ByteLength / 2);
+                    return true;
+                case char[] chars:
+                    memory = new ReadOnlyMemory<char>(chars, _start / 2, ByteLength / 2);
+                    return true;
+            }
+        }
+
+        memory = default;
+        return false;
+    }
 
     /// <summary>An empty <see cref="Text"/> value.</summary>
     public static Text Empty => default;

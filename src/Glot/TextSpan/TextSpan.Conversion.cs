@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Glot;
 
@@ -28,15 +29,41 @@ public readonly ref partial struct TextSpan
     public bool TryFormat(Span<char> destination, out int charsWritten,
         ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
     {
-        var str = ToString();
-        if (str.AsSpan().TryCopyTo(destination))
+        if (Encoding == TextEncoding.Utf16)
         {
-            charsWritten = str.Length;
-            return true;
+            var chars = MemoryMarshal.Cast<byte, char>(Bytes);
+            if (chars.TryCopyTo(destination))
+            {
+                charsWritten = chars.Length;
+                return true;
+            }
+
+            charsWritten = 0;
+            return false;
         }
 
-        charsWritten = 0;
-        return false;
+        // Cross-encoding: transcode rune-by-rune (zero-alloc)
+        var offset = 0;
+        var remaining = Bytes;
+
+        while (!remaining.IsEmpty)
+        {
+            Rune.TryDecodeFirst(remaining, Encoding, out var rune, out var consumed);
+            var runeCharCount = rune.Utf16SequenceLength;
+
+            if (offset + runeCharCount > destination.Length)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
+            rune.TryEncodeToUtf16(destination[offset..], out var written);
+            offset += written;
+            remaining = remaining[consumed..];
+        }
+
+        charsWritten = offset;
+        return true;
     }
 
     /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>.</summary>
@@ -55,15 +82,26 @@ public readonly ref partial struct TextSpan
             return false;
         }
 
-        var str = ToString();
-        var byteCount = System.Text.Encoding.UTF8.GetByteCount(str);
-        if (byteCount > utf8Destination.Length)
+        var offset = 0;
+        var remaining = Bytes;
+
+        while (!remaining.IsEmpty)
         {
-            bytesWritten = 0;
-            return false;
+            Rune.TryDecodeFirst(remaining, Encoding, out var rune, out var consumed);
+            var runeByteCount = rune.Utf8SequenceLength;
+
+            if (offset + runeByteCount > utf8Destination.Length)
+            {
+                bytesWritten = 0;
+                return false;
+            }
+
+            rune.TryEncodeToUtf8(utf8Destination[offset..], out var written);
+            offset += written;
+            remaining = remaining[consumed..];
         }
 
-        bytesWritten = System.Text.Encoding.UTF8.GetBytes(str.AsSpan(), utf8Destination);
+        bytesWritten = offset;
         return true;
     }
 

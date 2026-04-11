@@ -201,7 +201,16 @@ public sealed partial class LinkedTextUtf16
     {
         foreach (var t in segments)
         {
-            if (!t.IsEmpty)
+            if (t.IsEmpty)
+            {
+                continue;
+            }
+
+            if (t.TryGetUtf16Memory(out var memory))
+            {
+                AddSegment(memory);
+            }
+            else
             {
                 AppendTextSpan(t.AsSpan());
             }
