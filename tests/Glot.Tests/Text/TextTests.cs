@@ -659,4 +659,349 @@ public partial class TextTests
         await Assert.That(result).IsEqualTo("Hello");
         await Assert.That(ReferenceEquals(result, original)).IsFalse();
     }
+
+    // Factory — empty inputs
+
+    [Test]
+    public async Task FromChars_Empty_ReturnsDefault()
+    {
+        // Act
+        var text = Text.FromChars([]);
+
+        // Assert
+        await Assert.That(text.IsEmpty).IsTrue();
+    }
+
+    [Test]
+    public async Task FromUtf32_Empty_ReturnsDefault()
+    {
+        // Act
+        var text = Text.FromUtf32([]);
+
+        // Assert
+        await Assert.That(text.IsEmpty).IsTrue();
+    }
+
+    [Test]
+    public async Task FromBytes_Empty_ReturnsDefault()
+    {
+        // Act
+        var text = Text.FromBytes([], TextEncoding.Utf8);
+
+        // Assert
+        await Assert.That(text.IsEmpty).IsTrue();
+    }
+
+    // Factory — FromChars creates char[]-backed text
+
+    [Test]
+    public async Task FromChars_NonEmpty_CreatesCharBacked()
+    {
+        // Act
+        var text = Text.FromChars("Hello".AsSpan());
+
+        // Assert
+        await Assert.That(text.ToString()).IsEqualTo("Hello");
+        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
+        await Assert.That(text.RuneLength).IsEqualTo(5);
+    }
+
+    // Mutation validation — Replace
+
+    [Test]
+    public async Task Replace_EmptyOldValue_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Replace(Text.Empty, Text.From("x"))).Throws<ArgumentException>();
+    }
+
+    [Test]
+    public async Task Replace_EmptyText_ReturnsThis()
+    {
+        // Arrange
+        var text = Text.Empty;
+
+        // Act
+        var result = text.Replace("x", "y");
+
+        // Assert
+        await Assert.That(result.IsEmpty).IsTrue();
+    }
+
+    [Test]
+    public async Task Replace_NoMatch_ReturnsThis()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act
+        var result = text.Replace(Text.From("xyz"), Text.From("abc"));
+
+        // Assert
+        await Assert.That(result.ToString()).IsEqualTo("Hello");
+    }
+
+    [Test]
+    public async Task ReplacePooled_EmptyOldValue_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.ReplacePooled(Text.Empty, Text.From("x"))).Throws<ArgumentException>();
+    }
+
+    [Test]
+    public async Task ReplacePooled_EmptyText_ReturnsDefault()
+    {
+        // Act
+        using var result = Text.Empty.ReplacePooled(Text.From("x"), Text.From("y"));
+
+        // Assert
+        await Assert.That(result.IsEmpty).IsTrue();
+    }
+
+    [Test]
+    public async Task Replace_EmptyStringOldValue_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Replace("", "x")).Throws<ArgumentException>();
+    }
+
+    [Test]
+    public async Task Replace_String_EmptyText_ReturnsThis()
+    {
+        // Act
+        var result = Text.Empty.Replace("x", "y");
+
+        // Assert
+        await Assert.That(result.IsEmpty).IsTrue();
+    }
+
+    [Test]
+    public async Task ReplacePooled_StringEmptyOldValue_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.ReplacePooled("", "x")).Throws<ArgumentException>();
+    }
+
+    [Test]
+    public async Task ReplacePooled_StringEmptyText_ReturnsDefault()
+    {
+        // Act
+        using var result = Text.Empty.ReplacePooled("x", "y");
+
+        // Assert
+        await Assert.That(result.IsEmpty).IsTrue();
+    }
+
+    // Mutation validation — Insert
+
+    [Test]
+    public async Task Insert_NegativeIndex_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Insert(-1, Text.From("x"))).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task Insert_IndexBeyondLength_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Insert(100, Text.From("x"))).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task InsertPooled_NegativeIndex_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.InsertPooled(-1, Text.From("x"))).Throws<ArgumentOutOfRangeException>();
+    }
+
+    // Mutation validation — Remove
+
+    [Test]
+    public async Task Remove_NegativeIndex_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Remove(-1, 1)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task Remove_CountBeyondLength_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.Remove(0, 100)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    // Search validation — RuneSlice/ByteSlice
+
+    [Test]
+    public async Task RuneSlice_NegativeOffset_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.RuneSlice(-1)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task RuneSlice_OffsetCount_NegativeOffset_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.RuneSlice(-1, 1)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task RuneSlice_OffsetCount_CountBeyondLength_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.RuneSlice(0, 100)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task ByteSlice_NegativeOffset_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.ByteSlice(-1)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task ByteSlice_OffsetCount_NegativeOffset_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.ByteSlice(-1, 1)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task ByteSlice_OffsetCount_CountBeyondLength_Throws()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act & Assert
+        await Assert.That(() => _ = text.ByteSlice(0, 100)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    // ReplacePooled(Text, Text) — match and no-match paths
+
+    [Test]
+    public async Task ReplacePooled_Text_WithMatch_Replaces()
+    {
+        // Arrange
+        var text = Text.From("Hello World");
+
+        // Act
+        using var result = text.ReplacePooled(Text.From("World"), Text.From("Glot"));
+
+        // Assert
+        await Assert.That(result.Text.ToString()).IsEqualTo("Hello Glot");
+    }
+
+    [Test]
+    public async Task ReplacePooled_Text_NoMatch_ReturnsCopy()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act
+        using var result = text.ReplacePooled(Text.From("xyz"), Text.From("abc"));
+
+        // Assert
+        await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
+    }
+
+    // Replace(Text, Text) — empty self
+
+    [Test]
+    public async Task Replace_Text_EmptyText_ReturnsThis()
+    {
+        // Act
+        var result = Text.Empty.Replace(Text.From("x"), Text.From("y"));
+
+        // Assert
+        await Assert.That(result.IsEmpty).IsTrue();
+    }
+
+    // ToLowerInvariantPooled — no change
+
+    [Test]
+    public async Task ToLowerInvariantPooled_AlreadyLower_ReturnsCopy()
+    {
+        // Arrange
+        var text = Text.From("hello");
+
+        // Act
+        using var result = text.ToLowerInvariantPooled();
+
+        // Assert
+        await Assert.That(result.Text.ToString()).IsEqualTo("hello");
+    }
+
+    // CaseCore — trailing unchanged run after case change
+
+    [Test]
+    public async Task ToUpperInvariant_TrailingUnchangedRun_Works()
+    {
+        // Arrange — '!' is already uppercase, so after 'a' → 'A' there's an unchanged trailing run
+        var text = Text.From("a!!!");
+
+        // Act
+        var result = text.ToUpperInvariant();
+
+        // Assert
+        await Assert.That(result.ToString()).IsEqualTo("A!!!");
+    }
+
+    // TryGetUtf16Memory — char[]-backed text
+
+    [Test]
+    public async Task FromChars_InterpolationViaTryGetUtf16Memory_Works()
+    {
+        // Arrange — FromChars creates char[]-backed Text
+        var text = Text.FromChars("hello".AsSpan());
+
+        // Act — LinkedTextUtf16 interpolation calls TryGetUtf16Memory
+        var linked = LinkedTextUtf16.Create(text);
+
+        // Assert
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello");
+    }
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Glot;
 
 /// <summary>
@@ -71,7 +73,7 @@ public readonly partial struct LinkedTextUtf16Span
                 remaining -= segLen;
             }
 
-            throw new InvalidOperationException("Unreachable");
+            throw new UnreachableException();
         }
     }
 

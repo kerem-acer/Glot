@@ -222,6 +222,94 @@ public partial class LinkedTextUtf16Tests
         owned.Dispose();
     }
 
+    // Interpolation with empty Text hole — exercises empty early return
+
+    [Test]
+    public async Task Interpolation_EmptyTextHole_Skipped()
+    {
+        // Act
+        LinkedTextUtf16 linked = $"hello{Text.Empty}world";
+
+        // Assert
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("helloworld");
+    }
+
+    // Interpolation with UTF-16 Text hole — exercises TryGetUtf16Memory direct add
+
+    [Test]
+    public async Task Interpolation_Utf16TextHole_DirectAdd()
+    {
+        // Arrange
+        var utf16 = Text.From("world");
+
+        // Act
+        LinkedTextUtf16 linked = $"hello {utf16}";
+
+        // Assert
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+    }
+
+    // Interpolation with Text hole — exercises AppendFormattedCore transcoding path
+
+    [Test]
+    public async Task Interpolation_WithUtf8TextHole_Transcodes()
+    {
+        // Arrange
+        var utf8Text = Text.FromUtf8("world"u8);
+
+        // Act
+        var linked = LinkedTextUtf16.Create($"hello {utf8Text}");
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("hello world");
+    }
+
+    // ISpanFormattable that exceeds 256 chars — exercises buffer retry path
+
+    [Test]
+    public async Task Interpolation_LargeFormattedValue_FallsThrough()
+    {
+        // Arrange — create a string long enough to potentially exceed small ISpanFormattable buffer
+        var largeVal = new string('x', 300);
+
+        // Act
+        var linked = LinkedTextUtf16.Create($"prefix{largeVal}suffix");
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo($"prefix{largeVal}suffix");
+    }
+
+    // Memory<char> hole
+
+    [Test]
+    public async Task Interpolation_WithMemoryHole_ZeroCopy()
+    {
+        // Arrange
+        var memory = "hello".AsMemory();
+
+        // Act
+        var linked = LinkedTextUtf16.Create($"say: {memory}");
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("say: hello");
+    }
+
+    // Owned interpolation with format buffer
+
+    [Test]
+    public async Task InterpolationOwned_WithIntHole_FormatsCorrectly()
+    {
+        // Act
+        using var owned = LinkedTextUtf16.CreateOwned($"count={42}");
+        var result = owned.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("count=42");
+    }
+
     sealed class ToStringOnly(string value)
     {
         public override string ToString() => value;

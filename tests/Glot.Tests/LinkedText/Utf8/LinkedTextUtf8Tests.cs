@@ -151,6 +151,39 @@ public partial class LinkedTextUtf8Tests
         await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcd");
     }
 
+    // Direct UTF-8 bytes — non-transcode copy path
+
+    [Test]
+    public async Task Create_FromUtf8Bytes_DirectCopy()
+    {
+        // Arrange
+        var bytes = "hello"u8.ToArray();
+
+        // Act
+        var linked = LinkedTextUtf8.Create(new ReadOnlyMemory<byte>(bytes));
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("hello");
+    }
+
+    // CreateOwned — Memory segments
+
+    [Test]
+    public async Task CreateOwned_FromMemorySegments_Works()
+    {
+        // Arrange
+        var bytes1 = "hello"u8.ToArray().AsMemory();
+        var bytes2 = " world"u8.ToArray().AsMemory();
+
+        // Act
+        using var owned = LinkedTextUtf8.CreateOwned(bytes1, bytes2);
+        var result = owned.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("hello world");
+    }
+
     // Empty segment filtering
 
     [Test]
@@ -161,5 +194,134 @@ public partial class LinkedTextUtf8Tests
 
         // Assert
         await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf8.Empty);
+    }
+
+    // Overflow — factory with >8 Memory segments triggers overflow array
+
+    [Test]
+    public async Task Create_NineSegments_UsesOverflow()
+    {
+        // Arrange
+        var segments = Enumerable.Range(0, 9)
+            .Select(i => Utf8(((char)('a' + i)).ToString()))
+            .ToArray();
+
+        // Act
+        var linked = LinkedTextUtf8.Create(segments.AsSpan());
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsEqualTo(9);
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcdefghi");
+    }
+
+    // EnumerateSegments on LinkedTextUtf8
+
+    [Test]
+    public async Task EnumerateSegments_ViaLinkedText_YieldsAll()
+    {
+        // Arrange
+        var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" "), Utf8("world"));
+        var segments = new List<string>();
+
+        // Act
+        foreach (var seg in linked.EnumerateSegments())
+        {
+            segments.Add(Encoding.UTF8.GetString(seg.Span));
+        }
+
+        // Assert
+        await Assert.That(segments.Count).IsEqualTo(3);
+        await Assert.That(segments[0]).IsEqualTo("hello");
+        await Assert.That(segments[2]).IsEqualTo("world");
+    }
+
+    // LinkedTextUtf8Owned IsEmpty
+
+    [Test]
+    public async Task Owned_IsEmpty_WhenEmpty()
+    {
+        // Act
+        using var owned = LinkedTextUtf8.CreateOwned(ReadOnlyMemory<byte>.Empty);
+
+        // Assert
+        await Assert.That(owned.IsEmpty).IsTrue();
+    }
+
+    // CreateOwned with overflow segments
+
+    [Test]
+    public async Task CreateOwned_NineSegments_UsesOverflow()
+    {
+        // Arrange
+        var segments = Enumerable.Range(0, 9)
+            .Select(i => Utf8(((char)('a' + i)).ToString()))
+            .ToArray();
+
+        // Act
+        using var owned = LinkedTextUtf8.CreateOwned(segments.AsSpan());
+
+        // Assert
+        await Assert.That(owned.Data!.SegmentCount).IsEqualTo(9);
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("abcdefghi");
+    }
+
+    // All-empty segments via factory
+
+    [Test]
+    public async Task Create_AllEmptySegments_ReturnsSingleton()
+    {
+        // Arrange
+        var segments = new[] { ReadOnlyMemory<byte>.Empty, ReadOnlyMemory<byte>.Empty };
+
+        // Act
+        var linked = LinkedTextUtf8.Create(segments.AsSpan());
+
+        // Assert
+        await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf8.Empty);
+    }
+
+    // AsSpan on empty LinkedTextUtf8
+
+    [Test]
+    public async Task AsSpan_Empty_ReturnsDefault()
+    {
+        // Act
+        var span = LinkedTextUtf8.Empty.AsSpan();
+
+        // Assert
+        await Assert.That(span.IsEmpty).IsTrue();
+    }
+
+    // Thread-safe AsSequence — concurrent access
+
+    [Test]
+    public async Task AsSequence_ConcurrentAccess_BothSucceed()
+    {
+        // Arrange — need >1 segment to trigger the CompareExchange path
+        var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" "), Utf8("world"));
+        var results = new System.Collections.Concurrent.ConcurrentBag<string>();
+        var barrier = new Barrier(2);
+
+        // Act — two threads race to build the sequence
+        var t1 = Task.Run(() =>
+        {
+            barrier.SignalAndWait();
+            _ = linked.AsSequence(); // trigger race
+            results.Add(linked.AsSpan().ToString());
+        });
+        var t2 = Task.Run(() =>
+        {
+            barrier.SignalAndWait();
+            _ = linked.AsSequence(); // trigger race
+            results.Add(linked.AsSpan().ToString());
+        });
+        await Task.WhenAll(t1, t2);
+
+        // Assert — both threads got the correct result
+        await Assert.That(results.Count).IsEqualTo(2);
+        foreach (var r in results)
+        {
+            await Assert.That(r).IsEqualTo("hello world");
+        }
     }
 }

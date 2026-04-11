@@ -112,6 +112,24 @@ public partial class LinkedTextUtf8Tests
         await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf8.Empty);
     }
 
+    // Format buffer growth — many Text values overflow initial buffer
+
+    [Test]
+    public async Task Create_ManyTexts_GrowsBuffer()
+    {
+        // Arrange — each transcoded segment accumulates in format buffer
+        var texts = Enumerable.Range(0, 50)
+            .Select(i => Text.From($"item{i} "))
+            .ToArray();
+
+        // Act
+        var linked = LinkedTextUtf8.Create(texts.AsSpan());
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsGreaterThan(0);
+        await Assert.That(linked.Length).IsGreaterThan(0);
+    }
+
     // Unicode — emoji and supplementary characters
 
     [Test]

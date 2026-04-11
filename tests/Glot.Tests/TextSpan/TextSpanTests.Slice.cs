@@ -288,4 +288,68 @@ public partial class TextSpanTests
         // Assert
         await Assert.That(isEmpty).IsTrue();
     }
+
+    // ByteSlice validation
+
+    [Test]
+    public async Task ByteSlice_NegativeOffset_Throws()
+    {
+        // Arrange
+        var span = new TextSpan("Hi"u8, TextEncoding.Utf8);
+        Exception? caught = null;
+
+        // Act
+        try { _ = span.ByteSlice(-1); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsTypeOf<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task ByteSlice_OffsetCount_NegativeOffset_Throws()
+    {
+        // Arrange
+        var span = new TextSpan("Hi"u8, TextEncoding.Utf8);
+        Exception? caught = null;
+
+        // Act
+        try { _ = span.ByteSlice(-1, 1); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsTypeOf<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task ByteSlice_CountBeyondLength_Throws()
+    {
+        // Arrange
+        var span = new TextSpan("Hi"u8, TextEncoding.Utf8);
+        Exception? caught = null;
+
+        // Act
+        try { _ = span.ByteSlice(0, 100); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsTypeOf<ArgumentOutOfRangeException>();
+    }
+
+    // RuneSlice validation — count out of range
+
+    [Test]
+    public async Task RuneSlice_CountBeyondLength_Throws()
+    {
+        // Arrange
+        var span = new TextSpan("Hi"u8, TextEncoding.Utf8);
+        Exception? caught = null;
+
+        // Act
+        try { _ = span.RuneSlice(0, 100); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsTypeOf<ArgumentOutOfRangeException>();
+    }
 }

@@ -178,4 +178,80 @@ public partial class ParseExtensionTests
         await Assert.That(success).IsTrue();
         await Assert.That(result).IsEqualTo(expected);
     }
+
+    // Large input — exceeds StackAllocThreshold (256), triggers ArrayPool rent/return
+
+    [Test]
+    public async Task Int_Parse_LargeUtf8Input_UsesArrayPool()
+    {
+        // Arrange — pad with leading spaces to exceed 256 chars
+        var padded = new string(' ', 300) + "42";
+        var text = Text.FromUtf8(System.Text.Encoding.UTF8.GetBytes(padded));
+
+        // Act
+        var result = int.Parse(text);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(42);
+    }
+
+    [Test]
+    public async Task Int_TryParse_LargeUtf8Input_UsesArrayPool()
+    {
+        // Arrange
+        var padded = new string(' ', 300) + "99";
+        var text = Text.FromUtf8(System.Text.Encoding.UTF8.GetBytes(padded));
+
+        // Act
+        var success = int.TryParse(text, out var result);
+
+        // Assert
+        await Assert.That(success).IsTrue();
+        await Assert.That(result).IsEqualTo(99);
+    }
+
+    [Test]
+    public async Task Int_ParseUtf8_LargeUtf16Input_UsesArrayPool()
+    {
+        // Arrange — UTF-16 text forces transcode, padding exceeds threshold
+        var padded = new string(' ', 300) + "77";
+        var text = Text.From(padded);
+
+        // Act
+        var result = int.ParseUtf8(text);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(77);
+    }
+
+    [Test]
+    public async Task Int_TryParseUtf8_LargeUtf16Input_UsesArrayPool()
+    {
+        // Arrange
+        var padded = new string(' ', 300) + "55";
+        var text = Text.From(padded);
+
+        // Act
+        var success = int.TryParseUtf8(text, out var result);
+
+        // Assert
+        await Assert.That(success).IsTrue();
+        await Assert.That(result).IsEqualTo(55);
+    }
+
+    // TryParse single-arg overload (no provider)
+
+    [Test]
+    public async Task Int_TryParse_NoProvider_Succeeds()
+    {
+        // Arrange
+        var text = Text.From("42");
+
+        // Act
+        var success = int.TryParse(text, out var result);
+
+        // Assert
+        await Assert.That(success).IsTrue();
+        await Assert.That(result).IsEqualTo(42);
+    }
 }

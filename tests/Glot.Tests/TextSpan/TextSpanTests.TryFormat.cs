@@ -171,4 +171,55 @@ public partial class TextSpanTests
         // Assert
         await Assert.That(result).IsEqualTo("Hello");
     }
+
+    // Equals(object?) — always false for ref struct
+
+    [Test]
+    public async Task Equals_Object_ReturnsFalse()
+    {
+        // Arrange
+        var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
+
+        // Act
+        #pragma warning disable CS8604
+        var result = span.Equals((object?)null);
+        #pragma warning restore CS8604
+
+        // Assert
+        await Assert.That(result).IsFalse();
+    }
+
+    // EncodeToUtf16 — identity copy when already UTF-16
+
+    [Test]
+    public async Task EncodeToUtf16_Utf16Span_IdentityCopy()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+        var span = text.AsSpan();
+        var dest = new char[10];
+
+        // Act
+        var written = span.EncodeToUtf16(dest);
+
+        // Assert
+        await Assert.That(written).IsEqualTo(5);
+        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+    }
+
+    // EncodeToUtf8 — identity copy when already UTF-8
+
+    [Test]
+    public async Task EncodeToUtf8_Utf8Span_IdentityCopy()
+    {
+        // Arrange
+        var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
+        var dest = new byte[10];
+
+        // Act
+        var written = span.EncodeToUtf8(dest);
+
+        // Assert
+        await Assert.That(written).IsEqualTo(5);
+    }
 }

@@ -194,6 +194,85 @@ public partial class LinkedTextUtf16Tests
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
     }
 
+    // Create from Text — exercises AppendTextSpan transcoding paths
+
+    [Test]
+    public async Task Create_FromUtf8Text_TranscodesToUtf16()
+    {
+        // Arrange
+        var utf8 = Text.FromUtf8("Hello World"u8);
+
+        // Act
+        var linked = LinkedTextUtf16.Create(utf8);
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("Hello World");
+    }
+
+    [Test]
+    public async Task Create_FromMultipleTexts_TranscodesAll()
+    {
+        // Arrange
+        var a = Text.FromUtf8("Hello"u8);
+        var b = Text.From(" World");
+
+        // Act
+        var linked = LinkedTextUtf16.Create(a, b);
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("Hello World");
+    }
+
+    [Test]
+    public async Task Create_FromUtf8Text_MultiByte_TranscodesCorrectly()
+    {
+        // Arrange
+        var utf8 = Text.FromUtf8("café"u8);
+
+        // Act
+        var linked = LinkedTextUtf16.Create(utf8);
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("café");
+    }
+
+    // Format buffer growth
+
+    [Test]
+    public async Task Create_ManyTexts_GrowsFormatBuffer()
+    {
+        // Arrange — each transcoded text accumulates in format buffer
+        var texts = Enumerable.Range(0, 50)
+            .Select(i => Text.FromUtf8(System.Text.Encoding.UTF8.GetBytes($"item{i} ")))
+            .ToArray();
+
+        // Act
+        var linked = LinkedTextUtf16.Create(texts.AsSpan());
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsGreaterThan(0);
+        await Assert.That(linked.Length).IsGreaterThan(0);
+    }
+
+    // UTF-16 direct copy (no transcode)
+
+    [Test]
+    public async Task Create_Utf16Text_DirectCopy()
+    {
+        // Arrange
+        var text = Text.From("hello");
+
+        // Act
+        var linked = LinkedTextUtf16.Create(text);
+        var result = linked.AsSpan().ToString();
+
+        // Assert
+        await Assert.That(result).IsEqualTo("hello");
+    }
+
     // CreateOwned — four strings
 
     [Test]
@@ -205,5 +284,190 @@ public partial class LinkedTextUtf16Tests
         // Assert
         await Assert.That(owned.Data!.SegmentCount).IsEqualTo(4);
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("abcd");
+    }
+
+    // Overflow — factory with >8 Memory segments triggers overflow array
+
+    [Test]
+    public async Task Create_NineMemorySegments_UsesOverflow()
+    {
+        // Arrange
+        var segments = Enumerable.Range(0, 9)
+            .Select(i => ((char)('a' + i)).ToString().AsMemory())
+            .ToArray();
+
+        // Act
+        var linked = LinkedTextUtf16.Create(segments.AsSpan());
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsEqualTo(9);
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcdefghi");
+    }
+
+    [Test]
+    public async Task Create_NineStrings_UsesOverflow()
+    {
+        // Arrange
+        var strings = Enumerable.Range(0, 9)
+            .Select(i => ((char)('a' + i)).ToString())
+            .ToArray();
+
+        // Act
+        var linked = LinkedTextUtf16.Create(strings.AsSpan());
+
+        // Assert
+        await Assert.That(linked.SegmentCount).IsEqualTo(9);
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcdefghi");
+    }
+
+    // EnumerateSegments on LinkedTextUtf16
+
+    [Test]
+    public async Task EnumerateSegments_ViaLinkedText_YieldsAll()
+    {
+        // Arrange
+        var linked = LinkedTextUtf16.Create("hello", " ", "world");
+        var segments = new List<string>();
+
+        // Act
+        foreach (var seg in linked.EnumerateSegments())
+        {
+            segments.Add(seg.ToString());
+        }
+
+        // Assert
+        await Assert.That(segments.Count).IsEqualTo(3);
+        await Assert.That(segments[0]).IsEqualTo("hello");
+        await Assert.That(segments[2]).IsEqualTo("world");
+    }
+
+    // Owned — TextSpan hole and generic <T> hole
+
+    [Test]
+    public async Task Owned_TextSpanHole_Works()
+    {
+        // Arrange
+        var text = Text.From("world");
+        var span = text.AsSpan();
+
+        // Act
+        using LinkedTextUtf16Owned owned = $"hello {span}";
+
+        // Assert
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
+    }
+
+    [Test]
+    public async Task Owned_GenericHole_FormatsValue()
+    {
+        // Act
+        using LinkedTextUtf16Owned owned = $"count={42}";
+
+        // Assert
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("count=42");
+    }
+
+    [Test]
+    public async Task Owned_GenericHoleWithFormat_FormatsValue()
+    {
+        // Act
+        using LinkedTextUtf16Owned owned = $"val={42:D5}";
+
+        // Assert
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("val=00042");
+    }
+
+    // CreateOwned with overflow Memory segments
+
+    [Test]
+    public async Task CreateOwned_NineMemorySegments_UsesOverflow()
+    {
+        // Arrange
+        var segments = Enumerable.Range(0, 9)
+            .Select(i => ((char)('a' + i)).ToString().AsMemory())
+            .ToArray();
+
+        // Act
+        using var owned = LinkedTextUtf16.CreateOwned(segments.AsSpan());
+
+        // Assert
+        await Assert.That(owned.Data!.SegmentCount).IsEqualTo(9);
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("abcdefghi");
+    }
+
+    // All-empty segments via factory
+
+    [Test]
+    public async Task Create_AllEmptyStrings_ReturnsSingleton()
+    {
+        // Arrange
+        var strings = new[] { "", "", "" };
+
+        // Act
+        var linked = LinkedTextUtf16.Create(strings.AsSpan());
+
+        // Assert
+        await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf16.Empty);
+    }
+
+    [Test]
+    public async Task Create_AllEmptyMemory_ReturnsSingleton()
+    {
+        // Arrange
+        var segments = new[] { ReadOnlyMemory<char>.Empty, ReadOnlyMemory<char>.Empty };
+
+        // Act
+        var linked = LinkedTextUtf16.Create(segments.AsSpan());
+
+        // Assert
+        await Assert.That(linked).IsSameReferenceAs(LinkedTextUtf16.Empty);
+    }
+
+    // AppendTextSpan — UTF-16 same-encoding fast path
+
+    [Test]
+    public async Task Create_FromUtf16TextSpan_DirectCopy()
+    {
+        // Arrange — Text.From creates UTF-16 backed text
+        var text = Text.From("hello");
+
+        // Act — exercises AppendTextSpan UTF-16 fast path
+        var linked = LinkedTextUtf16.Create(text);
+
+        // Assert
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello");
+    }
+
+    // Thread-safe AsSequence — concurrent access
+
+    [Test]
+    public async Task AsSequence_ConcurrentAccess_BothSucceed()
+    {
+        // Arrange — need >1 segment to trigger the CompareExchange path
+        var linked = LinkedTextUtf16.Create("hello", " ", "world");
+        var results = new System.Collections.Concurrent.ConcurrentBag<string>();
+        var barrier = new Barrier(2);
+
+        // Act — two threads race to build the sequence
+        var t1 = Task.Run(() =>
+        {
+            barrier.SignalAndWait();
+            var seq = linked.AsSequence();
+            results.Add(string.Concat(seq));
+        });
+        var t2 = Task.Run(() =>
+        {
+            barrier.SignalAndWait();
+            var seq = linked.AsSequence();
+            results.Add(string.Concat(seq));
+        });
+        await Task.WhenAll(t1, t2);
+
+        // Assert — both threads got the correct result
+        await Assert.That(results.Count).IsEqualTo(2);
+        foreach (var r in results)
+        {
+            await Assert.That(r).IsEqualTo("hello world");
+        }
     }
 }

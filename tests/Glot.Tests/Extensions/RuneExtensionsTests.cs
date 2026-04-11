@@ -41,4 +41,67 @@ public class RuneExtensionsTests
         // Assert
         await Assert.That(result).IsEqualTo(expected);
     }
+
+    // Invalid encoding — exercises default throw paths
+
+    [Test]
+    public async Task GetByteCount_InvalidEncoding_Throws()
+    {
+        // Arrange
+        var rune = new Rune('A');
+        Exception? caught = null;
+
+        // Act
+        try { _ = rune.GetByteCount((TextEncoding)99); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsNotNull();
+    }
+
+    [Test]
+    public async Task EncodeTo_InvalidEncoding_Throws()
+    {
+        // Arrange
+        var rune = new Rune('A');
+        var dest = new byte[4];
+        Exception? caught = null;
+
+        // Act
+        try { _ = rune.EncodeTo(dest, (TextEncoding)99); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsNotNull();
+    }
+
+    [Test]
+    public async Task TryDecodeFirst_InvalidEncoding_Throws()
+    {
+        // Arrange
+        byte[] bytes = [65]; // 'A'
+        Exception? caught = null;
+
+        // Act
+        try { Rune.TryDecodeFirst(bytes, (TextEncoding)99, out _, out _); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsNotNull();
+    }
+
+    [Test]
+    public async Task TryDecodeLast_InvalidEncoding_Throws()
+    {
+        // Arrange
+        byte[] bytes = [65]; // 'A'
+        Exception? caught = null;
+
+        // Act
+        try { Rune.TryDecodeLast(bytes, (TextEncoding)99, out _, out _); }
+        catch (Exception ex) { caught = ex; }
+
+        // Assert
+        await Assert.That(caught).IsNotNull();
+    }
 }

@@ -146,4 +146,19 @@ public partial class TextTests
         // Assert
         await Assert.That(result).IsEqualTo("World");
     }
+
+    // IFormattable.ToString(format, provider) delegates to ToString()
+
+    [Test]
+    public async Task IFormattable_ToString_DelegatesToToString()
+    {
+        // Arrange
+        var text = Text.From("Hello");
+
+        // Act
+        var result = text.ToString("ignored", null);
+
+        // Assert
+        await Assert.That(result).IsEqualTo("Hello");
+    }
 }

@@ -170,7 +170,7 @@ public partial class LinkedTextUtf16SpanTests
     }
 
     [Test]
-    public async Task Slice_OffsetCount_OutOfRange_Throws()
+    public async Task Slice_OffsetCount_CountExceedsBounds_Throws()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello").AsSpan();
@@ -178,6 +178,16 @@ public partial class LinkedTextUtf16SpanTests
         // Act & Assert
         await Assert.That(() => span.Slice(0, 6)).Throws<ArgumentOutOfRangeException>();
         await Assert.That(() => span.Slice(3, 3)).Throws<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public async Task Slice_OffsetCount_OffsetExceedsBounds_Throws()
+    {
+        // Arrange
+        var span = LinkedTextUtf16.Create("hello").AsSpan();
+
+        // Act & Assert
+        await Assert.That(() => span.Slice(6, 1)).Throws<ArgumentOutOfRangeException>();
     }
 
     // Chained slicing

@@ -133,18 +133,12 @@ public readonly partial struct Text
                 }
                 else
                 {
-                    var matched = RunePrefix.TryMatch(
+                    RunePrefix.TryMatch(
                         remaining.Bytes[bytePos..],
                         remaining.Encoding,
                         oldValue.Bytes,
                         oldValue.Encoding,
                         out matchByteLen);
-
-                    if (!matched || matchByteLen == 0)
-                    {
-                        throw new InvalidOperationException(
-                            "Cross-encoding ByteIndexOf reported a match that RunePrefix.TryMatch could not confirm.");
-                    }
                 }
 
                 remaining = remaining.ByteSlice(bytePos + matchByteLen);

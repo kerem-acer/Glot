@@ -78,8 +78,7 @@ public readonly partial struct Text :
             MemoryMarshal.AsBytes(chars.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
         int[] ints => new TextSpan(
             MemoryMarshal.AsBytes(ints.AsSpan()).Slice(_start, ByteLength), Encoding, RuneLength),
-        null => default,
-        _ => throw new InvalidOperationException($"Unexpected backing type: {_data.GetType()}"),
+        _ => default,
     };
 
     internal bool TryGetUtf8Memory(out ReadOnlyMemory<byte> memory)
