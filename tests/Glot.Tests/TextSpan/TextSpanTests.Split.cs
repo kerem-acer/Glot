@@ -3,24 +3,21 @@ namespace Glot.Tests;
 public partial class TextSpanTests
 {
     [Test]
-    public async Task Split_BasicComma_ReturnsThreeParts()
+    public Task Split_BasicComma_ReturnsThreeParts()
     {
         // Arrange
         var span = new TextSpan("a,b,c"u8, TextEncoding.Utf8);
         var sep = new TextSpan(","u8, TextEncoding.Utf8);
 
         // Act
-        var parts = new List<byte[]>();
+        var parts = new List<string>();
         foreach (var part in span.Split(sep))
         {
-            parts.Add(part.Bytes.ToArray());
+            parts.Add(part.ToString());
         }
 
         // Assert
-        await Assert.That(parts.Count).IsEqualTo(3);
-        await Assert.That(parts[0].SequenceEqual("a"u8.ToArray())).IsTrue();
-        await Assert.That(parts[1].SequenceEqual("b"u8.ToArray())).IsTrue();
-        await Assert.That(parts[2].SequenceEqual("c"u8.ToArray())).IsTrue();
+        return Verify(parts);
     }
 
     [Test]
@@ -143,7 +140,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task Split_Utf16Content_ProducesCorrectParts()
+    public Task Split_Utf16Content_ProducesCorrectParts()
     {
         // Arrange
         var bytes = TestHelpers.Encode("Hello World", TextEncoding.Utf16);
@@ -155,9 +152,7 @@ public partial class TextSpanTests
         var parts = TestHelpers.CollectSplitParts(span, sep);
 
         // Assert
-        await Assert.That(parts.Length).IsEqualTo(2);
-        await Assert.That(parts[0]).IsEqualTo("Hello");
-        await Assert.That(parts[1]).IsEqualTo("World");
+        return Verify(parts);
     }
 
     [Test]

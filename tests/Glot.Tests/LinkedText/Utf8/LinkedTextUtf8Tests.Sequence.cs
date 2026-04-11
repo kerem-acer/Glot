@@ -6,18 +6,17 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8Tests
 {
     [Test]
-    public async Task AsSequence_Empty_ReturnsEmptySequence()
+    public Task AsSequence_Empty_ReturnsEmptySequence()
     {
         // Act
         var seq = LinkedTextUtf8.Empty.AsSequence();
 
         // Assert
-        await Assert.That(seq.Length).IsEqualTo(0);
-        await Assert.That(seq.IsEmpty).IsTrue();
+        return Verify(new { seq.Length, seq.IsEmpty });
     }
 
     [Test]
-    public async Task AsSequence_SingleSegment_IsSingleSegment()
+    public Task AsSequence_SingleSegment_IsSingleSegment()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("hello"));
@@ -26,29 +25,29 @@ public partial class LinkedTextUtf8Tests
         var seq = linked.AsSequence();
 
         // Assert
-        await Assert.That(seq.Length).IsEqualTo(5);
-        await Assert.That(seq.IsSingleSegment).IsTrue();
+        return Verify(new { seq.Length, seq.IsSingleSegment });
     }
 
     [Test]
     public async Task AsSequence_MultiSegment_ReturnsCorrectContent()
     {
         // Arrange
+        const int expectedLength = 13;
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
 
         // Act
         var seq = linked.AsSequence();
 
         // Assert
-        await Assert.That(seq.Length).IsEqualTo(13);
-        var buffer = new byte[13];
+        await Assert.That(seq.Length).IsEqualTo(expectedLength);
+        var buffer = new byte[expectedLength];
         seq.CopyTo(buffer);
         var result = Encoding.UTF8.GetString(buffer);
         await Assert.That(result).IsEqualTo("hello - world");
     }
 
     [Test]
-    public async Task AsSequence_IsCached()
+    public Task AsSequence_IsCached()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("a"), Utf8("b"));
@@ -58,14 +57,14 @@ public partial class LinkedTextUtf8Tests
         var seq2 = linked.AsSequence();
 
         // Assert
-        await Assert.That(seq1.Start.Equals(seq2.Start)).IsTrue();
-        await Assert.That(seq1.End.Equals(seq2.End)).IsTrue();
+        return Verify(new { startEqual = seq1.Start.Equals(seq2.Start), endEqual = seq1.End.Equals(seq2.End) });
     }
 
     [Test]
     public async Task AsSequence_ConcurrentCalls_NoNodeLeak()
     {
         // Arrange
+        const int expectedLength = 13;
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
 
         // Act
@@ -80,7 +79,7 @@ public partial class LinkedTextUtf8Tests
         // Assert
         for (var i = 0; i < results.Length; i++)
         {
-            await Assert.That(results[i].Length).IsEqualTo(13);
+            await Assert.That(results[i].Length).IsEqualTo(expectedLength);
         }
     }
 }

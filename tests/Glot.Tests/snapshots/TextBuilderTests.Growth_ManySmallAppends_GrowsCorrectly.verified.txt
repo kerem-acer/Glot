@@ -1,0 +1,4 @@
+﻿{
+  RuneLength: 1000,
+  ByteLength: 1000
+}

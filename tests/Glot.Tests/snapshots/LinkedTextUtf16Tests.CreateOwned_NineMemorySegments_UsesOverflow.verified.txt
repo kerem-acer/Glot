@@ -1,0 +1,4 @@
+﻿{
+  segmentCount: 9,
+  result: abcdefghi
+}

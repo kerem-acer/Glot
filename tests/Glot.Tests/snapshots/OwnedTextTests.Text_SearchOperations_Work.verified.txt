@@ -1,0 +1,5 @@
+﻿{
+  contains: true,
+  startsWith: true,
+  endsWith: true
+}

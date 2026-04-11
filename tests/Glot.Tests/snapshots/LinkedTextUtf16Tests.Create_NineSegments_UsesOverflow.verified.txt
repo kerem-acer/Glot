@@ -1,0 +1,5 @@
+﻿{
+  SegmentCount: 9,
+  Length: 9,
+  result: abcabcabc
+}

@@ -1,0 +1,4 @@
+﻿{
+  result: Hi,
+  RuneLength: 2
+}

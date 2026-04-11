@@ -3,7 +3,7 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8Tests
 {
     [Test]
-    public async Task CreateOwned_Dispose_ResetsInstance()
+    public Task CreateOwned_Dispose_ResetsInstance()
     {
         // Arrange
         var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"), Utf8(" - "), Utf8("world"));
@@ -14,13 +14,11 @@ public partial class LinkedTextUtf8Tests
         owned.Dispose();
 
         // Assert
-        await Assert.That(data.SegmentCount).IsEqualTo(0);
-        await Assert.That(data.Length).IsEqualTo(0);
-        await Assert.That(data.IsEmpty).IsTrue();
+        return Verify(new { data.SegmentCount, data.Length, data.IsEmpty });
     }
 
     [Test]
-    public async Task CreateOwned_Dispose_InstanceCanBeReused()
+    public Task CreateOwned_Dispose_InstanceCanBeReused()
     {
         // Arrange — dispose returns to pool
         var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"));
@@ -30,8 +28,7 @@ public partial class LinkedTextUtf8Tests
         using var owned2 = LinkedTextUtf8.CreateOwned(Utf8("world"));
 
         // Assert
-        await Assert.That(owned2.Data!.SegmentCount).IsEqualTo(1);
-        await Assert.That(owned2.AsSpan().ToString()).IsEqualTo("world");
+        return Verify(new { segmentCount = owned2.Data!.SegmentCount, result = owned2.AsSpan().ToString() });
     }
 
     [Test]

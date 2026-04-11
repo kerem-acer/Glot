@@ -5,7 +5,7 @@ public partial class LinkedTextUtf16Tests
     // Create with Text — same encoding (UTF-16)
 
     [Test]
-    public async Task Create_Utf16Text_CopiesIntoFormatBuffer()
+    public Task Create_Utf16Text_CopiesIntoFormatBuffer()
     {
         // Arrange
         var text = Text.From("hello");
@@ -14,15 +14,13 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create(text);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.Length).IsEqualTo(5);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello");
+        return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
     // Create with Text — different encoding (UTF-8 → UTF-16 transcode)
 
     [Test]
-    public async Task Create_Utf8Text_TranscodesToUtf16()
+    public Task Create_Utf8Text_TranscodesToUtf16()
     {
         // Arrange
         var text = Text.FromUtf8("café"u8);
@@ -31,15 +29,13 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create(text);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.Length).IsEqualTo(4); // 4 chars in UTF-16
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("café");
+        return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
     // Create with two Text values — different encodings
 
     [Test]
-    public async Task Create_MixedEncodings_TranscodesCorrectly()
+    public Task Create_MixedEncodings_TranscodesCorrectly()
     {
         // Arrange
         var utf16 = Text.From("hello ");
@@ -49,14 +45,13 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create(utf16, utf8);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(2);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     // Create with three Text values
 
     [Test]
-    public async Task Create_ThreeTexts_AllTranscoded()
+    public Task Create_ThreeTexts_AllTranscoded()
     {
         // Arrange
         var t1 = Text.FromUtf8("hello"u8);
@@ -67,8 +62,7 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create(t1, t2, t3);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(3);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello - world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     // CreateOwned with Text
@@ -83,7 +77,8 @@ public partial class LinkedTextUtf16Tests
         using var owned = LinkedTextUtf16.CreateOwned(text);
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("café");
+        const string expected = "café";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     [Test]
@@ -97,7 +92,8 @@ public partial class LinkedTextUtf16Tests
         using var owned = LinkedTextUtf16.CreateOwned(utf8, utf16);
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
+        const string expected = "hello world";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Interpolation with Text
@@ -112,7 +108,8 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create($"Hello {name}!");
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("Hello world!");
+        const string expected = "Hello world!";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     [Test]
@@ -126,7 +123,8 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create($"{utf8Name} in {utf16Place}");
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("café in Paris");
+        const string expected = "café in Paris";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Interpolation with TextSpan
@@ -142,7 +140,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"Hello {span}!";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("Hello world!");
+        const string expected = "Hello world!";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // CreateOwned interpolation with Text
@@ -157,7 +156,8 @@ public partial class LinkedTextUtf16Tests
         using var owned = LinkedTextUtf16.CreateOwned($"Hello {name}!");
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("Hello world!");
+        const string expected = "Hello world!";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Empty Text
@@ -175,7 +175,7 @@ public partial class LinkedTextUtf16Tests
     // Unicode — emoji and supplementary characters
 
     [Test]
-    public async Task Create_Utf8Text_WithEmoji_TranscodesCorrectly()
+    public Task Create_Utf8Text_WithEmoji_TranscodesCorrectly()
     {
         // Arrange — 🎉 is U+1F389, 4 bytes UTF-8, 2 chars UTF-16 (surrogate pair)
         var text = Text.FromUtf8("🎉"u8);
@@ -184,7 +184,6 @@ public partial class LinkedTextUtf16Tests
         var linked = LinkedTextUtf16.Create(text);
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("🎉");
-        await Assert.That(linked.Length).IsEqualTo(2); // surrogate pair = 2 chars
+        return Verify(new { result = linked.AsSpan().ToString(), linked.Length });
     }
 }

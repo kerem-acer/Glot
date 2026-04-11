@@ -20,7 +20,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task ByteLength_Utf8MultiByte_GreaterThanRuneLength()
+    public Task ByteLength_Utf8MultiByte_GreaterThanRuneLength()
     {
         // Arrange — "café" = 5 bytes, 4 runes
         var span = new TextSpan("café"u8, TextEncoding.Utf8);
@@ -30,8 +30,7 @@ public partial class TextSpanTests
         var runeLen = span.RuneLength;
 
         // Assert
-        await Assert.That(byteLen).IsEqualTo(5);
-        await Assert.That(runeLen).IsEqualTo(4);
+        return Verify(new { byteLen, runeLen });
     }
 
     [Test]
@@ -92,7 +91,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task ByteSlice_Utf8MultiByte_SlicesAtByteOffset()
+    public Task ByteSlice_Utf8MultiByte_SlicesAtByteOffset()
     {
         // Arrange — "café" = [63 61 66 C3 A9], byte 3 is start of "é"
         var span = new TextSpan("café"u8, TextEncoding.Utf8);
@@ -103,8 +102,7 @@ public partial class TextSpanTests
         var runeLen = sliced.RuneLength;
 
         // Assert
-        await Assert.That(eq).IsTrue();
-        await Assert.That(runeLen).IsEqualTo(1);
+        return Verify(new { eq, runeLen });
     }
 
     [Test]

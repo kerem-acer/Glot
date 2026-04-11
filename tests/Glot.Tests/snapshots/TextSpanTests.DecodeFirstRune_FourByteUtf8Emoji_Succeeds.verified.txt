@@ -1,0 +1,5 @@
+﻿{
+  ok: true,
+  runeValue: 127881,
+  consumed: 4
+}

@@ -1,0 +1,4 @@
+﻿{
+  SegmentCount: 4,
+  Length: 4
+}

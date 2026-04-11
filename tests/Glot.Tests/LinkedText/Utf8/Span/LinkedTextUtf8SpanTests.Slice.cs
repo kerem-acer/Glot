@@ -3,17 +3,18 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8SpanTests
 {
     [Test]
-    public async Task Slice_Offset_Zero_ReturnsSame()
+    public Task Slice_Offset_Zero_ReturnsSame()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span.Slice(0);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(13);
-        await Assert.That(sliced.ToString()).IsEqualTo("hello - world");
+        return Verify(new { length, result });
     }
 
     [Test]
@@ -30,45 +31,48 @@ public partial class LinkedTextUtf8SpanTests
     }
 
     [Test]
-    public async Task Slice_Offset_AtSegmentBoundary()
+    public Task Slice_Offset_AtSegmentBoundary()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span.Slice(5);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(8);
-        await Assert.That(sliced.ToString()).IsEqualTo(" - world");
+        return Verify(new { length, result });
     }
 
     [Test]
-    public async Task Slice_Offset_IntoLastSegment()
+    public Task Slice_Offset_IntoLastSegment()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span.Slice(10);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(3);
-        await Assert.That(sliced.ToString()).IsEqualTo("rld");
+        return Verify(new { length, result });
     }
 
     [Test]
-    public async Task Slice_OffsetCount_FullSpan_ReturnsSame()
+    public Task Slice_OffsetCount_FullSpan_ReturnsSame()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span.Slice(0, 13);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(13);
-        await Assert.That(sliced.ToString()).IsEqualTo("hello - world");
+        return Verify(new { length, result });
     }
 
     [Test]
@@ -85,31 +89,33 @@ public partial class LinkedTextUtf8SpanTests
     }
 
     [Test]
-    public async Task Slice_OffsetCount_WithinSingleSegment()
+    public Task Slice_OffsetCount_WithinSingleSegment()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span.Slice(1, 3);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(3);
-        await Assert.That(sliced.ToString()).IsEqualTo("ell");
+        return Verify(new { length, result });
     }
 
     [Test]
-    public async Task Slice_OffsetCount_AtSegmentBoundaries()
+    public Task Slice_OffsetCount_AtSegmentBoundaries()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act — exactly the middle segment
         var sliced = span.Slice(5, 3);
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(3);
-        await Assert.That(sliced.ToString()).IsEqualTo(" - ");
+        return Verify(new { length, result });
     }
 
     [Test]
@@ -124,16 +130,17 @@ public partial class LinkedTextUtf8SpanTests
     }
 
     [Test]
-    public async Task RangeIndexer_SlicesCorrectly()
+    public Task RangeIndexer_SlicesCorrectly()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
 
         // Act
         var sliced = span[3..10];
+        var length = sliced.Length;
+        var result = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(7);
-        await Assert.That(sliced.ToString()).IsEqualTo("lo - wo");
+        return Verify(new { length, result });
     }
 }

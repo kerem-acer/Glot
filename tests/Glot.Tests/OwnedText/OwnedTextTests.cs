@@ -5,52 +5,45 @@ public class OwnedTextTests
     // Factory — FromUtf8
 
     [Test]
-    public async Task FromUtf8_StoresCorrectEncoding()
+    public Task FromUtf8_StoresCorrectEncoding()
     {
         // Arrange & Act
         using var owned = OwnedText.FromUtf8("Hello"u8);
 
         // Assert
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
-        await Assert.That(owned.ByteLength).IsEqualTo(5);
-        await Assert.That(owned.IsEmpty).IsFalse();
+        return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength, owned.IsEmpty });
     }
 
     [Test]
-    public async Task FromUtf8_MultiByte_CountsRunesCorrectly()
+    public Task FromUtf8_MultiByte_CountsRunesCorrectly()
     {
         // Arrange & Act
         using var owned = OwnedText.FromUtf8("café🎉"u8);
 
-        // Assert
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
-        await Assert.That(owned.ByteLength).IsEqualTo(9); // c(1) a(1) f(1) é(2) 🎉(4)
+        // Assert — c(1) a(1) f(1) é(2) 🎉(4)
+        return Verify(new { owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
-    public async Task FromUtf8_Empty_ReturnsDefault()
+    public Task FromUtf8_Empty_ReturnsDefault()
     {
         // Act
         using var owned = OwnedText.FromUtf8([]);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
-        await Assert.That(owned.ByteLength).IsEqualTo(0);
+        return Verify(new { owned.IsEmpty, owned.ByteLength });
     }
 
     // Factory — FromChars
 
     [Test]
-    public async Task FromChars_StoresUtf16()
+    public Task FromChars_StoresUtf16()
     {
         // Arrange & Act
         using var owned = OwnedText.FromChars("Hello".AsSpan());
 
         // Assert
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
-        await Assert.That(owned.ByteLength).IsEqualTo(10);
+        return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
@@ -66,7 +59,7 @@ public class OwnedTextTests
     // Factory — FromUtf32
 
     [Test]
-    public async Task FromUtf32_StoresUtf32()
+    public Task FromUtf32_StoresUtf32()
     {
         // Arrange
         ReadOnlySpan<int> codePoints = [0x48, 0x65, 0x6C]; // H, e, l
@@ -75,9 +68,7 @@ public class OwnedTextTests
         using var owned = OwnedText.FromUtf32(codePoints);
 
         // Assert
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf32);
-        await Assert.That(owned.RuneLength).IsEqualTo(3);
-        await Assert.That(owned.ByteLength).IsEqualTo(12);
+        return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
@@ -93,7 +84,7 @@ public class OwnedTextTests
     // Factory — FromBytes
 
     [Test]
-    public async Task FromBytes_Utf16_StoresCorrectly()
+    public Task FromBytes_Utf16_StoresCorrectly()
     {
         // Arrange
         var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf16);
@@ -102,14 +93,13 @@ public class OwnedTextTests
         using var owned = OwnedText.FromBytes(bytes, TextEncoding.Utf16);
 
         // Assert
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
+        return Verify(new { owned.Encoding, owned.RuneLength });
     }
 
     // Create — zero-copy from existing pooled buffer
 
     [Test]
-    public async Task Create_TakesOwnershipOfBuffer()
+    public Task Create_TakesOwnershipOfBuffer()
     {
         // Arrange
         var buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(5);
@@ -119,13 +109,11 @@ public class OwnedTextTests
         using var owned = OwnedText.Create(buffer, 5, TextEncoding.Utf8);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("Hello");
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
+        return Verify(new { result = owned.Text.ToString(), owned.Encoding, owned.RuneLength });
     }
 
     [Test]
-    public async Task Create_Utf16Buffer_WorksCorrectly()
+    public Task Create_Utf16Buffer_WorksCorrectly()
     {
         // Arrange
         var source = TestHelpers.Encode("café", TextEncoding.Utf16);
@@ -136,12 +124,11 @@ public class OwnedTextTests
         using var owned = OwnedText.Create(buffer, source.Length, TextEncoding.Utf16);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("café");
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf16);
+        return Verify(new { result = owned.Text.ToString(), owned.Encoding });
     }
 
     [Test]
-    public async Task Create_CharBuffer_TakesOwnership()
+    public Task Create_CharBuffer_TakesOwnership()
     {
         // Arrange
         var buffer = System.Buffers.ArrayPool<char>.Shared.Rent(5);
@@ -151,14 +138,11 @@ public class OwnedTextTests
         using var owned = OwnedText.Create(buffer, 5);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("Hello");
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(owned.RuneLength).IsEqualTo(5);
-        await Assert.That(owned.ByteLength).IsEqualTo(10);
+        return Verify(new { result = owned.Text.ToString(), owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
-    public async Task Create_IntBuffer_TakesOwnership()
+    public Task Create_IntBuffer_TakesOwnership()
     {
         // Arrange
         var buffer = System.Buffers.ArrayPool<int>.Shared.Rent(3);
@@ -170,16 +154,13 @@ public class OwnedTextTests
         using var owned = OwnedText.Create(buffer, 3);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("Hi!");
-        await Assert.That(owned.Encoding).IsEqualTo(TextEncoding.Utf32);
-        await Assert.That(owned.RuneLength).IsEqualTo(3);
-        await Assert.That(owned.ByteLength).IsEqualTo(12);
+        return Verify(new { result = owned.Text.ToString(), owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     // Text property
 
     [Test]
-    public async Task Text_ReturnsCorrectValue()
+    public Task Text_ReturnsCorrectValue()
     {
         // Arrange
         using var owned = OwnedText.FromUtf8("Hello"u8);
@@ -188,9 +169,7 @@ public class OwnedTextTests
         var text = owned.Text;
 
         // Assert
-        await Assert.That(text.ToString()).IsEqualTo("Hello");
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(text.RuneLength).IsEqualTo(5);
+        return Verify(new { result = text.ToString(), text.Encoding, text.RuneLength });
     }
 
     [Test]
@@ -271,16 +250,19 @@ public class OwnedTextTests
     // Operations via Text
 
     [Test]
-    public async Task Text_SearchOperations_Work()
+    public Task Text_SearchOperations_Work()
     {
         // Arrange
         using var owned = OwnedText.FromUtf8("Hello World"u8);
         var text = owned.Text;
 
         // Act & Assert
-        await Assert.That(text.Contains("World")).IsTrue();
-        await Assert.That(text.StartsWith("Hello")).IsTrue();
-        await Assert.That(text.EndsWith("World")).IsTrue();
+        return Verify(new
+        {
+            contains = text.Contains("World"),
+            startsWith = text.StartsWith("Hello"),
+            endsWith = text.EndsWith("World"),
+        });
     }
 
     [Test]

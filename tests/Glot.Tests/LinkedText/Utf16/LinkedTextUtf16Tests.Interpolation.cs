@@ -5,7 +5,7 @@ public partial class LinkedTextUtf16Tests
     // Direct assignment — implicit interpolated string handler
 
     [Test]
-    public async Task Interpolation_Direct_CapturesSegments()
+    public Task Interpolation_Direct_CapturesSegments()
     {
         // Arrange
         var name = "world";
@@ -14,13 +14,11 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"Hello {name}!";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(3); // "Hello ", "world", "!"
-        await Assert.That(linked.Length).IsEqualTo(12);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("Hello world!");
+        return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task Interpolation_Direct_StringsAreZeroCopy()
+    public Task Interpolation_Direct_StringsAreZeroCopy()
     {
         // Arrange
         var name = "world";
@@ -29,12 +27,11 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"{name}";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task Interpolation_Direct_EmptyHoles_Skipped()
+    public Task Interpolation_Direct_EmptyHoles_Skipped()
     {
         // Arrange
         var empty = "";
@@ -43,12 +40,11 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"hello{empty}world";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(2); // "hello", "world"
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("helloworld");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task Interpolation_Direct_NonStringTypes_FormattedIntoBuffer()
+    public Task Interpolation_Direct_NonStringTypes_FormattedIntoBuffer()
     {
         // Arrange
         const int count = 42;
@@ -57,23 +53,21 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"count: {count}";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(2); // "count: ", "42"
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("count: 42");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task Interpolation_Direct_NoHoles_SingleLiteral()
+    public Task Interpolation_Direct_NoHoles_SingleLiteral()
     {
         // Act
         LinkedTextUtf16 linked = $"hello world";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task Interpolation_Direct_MultipleHoles()
+    public Task Interpolation_Direct_MultipleHoles()
     {
         // Arrange
         var a = "hello";
@@ -84,8 +78,7 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"{a}{sep}{b}";
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(3);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello - world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     [Test]
@@ -98,13 +91,14 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"date: {date:yyyy-MM-dd}";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("date: 2026-04-10");
+        const string expected = "date: 2026-04-10";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Owned — direct assignment
 
     [Test]
-    public async Task Interpolation_Owned_Direct()
+    public Task Interpolation_Owned_Direct()
     {
         // Arrange
         var name = "world";
@@ -113,12 +107,11 @@ public partial class LinkedTextUtf16Tests
         using LinkedTextUtf16Owned owned = $"Hello {name}!";
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("Hello world!");
-        await Assert.That(owned.Data!.SegmentCount).IsEqualTo(3);
+        return Verify(new { result = owned.AsSpan().ToString(), segmentCount = owned.Data!.SegmentCount });
     }
 
     [Test]
-    public async Task Interpolation_Owned_PooledInstanceCanBeReused()
+    public Task Interpolation_Owned_PooledInstanceCanBeReused()
     {
         // Arrange — dispose returns to pool
         {
@@ -130,8 +123,7 @@ public partial class LinkedTextUtf16Tests
         using LinkedTextUtf16Owned owned2 = $"world";
 
         // Assert
-        await Assert.That(owned2.Data!.SegmentCount).IsEqualTo(1);
-        await Assert.That(owned2.AsSpan().ToString()).IsEqualTo("world");
+        return Verify(new { segmentCount = owned2.Data!.SegmentCount, result = owned2.AsSpan().ToString() });
     }
 
     [Test]
@@ -144,7 +136,8 @@ public partial class LinkedTextUtf16Tests
         using LinkedTextUtf16Owned owned = $"hello{nullStr}world";
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("helloworld");
+        const string expected = "helloworld";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Non-ISpanFormattable fallback (IFormattable / ToString)
@@ -159,7 +152,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"value: {obj}";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("value: test");
+        const string expected = "value: test";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     [Test]
@@ -172,7 +166,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"hello{nullObj}world";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("helloworld");
+        const string expected = "helloworld";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // ReadOnlyMemory<char> hole
@@ -187,7 +182,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"{mem} world";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+        const string expected = "hello world";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Owned with Text hole
@@ -202,7 +198,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16Owned owned = $"at {text}";
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("at café");
+        const string expected = "at café";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
         owned.Dispose();
     }
 
@@ -218,7 +215,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16Owned owned = $"{mem}!";
 
         // Assert
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello!");
+        const string expected = "hello!";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
         owned.Dispose();
     }
 
@@ -231,7 +229,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"hello{Text.Empty}world";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("helloworld");
+        const string expected = "helloworld";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Interpolation with UTF-16 Text hole — exercises TryGetUtf16Memory direct add
@@ -246,7 +245,8 @@ public partial class LinkedTextUtf16Tests
         LinkedTextUtf16 linked = $"hello {utf16}";
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+        const string expected = "hello world";
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     // Interpolation with Text hole — exercises AppendFormattedCore transcoding path
@@ -262,7 +262,8 @@ public partial class LinkedTextUtf16Tests
         var result = linked.AsSpan().ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("hello world");
+        const string expected = "hello world";
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // ISpanFormattable that exceeds 256 chars — exercises buffer retry path
@@ -294,7 +295,8 @@ public partial class LinkedTextUtf16Tests
         var result = linked.AsSpan().ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("say: hello");
+        const string expected = "say: hello";
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // Owned interpolation with format buffer
@@ -307,7 +309,8 @@ public partial class LinkedTextUtf16Tests
         var result = owned.AsSpan().ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("count=42");
+        const string expected = "count=42";
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     sealed class ToStringOnly(string value)

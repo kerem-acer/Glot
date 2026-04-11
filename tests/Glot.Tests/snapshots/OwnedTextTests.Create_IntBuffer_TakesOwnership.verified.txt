@@ -1,0 +1,6 @@
+﻿{
+  result: Hi!,
+  Encoding: Utf32,
+  RuneLength: 3,
+  ByteLength: 12
+}

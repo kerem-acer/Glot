@@ -1,0 +1,4 @@
+﻿{
+  length: 5,
+  result: o - w
+}

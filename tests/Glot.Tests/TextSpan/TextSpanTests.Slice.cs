@@ -36,7 +36,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task Slice_MultiByteUtf8_SlicesAtRuneBoundary()
+    public Task Slice_MultiByteUtf8_SlicesAtRuneBoundary()
     {
         // Arrange
         var span = new TextSpan("café"u8, TextEncoding.Utf8);
@@ -47,12 +47,11 @@ public partial class TextSpanTests
         var len = sliced.RuneLength;
 
         // Assert
-        await Assert.That(eq).IsTrue();
-        await Assert.That(len).IsEqualTo(1);
+        return Verify(new { eq, len });
     }
 
     [Test]
-    public async Task Slice_EmojiUtf8_SlicesAtRuneBoundary()
+    public Task Slice_EmojiUtf8_SlicesAtRuneBoundary()
     {
         // Arrange
         var span = new TextSpan("Hi🎉!"u8, TextEncoding.Utf8);
@@ -63,8 +62,7 @@ public partial class TextSpanTests
         var len = sliced.RuneLength;
 
         // Assert
-        await Assert.That(eq).IsTrue();
-        await Assert.That(len).IsEqualTo(2);
+        return Verify(new { eq, len });
     }
 
     [Test]

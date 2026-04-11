@@ -18,7 +18,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParse_FromUtf8Text_Transcodes()
+    public Task Int_TryParse_FromUtf8Text_Transcodes()
     {
         // Arrange
         var text = Text.FromUtf8("99"u8);
@@ -27,8 +27,7 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(99);
+        return Verify(new { success, result });
     }
 
     [Test]
@@ -45,7 +44,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParse_FromUtf8Text_Invalid_ReturnsFalse()
+    public Task Int_TryParse_FromUtf8Text_Invalid_ReturnsFalse()
     {
         // Arrange
         var text = Text.FromUtf8("abc"u8);
@@ -54,8 +53,7 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsFalse();
-        await Assert.That(result).IsEqualTo(0);
+        return Verify(new { success, result });
     }
 
     // ParseUtf8 from UTF-16 text (transcodes to UTF-8)
@@ -74,7 +72,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParseUtf8_FromUtf16Text_Transcodes()
+    public Task Int_TryParseUtf8_FromUtf16Text_Transcodes()
     {
         // Arrange
         var text = Text.From("99");
@@ -83,8 +81,7 @@ public partial class ParseExtensionTests
         var success = int.TryParseUtf8(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(99);
+        return Verify(new { success, result });
     }
 
     [Test]
@@ -101,7 +98,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParseUtf8_Invalid_ReturnsFalse()
+    public Task Int_TryParseUtf8_Invalid_ReturnsFalse()
     {
         // Arrange
         var text = Text.From("not-a-number");
@@ -110,14 +107,13 @@ public partial class ParseExtensionTests
         var success = int.TryParseUtf8(text, out var result);
 
         // Assert
-        await Assert.That(success).IsFalse();
-        await Assert.That(result).IsEqualTo(0);
+        return Verify(new { success, result });
     }
 
     // TryParse with provider from non-UTF16 text
 
     [Test]
-    public async Task Double_TryParse_FromUtf8Text_WithProvider()
+    public Task Double_TryParse_FromUtf8Text_WithProvider()
     {
         // Arrange
         var text = Text.FromUtf8("1.23"u8);
@@ -126,14 +122,13 @@ public partial class ParseExtensionTests
         var success = double.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(1.23);
+        return Verify(new { success, result });
     }
 
     // TryParseUtf8 with provider from non-UTF8 text
 
     [Test]
-    public async Task Double_TryParseUtf8_FromUtf16Text_WithProvider()
+    public Task Double_TryParseUtf8_FromUtf16Text_WithProvider()
     {
         // Arrange
         var text = Text.From("1.23");
@@ -142,8 +137,7 @@ public partial class ParseExtensionTests
         var success = double.TryParseUtf8(text, System.Globalization.CultureInfo.InvariantCulture, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(1.23);
+        return Verify(new { success, result });
     }
 
     // Parse from UTF-32 text (exercises non-UTF16 path)

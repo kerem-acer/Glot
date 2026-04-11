@@ -25,6 +25,7 @@ public partial class TextTests
     public async Task TryFormat_Char_Utf8Backed_Success()
     {
         // Arrange
+        const string expected = "Hello";
         var text = Text.FromUtf8("Hello"u8);
         var dest = new char[10];
 
@@ -34,7 +35,7 @@ public partial class TextTests
         // Assert
         await Assert.That(success).IsTrue();
         await Assert.That(written).IsEqualTo(5);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+        await Assert.That(new string(dest, 0, written)).IsEqualTo(expected);
     }
 
     [Test]
@@ -107,6 +108,7 @@ public partial class TextTests
     public async Task EncodeToUtf16_Utf8Text_Transcodes()
     {
         // Arrange
+        const string expected = "café";
         var text = Text.FromUtf8("café"u8);
         var dest = new char[10];
 
@@ -115,7 +117,7 @@ public partial class TextTests
 
         // Assert
         await Assert.That(written).IsEqualTo(4);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("café");
+        await Assert.That(new string(dest, 0, written)).IsEqualTo(expected);
     }
 
     [Test]
@@ -138,13 +140,14 @@ public partial class TextTests
     public async Task ToString_SubslicedStringBacked_Allocates()
     {
         // Arrange — slice creates a non-zero _start
+        const string expected = "World";
         var text = Text.From("Hello World").RuneSlice(6);
 
         // Act
         var result = text.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("World");
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // IFormattable.ToString(format, provider) delegates to ToString()
@@ -153,12 +156,13 @@ public partial class TextTests
     public async Task IFormattable_ToString_DelegatesToToString()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
 
         // Act
         var result = text.ToString("ignored", null);
 
         // Assert
-        await Assert.That(result).IsEqualTo("Hello");
+        await Assert.That(result).IsEqualTo(expected);
     }
 }

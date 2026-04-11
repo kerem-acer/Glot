@@ -1,0 +1,4 @@
+﻿{
+  length: 13,
+  result: hello - world
+}

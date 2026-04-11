@@ -103,19 +103,18 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task Equals_CrossEncodingDifferentLength_ReturnsFalse()
+    public Task Equals_CrossEncodingDifferentLength_ReturnsFalse()
     {
         // Arrange
         var shorter = new TextSpan("Hi"u8, TextEncoding.Utf8);
         var longer = new TextSpan(TestHelpers.Encode("Hello", TextEncoding.Utf16), TextEncoding.Utf16);
 
         // Act
-        var r1 = shorter.Equals(longer);
-        var r2 = longer.Equals(shorter);
+        var shorterEqualsLonger = shorter.Equals(longer);
+        var longerEqualsShorter = longer.Equals(shorter);
 
         // Assert
-        await Assert.That(r1).IsFalse();
-        await Assert.That(r2).IsFalse();
+        return Verify(new { shorterEqualsLonger, longerEqualsShorter });
     }
 
     [Test]
@@ -219,7 +218,7 @@ public partial class TextSpanTests
     [Arguments("café")]
     [Arguments("日本語")]
     [Arguments("🎉")]
-    public async Task GetHashCode_SameContentDifferentEncodings_ReturnsSameHash(string input)
+    public Task GetHashCode_SameContentDifferentEncodings_ReturnsSameHash(string input)
     {
         // Arrange & Act
         var hash8 = new TextSpan(TestHelpers.Encode(input, TextEncoding.Utf8), TextEncoding.Utf8).GetHashCode();
@@ -227,8 +226,7 @@ public partial class TextSpanTests
         var hash32 = new TextSpan(TestHelpers.Encode(input, TextEncoding.Utf32), TextEncoding.Utf32).GetHashCode();
 
         // Assert
-        await Assert.That(hash8).IsEqualTo(hash16);
-        await Assert.That(hash8).IsEqualTo(hash32);
+        return Verify(new { hash8EqualHash16 = hash8 == hash16, hash8EqualHash32 = hash8 == hash32 }).UseParameters(input);
     }
 
     [Test]

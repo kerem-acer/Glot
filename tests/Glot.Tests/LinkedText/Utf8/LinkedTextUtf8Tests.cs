@@ -9,15 +9,13 @@ public partial class LinkedTextUtf8Tests
     // Factory
 
     [Test]
-    public async Task Create_SingleSegment_StoresOneSegment()
+    public Task Create_SingleSegment_StoresOneSegment()
     {
         // Arrange & Act
         var linked = LinkedTextUtf8.Create(Utf8("hello"));
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.Length).IsEqualTo(5);
-        await Assert.That(linked.IsEmpty).IsFalse();
+        return Verify(new { linked.SegmentCount, linked.Length, linked.IsEmpty });
     }
 
     [Test]
@@ -31,25 +29,23 @@ public partial class LinkedTextUtf8Tests
     }
 
     [Test]
-    public async Task Create_TwoSegments_StoresBoth()
+    public Task Create_TwoSegments_StoresBoth()
     {
         // Act
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" world"));
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(2);
-        await Assert.That(linked.Length).IsEqualTo(11);
+        return Verify(new { linked.SegmentCount, linked.Length });
     }
 
     [Test]
-    public async Task Create_ThreeSegments_StoresAll()
+    public Task Create_ThreeSegments_StoresAll()
     {
         // Act
         var linked = LinkedTextUtf8.Create(Utf8("a"), Utf8(" - "), Utf8("b"));
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(3);
-        await Assert.That(linked.Length).IsEqualTo(5);
+        return Verify(new { linked.SegmentCount, linked.Length });
     }
 
     // AsSpan + ToString
@@ -68,7 +64,7 @@ public partial class LinkedTextUtf8Tests
     }
 
     [Test]
-    public async Task AsSpan_ToString_MultibyteChars()
+    public Task AsSpan_ToString_MultibyteChars()
     {
         // Arrange — "café" is 5 bytes in UTF-8 (é = 2 bytes)
         var linked = LinkedTextUtf8.Create(Utf8("caf"), Utf8("é"));
@@ -77,14 +73,13 @@ public partial class LinkedTextUtf8Tests
         var result = linked.AsSpan().ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("café");
-        await Assert.That(linked.Length).IsEqualTo(5);
+        return Verify(new { result, linked.Length });
     }
 
     // Slicing
 
     [Test]
-    public async Task Slice_AcrossSegments_WorksCorrectly()
+    public Task Slice_AcrossSegments_WorksCorrectly()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
@@ -92,32 +87,36 @@ public partial class LinkedTextUtf8Tests
 
         // Act — byte-level slice
         var sliced = span.Slice(3, 7);
+        var length = sliced.Length;
+        var text = sliced.ToString();
 
         // Assert
-        await Assert.That(sliced.Length).IsEqualTo(7);
-        await Assert.That(sliced.ToString()).IsEqualTo("lo - wo");
+        return Verify(new { length, text });
     }
 
     // Indexer
 
     [Test]
-    public async Task Indexer_ReturnsCorrectByte()
+    public Task Indexer_ReturnsCorrectByte()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("AB"), Utf8("CD"));
         var span = linked.AsSpan();
 
-        // Act & Assert
-        await Assert.That(span[0]).IsEqualTo((byte)'A');
-        await Assert.That(span[1]).IsEqualTo((byte)'B');
-        await Assert.That(span[2]).IsEqualTo((byte)'C');
-        await Assert.That(span[3]).IsEqualTo((byte)'D');
+        // Act
+        var byte0 = span[0];
+        var byte1 = span[1];
+        var byte2 = span[2];
+        var byte3 = span[3];
+
+        // Assert
+        return Verify(new { byte0, byte1, byte2, byte3 });
     }
 
     // EnumerateSegments
 
     [Test]
-    public async Task EnumerateSegments_YieldsAllSegments()
+    public Task EnumerateSegments_YieldsAllSegments()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
@@ -131,24 +130,19 @@ public partial class LinkedTextUtf8Tests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("hello");
-        await Assert.That(segments[1]).IsEqualTo(" - ");
-        await Assert.That(segments[2]).IsEqualTo("world");
+        return Verify(segments);
     }
 
     // Four-arg factory
 
     [Test]
-    public async Task Create_FourSegments_StoresAll()
+    public Task Create_FourSegments_StoresAll()
     {
         // Act
         var linked = LinkedTextUtf8.Create(Utf8("a"), Utf8("b"), Utf8("c"), Utf8("d"));
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(4);
-        await Assert.That(linked.Length).IsEqualTo(4);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcd");
+        return Verify(new { linked.SegmentCount, linked.Length, text = linked.AsSpan().ToString() });
     }
 
     // Direct UTF-8 bytes — non-transcode copy path
@@ -157,14 +151,15 @@ public partial class LinkedTextUtf8Tests
     public async Task Create_FromUtf8Bytes_DirectCopy()
     {
         // Arrange
-        var bytes = "hello"u8.ToArray();
+        const string expected = "hello";
+        var bytes = Encoding.UTF8.GetBytes(expected);
 
         // Act
         var linked = LinkedTextUtf8.Create(new ReadOnlyMemory<byte>(bytes));
         var result = linked.AsSpan().ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("hello");
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // CreateOwned — Memory segments
@@ -199,7 +194,7 @@ public partial class LinkedTextUtf8Tests
     // Overflow — factory with >8 Memory segments triggers overflow array
 
     [Test]
-    public async Task Create_NineSegments_UsesOverflow()
+    public Task Create_NineSegments_UsesOverflow()
     {
         // Arrange
         var segments = Enumerable.Range(0, 9)
@@ -210,14 +205,13 @@ public partial class LinkedTextUtf8Tests
         var linked = LinkedTextUtf8.Create(segments.AsSpan());
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(9);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("abcdefghi");
+        return Verify(new { linked.SegmentCount, text = linked.AsSpan().ToString() });
     }
 
     // EnumerateSegments on LinkedTextUtf8
 
     [Test]
-    public async Task EnumerateSegments_ViaLinkedText_YieldsAll()
+    public Task EnumerateSegments_ViaLinkedText_YieldsAll()
     {
         // Arrange
         var linked = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" "), Utf8("world"));
@@ -230,9 +224,7 @@ public partial class LinkedTextUtf8Tests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("hello");
-        await Assert.That(segments[2]).IsEqualTo("world");
+        return Verify(segments);
     }
 
     // LinkedTextUtf8Owned IsEmpty
@@ -250,7 +242,7 @@ public partial class LinkedTextUtf8Tests
     // CreateOwned with overflow segments
 
     [Test]
-    public async Task CreateOwned_NineSegments_UsesOverflow()
+    public Task CreateOwned_NineSegments_UsesOverflow()
     {
         // Arrange
         var segments = Enumerable.Range(0, 9)
@@ -261,8 +253,7 @@ public partial class LinkedTextUtf8Tests
         using var owned = LinkedTextUtf8.CreateOwned(segments.AsSpan());
 
         // Assert
-        await Assert.That(owned.Data!.SegmentCount).IsEqualTo(9);
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("abcdefghi");
+        return Verify(new { SegmentCount = owned.Data!.SegmentCount, text = owned.AsSpan().ToString() });
     }
 
     // All-empty segments via factory
@@ -318,10 +309,6 @@ public partial class LinkedTextUtf8Tests
         await Task.WhenAll(t1, t2);
 
         // Assert — both threads got the correct result
-        await Assert.That(results.Count).IsEqualTo(2);
-        foreach (var r in results)
-        {
-            await Assert.That(r).IsEqualTo("hello world");
-        }
+        await Verify(results.OrderBy(r => r).ToList());
     }
 }

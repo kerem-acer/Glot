@@ -15,6 +15,37 @@
           "TUnit.Engine": "1.29.0"
         }
       },
+      "Verify.TUnit": {
+        "type": "Direct",
+        "requested": "[31.15.0, )",
+        "resolved": "31.15.0",
+        "contentHash": "Kvw7XatCnxtGdlvHe9iQV4NVuSFXGbb/Mvs2yJzUURQWcqiUCGEqa1LTiusDFilaie9OpXdO0HwPQn30RRUACw==",
+        "dependencies": {
+          "Argon": "0.33.5",
+          "DiffEngine": "19.1.2",
+          "SimpleInfoName": "3.2.0",
+          "TUnit.Core": "1.24.18",
+          "Verify": "31.15.0"
+        }
+      },
+      "Argon": {
+        "type": "Transitive",
+        "resolved": "0.33.5",
+        "contentHash": "J6821zxO+EqMzO9C/V5uiWc2eBGyzN7Z8Z0xq3Q1/e6IxYcHDA32OgiZX5/7/f8rVPQQa7aYtm6f0UfnrgKNBg=="
+      },
+      "DiffEngine": {
+        "type": "Transitive",
+        "resolved": "19.1.2",
+        "contentHash": "5fteTgsAXovFNT8wnZT3US51KzVOipI2ptvBG5O27BuHqBPgdu6G8dwAnfF7BoP7RCJyLoT4AyoQ5KS3b3YhCw==",
+        "dependencies": {
+          "EmptyFiles": "8.17.2"
+        }
+      },
+      "EmptyFiles": {
+        "type": "Transitive",
+        "resolved": "8.17.2",
+        "contentHash": "2oyDVmM/DU3g0h2kqcV05zjOUfo9AdwPoduIGh0LZL6nXqSN4qhZna2M/aJoYiQrmIznJ52wxYCmxDnWaRZ1JQ=="
+      },
       "EnumerableAsyncProcessor": {
         "type": "Transitive",
         "resolved": "3.8.4",
@@ -84,6 +115,11 @@
           "Microsoft.Testing.Platform": "2.2.1"
         }
       },
+      "SimpleInfoName": {
+        "type": "Transitive",
+        "resolved": "3.2.0",
+        "contentHash": "K8ivHRbPWfncijk62Dan/r/z55gwq3aFzqB6yFlD9X0bbpIaacHyHH2cpcIdz0FECUpERUZTwxts0z4gRWpQpA=="
+      },
       "TUnit.Assertions": {
         "type": "Transitive",
         "resolved": "1.29.0",
@@ -104,6 +140,16 @@
           "Microsoft.Testing.Platform": "2.2.1",
           "Microsoft.Testing.Platform.MSBuild": "2.2.1",
           "TUnit.Core": "1.29.0"
+        }
+      },
+      "Verify": {
+        "type": "Transitive",
+        "resolved": "31.15.0",
+        "contentHash": "kYcurjOHZQfSggL5nA7Fqw0idzDdQOtDSWyfZ81SaMBgyYNIM01bq53GdYQigmMvqhkBj0Wf5M7qp+CrPRl0uQ==",
+        "dependencies": {
+          "Argon": "0.33.5",
+          "DiffEngine": "19.1.2",
+          "SimpleInfoName": "3.2.0"
         }
       },
       "glot": {

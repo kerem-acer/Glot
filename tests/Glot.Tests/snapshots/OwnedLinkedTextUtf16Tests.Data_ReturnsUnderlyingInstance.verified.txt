@@ -1,0 +1,4 @@
+﻿{
+  isNotNull: true,
+  length: 5
+}

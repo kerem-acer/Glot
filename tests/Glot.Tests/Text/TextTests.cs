@@ -7,28 +7,23 @@ public partial class TextTests
     // Factory — From(string)
 
     [Test]
-    public async Task From_String_StoresStringBacking()
+    public Task From_String_StoresStringBacking()
     {
         // Arrange & Act
         var text = Text.From("Hello");
 
         // Assert
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(text.RuneLength).IsEqualTo(5);
-        await Assert.That(text.ByteLength).IsEqualTo(10);
-        await Assert.That(text.IsEmpty).IsFalse();
+        return Verify(new { result = text.ToString(), text.Encoding, text.RuneLength, text.ByteLength, text.IsEmpty });
     }
 
     [Test]
-    public async Task From_EmptyString_ReturnsEmpty()
+    public Task From_EmptyString_ReturnsEmpty()
     {
         // Act
         var text = Text.From("");
 
         // Assert
-        await Assert.That(text.IsEmpty).IsTrue();
-        await Assert.That(text.RuneLength).IsEqualTo(0);
-        await Assert.That(text.ByteLength).IsEqualTo(0);
+        return Verify(new { text.IsEmpty, text.RuneLength, text.ByteLength });
     }
 
     [Test]
@@ -44,15 +39,13 @@ public partial class TextTests
     // Factory — FromUtf8
 
     [Test]
-    public async Task FromUtf8_Bytes_StoresUtf8()
+    public Task FromUtf8_Bytes_StoresUtf8()
     {
         // Arrange & Act
         var text = Text.FromUtf8("café"u8);
 
         // Assert
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(text.RuneLength).IsEqualTo(4);
-        await Assert.That(text.ByteLength).IsEqualTo(5); // é is 2 bytes
+        return Verify(new { text.Encoding, text.RuneLength, text.ByteLength });
     }
 
     [Test]
@@ -68,20 +61,19 @@ public partial class TextTests
     // Factory — FromChars
 
     [Test]
-    public async Task FromChars_Span_StoresUtf16()
+    public Task FromChars_Span_StoresUtf16()
     {
         // Arrange & Act
         var text = Text.FromChars("Hello".AsSpan());
 
         // Assert
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(text.RuneLength).IsEqualTo(5);
+        return Verify(new { text.Encoding, text.RuneLength });
     }
 
     // Factory — FromUtf32
 
     [Test]
-    public async Task FromUtf32_IntSpan_StoresUtf32()
+    public Task FromUtf32_IntSpan_StoresUtf32()
     {
         // Arrange
         ReadOnlySpan<int> codePoints = [0x48, 0x65, 0x6C]; // H, e, l
@@ -90,15 +82,13 @@ public partial class TextTests
         var text = Text.FromUtf32(codePoints);
 
         // Assert
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf32);
-        await Assert.That(text.RuneLength).IsEqualTo(3);
-        await Assert.That(text.ByteLength).IsEqualTo(12);
+        return Verify(new { text.Encoding, text.RuneLength, text.ByteLength });
     }
 
     // Factory — FromBytes
 
     [Test]
-    public async Task FromBytes_Utf16Bytes_StoresCorrectly()
+    public Task FromBytes_Utf16Bytes_StoresCorrectly()
     {
         // Arrange
         var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf16);
@@ -107,21 +97,19 @@ public partial class TextTests
         var text = Text.FromBytes(bytes, TextEncoding.Utf16);
 
         // Assert
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(text.RuneLength).IsEqualTo(5);
+        return Verify(new { text.Encoding, text.RuneLength });
     }
 
     // Factory — implicit from string
 
     [Test]
-    public async Task ImplicitFromString_CreatesText()
+    public Task ImplicitFromString_CreatesText()
     {
         // Act
         Text text = "Hello";
 
         // Assert
-        await Assert.That(text.RuneLength).IsEqualTo(5);
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
+        return Verify(new { text.RuneLength, text.Encoding });
     }
 
     // AsSpan
@@ -130,11 +118,12 @@ public partial class TextTests
     public async Task AsSpan_StringBacked_ReturnsCorrectSpan()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
 
         // Act
         var span = text.AsSpan();
-        var eq = span.Equals("Hello".AsSpan());
+        var eq = span.Equals(expected.AsSpan());
 
         // Assert
         await Assert.That(eq).IsTrue();
@@ -187,13 +176,14 @@ public partial class TextTests
     public async Task ToString_Utf8Backed_ReturnsCorrectString()
     {
         // Arrange
+        const string expected = "café🎉";
         var text = Text.FromUtf8("café🎉"u8);
 
         // Act
         var result = text.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("café🎉");
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     [Test]
@@ -362,7 +352,7 @@ public partial class TextTests
     // Trim (non-copying)
 
     [Test]
-    public async Task TrimStart_ReturnsTextNotCopy()
+    public Task TrimStart_ReturnsTextNotCopy()
     {
         // Arrange
         var text = Text.From("  Hello  ");
@@ -371,12 +361,11 @@ public partial class TextTests
         var trimmed = text.TrimStart();
 
         // Assert
-        await Assert.That(trimmed.ToString()).IsEqualTo("Hello  ");
-        await Assert.That(trimmed.RuneLength).IsEqualTo(7);
+        return Verify(new { result = trimmed.ToString(), trimmed.RuneLength });
     }
 
     [Test]
-    public async Task TrimEnd_ReturnsTextNotCopy()
+    public Task TrimEnd_ReturnsTextNotCopy()
     {
         // Arrange
         var text = Text.From("  Hello  ");
@@ -385,12 +374,11 @@ public partial class TextTests
         var trimmed = text.TrimEnd();
 
         // Assert
-        await Assert.That(trimmed.ToString()).IsEqualTo("  Hello");
-        await Assert.That(trimmed.RuneLength).IsEqualTo(7);
+        return Verify(new { result = trimmed.ToString(), trimmed.RuneLength });
     }
 
     [Test]
-    public async Task Trim_ReturnsTextNotCopy()
+    public Task Trim_ReturnsTextNotCopy()
     {
         // Arrange
         var text = Text.From("  Hello  ");
@@ -399,12 +387,11 @@ public partial class TextTests
         var trimmed = text.Trim();
 
         // Assert
-        await Assert.That(trimmed.ToString()).IsEqualTo("Hello");
-        await Assert.That(trimmed.RuneLength).IsEqualTo(5);
+        return Verify(new { result = trimmed.ToString(), trimmed.RuneLength });
     }
 
     [Test]
-    public async Task Trim_Utf8_ReturnsCorrectText()
+    public Task Trim_Utf8_ReturnsCorrectText()
     {
         // Arrange
         var text = Text.FromUtf8(" café "u8);
@@ -413,14 +400,13 @@ public partial class TextTests
         var trimmed = text.Trim();
 
         // Assert
-        await Assert.That(trimmed.ToString()).IsEqualTo("café");
-        await Assert.That(trimmed.RuneLength).IsEqualTo(4);
+        return Verify(new { result = trimmed.ToString(), trimmed.RuneLength });
     }
 
     // Slice (non-copying)
 
     [Test]
-    public async Task RuneSlice_Offset_ReturnsTextView()
+    public Task RuneSlice_Offset_ReturnsTextView()
     {
         // Arrange
         var text = Text.From("Hello World");
@@ -429,12 +415,11 @@ public partial class TextTests
         var sliced = text.RuneSlice(6);
 
         // Assert
-        await Assert.That(sliced.ToString()).IsEqualTo("World");
-        await Assert.That(sliced.RuneLength).IsEqualTo(5);
+        return Verify(new { result = sliced.ToString(), sliced.RuneLength });
     }
 
     [Test]
-    public async Task RuneSlice_OffsetAndCount_ReturnsTextView()
+    public Task RuneSlice_OffsetAndCount_ReturnsTextView()
     {
         // Arrange
         var text = Text.FromUtf8("Hello World"u8);
@@ -443,34 +428,35 @@ public partial class TextTests
         var sliced = text.RuneSlice(6, 5);
 
         // Assert
-        await Assert.That(sliced.ToString()).IsEqualTo("World");
-        await Assert.That(sliced.RuneLength).IsEqualTo(5);
+        return Verify(new { result = sliced.ToString(), sliced.RuneLength });
     }
 
     [Test]
     public async Task ByteSlice_ReturnsTextView()
     {
         // Arrange
+        const string expected = "lo";
         var text = Text.FromUtf8("Hello"u8);
 
         // Act
         var sliced = text.ByteSlice(3);
 
         // Assert
-        await Assert.That(sliced.ToString()).IsEqualTo("lo");
+        await Assert.That(sliced.ToString()).IsEqualTo(expected);
     }
 
     [Test]
     public async Task ByteSlice_OffsetAndCount_ReturnsTextView()
     {
         // Arrange
+        const string expected = "World";
         var text = Text.FromUtf8("Hello World"u8);
 
         // Act
         var sliced = text.ByteSlice(6, 5);
 
         // Assert
-        await Assert.That(sliced.ToString()).IsEqualTo("World");
+        await Assert.That(sliced.ToString()).IsEqualTo(expected);
     }
 
     // Split
@@ -537,7 +523,8 @@ public partial class TextTests
     public async Task TryFormat_Chars_StringBacked_WritesToDestination()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
         var dest = new char[10];
 
         // Act
@@ -546,7 +533,7 @@ public partial class TextTests
         // Assert
         await Assert.That(success).IsTrue();
         await Assert.That(written).IsEqualTo(5);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+        await Assert.That(new string(dest, 0, written)).IsEqualTo(expected);
     }
 
     [Test]
@@ -649,6 +636,7 @@ public partial class TextTests
     {
         // Arrange
         const string original = "  Hello  ";
+        const string expected = "Hello";
         var text = Text.From(original);
         var trimmed = text.Trim();
 
@@ -656,7 +644,7 @@ public partial class TextTests
         var result = trimmed.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("Hello");
+        await Assert.That(result).IsEqualTo(expected);
         await Assert.That(ReferenceEquals(result, original)).IsFalse();
     }
 
@@ -695,15 +683,13 @@ public partial class TextTests
     // Factory — FromChars creates char[]-backed text
 
     [Test]
-    public async Task FromChars_NonEmpty_CreatesCharBacked()
+    public Task FromChars_NonEmpty_CreatesCharBacked()
     {
         // Act
         var text = Text.FromChars("Hello".AsSpan());
 
         // Assert
-        await Assert.That(text.ToString()).IsEqualTo("Hello");
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf16);
-        await Assert.That(text.RuneLength).IsEqualTo(5);
+        return Verify(new { result = text.ToString(), text.Encoding, text.RuneLength });
     }
 
     // Mutation validation — Replace
@@ -735,13 +721,14 @@ public partial class TextTests
     public async Task Replace_NoMatch_ReturnsThis()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
 
         // Act
         var result = text.Replace(Text.From("xyz"), Text.From("abc"));
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello");
+        await Assert.That(result.ToString()).IsEqualTo(expected);
     }
 
     [Test]
@@ -926,26 +913,28 @@ public partial class TextTests
     public async Task ReplacePooled_Text_WithMatch_Replaces()
     {
         // Arrange
+        const string expected = "Hello Glot";
         var text = Text.From("Hello World");
 
         // Act
         using var result = text.ReplacePooled(Text.From("World"), Text.From("Glot"));
 
         // Assert
-        await Assert.That(result.Text.ToString()).IsEqualTo("Hello Glot");
+        await Assert.That(result.Text.ToString()).IsEqualTo(expected);
     }
 
     [Test]
     public async Task ReplacePooled_Text_NoMatch_ReturnsCopy()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
 
         // Act
         using var result = text.ReplacePooled(Text.From("xyz"), Text.From("abc"));
 
         // Assert
-        await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
+        await Assert.That(result.Text.ToString()).IsEqualTo(expected);
     }
 
     // Replace(Text, Text) — empty self
@@ -966,13 +955,14 @@ public partial class TextTests
     public async Task ToLowerInvariantPooled_AlreadyLower_ReturnsCopy()
     {
         // Arrange
-        var text = Text.From("hello");
+        const string expected = "hello";
+        var text = Text.From(expected);
 
         // Act
         using var result = text.ToLowerInvariantPooled();
 
         // Assert
-        await Assert.That(result.Text.ToString()).IsEqualTo("hello");
+        await Assert.That(result.Text.ToString()).IsEqualTo(expected);
     }
 
     // CaseCore — trailing unchanged run after case change
@@ -980,14 +970,14 @@ public partial class TextTests
     [Test]
     public async Task ToUpperInvariant_TrailingUnchangedRun_Works()
     {
-        // Arrange — '!' is already uppercase, so after 'a' → 'A' there's an unchanged trailing run
-        var text = Text.From("a!!!");
+        // Arrange
+        const string expected = "A!!!";
 
-        // Act
-        var result = text.ToUpperInvariant();
+        // Act — '!' is already uppercase, so after 'a' → 'A' there's an unchanged trailing run
+        var result = Text.From("a!!!").ToUpperInvariant();
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("A!!!");
+        await Assert.That(result.ToString()).IsEqualTo(expected);
     }
 
     // TryGetUtf16Memory — char[]-backed text
@@ -996,12 +986,13 @@ public partial class TextTests
     public async Task FromChars_InterpolationViaTryGetUtf16Memory_Works()
     {
         // Arrange — FromChars creates char[]-backed Text
+        const string expected = "hello";
         var text = Text.FromChars("hello".AsSpan());
 
         // Act — LinkedTextUtf16 interpolation calls TryGetUtf16Memory
         var linked = LinkedTextUtf16.Create(text);
 
         // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello");
+        await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 }

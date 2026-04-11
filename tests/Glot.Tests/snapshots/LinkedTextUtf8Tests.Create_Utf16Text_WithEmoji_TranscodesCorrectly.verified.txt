@@ -1,0 +1,4 @@
+﻿{
+  result: 🎉,
+  Length: 4
+}

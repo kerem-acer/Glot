@@ -7,21 +7,22 @@ public class OwnedLinkedTextUtf8Tests
     static ReadOnlyMemory<byte> Utf8(string s) => Encoding.UTF8.GetBytes(s).AsMemory();
 
     [Test]
-    public async Task AsSpan_ReturnsValidSpan()
+    public Task AsSpan_ReturnsValidSpan()
     {
         // Arrange
         using var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"), Utf8(" - "), Utf8("world"));
 
         // Act
         var span = owned.AsSpan();
+        var length = span.Length;
+        var result = span.ToString();
 
         // Assert
-        await Assert.That(span.Length).IsEqualTo(13);
-        await Assert.That(span.ToString()).IsEqualTo("hello - world");
+        return Verify(new { length, result });
     }
 
     [Test]
-    public async Task Dispose_SetsIsDisposed()
+    public Task Dispose_SetsIsDisposed()
     {
         // Arrange
         var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"));
@@ -30,8 +31,7 @@ public class OwnedLinkedTextUtf8Tests
         owned.Dispose();
 
         // Assert
-        await Assert.That(owned.IsDisposed).IsTrue();
-        await Assert.That(owned.Length).IsEqualTo(0);
+        return Verify(new { owned.IsDisposed, owned.Length });
     }
 
     [Test]

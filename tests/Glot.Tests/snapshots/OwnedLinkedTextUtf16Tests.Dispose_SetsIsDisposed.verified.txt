@@ -1,0 +1,4 @@
+﻿{
+  IsDisposed: true,
+  IsEmpty: true
+}

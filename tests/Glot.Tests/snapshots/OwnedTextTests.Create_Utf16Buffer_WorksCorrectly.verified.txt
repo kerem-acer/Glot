@@ -1,0 +1,4 @@
+﻿{
+  result: café,
+  Encoding: Utf16
+}

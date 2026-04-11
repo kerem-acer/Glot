@@ -5,18 +5,17 @@ namespace Glot.Tests;
 public partial class TextBuilderTests
 {
     [Test]
-    public async Task DefaultEncoding_IsUtf8()
+    public Task DefaultEncoding_IsUtf8()
     {
         // Arrange & Act
         using var builder = new TextBuilder(TextEncoding.Utf8);
 
         // Assert
-        await Assert.That(builder.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(builder.IsEmpty).IsTrue();
+        return Verify(new { builder.Encoding, builder.IsEmpty });
     }
 
     [Test]
-    public async Task Append_String_TranscodesToUtf8()
+    public Task Append_String_TranscodesToUtf8()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -25,13 +24,11 @@ public partial class TextBuilderTests
         builder.Append("Hello");
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello");
-        await Assert.That(builder.RuneLength).IsEqualTo(5);
-        await Assert.That(builder.ByteLength).IsEqualTo(5);
+        return Verify(new { result = builder.ToString(), builder.RuneLength, builder.ByteLength });
     }
 
     [Test]
-    public async Task Append_MultipleStrings_Concatenates()
+    public Task Append_MultipleStrings_Concatenates()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -42,8 +39,7 @@ public partial class TextBuilderTests
         builder.Append("World");
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello World");
-        await Assert.That(builder.RuneLength).IsEqualTo(11);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 
     [Test]
@@ -61,7 +57,7 @@ public partial class TextBuilderTests
     }
 
     [Test]
-    public async Task Append_Utf8Bytes_SameEncoding_DirectCopy()
+    public Task Append_Utf8Bytes_SameEncoding_DirectCopy()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -70,13 +66,11 @@ public partial class TextBuilderTests
         builder.Append("café"u8);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("café");
-        await Assert.That(builder.RuneLength).IsEqualTo(4);
-        await Assert.That(builder.ByteLength).IsEqualTo(5);
+        return Verify(new { result = builder.ToString(), builder.RuneLength, builder.ByteLength });
     }
 
     [Test]
-    public async Task Append_Utf8Bytes_ToUtf16Builder_Transcodes()
+    public Task Append_Utf8Bytes_ToUtf16Builder_Transcodes()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf16);
@@ -85,40 +79,40 @@ public partial class TextBuilderTests
         builder.Append("Hello"u8);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello");
-        await Assert.That(builder.RuneLength).IsEqualTo(5);
-        await Assert.That(builder.ByteLength).IsEqualTo(10);
+        return Verify(new { result = builder.ToString(), builder.RuneLength, builder.ByteLength });
     }
 
     [Test]
     public async Task Append_TextSpan_CrossEncoding_Transcodes()
     {
         // Arrange
+        const string expected = "café";
         using var builder = new TextBuilder(TextEncoding.Utf8);
-        var utf16Bytes = TestHelpers.Encode("café", TextEncoding.Utf16);
+        var utf16Bytes = TestHelpers.Encode(expected, TextEncoding.Utf16);
 
         // Act
         builder.Append(new TextSpan(utf16Bytes, TextEncoding.Utf16));
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("café");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
     public async Task Append_Text_Works()
     {
         // Arrange
+        const string expected = "Hello";
         using var builder = new TextBuilder(TextEncoding.Utf8);
 
         // Act
-        builder.Append(Text.From("Hello"));
+        builder.Append(Text.From(expected));
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
-    public async Task AppendRune_Appended()
+    public Task AppendRune_Appended()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -128,14 +122,14 @@ public partial class TextBuilderTests
         builder.AppendRune(new Rune(0x1F389));
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("A🎉");
-        await Assert.That(builder.RuneLength).IsEqualTo(2);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 
     [Test]
     public async Task AppendLine_AppendsNewline()
     {
         // Arrange
+        const string expected = "Hello\nWorld";
         using var builder = new TextBuilder(TextEncoding.Utf8);
 
         // Act
@@ -144,24 +138,25 @@ public partial class TextBuilderTests
         builder.Append("World");
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello\nWorld");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
     public async Task Append_CharSpan_Transcodes()
     {
         // Arrange
+        const string expected = "café";
         using var builder = new TextBuilder(TextEncoding.Utf8);
 
         // Act
-        builder.Append("café".AsSpan());
+        builder.Append(expected.AsSpan());
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("café");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
-    public async Task ToText_ReturnsCorrectText()
+    public Task ToText_ReturnsCorrectText()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -171,9 +166,7 @@ public partial class TextBuilderTests
         var text = builder.ToText();
 
         // Assert
-        await Assert.That(text.ToString()).IsEqualTo("Hello World");
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf8);
-        await Assert.That(text.RuneLength).IsEqualTo(11);
+        return Verify(new { result = text.ToString(), text.Encoding, text.RuneLength });
     }
 
     [Test]
@@ -190,7 +183,7 @@ public partial class TextBuilderTests
     }
 
     [Test]
-    public async Task ToOwnedText_TransfersBuffer()
+    public Task ToOwnedText_TransfersBuffer()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -200,9 +193,7 @@ public partial class TextBuilderTests
         using var owned = builder.ToOwnedText();
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("Hello");
-        await Assert.That(builder.IsEmpty).IsTrue();
-        await Assert.That(builder.ByteLength).IsEqualTo(0);
+        return Verify(new { result = owned.Text.ToString(), builderIsEmpty = builder.IsEmpty, builderByteLength = builder.ByteLength });
     }
 
     [Test]
@@ -219,7 +210,7 @@ public partial class TextBuilderTests
     }
 
     [Test]
-    public async Task ToOwnedText_BuilderCanContinue()
+    public Task ToOwnedText_BuilderCanContinue()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -231,26 +222,26 @@ public partial class TextBuilderTests
         using var second = builder.ToOwnedText();
 
         // Assert
-        await Assert.That(first.Text.ToString()).IsEqualTo("First");
-        await Assert.That(second.Text.ToString()).IsEqualTo("Second");
+        return Verify(new { first = first.Text.ToString(), second = second.Text.ToString() });
     }
 
     [Test]
     public async Task AsSpan_ReturnsCurrentContent()
     {
         // Arrange
+        const string expected = "Hello";
         using var builder = new TextBuilder(TextEncoding.Utf8);
-        builder.Append("Hello");
+        builder.Append(expected);
 
         // Act
-        var eq = builder.AsSpan().Equals("Hello".AsSpan());
+        var eq = builder.AsSpan().Equals(expected.AsSpan());
 
         // Assert
         await Assert.That(eq).IsTrue();
     }
 
     [Test]
-    public async Task Clear_ResetsContent()
+    public Task Clear_ResetsContent()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -260,41 +251,41 @@ public partial class TextBuilderTests
         builder.Clear();
 
         // Assert
-        await Assert.That(builder.IsEmpty).IsTrue();
-        await Assert.That(builder.ByteLength).IsEqualTo(0);
-        await Assert.That(builder.RuneLength).IsEqualTo(0);
+        return Verify(new { builder.IsEmpty, builder.ByteLength, builder.RuneLength });
     }
 
     [Test]
     public async Task Clear_CanAppendAgain()
     {
         // Arrange
+        const string expected = "Second";
         using var builder = new TextBuilder(TextEncoding.Utf8);
         builder.Append("First");
 
         // Act
         builder.Clear();
-        builder.Append("Second");
+        builder.Append(expected);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Second");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
     public async Task Growth_LargeAppend_GrowsBuffer()
     {
         // Arrange
+        const string expected = "Hello World, this is a string much longer than 4 bytes";
         using var builder = new TextBuilder(4, TextEncoding.Utf8);
 
         // Act
-        builder.Append("Hello World, this is a string much longer than 4 bytes");
+        builder.Append(expected);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello World, this is a string much longer than 4 bytes");
+        await Assert.That(builder.ToString()).IsEqualTo(expected);
     }
 
     [Test]
-    public async Task Growth_ManySmallAppends_GrowsCorrectly()
+    public Task Growth_ManySmallAppends_GrowsCorrectly()
     {
         // Arrange
         using var builder = new TextBuilder(4, TextEncoding.Utf8);
@@ -306,12 +297,11 @@ public partial class TextBuilderTests
         }
 
         // Assert
-        await Assert.That(builder.RuneLength).IsEqualTo(1000);
-        await Assert.That(builder.ByteLength).IsEqualTo(1000);
+        return Verify(new { builder.RuneLength, builder.ByteLength });
     }
 
     [Test]
-    public async Task MixedAppends_AllTranscodeCorrectly()
+    public Task MixedAppends_AllTranscodeCorrectly()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -322,12 +312,11 @@ public partial class TextBuilderTests
         builder.AppendRune(new Rune('!'));
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hello World!");
-        await Assert.That(builder.RuneLength).IsEqualTo(12);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 
     [Test]
-    public async Task Utf32Builder_AppendsCorrectly()
+    public Task Utf32Builder_AppendsCorrectly()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf32);
@@ -336,15 +325,13 @@ public partial class TextBuilderTests
         builder.Append("Hi!");
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("Hi!");
-        await Assert.That(builder.ByteLength).IsEqualTo(12);
-        await Assert.That(builder.RuneLength).IsEqualTo(3);
+        return Verify(new { result = builder.ToString(), builder.ByteLength, builder.RuneLength });
     }
 
     // UTF-16 builder — string append tracks RuneLength
 
     [Test]
-    public async Task Append_String_ToUtf16Builder_TracksRuneLength()
+    public Task Append_String_ToUtf16Builder_TracksRuneLength()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf16);
@@ -354,12 +341,11 @@ public partial class TextBuilderTests
         var text = builder.ToText();
 
         // Assert
-        await Assert.That(text.RuneLength).IsEqualTo(5);
-        await Assert.That(text.ToString()).IsEqualTo("Hello");
+        return Verify(new { text.RuneLength, result = text.ToString() });
     }
 
     [Test]
-    public async Task Append_String_ToUtf16Builder_MultiByte_TracksRuneLength()
+    public Task Append_String_ToUtf16Builder_MultiByte_TracksRuneLength()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf16);
@@ -369,14 +355,13 @@ public partial class TextBuilderTests
         var text = builder.ToText();
 
         // Assert
-        await Assert.That(text.RuneLength).IsEqualTo(4);
-        await Assert.That(text.ToString()).IsEqualTo("café");
+        return Verify(new { text.RuneLength, result = text.ToString() });
     }
 
     // Cross-encoding appends
 
     [Test]
-    public async Task Append_Utf8Bytes_WithExplicitEncoding_ToUtf16Builder_Transcodes()
+    public Task Append_Utf8Bytes_WithExplicitEncoding_ToUtf16Builder_Transcodes()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf16);
@@ -385,12 +370,11 @@ public partial class TextBuilderTests
         builder.Append("hello"u8, TextEncoding.Utf8);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("hello");
-        await Assert.That(builder.RuneLength).IsEqualTo(5);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 
     [Test]
-    public async Task Append_Utf16Text_ToUtf8Builder_Transcodes()
+    public Task Append_Utf16Text_ToUtf8Builder_Transcodes()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -400,14 +384,13 @@ public partial class TextBuilderTests
         builder.Append(text);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("World");
-        await Assert.That(builder.RuneLength).IsEqualTo(5);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 
     // Same-encoding TextSpan — fast path
 
     [Test]
-    public async Task Append_SameEncodingTextSpan_UsesAppendBytes()
+    public Task Append_SameEncodingTextSpan_UsesAppendBytes()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -417,7 +400,6 @@ public partial class TextBuilderTests
         builder.Append(span);
 
         // Assert
-        await Assert.That(builder.ToString()).IsEqualTo("hello");
-        await Assert.That(builder.RuneLength).IsEqualTo(5);
+        return Verify(new { result = builder.ToString(), builder.RuneLength });
     }
 }

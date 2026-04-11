@@ -1,0 +1,5 @@
+﻿{
+  lengthMatch: true,
+  startMatch: true,
+  endMatch: true
+}

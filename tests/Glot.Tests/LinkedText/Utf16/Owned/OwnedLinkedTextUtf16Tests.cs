@@ -3,21 +3,22 @@ namespace Glot.Tests;
 public class OwnedLinkedTextUtf16Tests
 {
     [Test]
-    public async Task AsSpan_ReturnsValidSpan()
+    public Task AsSpan_ReturnsValidSpan()
     {
         // Arrange
         using var owned = LinkedTextUtf16.CreateOwned("hello", " - ", "world");
 
         // Act
         var span = owned.AsSpan();
+        var length = span.Length;
+        var result = span.ToString();
 
         // Assert
-        await Assert.That(span.Length).IsEqualTo(13);
-        await Assert.That(span.ToString()).IsEqualTo("hello - world");
+        return Verify(new { length, result });
     }
 
     [Test]
-    public async Task Dispose_SetsIsDisposed()
+    public Task Dispose_SetsIsDisposed()
     {
         // Arrange
         var owned = LinkedTextUtf16.CreateOwned("hello");
@@ -26,9 +27,7 @@ public class OwnedLinkedTextUtf16Tests
         owned.Dispose();
 
         // Assert
-        await Assert.That(owned.IsDisposed).IsTrue();
-        await Assert.That(owned.Length).IsEqualTo(0);
-        await Assert.That(owned.IsEmpty).IsTrue();
+        return Verify(new { owned.IsDisposed, owned.Length, owned.IsEmpty });
     }
 
     [Test]
@@ -54,30 +53,29 @@ public class OwnedLinkedTextUtf16Tests
 
         // Act
         var span = owned.AsSpan();
+        var isEmpty = span.IsEmpty;
 
         // Assert
-        await Assert.That(span.IsEmpty).IsTrue();
+        await Assert.That(isEmpty).IsTrue();
     }
 
     [Test]
-    public async Task Length_ReturnsDataLength()
+    public Task Length_ReturnsDataLength()
     {
         // Arrange
         using var owned = LinkedTextUtf16.CreateOwned("hello", " world");
 
         // Assert
-        await Assert.That(owned.Length).IsEqualTo(11);
-        await Assert.That(owned.IsEmpty).IsFalse();
+        return Verify(new { owned.Length, owned.IsEmpty });
     }
 
     [Test]
-    public async Task Data_ReturnsUnderlyingInstance()
+    public Task Data_ReturnsUnderlyingInstance()
     {
         // Arrange
         using var owned = LinkedTextUtf16.CreateOwned("hello");
 
         // Assert
-        await Assert.That(owned.Data).IsNotNull();
-        await Assert.That(owned.Data!.Length).IsEqualTo(5);
+        return Verify(new { isNotNull = owned.Data is not null, length = owned.Data!.Length });
     }
 }

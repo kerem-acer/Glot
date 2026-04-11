@@ -1,0 +1,5 @@
+﻿{
+  result: Hi!,
+  ByteLength: 12,
+  RuneLength: 3
+}

@@ -1,0 +1,5 @@
+﻿{
+  SegmentCount: 1,
+  Length: 5,
+  result: café
+}

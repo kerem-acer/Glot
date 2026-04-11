@@ -49,14 +49,10 @@ public class RuneExtensionsTests
     {
         // Arrange
         var rune = new Rune('A');
-        Exception? caught = null;
 
-        // Act
-        try { _ = rune.GetByteCount((TextEncoding)99); }
-        catch (Exception ex) { caught = ex; }
-
-        // Assert
-        await Assert.That(caught).IsNotNull();
+        // Act & Assert
+        await Assert.That(() => _ = rune.GetByteCount((TextEncoding)99))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
@@ -65,14 +61,10 @@ public class RuneExtensionsTests
         // Arrange
         var rune = new Rune('A');
         var dest = new byte[4];
-        Exception? caught = null;
 
-        // Act
-        try { _ = rune.EncodeTo(dest, (TextEncoding)99); }
-        catch (Exception ex) { caught = ex; }
-
-        // Assert
-        await Assert.That(caught).IsNotNull();
+        // Act & Assert
+        await Assert.That(() => _ = rune.EncodeTo(dest, (TextEncoding)99))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
@@ -80,14 +72,10 @@ public class RuneExtensionsTests
     {
         // Arrange
         byte[] bytes = [65]; // 'A'
-        Exception? caught = null;
 
-        // Act
-        try { Rune.TryDecodeFirst(bytes, (TextEncoding)99, out _, out _); }
-        catch (Exception ex) { caught = ex; }
-
-        // Assert
-        await Assert.That(caught).IsNotNull();
+        // Act & Assert
+        await Assert.That(() => Rune.TryDecodeFirst(bytes, (TextEncoding)99, out _, out _))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
@@ -95,13 +83,9 @@ public class RuneExtensionsTests
     {
         // Arrange
         byte[] bytes = [65]; // 'A'
-        Exception? caught = null;
 
-        // Act
-        try { Rune.TryDecodeLast(bytes, (TextEncoding)99, out _, out _); }
-        catch (Exception ex) { caught = ex; }
-
-        // Assert
-        await Assert.That(caught).IsNotNull();
+        // Act & Assert
+        await Assert.That(() => Rune.TryDecodeLast(bytes, (TextEncoding)99, out _, out _))
+            .Throws<ArgumentOutOfRangeException>();
     }
 }

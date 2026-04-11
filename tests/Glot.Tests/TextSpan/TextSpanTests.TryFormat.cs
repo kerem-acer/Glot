@@ -8,7 +8,8 @@ public partial class TextSpanTests
     public async Task TryFormat_Char_Utf16Span_DirectCopy()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
         var span = text.AsSpan();
         var dest = new char[10];
 
@@ -18,7 +19,7 @@ public partial class TextSpanTests
         // Assert
         await Assert.That(success).IsTrue();
         await Assert.That(written).IsEqualTo(5);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+        await Assert.That(new string(dest, 0, written)).IsEqualTo(expected);
     }
 
     [Test]
@@ -162,14 +163,15 @@ public partial class TextSpanTests
     public async Task ToString_WithFormatProvider_SameAsToString()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
         var span = text.AsSpan();
 
         // Act
         var result = span.ToString(null, null);
 
         // Assert
-        await Assert.That(result).IsEqualTo("Hello");
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // Equals(object?) — always false for ref struct
@@ -195,7 +197,8 @@ public partial class TextSpanTests
     public async Task EncodeToUtf16_Utf16Span_IdentityCopy()
     {
         // Arrange
-        var text = Text.From("Hello");
+        const string expected = "Hello";
+        var text = Text.From(expected);
         var span = text.AsSpan();
         var dest = new char[10];
 
@@ -204,7 +207,7 @@ public partial class TextSpanTests
 
         // Assert
         await Assert.That(written).IsEqualTo(5);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+        await Assert.That(new string(dest, 0, written)).IsEqualTo(expected);
     }
 
     // EncodeToUtf8 — identity copy when already UTF-8

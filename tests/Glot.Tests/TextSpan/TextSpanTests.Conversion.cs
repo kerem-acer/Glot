@@ -124,7 +124,7 @@ public partial class TextSpanTests
     // AsInts
 
     [Test]
-    public async Task AsInts_Utf32_ReturnsCastSpan()
+    public Task AsInts_Utf32_ReturnsCastSpan()
     {
         // Arrange
         var bytes = TestHelpers.Encode("ABC", TextEncoding.Utf32);
@@ -132,20 +132,14 @@ public partial class TextSpanTests
 
         // Act
         var ints = span.Ints;
-        var length = ints.Length;
-        var first = ints[0];
-        var second = ints[1];
-        var third = ints[2];
+        var values = ints.ToArray();
 
         // Assert
-        await Assert.That(length).IsEqualTo(3);
-        await Assert.That(first).IsEqualTo('A');
-        await Assert.That(second).IsEqualTo('B');
-        await Assert.That(third).IsEqualTo('C');
+        return Verify(values);
     }
 
     [Test]
-    public async Task AsInts_Utf32Emoji_ReturnsCodePoints()
+    public Task AsInts_Utf32Emoji_ReturnsCodePoints()
     {
         // Arrange
         var bytes = TestHelpers.Encode("A🎉", TextEncoding.Utf32);
@@ -153,14 +147,10 @@ public partial class TextSpanTests
 
         // Act
         var ints = span.Ints;
-        var length = ints.Length;
-        var first = ints[0];
-        var second = ints[1];
+        var values = ints.ToArray();
 
         // Assert
-        await Assert.That(length).IsEqualTo(2);
-        await Assert.That(first).IsEqualTo('A');
-        await Assert.That(second).IsEqualTo(0x1F389); // 🎉
+        return Verify(values);
     }
 
     [Test]

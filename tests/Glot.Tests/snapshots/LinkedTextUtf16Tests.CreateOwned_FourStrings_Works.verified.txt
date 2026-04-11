@@ -1,0 +1,4 @@
+﻿{
+  segmentCount: 4,
+  result: abcd
+}

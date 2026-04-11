@@ -1,0 +1,4 @@
+﻿{
+  segmentCount: 1,
+  result: world
+}

@@ -1,0 +1,4 @@
+﻿{
+  startEqual: true,
+  endEqual: true
+}

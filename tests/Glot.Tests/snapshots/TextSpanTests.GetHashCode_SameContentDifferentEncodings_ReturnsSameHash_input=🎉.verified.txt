@@ -1,0 +1,4 @@
+﻿{
+  hash8EqualHash16: true,
+  hash8EqualHash32: true
+}

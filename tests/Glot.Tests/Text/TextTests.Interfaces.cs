@@ -15,79 +15,73 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task TryParse_String_AlwaysSucceeds()
+    public Task TryParse_String_AlwaysSucceeds()
     {
         // Act
         var success = Text.TryParse("Hello", null, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.ToString()).IsEqualTo("Hello");
+        return Verify(new { success, result = result.ToString() });
     }
 
     [Test]
-    public async Task TryParse_NullString_ReturnsEmpty()
+    public Task TryParse_NullString_ReturnsEmpty()
     {
         // Act
         var success = Text.TryParse((string?)null, null, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.IsEmpty).IsTrue();
+        return Verify(new { success, result.IsEmpty });
     }
 
     // ISpanParsable<Text>
 
     [Test]
-    public async Task Parse_CharSpan_ReturnsUtf16Text()
+    public Task Parse_CharSpan_ReturnsUtf16Text()
     {
         // Act
         var result = Text.Parse("Hello".AsSpan(), null);
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello");
-        await Assert.That(result.Encoding).IsEqualTo(TextEncoding.Utf16);
+        return Verify(new { text = result.ToString(), result.Encoding });
     }
 
     [Test]
-    public async Task TryParse_CharSpan_AlwaysSucceeds()
+    public Task TryParse_CharSpan_AlwaysSucceeds()
     {
         // Act
         var success = Text.TryParse("café".AsSpan(), null, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.ToString()).IsEqualTo("café");
+        return Verify(new { success, result = result.ToString() });
     }
 
     // IUtf8SpanParsable<Text>
 
     [Test]
-    public async Task Parse_Utf8Span_ReturnsUtf8Text()
+    public Task Parse_Utf8Span_ReturnsUtf8Text()
     {
         // Act
         var result = Text.Parse("Hello"u8, null);
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello");
-        await Assert.That(result.Encoding).IsEqualTo(TextEncoding.Utf8);
+        return Verify(new { text = result.ToString(), result.Encoding });
     }
 
     [Test]
-    public async Task TryParse_Utf8Span_AlwaysSucceeds()
+    public Task TryParse_Utf8Span_AlwaysSucceeds()
     {
         // Act
         var success = Text.TryParse("café"u8, null, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.ToString()).IsEqualTo("café");
+        return Verify(new { success, result = result.ToString() });
     }
 
     // ISpanFormattable
 
     [Test]
-    public async Task ISpanFormattable_TryFormat_WritesChars()
+    public Task ISpanFormattable_TryFormat_WritesChars()
     {
         // Arrange
         var text = Text.From("Hello");
@@ -95,17 +89,16 @@ public partial class TextTests
 
         // Act
         var success = ((ISpanFormattable)text).TryFormat(dest, out var written, default, null);
+        var result = new string(dest, 0, written);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(written).IsEqualTo(5);
-        await Assert.That(new string(dest, 0, written)).IsEqualTo("Hello");
+        return Verify(new { success, written, result });
     }
 
     // IUtf8SpanFormattable
 
     [Test]
-    public async Task IUtf8SpanFormattable_TryFormat_WritesUtf8()
+    public Task IUtf8SpanFormattable_TryFormat_WritesUtf8()
     {
         // Arrange
         var text = Text.FromUtf8("Hello"u8);
@@ -115,8 +108,7 @@ public partial class TextTests
         var success = ((IUtf8SpanFormattable)text).TryFormat(dest, out var written, default, null);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(written).IsEqualTo(5);
+        return Verify(new { success, written });
     }
 
     // Generic parsing — works with generic constraints

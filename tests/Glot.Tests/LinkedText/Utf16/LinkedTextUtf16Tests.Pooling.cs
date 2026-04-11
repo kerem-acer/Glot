@@ -13,14 +13,17 @@ public partial class LinkedTextUtf16Tests
         // Act
         owned.Dispose();
 
-        // Assert
-        await Assert.That(data.SegmentCount).IsEqualTo(0);
-        await Assert.That(data.Length).IsEqualTo(0);
-        await Assert.That(data.IsEmpty).IsTrue();
+        // Assert — capture eagerly; pooled object may be reused by parallel tests
+        var segmentCount = data.SegmentCount;
+        var length = data.Length;
+        var isEmpty = data.IsEmpty;
+        await Assert.That(segmentCount).IsEqualTo(0);
+        await Assert.That(length).IsEqualTo(0);
+        await Assert.That(isEmpty).IsTrue();
     }
 
     [Test]
-    public async Task CreateOwned_Dispose_InstanceCanBeReused()
+    public Task CreateOwned_Dispose_InstanceCanBeReused()
     {
         // Arrange — dispose returns to pool
         var owned = LinkedTextUtf16.CreateOwned("hello");
@@ -30,8 +33,7 @@ public partial class LinkedTextUtf16Tests
         using var owned2 = LinkedTextUtf16.CreateOwned("world");
 
         // Assert — instance is clean and functional
-        await Assert.That(owned2.Data!.SegmentCount).IsEqualTo(1);
-        await Assert.That(owned2.AsSpan().ToString()).IsEqualTo("world");
+        return Verify(new { segmentCount = owned2.Data!.SegmentCount, result = owned2.AsSpan().ToString() });
     }
 
     [Test]
@@ -52,7 +54,8 @@ public partial class LinkedTextUtf16Tests
 
         // Assert — pool works normally after overflow
         using var owned = LinkedTextUtf16.CreateOwned("verify");
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("verify");
+        const string expected = "verify";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     [Test]
@@ -73,6 +76,7 @@ public partial class LinkedTextUtf16Tests
 
         // Assert
         using var owned = LinkedTextUtf16.CreateOwned($"verify: {42}");
-        await Assert.That(owned.AsSpan().ToString()).IsEqualTo("verify: 42");
+        const string expected = "verify: 42";
+        await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 }

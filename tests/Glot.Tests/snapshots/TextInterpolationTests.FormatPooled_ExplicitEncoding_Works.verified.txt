@@ -1,0 +1,4 @@
+﻿{
+  result: Hi 42,
+  encoding: Utf32
+}

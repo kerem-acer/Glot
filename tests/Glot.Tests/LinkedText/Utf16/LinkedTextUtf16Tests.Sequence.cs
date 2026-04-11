@@ -7,20 +7,19 @@ public partial class LinkedTextUtf16Tests
     // AsSequence — empty
 
     [Test]
-    public async Task AsSequence_Empty_ReturnsEmptySequence()
+    public Task AsSequence_Empty_ReturnsEmptySequence()
     {
         // Act
         var seq = LinkedTextUtf16.Empty.AsSequence();
 
         // Assert
-        await Assert.That(seq.Length).IsEqualTo(0);
-        await Assert.That(seq.IsEmpty).IsTrue();
+        return Verify(new { seq.Length, seq.IsEmpty });
     }
 
     // AsSequence — single segment (no nodes needed)
 
     [Test]
-    public async Task AsSequence_SingleSegment_ReturnsSingleSegmentSequence()
+    public Task AsSequence_SingleSegment_ReturnsSingleSegmentSequence()
     {
         // Arrange
         var linked = LinkedTextUtf16.Create("hello");
@@ -29,9 +28,7 @@ public partial class LinkedTextUtf16Tests
         var seq = linked.AsSequence();
 
         // Assert
-        await Assert.That(seq.Length).IsEqualTo(5);
-        await Assert.That(seq.IsSingleSegment).IsTrue();
-        await Assert.That(new string(seq.FirstSpan)).IsEqualTo("hello");
+        return Verify(new { seq.Length, seq.IsSingleSegment, firstSpan = new string(seq.FirstSpan) });
     }
 
     // AsSequence — multi segment
@@ -45,21 +42,22 @@ public partial class LinkedTextUtf16Tests
         // Act
         var seq = linked.AsSequence();
 
-        // Assert
-        await Assert.That(seq.Length).IsEqualTo(13);
-        await Assert.That(seq.IsSingleSegment).IsFalse();
-
         // Verify content by copying to array
         var buffer = new char[13];
         seq.CopyTo(buffer);
         var result = new string(buffer);
-        await Assert.That(result).IsEqualTo("hello - world");
+
+        // Assert
+        const string expected = "hello - world";
+        await Assert.That(seq.Length).IsEqualTo(13);
+        await Assert.That(seq.IsSingleSegment).IsFalse();
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     // AsSequence — caching
 
     [Test]
-    public async Task AsSequence_CalledTwice_ReturnsCachedInstance()
+    public Task AsSequence_CalledTwice_ReturnsCachedInstance()
     {
         // Arrange
         var linked = LinkedTextUtf16.Create("hello", " - ", "world");
@@ -69,9 +67,12 @@ public partial class LinkedTextUtf16Tests
         var seq2 = linked.AsSequence();
 
         // Assert — ReadOnlySequence is a struct, but the backing segments are same
-        await Assert.That(seq1.Length).IsEqualTo(seq2.Length);
-        await Assert.That(seq1.Start.Equals(seq2.Start)).IsTrue();
-        await Assert.That(seq1.End.Equals(seq2.End)).IsTrue();
+        return Verify(new
+        {
+            lengthMatch = seq1.Length == seq2.Length,
+            startMatch = seq1.Start.Equals(seq2.Start),
+            endMatch = seq1.End.Equals(seq2.End)
+        });
     }
 
     [Test]
@@ -90,9 +91,10 @@ public partial class LinkedTextUtf16Tests
         var results = await Task.WhenAll(tasks);
 
         // Assert — all results valid
+        const long expectedLength = 13;
         for (var i = 0; i < results.Length; i++)
         {
-            await Assert.That(results[i].Length).IsEqualTo(13);
+            await Assert.That(results[i].Length).IsEqualTo(expectedLength);
         }
     }
 
@@ -109,6 +111,7 @@ public partial class LinkedTextUtf16Tests
         // Assert — pool still works
         var lt2 = LinkedTextUtf16.Create("x", "y");
         var seq = lt2.AsSequence();
-        await Assert.That(seq.Length).IsEqualTo(2);
+        const long expectedLength = 2;
+        await Assert.That(seq.Length).IsEqualTo(expectedLength);
     }
 }

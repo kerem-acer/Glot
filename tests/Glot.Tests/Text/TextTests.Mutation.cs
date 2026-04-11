@@ -410,7 +410,7 @@ public partial class TextTests
     // Round-trip
 
     [Test]
-    public async Task RoundTrip_UpperLower_Ascii()
+    public Task RoundTrip_UpperLower_Ascii()
     {
         // Arrange
         var text = Text.From("Hello World");
@@ -420,8 +420,7 @@ public partial class TextTests
         var lower = upper.ToLowerInvariant();
 
         // Assert
-        await Assert.That(upper.ToString()).IsEqualTo("HELLO WORLD");
-        await Assert.That(lower.ToString()).IsEqualTo("hello world");
+        return Verify(new { upper = upper.ToString(), lower = lower.ToString() });
     }
 
     // Concat
@@ -495,14 +494,13 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task Concat_CrossEncoding_UsesFirstEncoding()
+    public Task Concat_CrossEncoding_UsesFirstEncoding()
     {
         // Act
         var result = Text.Concat(Text.FromUtf8("Hello"u8), Text.From(" World"));
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello World");
-        await Assert.That(result.Encoding).IsEqualTo(TextEncoding.Utf8);
+        return Verify(new { text = result.ToString(), result.Encoding });
     }
 
     [Test]
@@ -540,7 +538,7 @@ public partial class TextTests
     // Utf8-backed mutations
 
     [Test]
-    public async Task Replace_Utf8Backed_PreservesEncoding()
+    public Task Replace_Utf8Backed_PreservesEncoding()
     {
         // Arrange
         var text = Text.FromUtf8("Hello World"u8);
@@ -549,12 +547,11 @@ public partial class TextTests
         var result = text.Replace(Text.FromUtf8("World"u8), Text.FromUtf8("Glot"u8));
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello Glot");
-        await Assert.That(result.Encoding).IsEqualTo(TextEncoding.Utf8);
+        return Verify(new { text = result.ToString(), result.Encoding });
     }
 
     [Test]
-    public async Task Insert_Utf8Backed_PreservesEncoding()
+    public Task Insert_Utf8Backed_PreservesEncoding()
     {
         // Arrange
         var text = Text.FromUtf8("HelloWorld"u8);
@@ -563,7 +560,6 @@ public partial class TextTests
         var result = text.Insert(5, Text.FromUtf8(" "u8));
 
         // Assert
-        await Assert.That(result.ToString()).IsEqualTo("Hello World");
-        await Assert.That(result.Encoding).IsEqualTo(TextEncoding.Utf8);
+        return Verify(new { text = result.ToString(), result.Encoding });
     }
 }

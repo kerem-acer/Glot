@@ -1,0 +1,4 @@
+﻿{
+  byteLen: 5,
+  runeLen: 4
+}

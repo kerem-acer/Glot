@@ -5,7 +5,7 @@ public partial class LinkedTextUtf8Tests
     // Create with Text — same encoding (UTF-8)
 
     [Test]
-    public async Task Create_Utf8Text_CopiesIntoFormatBuffer()
+    public Task Create_Utf8Text_CopiesIntoFormatBuffer()
     {
         // Arrange
         var text = Text.FromUtf8("hello"u8);
@@ -14,15 +14,13 @@ public partial class LinkedTextUtf8Tests
         var linked = LinkedTextUtf8.Create(text);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.Length).IsEqualTo(5);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello");
+        return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
     // Create with Text — different encoding (UTF-16 → UTF-8 transcode)
 
     [Test]
-    public async Task Create_Utf16Text_TranscodesToUtf8()
+    public Task Create_Utf16Text_TranscodesToUtf8()
     {
         // Arrange
         var text = Text.From("café");
@@ -30,16 +28,14 @@ public partial class LinkedTextUtf8Tests
         // Act
         var linked = LinkedTextUtf8.Create(text);
 
-        // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(1);
-        await Assert.That(linked.Length).IsEqualTo(5); // 5 bytes in UTF-8 (é = 2 bytes)
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("café");
+        // Assert — 5 bytes in UTF-8 (é = 2 bytes)
+        return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
     // Create with two Text values — different encodings
 
     [Test]
-    public async Task Create_MixedEncodings_TranscodesCorrectly()
+    public Task Create_MixedEncodings_TranscodesCorrectly()
     {
         // Arrange
         var utf8 = Text.FromUtf8("hello "u8);
@@ -49,14 +45,13 @@ public partial class LinkedTextUtf8Tests
         var linked = LinkedTextUtf8.Create(utf8, utf16);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(2);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     // Create with three Text values
 
     [Test]
-    public async Task Create_ThreeTexts_AllTranscoded()
+    public Task Create_ThreeTexts_AllTranscoded()
     {
         // Arrange
         var t1 = Text.From("hello");
@@ -67,8 +62,7 @@ public partial class LinkedTextUtf8Tests
         var linked = LinkedTextUtf8.Create(t1, t2, t3);
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsEqualTo(3);
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("hello - world");
+        return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
     // CreateOwned with Text
@@ -115,7 +109,7 @@ public partial class LinkedTextUtf8Tests
     // Format buffer growth — many Text values overflow initial buffer
 
     [Test]
-    public async Task Create_ManyTexts_GrowsBuffer()
+    public Task Create_ManyTexts_GrowsBuffer()
     {
         // Arrange — each transcoded segment accumulates in format buffer
         var texts = Enumerable.Range(0, 50)
@@ -126,14 +120,13 @@ public partial class LinkedTextUtf8Tests
         var linked = LinkedTextUtf8.Create(texts.AsSpan());
 
         // Assert
-        await Assert.That(linked.SegmentCount).IsGreaterThan(0);
-        await Assert.That(linked.Length).IsGreaterThan(0);
+        return Verify(new { segmentCountPositive = linked.SegmentCount > 0, lengthPositive = linked.Length > 0 });
     }
 
     // Unicode — emoji and supplementary characters
 
     [Test]
-    public async Task Create_Utf16Text_WithEmoji_TranscodesCorrectly()
+    public Task Create_Utf16Text_WithEmoji_TranscodesCorrectly()
     {
         // Arrange — 🎉 is U+1F389, 2 chars UTF-16 (surrogate pair), 4 bytes UTF-8
         var text = Text.From("🎉");
@@ -141,8 +134,7 @@ public partial class LinkedTextUtf8Tests
         // Act
         var linked = LinkedTextUtf8.Create(text);
 
-        // Assert
-        await Assert.That(linked.AsSpan().ToString()).IsEqualTo("🎉");
-        await Assert.That(linked.Length).IsEqualTo(4); // 4 bytes in UTF-8
+        // Assert — 4 bytes in UTF-8
+        return Verify(new { result = linked.AsSpan().ToString(), linked.Length });
     }
 }

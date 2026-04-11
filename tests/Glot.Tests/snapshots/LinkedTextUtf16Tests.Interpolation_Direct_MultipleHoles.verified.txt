@@ -1,0 +1,4 @@
+﻿{
+  SegmentCount: 3,
+  result: hello - world
+}

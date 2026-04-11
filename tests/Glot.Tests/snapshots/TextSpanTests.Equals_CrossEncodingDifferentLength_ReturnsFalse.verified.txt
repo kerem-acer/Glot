@@ -1,0 +1,4 @@
+﻿{
+  shorterEqualsLonger: false,
+  longerEqualsShorter: false
+}

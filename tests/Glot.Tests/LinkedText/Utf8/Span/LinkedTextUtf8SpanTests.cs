@@ -9,15 +9,16 @@ public partial class LinkedTextUtf8SpanTests
     // Properties
 
     [Test]
-    public async Task Default_IsEmpty()
+    public Task Default_IsEmpty()
     {
         // Arrange
         var span = default(LinkedTextUtf8Span);
 
         // Assert
-        await Assert.That(span.IsEmpty).IsTrue();
-        await Assert.That(span.Length).IsEqualTo(0);
-        await Assert.That(span.ToString()).IsEqualTo(string.Empty);
+        var isEmpty = span.IsEmpty;
+        var length = span.Length;
+        var result = span.ToString();
+        return Verify(new { isEmpty, length, result });
     }
 
     // Indexer

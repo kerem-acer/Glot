@@ -1,0 +1,4 @@
+﻿{
+  length: 11,
+  result: llo - world
+}

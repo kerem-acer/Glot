@@ -1,0 +1,5 @@
+﻿{
+  result: Hello,
+  RuneLength: 5,
+  ByteLength: 5
+}

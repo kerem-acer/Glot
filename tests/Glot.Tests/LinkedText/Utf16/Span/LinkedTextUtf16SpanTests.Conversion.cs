@@ -10,13 +10,14 @@ public partial class LinkedTextUtf16SpanTests
     public async Task ToString_SingleSegment_ReturnsString()
     {
         // Arrange
-        var span = LinkedTextUtf16.Create("hello").AsSpan();
+        const string expected = "hello";
+        var span = LinkedTextUtf16.Create(expected).AsSpan();
 
         // Act
         var result = span.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("hello");
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     [Test]
@@ -29,7 +30,8 @@ public partial class LinkedTextUtf16SpanTests
         var result = span.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("hello - world");
+        const string expected = "hello - world";
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     [Test]
@@ -43,7 +45,8 @@ public partial class LinkedTextUtf16SpanTests
         var result = sliced.ToString();
 
         // Assert
-        await Assert.That(result).IsEqualTo("lo - wo");
+        const string expected = "lo - wo";
+        await Assert.That(result).IsEqualTo(expected);
     }
 
     [Test]
@@ -73,7 +76,8 @@ public partial class LinkedTextUtf16SpanTests
 
         // Assert
         var written = new string(writer.WrittenSpan);
-        await Assert.That(written).IsEqualTo("hello - world");
+        const string expected = "hello - world";
+        await Assert.That(written).IsEqualTo(expected);
     }
 
     [Test]
@@ -89,7 +93,8 @@ public partial class LinkedTextUtf16SpanTests
 
         // Assert
         var written = new string(writer.WrittenSpan);
-        await Assert.That(written).IsEqualTo("llo - wor");
+        const string expected = "llo - wor";
+        await Assert.That(written).IsEqualTo(expected);
     }
 
     [Test]

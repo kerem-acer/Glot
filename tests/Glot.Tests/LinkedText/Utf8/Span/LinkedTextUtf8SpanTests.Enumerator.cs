@@ -5,7 +5,7 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8SpanTests
 {
     [Test]
-    public async Task EnumerateSegments_FullSpan_YieldsAllSegments()
+    public Task EnumerateSegments_FullSpan_YieldsAllSegments()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
@@ -18,14 +18,11 @@ public partial class LinkedTextUtf8SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("hello");
-        await Assert.That(segments[1]).IsEqualTo(" - ");
-        await Assert.That(segments[2]).IsEqualTo("world");
+        return Verify(segments);
     }
 
     [Test]
-    public async Task EnumerateSegments_SingleSegment_YieldsOne()
+    public Task EnumerateSegments_SingleSegment_YieldsOne()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello")).AsSpan();
@@ -38,8 +35,7 @@ public partial class LinkedTextUtf8SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(1);
-        await Assert.That(segments[0]).IsEqualTo("hello");
+        return Verify(segments);
     }
 
     [Test]
@@ -60,7 +56,7 @@ public partial class LinkedTextUtf8SpanTests
     }
 
     [Test]
-    public async Task EnumerateSegments_SlicedAcrossSegments_YieldsSlicedFirstAndLast()
+    public Task EnumerateSegments_SlicedAcrossSegments_YieldsSlicedFirstAndLast()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
@@ -74,14 +70,11 @@ public partial class LinkedTextUtf8SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("lo");
-        await Assert.That(segments[1]).IsEqualTo(" - ");
-        await Assert.That(segments[2]).IsEqualTo("wo");
+        return Verify(segments);
     }
 
     [Test]
-    public async Task EnumerateSegments_SlicedAtBoundary_YieldsFullMiddleSegment()
+    public Task EnumerateSegments_SlicedAtBoundary_YieldsFullMiddleSegment()
     {
         // Arrange
         var span = LinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world")).AsSpan();
@@ -95,7 +88,6 @@ public partial class LinkedTextUtf8SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(1);
-        await Assert.That(segments[0]).IsEqualTo(" - ");
+        return Verify(segments);
     }
 }

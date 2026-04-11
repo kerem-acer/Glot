@@ -18,7 +18,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParse_FromText_Succeeds()
+    public Task Int_TryParse_FromText_Succeeds()
     {
         // Arrange
         var text = Text.FromUtf8("123"u8);
@@ -27,12 +27,11 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(123);
+        return Verify(new { success, result });
     }
 
     [Test]
-    public async Task Int_TryParse_Invalid_ReturnsFalse()
+    public Task Int_TryParse_Invalid_ReturnsFalse()
     {
         // Arrange
         var text = Text.From("not a number");
@@ -41,8 +40,7 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsFalse();
-        await Assert.That(result).IsEqualTo(0);
+        return Verify(new { success, result });
     }
 
     // long
@@ -63,7 +61,7 @@ public partial class ParseExtensionTests
     // double
 
     [Test]
-    public async Task Double_TryParse_FromText()
+    public Task Double_TryParse_FromText()
     {
         // Arrange
         var text = Text.From("3.14");
@@ -72,8 +70,7 @@ public partial class ParseExtensionTests
         var success = double.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(3.14);
+        return Verify(new { success, result });
     }
 
     // bool
@@ -91,24 +88,23 @@ public partial class ParseExtensionTests
     // Guid
 
     [Test]
-    public async Task Guid_TryParse_FromText()
+    public Task Guid_TryParse_FromText()
     {
         // Arrange
-        var expected = Guid.Parse("12345678-1234-1234-1234-123456789abc");
-        var text = Text.From("12345678-1234-1234-1234-123456789abc");
+        const string guidString = "12345678-1234-1234-1234-123456789abc";
+        var text = Text.From(guidString);
 
         // Act
         var success = Guid.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result });
     }
 
     // DateTime
 
     [Test]
-    public async Task DateTime_Parse_FromText()
+    public Task DateTime_Parse_FromText()
     {
         // Arrange
         var text = Text.From("2026-04-10");
@@ -117,9 +113,7 @@ public partial class ParseExtensionTests
         var result = DateTime.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
 
         // Assert
-        await Assert.That(result.Year).IsEqualTo(2026);
-        await Assert.That(result.Month).IsEqualTo(4);
-        await Assert.That(result.Day).IsEqualTo(10);
+        return Verify(new { result.Year, result.Month, result.Day });
     }
 
     // UTF-8 fast path
@@ -138,7 +132,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParseUtf8_Succeeds()
+    public Task Int_TryParseUtf8_Succeeds()
     {
         // Arrange
         var text = Text.FromUtf8("123"u8);
@@ -147,8 +141,7 @@ public partial class ParseExtensionTests
         var success = int.TryParseUtf8(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(123);
+        return Verify(new { success, result });
     }
 
     [Test]
@@ -165,18 +158,17 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Guid_TryParseUtf8_Succeeds()
+    public Task Guid_TryParseUtf8_Succeeds()
     {
         // Arrange
-        var expected = Guid.Parse("12345678-1234-1234-1234-123456789abc");
-        var text = Text.FromUtf8("12345678-1234-1234-1234-123456789abc"u8);
+        const string guidString = "12345678-1234-1234-1234-123456789abc";
+        var text = Text.FromUtf8(System.Text.Encoding.UTF8.GetBytes(guidString));
 
         // Act
         var success = Guid.TryParseUtf8(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result });
     }
 
     // Large input — exceeds StackAllocThreshold (256), triggers ArrayPool rent/return
@@ -196,7 +188,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParse_LargeUtf8Input_UsesArrayPool()
+    public Task Int_TryParse_LargeUtf8Input_UsesArrayPool()
     {
         // Arrange
         var padded = new string(' ', 300) + "99";
@@ -206,8 +198,7 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(99);
+        return Verify(new { success, result });
     }
 
     [Test]
@@ -225,7 +216,7 @@ public partial class ParseExtensionTests
     }
 
     [Test]
-    public async Task Int_TryParseUtf8_LargeUtf16Input_UsesArrayPool()
+    public Task Int_TryParseUtf8_LargeUtf16Input_UsesArrayPool()
     {
         // Arrange
         var padded = new string(' ', 300) + "55";
@@ -235,14 +226,13 @@ public partial class ParseExtensionTests
         var success = int.TryParseUtf8(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(55);
+        return Verify(new { success, result });
     }
 
     // TryParse single-arg overload (no provider)
 
     [Test]
-    public async Task Int_TryParse_NoProvider_Succeeds()
+    public Task Int_TryParse_NoProvider_Succeeds()
     {
         // Arrange
         var text = Text.From("42");
@@ -251,7 +241,6 @@ public partial class ParseExtensionTests
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(42);
+        return Verify(new { success, result });
     }
 }

@@ -1,0 +1,5 @@
+﻿{
+  SegmentCount: 3,
+  Length: 12,
+  result: Hello world!
+}

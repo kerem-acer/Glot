@@ -1,0 +1,8 @@
+﻿{
+  char0: h,
+  char4: o,
+  char5:  ,
+  char7:  ,
+  char8: w,
+  char12: d
+}

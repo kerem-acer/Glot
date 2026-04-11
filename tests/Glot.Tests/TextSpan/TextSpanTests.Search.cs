@@ -45,7 +45,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task Contains_ReadOnlySpanByte_MatchesCorrectly()
+    public Task Contains_ReadOnlySpanByte_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello World"u8, TextEncoding.Utf8);
@@ -55,12 +55,11 @@ public partial class TextSpanTests
         var notFound = span.Contains("xyz"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task Contains_ReadOnlySpanChar_MatchesCorrectly()
+    public Task Contains_ReadOnlySpanChar_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello World"u8, TextEncoding.Utf8);
@@ -70,12 +69,11 @@ public partial class TextSpanTests
         var notFound = span.Contains("xyz".AsSpan());
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task Contains_MultiByteUtf8_DistinguishesAccents()
+    public Task Contains_MultiByteUtf8_DistinguishesAccents()
     {
         // Arrange
         var span = new TextSpan("I love café"u8, TextEncoding.Utf8);
@@ -85,8 +83,7 @@ public partial class TextSpanTests
         var notFound = span.Contains("cafe"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
@@ -481,7 +478,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task StartsWith_ReadOnlySpanByte_MatchesCorrectly()
+    public Task StartsWith_ReadOnlySpanByte_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
@@ -491,12 +488,11 @@ public partial class TextSpanTests
         var notFound = span.StartsWith("lo"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task StartsWith_ReadOnlySpanChar_MatchesCorrectly()
+    public Task StartsWith_ReadOnlySpanChar_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
@@ -506,12 +502,11 @@ public partial class TextSpanTests
         var notFound = span.StartsWith("lo".AsSpan());
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task StartsWith_MultiBytePrefix_DistinguishesAccents()
+    public Task StartsWith_MultiBytePrefix_DistinguishesAccents()
     {
         // Arrange
         var span = new TextSpan("café latte"u8, TextEncoding.Utf8);
@@ -521,8 +516,7 @@ public partial class TextSpanTests
         var notFound = span.StartsWith("cafe"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
@@ -636,7 +630,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task EndsWith_ReadOnlySpanByte_MatchesCorrectly()
+    public Task EndsWith_ReadOnlySpanByte_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
@@ -646,12 +640,11 @@ public partial class TextSpanTests
         var notFound = span.EndsWith("He"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task EndsWith_ReadOnlySpanChar_MatchesCorrectly()
+    public Task EndsWith_ReadOnlySpanChar_MatchesCorrectly()
     {
         // Arrange
         var span = new TextSpan("Hello"u8, TextEncoding.Utf8);
@@ -661,12 +654,11 @@ public partial class TextSpanTests
         var notFound = span.EndsWith("He".AsSpan());
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
-    public async Task EndsWith_MultiByteSuffix_DistinguishesAccents()
+    public Task EndsWith_MultiByteSuffix_DistinguishesAccents()
     {
         // Arrange
         var span = new TextSpan("hello café"u8, TextEncoding.Utf8);
@@ -676,8 +668,7 @@ public partial class TextSpanTests
         var notFound = span.EndsWith("cafe"u8);
 
         // Assert
-        await Assert.That(found).IsTrue();
-        await Assert.That(notFound).IsFalse();
+        return Verify(new { found, notFound });
     }
 
     [Test]
@@ -796,7 +787,7 @@ public partial class TextSpanTests
     }
 
     [Test]
-    public async Task Contains_LargeMultiByte_ExercisesSimd()
+    public Task Contains_LargeMultiByte_ExercisesSimd()
     {
         // Arrange
         const int padding = 500;
@@ -810,8 +801,7 @@ public partial class TextSpanTests
         var length = span.RuneLength;
 
         // Assert
-        await Assert.That(contains).IsTrue();
-        await Assert.That(length).IsEqualTo(expectedLength);
+        return Verify(new { contains, lengthMatches = length == expectedLength });
     }
 
     [Test]

@@ -1,0 +1,4 @@
+﻿{
+  result: café,
+  RuneLength: 4
+}

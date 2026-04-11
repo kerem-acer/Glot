@@ -44,18 +44,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task ByteTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task ByteTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const byte expected = 42;
         var text = CreateText("42", encoding);
 
         // Act
         var success = byte.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -104,18 +102,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task SByteTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task SByteTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const sbyte expected = 127;
         var text = CreateText("127", encoding);
 
         // Act
         var success = sbyte.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -164,18 +160,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task ShortTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task ShortTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const short expected = 32767;
         var text = CreateText("32767", encoding);
 
         // Act
         var success = short.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -224,18 +218,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task UShortTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task UShortTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const ushort expected = 1000;
         var text = CreateText("1000", encoding);
 
         // Act
         var success = ushort.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -284,18 +276,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task IntTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task IntTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const int expected = 42;
         var text = CreateText("42", encoding);
 
         // Act
         var success = int.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -344,18 +334,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task UIntTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task UIntTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const uint expected = 100;
         var text = CreateText("100", encoding);
 
         // Act
         var success = uint.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -404,18 +392,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task LongTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task LongTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const long expected = -999L;
         var text = CreateText("-999", encoding);
 
         // Act
         var success = long.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -464,18 +450,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task ULongTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task ULongTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const ulong expected = 0UL;
         var text = CreateText("0", encoding);
 
         // Act
         var success = ulong.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -524,18 +508,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task FloatTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task FloatTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const float expected = 7f;
         var text = CreateText("7", encoding);
 
         // Act
         var success = float.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -584,18 +566,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DoubleTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task DoubleTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const double expected = 777d;
         var text = CreateText("777", encoding);
 
         // Act
         var success = double.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -644,18 +624,16 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DecimalTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task DecimalTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const decimal expected = -50m;
         var text = CreateText("-50", encoding);
 
         // Act
         var success = decimal.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -719,7 +697,7 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task BoolTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task BoolTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
         var text = CreateText("True", encoding);
@@ -728,8 +706,7 @@ public partial class PrimitiveParseExtensionTests
         var success = bool.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsTrue();
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -764,8 +741,9 @@ public partial class PrimitiveParseExtensionTests
     public async Task GuidParse_ValidValue_ReturnsExpected(TextEncoding encoding)
     {
         // Arrange
-        var expected = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        var text = CreateText("a1b2c3d4-e5f6-7890-abcd-ef1234567890", encoding);
+        const string guidString = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
+        var expected = Guid.Parse(guidString);
+        var text = CreateText(guidString, encoding);
 
         // Act
         var result = Guid.Parse(text);
@@ -778,18 +756,17 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task GuidTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task GuidTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        var expected = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        var text = CreateText("a1b2c3d4-e5f6-7890-abcd-ef1234567890", encoding);
+        const string guidString = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
+        var text = CreateText(guidString, encoding);
 
         // Act
         var success = Guid.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result).IsEqualTo(expected);
+        return Verify(new { success, result }).UseParameters(encoding);
     }
 
     [Test]
@@ -821,39 +798,32 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DateTimeParse_ValidValue_ReturnsExpected(TextEncoding encoding)
+    public Task DateTimeParse_ValidValue_ReturnsExpected(TextEncoding encoding)
     {
         // Arrange
-        const int expectedYear = 2024;
-        const int expectedMonth = 6;
-        const int expectedDay = 15;
         var text = CreateText("2024-06-15", encoding);
 
         // Act
         var result = DateTime.Parse(text);
 
         // Assert
-        await Assert.That(result.Year).IsEqualTo(expectedYear);
-        await Assert.That(result.Month).IsEqualTo(expectedMonth);
-        await Assert.That(result.Day).IsEqualTo(expectedDay);
+        return Verify(new { result.Year, result.Month, result.Day }).UseParameters(encoding);
     }
 
     [Test]
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DateTimeTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task DateTimeTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const int expectedYear = 2024;
         var text = CreateText("2024-06-15", encoding);
 
         // Act
         var success = DateTime.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.Year).IsEqualTo(expectedYear);
+        return Verify(new { success, result.Year }).UseParameters(encoding);
     }
 
     [Test]
@@ -885,39 +855,32 @@ public partial class PrimitiveParseExtensionTests
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DateTimeOffsetParse_ValidValue_ReturnsExpected(TextEncoding encoding)
+    public Task DateTimeOffsetParse_ValidValue_ReturnsExpected(TextEncoding encoding)
     {
         // Arrange
-        const int expectedYear = 2024;
-        const int expectedMonth = 6;
-        const int expectedDay = 15;
         var text = CreateText("2024-06-15T10:30:00Z", encoding);
 
         // Act
         var result = DateTimeOffset.Parse(text);
 
         // Assert
-        await Assert.That(result.Year).IsEqualTo(expectedYear);
-        await Assert.That(result.Month).IsEqualTo(expectedMonth);
-        await Assert.That(result.Day).IsEqualTo(expectedDay);
+        return Verify(new { result.Year, result.Month, result.Day }).UseParameters(encoding);
     }
 
     [Test]
     [Arguments(TextEncoding.Utf16)]
     [Arguments(TextEncoding.Utf8)]
     [Arguments(TextEncoding.Utf32)]
-    public async Task DateTimeOffsetTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
+    public Task DateTimeOffsetTryParse_ValidValue_ReturnsTrue(TextEncoding encoding)
     {
         // Arrange
-        const int expectedYear = 2024;
         var text = CreateText("2024-06-15T10:30:00Z", encoding);
 
         // Act
         var success = DateTimeOffset.TryParse(text, out var result);
 
         // Assert
-        await Assert.That(success).IsTrue();
-        await Assert.That(result.Year).IsEqualTo(expectedYear);
+        return Verify(new { success, result.Year }).UseParameters(encoding);
     }
 
     [Test]

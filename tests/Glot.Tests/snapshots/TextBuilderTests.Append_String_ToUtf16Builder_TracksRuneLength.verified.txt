@@ -1,0 +1,4 @@
+﻿{
+  RuneLength: 5,
+  result: Hello
+}

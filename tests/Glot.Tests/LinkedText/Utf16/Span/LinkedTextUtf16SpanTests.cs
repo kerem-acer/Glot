@@ -10,8 +10,12 @@ public partial class LinkedTextUtf16SpanTests
         // Arrange
         var span = LinkedTextUtf16.Create("hello").AsSpan();
 
-        // Act & Assert
-        await Assert.That(span.Length).IsEqualTo(5);
+        // Act
+        var length = span.Length;
+
+        // Assert
+        const int expected = 5;
+        await Assert.That(length).IsEqualTo(expected);
     }
 
     [Test]
@@ -20,8 +24,12 @@ public partial class LinkedTextUtf16SpanTests
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
 
-        // Act & Assert
-        await Assert.That(span.Length).IsEqualTo(13);
+        // Act
+        var length = span.Length;
+
+        // Assert
+        const int expected = 13;
+        await Assert.That(length).IsEqualTo(expected);
     }
 
     [Test]
@@ -30,8 +38,11 @@ public partial class LinkedTextUtf16SpanTests
         // Arrange
         var span = LinkedTextUtf16.Create("x").AsSpan();
 
-        // Act & Assert
-        await Assert.That(span.IsEmpty).IsFalse();
+        // Act
+        var isEmpty = span.IsEmpty;
+
+        // Assert
+        await Assert.That(isEmpty).IsFalse();
     }
 
     [Test]
@@ -40,36 +51,45 @@ public partial class LinkedTextUtf16SpanTests
         // Arrange
         var span = default(LinkedTextUtf16Span);
 
-        // Act & Assert
-        await Assert.That(span.IsEmpty).IsTrue();
+        // Act
+        var isEmpty = span.IsEmpty;
+
+        // Assert
+        await Assert.That(isEmpty).IsTrue();
     }
 
     // Indexer
 
     [Test]
-    public async Task Indexer_SingleSegment_ReturnsCorrectChar()
+    public Task Indexer_SingleSegment_ReturnsCorrectChar()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello").AsSpan();
 
-        // Act & Assert
-        await Assert.That(span[0]).IsEqualTo('h');
-        await Assert.That(span[4]).IsEqualTo('o');
+        // Act
+        var first = span[0];
+        var last = span[4];
+
+        // Assert
+        return Verify(new { first, last });
     }
 
     [Test]
-    public async Task Indexer_MultiSegment_ReturnsCorrectChar()
+    public Task Indexer_MultiSegment_ReturnsCorrectChar()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
 
-        // Act & Assert
-        await Assert.That(span[0]).IsEqualTo('h');
-        await Assert.That(span[4]).IsEqualTo('o');
-        await Assert.That(span[5]).IsEqualTo(' ');
-        await Assert.That(span[7]).IsEqualTo(' ');
-        await Assert.That(span[8]).IsEqualTo('w');
-        await Assert.That(span[12]).IsEqualTo('d');
+        // Act
+        var char0 = span[0];
+        var char4 = span[4];
+        var char5 = span[5];
+        var char7 = span[7];
+        var char8 = span[8];
+        var char12 = span[12];
+
+        // Assert
+        return Verify(new { char0, char4, char5, char7, char8, char12 });
     }
 
     [Test]

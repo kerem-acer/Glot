@@ -1,0 +1,4 @@
+﻿{
+  result: Hello World,
+  Encoding: Utf16
+}

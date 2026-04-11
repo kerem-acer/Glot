@@ -1,0 +1,5 @@
+﻿{
+  result: Hello,
+  Encoding: Utf16,
+  RuneLength: 5
+}

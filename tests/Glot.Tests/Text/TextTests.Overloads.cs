@@ -479,14 +479,13 @@ public partial class TextTests
     // char[] and int[] backing paths
 
     [Test]
-    public async Task FromChars_AsSpan_WorksCorrectly()
+    public Task FromChars_AsSpan_WorksCorrectly()
     {
         // Arrange
         var text = Text.FromChars("café".AsSpan());
 
-        // Act & Assert
-        await Assert.That(text.ToString()).IsEqualTo("café");
-        await Assert.That(text.RuneLength).IsEqualTo(4);
+        // Assert
+        return Verify(new { result = text.ToString(), text.RuneLength });
     }
 
     [Test]
@@ -503,7 +502,7 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task FromChars_Trim_NonCopying()
+    public Task FromChars_Trim_NonCopying()
     {
         // Arrange
         var text = Text.FromChars("  Hi  ".AsSpan());
@@ -512,12 +511,11 @@ public partial class TextTests
         var trimmed = text.Trim();
 
         // Assert
-        await Assert.That(trimmed.ToString()).IsEqualTo("Hi");
-        await Assert.That(trimmed.RuneLength).IsEqualTo(2);
+        return Verify(new { result = trimmed.ToString(), trimmed.RuneLength });
     }
 
     [Test]
-    public async Task FromBytes_Utf32_WorksCorrectly()
+    public Task FromBytes_Utf32_WorksCorrectly()
     {
         // Arrange
         var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf32);
@@ -526,7 +524,6 @@ public partial class TextTests
         var text = Text.FromBytes(bytes, TextEncoding.Utf32);
 
         // Assert
-        await Assert.That(text.ToString()).IsEqualTo("Hello");
-        await Assert.That(text.Encoding).IsEqualTo(TextEncoding.Utf32);
+        return Verify(new { result = text.ToString(), text.Encoding });
     }
 }

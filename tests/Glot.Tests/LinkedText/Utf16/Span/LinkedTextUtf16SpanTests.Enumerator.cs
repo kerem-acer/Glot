@@ -5,7 +5,7 @@ public partial class LinkedTextUtf16SpanTests
     // EnumerateSegments — full span
 
     [Test]
-    public async Task EnumerateSegments_FullSpan_YieldsAllSegments()
+    public Task EnumerateSegments_FullSpan_YieldsAllSegments()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
@@ -18,10 +18,7 @@ public partial class LinkedTextUtf16SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("hello");
-        await Assert.That(segments[1]).IsEqualTo(" - ");
-        await Assert.That(segments[2]).IsEqualTo("world");
+        return Verify(segments);
     }
 
     [Test]
@@ -38,8 +35,9 @@ public partial class LinkedTextUtf16SpanTests
         }
 
         // Assert
+        const string expected = "hello";
         await Assert.That(segments.Count).IsEqualTo(1);
-        await Assert.That(segments[0]).IsEqualTo("hello");
+        await Assert.That(segments[0]).IsEqualTo(expected);
     }
 
     [Test]
@@ -62,7 +60,7 @@ public partial class LinkedTextUtf16SpanTests
     // EnumerateSegments — sliced span
 
     [Test]
-    public async Task EnumerateSegments_SlicedWithinFirstSegment_YieldsSlicedSegment()
+    public Task EnumerateSegments_SlicedWithinFirstSegment_YieldsSlicedSegment()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
@@ -76,12 +74,11 @@ public partial class LinkedTextUtf16SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(1);
-        await Assert.That(segments[0]).IsEqualTo("ell");
+        return Verify(segments);
     }
 
     [Test]
-    public async Task EnumerateSegments_SlicedAcrossSegments_YieldsSlicedFirstAndLast()
+    public Task EnumerateSegments_SlicedAcrossSegments_YieldsSlicedFirstAndLast()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
@@ -95,14 +92,11 @@ public partial class LinkedTextUtf16SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(3);
-        await Assert.That(segments[0]).IsEqualTo("lo");
-        await Assert.That(segments[1]).IsEqualTo(" - ");
-        await Assert.That(segments[2]).IsEqualTo("wo");
+        return Verify(segments);
     }
 
     [Test]
-    public async Task EnumerateSegments_SlicedAtBoundary_YieldsFullMiddleSegment()
+    public Task EnumerateSegments_SlicedAtBoundary_YieldsFullMiddleSegment()
     {
         // Arrange
         var span = LinkedTextUtf16.Create("hello", " - ", "world").AsSpan();
@@ -116,7 +110,6 @@ public partial class LinkedTextUtf16SpanTests
         }
 
         // Assert
-        await Assert.That(segments.Count).IsEqualTo(1);
-        await Assert.That(segments[0]).IsEqualTo(" - ");
+        return Verify(segments);
     }
 }
