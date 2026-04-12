@@ -19,11 +19,28 @@ public readonly ref partial struct TextSpan
 
         var a = Bytes;
         var b = other.Bytes;
+        var encA = Encoding;
+        var encB = other.Encoding;
 
         while (!a.IsEmpty && !b.IsEmpty)
         {
-            Rune.TryDecodeFirst(a, Encoding, out var ra, out var ca);
-            Rune.TryDecodeFirst(b, other.Encoding, out var rb, out var cb);
+            // ASCII fast path: when both sides have an ASCII code unit,
+            // the rune value equals the byte value — skip full rune decoding.
+            if (AsciiHelper.TryReadAscii(a, encA, out var asciiA, out var sizeA) &&
+                AsciiHelper.TryReadAscii(b, encB, out var asciiB, out var sizeB))
+            {
+                if (asciiA != asciiB)
+                {
+                    return false;
+                }
+
+                a = a[sizeA..];
+                b = b[sizeB..];
+                continue;
+            }
+
+            Rune.TryDecodeFirst(a, encA, out var ra, out var ca);
+            Rune.TryDecodeFirst(b, encB, out var rb, out var cb);
 
             if (ra != rb)
             {
@@ -67,6 +84,14 @@ public readonly ref partial struct TextSpan
 
         while (!remaining.IsEmpty)
         {
+            // ASCII fast path: ASCII byte value equals rune value, skip full decode.
+            if (AsciiHelper.TryReadAscii(remaining, encoding, out var ascii, out var size))
+            {
+                hash.Add((int)ascii);
+                remaining = remaining[size..];
+                continue;
+            }
+
             Rune.TryDecodeFirst(remaining, encoding, out var rune, out var consumed);
             hash.Add(rune.Value);
             remaining = remaining[consumed..];
@@ -86,16 +111,33 @@ public readonly ref partial struct TextSpan
 
         var a = Bytes;
         var b = other.Bytes;
+        var encA = Encoding;
+        var encB = other.Encoding;
 
         while (!a.IsEmpty && !b.IsEmpty)
         {
-            Rune.TryDecodeFirst(a, Encoding, out var ra, out var ca);
-            Rune.TryDecodeFirst(b, other.Encoding, out var rb, out var cb);
-
-            var cmp = ra.CompareTo(rb);
-            if (cmp != 0)
+            // ASCII fast path: byte value equals rune value for ASCII code units.
+            if (AsciiHelper.TryReadAscii(a, encA, out var asciiA, out var sizeA) &&
+                AsciiHelper.TryReadAscii(b, encB, out var asciiB, out var sizeB))
             {
-                return cmp;
+                var cmp = asciiA.CompareTo(asciiB);
+                if (cmp != 0)
+                {
+                    return cmp;
+                }
+
+                a = a[sizeA..];
+                b = b[sizeB..];
+                continue;
+            }
+
+            Rune.TryDecodeFirst(a, encA, out var ra, out var ca);
+            Rune.TryDecodeFirst(b, encB, out var rb, out var cb);
+
+            var runeCmp = ra.CompareTo(rb);
+            if (runeCmp != 0)
+            {
+                return runeCmp;
             }
 
             a = a[ca..];

@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Text.Encoding;
 
 namespace Glot;
 
@@ -70,6 +71,20 @@ public struct TextBuilder : IDisposable
             return;
         }
 
+        // Bulk path for UTF-8↔UTF-16 (SIMD-accelerated on .NET 6+, via Polyfill on netstandard).
+        if (value.Encoding == TextEncoding.Utf16 && Encoding == TextEncoding.Utf8)
+        {
+            AppendBulkUtf16ToUtf8(value);
+            return;
+        }
+
+        if (value.Encoding == TextEncoding.Utf8 && Encoding == TextEncoding.Utf16)
+        {
+            AppendBulkUtf8ToUtf16(value);
+            return;
+        }
+
+        // UTF-32 paths: rune-by-rune (no bulk BCL API for UTF-32).
         foreach (var rune in value.EnumerateRunes())
         {
             AppendRune(rune);
@@ -206,6 +221,31 @@ public struct TextBuilder : IDisposable
     {
         AppendBytes(value);
         RuneLength += runeCount;
+    }
+
+    void AppendBulkUtf16ToUtf8(TextSpan value)
+    {
+        var chars = value.Chars;
+        var byteCount = UTF8.GetByteCount(chars);
+        EnsureCapacity(ByteLength + byteCount);
+        var written = UTF8.GetBytes(chars, _buffer.AsSpan(ByteLength));
+        ByteLength += written;
+        RuneLength += value.RuneLength != 0
+            ? value.RuneLength
+            : RuneCount.Count(value.Bytes, value.Encoding);
+    }
+
+    void AppendBulkUtf8ToUtf16(TextSpan value)
+    {
+        var charCount = UTF8.GetCharCount(value.Bytes);
+        var byteCount = charCount * 2;
+        EnsureCapacity(ByteLength + byteCount);
+        var charDest = MemoryMarshal.Cast<byte, char>(_buffer.AsSpan(ByteLength, byteCount));
+        UTF8.GetChars(value.Bytes, charDest);
+        ByteLength += byteCount;
+        RuneLength += value.RuneLength != 0
+            ? value.RuneLength
+            : RuneCount.Count(value.Bytes, value.Encoding);
     }
 
     void EnsureCapacity(int required)

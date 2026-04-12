@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Text.Encoding;
 
 namespace Glot;
 
@@ -15,9 +16,9 @@ public readonly ref partial struct TextSpan
 
         return Encoding switch
         {
-            TextEncoding.Utf8 => System.Text.Encoding.UTF8.GetString(Bytes),
+            TextEncoding.Utf8 => UTF8.GetString(Bytes),
             TextEncoding.Utf16 => MemoryMarshal.Cast<byte, char>(Bytes).ToString(),
-            TextEncoding.Utf32 => System.Text.Encoding.UTF32.GetString(Bytes),
+            TextEncoding.Utf32 => UTF32.GetString(Bytes),
             _ => throw new InvalidEncodingException(Encoding),
         };
     }
@@ -42,28 +43,12 @@ public readonly ref partial struct TextSpan
             return false;
         }
 
-        // Cross-encoding: transcode rune-by-rune (zero-alloc)
-        var offset = 0;
-        var remaining = Bytes;
+        // Bulk path: UTF-8→char and UTF-32→char via BCL TryGetChars (Polyfill on netstandard).
+        var encoding = Encoding == TextEncoding.Utf8
+            ? UTF8
+            : UTF32;
 
-        while (!remaining.IsEmpty)
-        {
-            Rune.TryDecodeFirst(remaining, Encoding, out var rune, out var consumed);
-            var runeCharCount = rune.Utf16SequenceLength;
-
-            if (offset + runeCharCount > destination.Length)
-            {
-                charsWritten = 0;
-                return false;
-            }
-
-            rune.TryEncodeToUtf16(destination[offset..], out var written);
-            offset += written;
-            remaining = remaining[consumed..];
-        }
-
-        charsWritten = offset;
-        return true;
+        return encoding.TryGetChars(Bytes, destination, out charsWritten);
     }
 
     /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>.</summary>
@@ -82,6 +67,14 @@ public readonly ref partial struct TextSpan
             return false;
         }
 
+        // Bulk path: UTF-16→UTF-8 via BCL TryGetBytes (Polyfill on netstandard).
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return UTF8.TryGetBytes(
+                MemoryMarshal.Cast<byte, char>(Bytes), utf8Destination, out bytesWritten);
+        }
+
+        // UTF-32→UTF-8: no direct bulk API, rune-by-rune.
         var offset = 0;
         var remaining = Bytes;
 
