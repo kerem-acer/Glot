@@ -1,0 +1,14 @@
+﻿{
+  Name: {
+    Encoding: Utf16,
+    RuneLength: 5,
+    ByteLength: 10,
+    IsEmpty: false
+  },
+  Label: {
+    Encoding: Utf16,
+    RuneLength: 4,
+    ByteLength: 8,
+    IsEmpty: false
+  }
+}

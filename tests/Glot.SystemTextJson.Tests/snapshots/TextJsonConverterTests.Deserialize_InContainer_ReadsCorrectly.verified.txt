@@ -1,0 +1,12 @@
+﻿{
+  Name: {
+    RuneLength: 5,
+    ByteLength: 5,
+    IsEmpty: false
+  },
+  Label: {
+    RuneLength: 4,
+    ByteLength: 4,
+    IsEmpty: false
+  }
+}
