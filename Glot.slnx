@@ -1,9 +1,15 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Glot/Glot.csproj" />
+    <Project Path="src/Glot.SystemTextJson/Glot.SystemTextJson.csproj" />
+    <Project Path="src/Glot.NewtonsoftJson/Glot.NewtonsoftJson.csproj" />
+    <Project Path="src/Glot.VYaml/Glot.VYaml.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Glot.Tests/Glot.Tests.csproj" />
+    <Project Path="tests/Glot.SystemTextJson.Tests/Glot.SystemTextJson.Tests.csproj" />
+    <Project Path="tests/Glot.NewtonsoftJson.Tests/Glot.NewtonsoftJson.Tests.csproj" />
+    <Project Path="tests/Glot.VYaml.Tests/Glot.VYaml.Tests.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
