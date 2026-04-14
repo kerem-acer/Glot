@@ -14,11 +14,10 @@ public sealed partial class LinkedTextUtf8
     /// returns its nodes to the pool.
     /// </summary>
     /// <remarks>
-    /// Thread-safety note: this uses <see cref="Thread.MemoryBarrier"/> around reads/writes
-    /// of <c>_cachedSequence</c> and <see cref="Interlocked.CompareExchange{T}"/> on
-    /// <c>_cachedSequenceHead</c> to handle concurrent construction. The pattern is fragile —
-    /// a future refactor should consider <c>Volatile.Read</c>/<c>Volatile.Write</c> for
-    /// <c>_cachedSequence</c> to make ordering guarantees more explicit and less error-prone.
+    /// Thread-safety: uses <see cref="Thread.MemoryBarrier"/> around reads/writes of
+    /// <c>_cachedSequence</c> (a nullable value type, incompatible with <see cref="Volatile"/>
+    /// on net6.0) and <see cref="Interlocked.CompareExchange{T}"/> on <c>_cachedSequenceHead</c>
+    /// to handle concurrent construction without locks.
     /// </remarks>
     public ReadOnlySequence<byte> AsSequence()
     {

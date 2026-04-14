@@ -17,7 +17,7 @@ public class OwnedTextYamlFormatterTests
     {
         // Arrange
         const string value = "hello";
-        using var owned = OwnedText.FromChars(value.AsSpan());
+        using var owned = OwnedText.FromChars(value.AsSpan())!;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(owned, _options);
@@ -31,7 +31,7 @@ public class OwnedTextYamlFormatterTests
     {
         // Arrange
         const string value = "hello";
-        using var owned = OwnedText.FromUtf8(Encoding.UTF8.GetBytes(value));
+        using var owned = OwnedText.FromUtf8(Encoding.UTF8.GetBytes(value))!;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(owned, _options);
@@ -45,7 +45,7 @@ public class OwnedTextYamlFormatterTests
     {
         // Arrange
         var codePoints = new int[] { 'h', 'e', 'l', 'l', 'o' };
-        using var owned = OwnedText.FromUtf32(codePoints);
+        using var owned = OwnedText.FromUtf32(codePoints)!;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(owned, _options);
@@ -62,7 +62,7 @@ public class OwnedTextYamlFormatterTests
         var bytes = Encoding.UTF8.GetBytes(yaml);
 
         // Act
-        using var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
+        using var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options)!;
 
         // Assert
         await Assert.That(owned.Text.ToString()).IsEqualTo("hello");
@@ -73,33 +73,33 @@ public class OwnedTextYamlFormatterTests
     {
         // Arrange
         const string value = "hello";
-        using var original = OwnedText.FromChars(value.AsSpan());
+        using var original = OwnedText.FromChars(value.AsSpan())!;
         var originalText = original.Text;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(original, _options);
         var bytes = Encoding.UTF8.GetBytes(yaml);
-        using var deserialized = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
+        using var deserialized = YamlSerializer.Deserialize<OwnedText>(bytes, _options)!;
 
         // Assert
         await Assert.That(deserialized.Text).IsEqualTo(originalText);
     }
 
     [Test]
-    public async Task Serialize_Empty_WritesEmptyString()
+    public async Task Serialize_Null_WritesNull()
     {
         // Arrange
-        var owned = default(OwnedText);
+        OwnedText? owned = null;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(owned, _options);
 
         // Assert
-        await Assert.That(yaml.Trim()).IsEqualTo("\"\"");
+        await Assert.That(yaml.Trim()).IsEqualTo("null");
     }
 
     [Test]
-    public async Task Deserialize_Null_ReturnsEmpty()
+    public async Task Deserialize_Null_ReturnsNull()
     {
         // Arrange
         const string yaml = "null";
@@ -109,21 +109,21 @@ public class OwnedTextYamlFormatterTests
         var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     [Test]
-    public async Task Deserialize_EmptyString_ReturnsEmpty()
+    public async Task Deserialize_EmptyString_ReturnsNull()
     {
         // Arrange
         const string yaml = "''";
         var bytes = Encoding.UTF8.GetBytes(yaml);
 
         // Act
-        using var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
+        var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     [Test]
@@ -131,13 +131,13 @@ public class OwnedTextYamlFormatterTests
     {
         // Arrange
         const string value = "Hello \U0001F600 \u4E16\u754C";
-        using var original = OwnedText.FromChars(value.AsSpan());
+        using var original = OwnedText.FromChars(value.AsSpan())!;
         var originalText = original.Text;
 
         // Act
         var yaml = YamlSerializer.SerializeToString(original, _options);
         var bytes = Encoding.UTF8.GetBytes(yaml);
-        using var deserialized = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
+        using var deserialized = YamlSerializer.Deserialize<OwnedText>(bytes, _options)!;
 
         // Assert
         await Assert.That(deserialized.Text).IsEqualTo(originalText);

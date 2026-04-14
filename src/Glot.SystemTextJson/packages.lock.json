@@ -88,6 +88,7 @@
           "Microsoft.Bcl.HashCode": "[6.0.0, )",
           "Microsoft.Extensions.ObjectPool": "[10.0.5, )",
           "Shim.System.Text.Rune": "[6.0.2, )",
+          "System.IO.Hashing": "[10.0.5, )",
           "System.Memory": "[4.6.3, )"
         }
       },
@@ -110,6 +111,16 @@
         "contentHash": "vWD2prI1ijtRk0/aklJJNDzuk9DJp3TEdZTSKMaSCZOmlVR1cDhvNoPPM2D12mXp2CszNNjbTWdvayFtEB6uDQ==",
         "dependencies": {
           "System.Memory": "4.5.4"
+        }
+      },
+      "System.IO.Hashing": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg==",
+        "dependencies": {
+          "System.Buffers": "4.6.1",
+          "System.Memory": "4.6.3"
         }
       },
       "System.Memory": {
@@ -165,7 +176,8 @@
         "dependencies": {
           "Microsoft.Bcl.HashCode": "[6.0.0, )",
           "Microsoft.Extensions.ObjectPool": "[10.0.5, )",
-          "Shim.System.Text.Rune": "[6.0.2, )"
+          "Shim.System.Text.Rune": "[6.0.2, )",
+          "System.IO.Hashing": "[10.0.5, )"
         }
       },
       "Microsoft.Bcl.HashCode": {
@@ -185,13 +197,20 @@
         "requested": "[6.0.2, )",
         "resolved": "6.0.2",
         "contentHash": "vWD2prI1ijtRk0/aklJJNDzuk9DJp3TEdZTSKMaSCZOmlVR1cDhvNoPPM2D12mXp2CszNNjbTWdvayFtEB6uDQ=="
+      },
+      "System.IO.Hashing": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     },
     "net10.0": {
       "glot": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.ObjectPool": "[10.0.5, )"
+          "Microsoft.Extensions.ObjectPool": "[10.0.5, )",
+          "System.IO.Hashing": "[10.0.5, )"
         }
       },
       "Microsoft.Extensions.ObjectPool": {
@@ -199,13 +218,20 @@
         "requested": "[10.0.5, )",
         "resolved": "10.0.5",
         "contentHash": "91t1kPt6F+1cTJ4dZFY89BopLr1JyGlZ2pROIkIuyE28jUXhdelOzn22UwvNk8EwW/9x8D7GXyLqiMJShgIGhQ=="
+      },
+      "System.IO.Hashing": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     },
     "net8.0": {
       "glot": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.ObjectPool": "[10.0.5, )"
+          "Microsoft.Extensions.ObjectPool": "[8.0.11, )",
+          "System.IO.Hashing": "[10.0.5, )"
         }
       },
       "Microsoft.Extensions.ObjectPool": {
@@ -213,6 +239,12 @@
         "requested": "[10.0.5, )",
         "resolved": "10.0.5",
         "contentHash": "91t1kPt6F+1cTJ4dZFY89BopLr1JyGlZ2pROIkIuyE28jUXhdelOzn22UwvNk8EwW/9x8D7GXyLqiMJShgIGhQ=="
+      },
+      "System.IO.Hashing": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     }
   }

@@ -1,0 +1,7 @@
+﻿{
+  Encoding: Utf32,
+  RuneLength: 5,
+  ByteLength: 20,
+  IsEmpty: false,
+  text: Hello
+}

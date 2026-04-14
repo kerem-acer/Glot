@@ -15,11 +15,11 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
     const int StackAllocThreshold = 512;
 
     /// <inheritdoc/>
-    public override OwnedText Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override OwnedText? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.Null)
         {
-            return default;
+            return null;
         }
 
         if (!reader.HasValueSequence && !reader.ValueIsEscaped)
@@ -38,6 +38,12 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
     /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, OwnedText value, JsonSerializerOptions options)
     {
+        if (value is null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
         var text = value.Text;
         switch (text.Encoding)
         {

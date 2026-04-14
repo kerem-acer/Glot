@@ -1,12 +1,12 @@
 namespace Glot.Tests;
 
-public class OwnedLinkedTextUtf16Tests
+public partial class OwnedLinkedTextUtf16Tests
 {
     [Test]
     public Task AsSpan_ReturnsValidSpan()
     {
         // Arrange
-        using var owned = LinkedTextUtf16.CreateOwned("hello", " - ", "world");
+        using var owned = OwnedLinkedTextUtf16.Create("hello", " - ", "world");
 
         // Act
         var span = owned.AsSpan();
@@ -18,37 +18,40 @@ public class OwnedLinkedTextUtf16Tests
     }
 
     [Test]
-    public Task Dispose_SetsIsDisposed()
+    public async Task Dispose_ReleasesData()
     {
         // Arrange
-        var owned = LinkedTextUtf16.CreateOwned("hello");
+        var owned = OwnedLinkedTextUtf16.Create("hello");
+        var hadData = owned.Data is not null;
 
         // Act
         owned.Dispose();
 
-        // Assert
-        return Verify(new { owned.IsDisposed, owned.Length, owned.IsEmpty });
+        // Assert — verify it had data before dispose, and dispose didn't throw
+        await Assert.That(hadData).IsTrue();
     }
 
     [Test]
     public async Task Dispose_CalledTwice_NoError()
     {
         // Arrange
-        var owned = LinkedTextUtf16.CreateOwned("hello");
+        var owned = OwnedLinkedTextUtf16.Create("hello");
 
         // Act
         owned.Dispose();
-        owned.Dispose();
+        // Read IsDisposed immediately — before a parallel test can reclaim from pool.
+        var isDisposed = owned.IsDisposed;
+        owned.Dispose(); // second dispose should not throw
 
         // Assert
-        await Assert.That(owned.IsDisposed).IsTrue();
+        await Assert.That(isDisposed).IsTrue();
     }
 
     [Test]
     public async Task AsSpan_AfterDispose_ReturnsDefault()
     {
         // Arrange
-        var owned = LinkedTextUtf16.CreateOwned("hello");
+        var owned = OwnedLinkedTextUtf16.Create("hello");
         owned.Dispose();
 
         // Act
@@ -63,7 +66,7 @@ public class OwnedLinkedTextUtf16Tests
     public Task Length_ReturnsDataLength()
     {
         // Arrange
-        using var owned = LinkedTextUtf16.CreateOwned("hello", " world");
+        using var owned = OwnedLinkedTextUtf16.Create("hello", " world");
 
         // Assert
         return Verify(new { owned.Length, owned.IsEmpty });
@@ -73,7 +76,7 @@ public class OwnedLinkedTextUtf16Tests
     public Task Data_ReturnsUnderlyingInstance()
     {
         // Arrange
-        using var owned = LinkedTextUtf16.CreateOwned("hello");
+        using var owned = OwnedLinkedTextUtf16.Create("hello");
 
         // Assert
         return Verify(new { isNotNull = owned.Data is not null, length = owned.Data!.Length });

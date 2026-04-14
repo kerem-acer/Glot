@@ -8,7 +8,7 @@ namespace Glot;
 /// without allocating intermediate strings. Wraps <see cref="TextBuilder"/> internally.
 /// </summary>
 [InterpolatedStringHandler]
-public ref struct TextInterpolatedStringHandler : IDisposable
+public struct TextInterpolatedStringHandler : IDisposable
 {
     TextBuilder _builder;
 
@@ -36,6 +36,15 @@ public ref struct TextInterpolatedStringHandler : IDisposable
 
     /// <summary>Appends a <see cref="TextSpan"/> value directly (no ToString, cross-encoding aware).</summary>
     public void AppendFormatted(TextSpan value) => _builder.Append(value);
+
+    /// <summary>Appends an <see cref="OwnedText"/> value directly (no ToString, cross-encoding aware).</summary>
+    public void AppendFormatted(OwnedText? value)
+    {
+        if (value is not null)
+        {
+            _builder.Append(value.Text);
+        }
+    }
 
     /// <summary>Appends a string value.</summary>
     public void AppendFormatted(string? value)
@@ -164,7 +173,7 @@ public ref struct TextInterpolatedStringHandler : IDisposable
         return result;
     }
 
-    internal OwnedText ToOwnedText()
+    internal OwnedText? ToOwnedText()
     {
         var result = _builder.ToOwnedText();
         _builder.Dispose();

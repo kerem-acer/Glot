@@ -18,9 +18,14 @@ public sealed partial class LinkedTextUtf16
 #if NET8_0_OR_GREATER
     InlineSegmentBuffer _inlineSegments;
 #endif
-    ReadOnlyMemory<char>[]? _overflowSegments;
+    Segment[]? _overflowSegments;
     char[]? _formatBuffer;
     int _formatPosition;
+
+    LinkedTextUtf16() { }
+
+    /// <summary>Controls how <see cref="OwnedText"/> values are handled during interpolation.</summary>
+    internal OwnedTextHandling OwnedTextHandling { get; set; }
 
     /// <summary>The number of segments in this linked text.</summary>
     public int SegmentCount { get; private set; }
@@ -31,13 +36,13 @@ public sealed partial class LinkedTextUtf16
     /// <summary>Returns <c>true</c> if this linked text has no content.</summary>
     public bool IsEmpty => Length == 0;
 
-    LinkedTextUtf16() { }
-
     /// <summary>An empty <see cref="LinkedTextUtf16"/>.</summary>
     public static LinkedTextUtf16 Empty { get; } = new();
 
-    /// <summary>Gets the segment at the specified index.</summary>
-    internal ReadOnlyMemory<char> GetSegment(int index)
+    /// <summary>Gets the memory at the specified segment index.</summary>
+    internal ReadOnlyMemory<char> GetSegment(int index) => GetSegmentEntry(index).Memory;
+
+    internal Segment GetSegmentEntry(int index)
     {
 #if NET8_0_OR_GREATER
         if (index < InlineCapacity)

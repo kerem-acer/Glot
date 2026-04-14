@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextBuilderBenchmarks-20260413-175331</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, macOS 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host]   : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+  ShortRun : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                         </th><th>PartSize</th><th>Parts</th><th>Locale</th><th>Mean </th><th>Error</th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>8</td><td>4</td><td>Ascii</td><td>30.14 ns</td><td>1.982 ns</td><td>0.109 ns</td><td>1.00</td><td>0.00</td><td>0.0353</td><td>-</td><td>296 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>8</td><td>4</td><td>Ascii</td><td>32.49 ns</td><td>5.720 ns</td><td>0.314 ns</td><td>1.08</td><td>0.01</td><td>0.0067</td><td>-</td><td>56 B</td><td>0.19</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>8</td><td>4</td><td>Ascii</td><td>42.80 ns</td><td>0.313 ns</td><td>0.017 ns</td><td>1.42</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>8</td><td>4</td><td>Ascii</td><td>38.64 ns</td><td>2.935 ns</td><td>0.161 ns</td><td>1.28</td><td>0.01</td><td>0.0067</td><td>-</td><td>56 B</td><td>0.19</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>8</td><td>4</td><td>Mixed</td><td>31.11 ns</td><td>39.548 ns</td><td>2.168 ns</td><td>1.00</td><td>0.08</td><td>0.0353</td><td>-</td><td>296 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>8</td><td>4</td><td>Mixed</td><td>34.58 ns</td><td>19.060 ns</td><td>1.045 ns</td><td>1.11</td><td>0.07</td><td>0.0086</td><td>-</td><td>72 B</td><td>0.24</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>8</td><td>4</td><td>Mixed</td><td>43.22 ns</td><td>4.874 ns</td><td>0.267 ns</td><td>1.39</td><td>0.08</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>8</td><td>4</td><td>Mixed</td><td>49.54 ns</td><td>4.636 ns</td><td>0.254 ns</td><td>1.60</td><td>0.09</td><td>0.0086</td><td>-</td><td>72 B</td><td>0.24</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>8</td><td>16</td><td>Ascii</td><td>83.02 ns</td><td>13.760 ns</td><td>0.754 ns</td><td>1.00</td><td>0.01</td><td>0.0985</td><td>0.0001</td><td>824 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>8</td><td>16</td><td>Ascii</td><td>98.78 ns</td><td>9.827 ns</td><td>0.539 ns</td><td>1.19</td><td>0.01</td><td>0.0181</td><td>-</td><td>152 B</td><td>0.18</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>8</td><td>16</td><td>Ascii</td><td>108.07 ns</td><td>3.405 ns</td><td>0.187 ns</td><td>1.30</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>8</td><td>16</td><td>Ascii</td><td>131.52 ns</td><td>15.416 ns</td><td>0.845 ns</td><td>1.58</td><td>0.02</td><td>0.0181</td><td>-</td><td>152 B</td><td>0.18</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>8</td><td>16</td><td>Mixed</td><td>86.91 ns</td><td>6.474 ns</td><td>0.355 ns</td><td>1.00</td><td>0.00</td><td>0.0985</td><td>0.0001</td><td>824 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>8</td><td>16</td><td>Mixed</td><td>101.59 ns</td><td>6.555 ns</td><td>0.359 ns</td><td>1.17</td><td>0.01</td><td>0.0248</td><td>-</td><td>208 B</td><td>0.25</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>8</td><td>16</td><td>Mixed</td><td>106.72 ns</td><td>2.121 ns</td><td>0.116 ns</td><td>1.23</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>8</td><td>16</td><td>Mixed</td><td>309.61 ns</td><td>62.552 ns</td><td>3.429 ns</td><td>3.56</td><td>0.04</td><td>0.0782</td><td>-</td><td>656 B</td><td>0.80</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>64</td><td>4</td><td>Ascii</td><td>87.75 ns</td><td>10.598 ns</td><td>0.581 ns</td><td>1.00</td><td>0.01</td><td>0.1596</td><td>0.0005</td><td>1336 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>64</td><td>4</td><td>Ascii</td><td>44.87 ns</td><td>2.258 ns</td><td>0.124 ns</td><td>0.51</td><td>0.00</td><td>0.0334</td><td>-</td><td>280 B</td><td>0.21</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>64</td><td>4</td><td>Ascii</td><td>44.15 ns</td><td>2.664 ns</td><td>0.146 ns</td><td>0.50</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>64</td><td>4</td><td>Ascii</td><td>72.34 ns</td><td>4.544 ns</td><td>0.249 ns</td><td>0.82</td><td>0.01</td><td>0.0334</td><td>-</td><td>280 B</td><td>0.21</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>64</td><td>4</td><td>Mixed</td><td>86.57 ns</td><td>12.096 ns</td><td>0.663 ns</td><td>1.00</td><td>0.01</td><td>0.1596</td><td>0.0005</td><td>1336 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>64</td><td>4</td><td>Mixed</td><td>58.51 ns</td><td>9.597 ns</td><td>0.526 ns</td><td>0.68</td><td>0.01</td><td>0.0459</td><td>-</td><td>384 B</td><td>0.29</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>64</td><td>4</td><td>Mixed</td><td>45.26 ns</td><td>1.711 ns</td><td>0.094 ns</td><td>0.52</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>64</td><td>4</td><td>Mixed</td><td>309.66 ns</td><td>5.755 ns</td><td>0.315 ns</td><td>3.58</td><td>0.02</td><td>0.0992</td><td>-</td><td>832 B</td><td>0.62</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>64</td><td>16</td><td>Ascii</td><td>238.95 ns</td><td>6.692 ns</td><td>0.367 ns</td><td>1.00</td><td>0.00</td><td>0.5441</td><td>0.0048</td><td>4552 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>64</td><td>16</td><td>Ascii</td><td>161.68 ns</td><td>16.606 ns</td><td>0.910 ns</td><td>0.68</td><td>0.00</td><td>0.1252</td><td>0.0005</td><td>1048 B</td><td>0.23</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>64</td><td>16</td><td>Ascii</td><td>124.70 ns</td><td>14.259 ns</td><td>0.782 ns</td><td>0.52</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>64</td><td>16</td><td>Ascii</td><td>297.83 ns</td><td>24.803 ns</td><td>1.360 ns</td><td>1.25</td><td>0.01</td><td>0.1249</td><td>0.0005</td><td>1048 B</td><td>0.23</td>
+</tr><tr><td>&#39;StringBuilder -&gt; ToString&#39;</td><td>64</td><td>16</td><td>Mixed</td><td>233.99 ns</td><td>19.634 ns</td><td>1.076 ns</td><td>1.00</td><td>0.01</td><td>0.5441</td><td>0.0050</td><td>4552 B</td><td>1.00</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToText&#39;</td><td>64</td><td>16</td><td>Mixed</td><td>199.68 ns</td><td>19.114 ns</td><td>1.048 ns</td><td>0.85</td><td>0.01</td><td>0.1721</td><td>0.0007</td><td>1440 B</td><td>0.32</td>
+</tr><tr><td>&#39;TextBuilder -&gt; ToOwnedText&#39;</td><td>64</td><td>16</td><td>Mixed</td><td>144.49 ns</td><td>11.782 ns</td><td>0.646 ns</td><td>0.62</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;TextBuilder cross-enc UTF-16-&gt;UTF-8&#39;</td><td>64</td><td>16</td><td>Mixed</td><td>1,019.51 ns</td><td>17.183 ns</td><td>0.942 ns</td><td>4.36</td><td>0.02</td><td>0.2785</td><td>-</td><td>2336 B</td><td>0.51</td>
+</tr></tbody></table>
+</body>
+</html>

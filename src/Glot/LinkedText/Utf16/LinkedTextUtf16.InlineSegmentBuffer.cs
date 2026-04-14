@@ -10,7 +10,13 @@ public sealed partial class LinkedTextUtf16
     [InlineArray(InlineCapacity)]
     struct InlineSegmentBuffer
     {
-        ReadOnlyMemory<char> _element0;
+        Segment _element0;
+    }
+
+    internal struct Segment
+    {
+        internal ReadOnlyMemory<char> Memory;
+        internal char[]? PooledBuffer;
     }
 }
 #else
@@ -19,5 +25,11 @@ namespace Glot;
 public sealed partial class LinkedTextUtf16
 {
     const int InlineCapacity = 0;
+
+    internal struct Segment
+    {
+        internal ReadOnlyMemory<char> Memory;
+        internal char[]? PooledBuffer;
+    }
 }
 #endif

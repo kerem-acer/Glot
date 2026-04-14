@@ -1,0 +1,46 @@
+using BenchmarkDotNet.Attributes;
+
+namespace Glot.Benchmarks;
+
+[MemoryDiagnoser]
+public class ContainsUtf8Benchmarks
+{
+    [SearchSizeParams]
+    public int N;
+    [ScriptParams]
+    public Script Locale;
+
+    EncodedSet _haystack, _needle, _missingNeedle;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _haystack = EncodedSet.From(TestData.Generate(N, Locale));
+        _needle = EncodedSet.From(TestData.Needle(Locale));
+        _missingNeedle = EncodedSet.From(TestData.MissingNeedle(Locale));
+    }
+
+    [Benchmark(Baseline = true, Description = "U8String.Contains")]
+    public bool U8Contains() => _haystack.U8.Contains(_needle.U8);
+
+    [Benchmark(Description = "Text.Contains UTF-8")]
+    public bool TextContains_Utf8() => _haystack.Utf8.Contains(_needle.Utf8);
+
+    [Benchmark(Description = "Text.Contains UTF-16")]
+    public bool TextContains_Utf16() => _haystack.Utf8.Contains(_needle.Utf16);
+
+    [Benchmark(Description = "Text.Contains UTF-32")]
+    public bool TextContains_Utf32() => _haystack.Utf8.Contains(_needle.Utf32);
+
+    [Benchmark(Description = "U8String.Contains miss")]
+    public bool U8Contains_Miss() => _haystack.U8.Contains(_missingNeedle.U8);
+
+    [Benchmark(Description = "Text.Contains UTF-8 miss")]
+    public bool TextContains_Utf8_Miss() => _haystack.Utf8.Contains(_missingNeedle.Utf8);
+
+    [Benchmark(Description = "Text.Contains UTF-16 miss")]
+    public bool TextContains_Utf16_Miss() => _haystack.Utf8.Contains(_missingNeedle.Utf16);
+
+    [Benchmark(Description = "Text.Contains UTF-32 miss")]
+    public bool TextContains_Utf32_Miss() => _haystack.Utf8.Contains(_missingNeedle.Utf32);
+}

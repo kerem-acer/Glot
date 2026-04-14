@@ -38,6 +38,16 @@
           "System.Memory": "4.5.4"
         }
       },
+      "System.IO.Hashing": {
+        "type": "Direct",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg==",
+        "dependencies": {
+          "System.Buffers": "4.6.1",
+          "System.Memory": "4.6.3"
+        }
+      },
       "System.Memory": {
         "type": "Direct",
         "requested": "[4.6.3, )",
@@ -95,6 +105,12 @@
         "resolved": "6.0.2",
         "contentHash": "vWD2prI1ijtRk0/aklJJNDzuk9DJp3TEdZTSKMaSCZOmlVR1cDhvNoPPM2D12mXp2CszNNjbTWdvayFtEB6uDQ=="
       },
+      "System.IO.Hashing": {
+        "type": "Direct",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
+      },
       "System.Memory": {
         "type": "Direct",
         "requested": "[4.6.3, )",
@@ -114,34 +130,32 @@
         "requested": "[10.3.0, )",
         "resolved": "10.3.0",
         "contentHash": "5GDzIb+7qvrftxO+POQc2HAInFnQIw2NKdxjqmAVJ7l+P10djdmKW6dcjnHitUX59TTQZ/Ok0qcHUSasl/Cs1A=="
-      }
-    },
-    "net6.0": {
-      "Microsoft.Extensions.ObjectPool": {
+      },
+      "System.IO.Hashing": {
         "type": "Direct",
         "requested": "[10.0.5, )",
         "resolved": "10.0.5",
-        "contentHash": "91t1kPt6F+1cTJ4dZFY89BopLr1JyGlZ2pROIkIuyE28jUXhdelOzn22UwvNk8EwW/9x8D7GXyLqiMJShgIGhQ=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[10.3.0, )",
-        "resolved": "10.3.0",
-        "contentHash": "5GDzIb+7qvrftxO+POQc2HAInFnQIw2NKdxjqmAVJ7l+P10djdmKW6dcjnHitUX59TTQZ/Ok0qcHUSasl/Cs1A=="
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     },
     "net8.0": {
       "Microsoft.Extensions.ObjectPool": {
         "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "91t1kPt6F+1cTJ4dZFY89BopLr1JyGlZ2pROIkIuyE28jUXhdelOzn22UwvNk8EwW/9x8D7GXyLqiMJShgIGhQ=="
+        "requested": "[8.0.11, )",
+        "resolved": "8.0.11",
+        "contentHash": "6ApKcHNJigXBfZa6XlDQ8feJpq7SG1ogZXg6M4FiNzgd6irs3LUAzo0Pfn4F2ZI9liGnH1XIBR/OtSbZmJAV5w=="
       },
       "Polyfill": {
         "type": "Direct",
         "requested": "[10.3.0, )",
         "resolved": "10.3.0",
         "contentHash": "5GDzIb+7qvrftxO+POQc2HAInFnQIw2NKdxjqmAVJ7l+P10djdmKW6dcjnHitUX59TTQZ/Ok0qcHUSasl/Cs1A=="
+      },
+      "System.IO.Hashing": {
+        "type": "Direct",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     }
   }

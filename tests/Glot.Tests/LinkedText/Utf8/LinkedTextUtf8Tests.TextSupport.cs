@@ -65,30 +65,30 @@ public partial class LinkedTextUtf8Tests
         return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
-    // CreateOwned with Text
+    // Create (Owned) with Text
 
     [Test]
-    public async Task CreateOwned_Text_Works()
+    public async Task Create_Text_Works()
     {
         // Arrange
         var text = Text.From("café");
 
         // Act
-        using var owned = LinkedTextUtf8.CreateOwned(text);
+        using var owned = OwnedLinkedTextUtf8.Create(text);
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("café");
     }
 
     [Test]
-    public async Task CreateOwned_MixedTexts_TranscodesCorrectly()
+    public async Task Create_MixedTexts_TranscodesCorrectly()
     {
         // Arrange
         var utf16 = Text.From("hello");
         var utf8 = Text.FromUtf8(" world"u8);
 
         // Act
-        using var owned = LinkedTextUtf8.CreateOwned(utf16, utf8);
+        using var owned = OwnedLinkedTextUtf8.Create(utf16, utf8);
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");

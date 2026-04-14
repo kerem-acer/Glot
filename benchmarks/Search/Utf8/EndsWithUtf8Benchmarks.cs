@@ -1,0 +1,46 @@
+using BenchmarkDotNet.Attributes;
+
+namespace Glot.Benchmarks;
+
+[MemoryDiagnoser]
+public class EndsWithUtf8Benchmarks
+{
+    [SearchSizeParams]
+    public int N;
+    [ScriptParams]
+    public Script Locale;
+
+    EncodedSet _haystack, _needle, _missingNeedle;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _haystack = EncodedSet.From(TestData.Generate(N, Locale));
+        _needle = EncodedSet.From(TestData.Needle(Locale));
+        _missingNeedle = EncodedSet.From(TestData.MissingNeedle(Locale));
+    }
+
+    [Benchmark(Baseline = true, Description = "U8String.EndsWith")]
+    public bool U8EndsWith() => _haystack.U8.EndsWith(_needle.U8);
+
+    [Benchmark(Description = "Text.EndsWith UTF-8")]
+    public bool TextEndsWith_Utf8() => _haystack.Utf8.EndsWith(_needle.Utf8);
+
+    [Benchmark(Description = "Text.EndsWith UTF-16")]
+    public bool TextEndsWith_Utf16() => _haystack.Utf8.EndsWith(_needle.Utf16);
+
+    [Benchmark(Description = "Text.EndsWith UTF-32")]
+    public bool TextEndsWith_Utf32() => _haystack.Utf8.EndsWith(_needle.Utf32);
+
+    [Benchmark(Description = "U8String.EndsWith miss")]
+    public bool U8EndsWith_Miss() => _haystack.U8.EndsWith(_missingNeedle.U8);
+
+    [Benchmark(Description = "Text.EndsWith UTF-8 miss")]
+    public bool TextEndsWith_Utf8_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf8);
+
+    [Benchmark(Description = "Text.EndsWith UTF-16 miss")]
+    public bool TextEndsWith_Utf16_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf16);
+
+    [Benchmark(Description = "Text.EndsWith UTF-32 miss")]
+    public bool TextEndsWith_Utf32_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf32);
+}

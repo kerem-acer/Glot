@@ -190,23 +190,23 @@ public partial class TextBuilderTests
         builder.Append("Hello");
 
         // Act
-        using var owned = builder.ToOwnedText();
+        using var owned = builder.ToOwnedText()!;
 
         // Assert
         return Verify(new { result = owned.Text.ToString(), builderIsEmpty = builder.IsEmpty, builderByteLength = builder.ByteLength });
     }
 
     [Test]
-    public async Task ToOwnedText_Empty_ReturnsDefault()
+    public async Task ToOwnedText_Empty_ReturnsNull()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
 
         // Act
-        using var owned = builder.ToOwnedText();
+        var owned = builder.ToOwnedText();
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     [Test]
@@ -217,9 +217,9 @@ public partial class TextBuilderTests
 
         // Act
         builder.Append("First");
-        using var first = builder.ToOwnedText();
+        using var first = builder.ToOwnedText()!;
         builder.Append("Second");
-        using var second = builder.ToOwnedText();
+        using var second = builder.ToOwnedText()!;
 
         // Assert
         return Verify(new { first = first.Text.ToString(), second = second.Text.ToString() });

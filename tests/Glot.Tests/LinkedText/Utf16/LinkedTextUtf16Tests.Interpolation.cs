@@ -104,7 +104,7 @@ public partial class LinkedTextUtf16Tests
         var name = "world";
 
         // Act
-        using LinkedTextUtf16Owned owned = $"Hello {name}!";
+        using var owned = OwnedLinkedTextUtf16.Create($"Hello {name}!");
 
         // Assert
         return Verify(new { result = owned.AsSpan().ToString(), segmentCount = owned.Data!.SegmentCount });
@@ -115,12 +115,12 @@ public partial class LinkedTextUtf16Tests
     {
         // Arrange — dispose returns to pool
         {
-            LinkedTextUtf16Owned owned = $"hello";
+            var owned = OwnedLinkedTextUtf16.Create($"hello");
             owned.Dispose();
         }
 
         // Act — next owned gets a clean instance
-        using LinkedTextUtf16Owned owned2 = $"world";
+        using var owned2 = OwnedLinkedTextUtf16.Create($"world");
 
         // Assert
         return Verify(new { segmentCount = owned2.Data!.SegmentCount, result = owned2.AsSpan().ToString() });
@@ -133,7 +133,7 @@ public partial class LinkedTextUtf16Tests
         string? nullStr = null;
 
         // Act
-        using LinkedTextUtf16Owned owned = $"hello{nullStr}world";
+        using var owned = OwnedLinkedTextUtf16.Create($"hello{nullStr}world");
 
         // Assert
         const string expected = "helloworld";
@@ -195,7 +195,7 @@ public partial class LinkedTextUtf16Tests
         var text = Text.FromUtf8("café"u8);
 
         // Act
-        LinkedTextUtf16Owned owned = $"at {text}";
+        var owned = OwnedLinkedTextUtf16.Create($"at {text}");
 
         // Assert
         const string expected = "at café";
@@ -212,7 +212,7 @@ public partial class LinkedTextUtf16Tests
         var mem = "hello".AsMemory();
 
         // Act
-        LinkedTextUtf16Owned owned = $"{mem}!";
+        var owned = OwnedLinkedTextUtf16.Create($"{mem}!");
 
         // Assert
         const string expected = "hello!";
@@ -305,7 +305,7 @@ public partial class LinkedTextUtf16Tests
     public async Task InterpolationOwned_WithIntHole_FormatsCorrectly()
     {
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned($"count={42}");
+        using var owned = OwnedLinkedTextUtf16.Create($"count={42}");
         var result = owned.AsSpan().ToString();
 
         // Assert

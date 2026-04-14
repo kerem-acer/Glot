@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <InternalsVisibleTo Include="Glot.AspNetCore.Tests" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="../Glot/Glot.csproj" />
+    <ProjectReference Include="../Glot.SystemTextJson/Glot.SystemTextJson.csproj" />
+  </ItemGroup>
+</Project>

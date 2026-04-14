@@ -10,17 +10,27 @@ public sealed partial class LinkedTextUtf8
 
     void Reset()
     {
+        // Return pooled buffers from owned segments
+        for (var i = 0; i < SegmentCount; i++)
+        {
+            var entry = GetSegmentEntry(i);
+            if (entry.PooledBuffer is not null)
+            {
+                ArrayPool<byte>.Shared.Return(entry.PooledBuffer);
+            }
+        }
+
 #if NET8_0_OR_GREATER
         if (SegmentCount > 0)
         {
             var inlineCount = Math.Min(SegmentCount, InlineCapacity);
-            ((Span<ReadOnlyMemory<byte>>)_inlineSegments)[..inlineCount].Clear();
+            ((Span<Segment>)_inlineSegments)[..inlineCount].Clear();
         }
 #endif
 
         if (_overflowSegments is not null)
         {
-            ArrayPool<ReadOnlyMemory<byte>>.Shared.Return(_overflowSegments, clearArray: true);
+            ArrayPool<Segment>.Shared.Return(_overflowSegments, clearArray: true);
             _overflowSegments = null;
         }
 
@@ -35,6 +45,7 @@ public sealed partial class LinkedTextUtf8
 
         SegmentCount = 0;
         Length = 0;
+        OwnedTextHandling = OwnedTextHandling.Copy;
         _cachedSequence = null;
     }
 

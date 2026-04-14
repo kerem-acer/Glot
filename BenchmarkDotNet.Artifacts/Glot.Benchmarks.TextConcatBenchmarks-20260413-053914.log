@@ -1,0 +1,1052 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 9 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf
+// command took 2.09 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0/" --output "/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf
+// command took 5.33 sec and exited with 0
+// ***** Done, took 00:00:07 (7.48 sec)   *****
+// Found 9 benchmarks:
+//   TextConcatBenchmarks.'Text.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'Text.ConcatPooled 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'Text.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'OwnedText.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'OwnedText.Create mixed types': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'Text + operator': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'string.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'string interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+//   TextConcatBenchmarks.'string interpolation mixed': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+// **************************
+// Benchmark: TextConcatBenchmarks.'Text.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.TextConcat --job ShortRun --benchmarkId 0 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 104417.00 ns, 104.4170 us/op
+WorkloadJitting  1: 1 op, 971792.00 ns, 971.7920 us/op
+
+OverheadJitting  2: 16 op, 101000.00 ns, 6.3125 us/op
+WorkloadJitting  2: 16 op, 209792.00 ns, 13.1120 us/op
+
+WorkloadPilot    1: 16 op, 10833.00 ns, 677.0625 ns/op
+WorkloadPilot    2: 32 op, 15833.00 ns, 494.7813 ns/op
+WorkloadPilot    3: 64 op, 25417.00 ns, 397.1406 ns/op
+WorkloadPilot    4: 128 op, 49375.00 ns, 385.7422 ns/op
+WorkloadPilot    5: 256 op, 134042.00 ns, 523.6016 ns/op
+WorkloadPilot    6: 512 op, 185000.00 ns, 361.3281 ns/op
+WorkloadPilot    7: 1024 op, 367000.00 ns, 358.3984 ns/op
+WorkloadPilot    8: 2048 op, 843958.00 ns, 412.0889 ns/op
+WorkloadPilot    9: 4096 op, 1615125.00 ns, 394.3176 ns/op
+WorkloadPilot   10: 8192 op, 3238375.00 ns, 395.3094 ns/op
+WorkloadPilot   11: 16384 op, 6276250.00 ns, 383.0719 ns/op
+WorkloadPilot   12: 32768 op, 12677792.00 ns, 386.8955 ns/op
+WorkloadPilot   13: 65536 op, 24921000.00 ns, 380.2643 ns/op
+WorkloadPilot   14: 131072 op, 47493416.00 ns, 362.3460 ns/op
+WorkloadPilot   15: 262144 op, 62837500.00 ns, 239.7060 ns/op
+WorkloadPilot   16: 524288 op, 20181583.00 ns, 38.4933 ns/op
+WorkloadPilot   17: 1048576 op, 39460500.00 ns, 37.6325 ns/op
+WorkloadPilot   18: 2097152 op, 76532708.00 ns, 36.4936 ns/op
+WorkloadPilot   19: 4194304 op, 156243542.00 ns, 37.2514 ns/op
+WorkloadPilot   20: 8388608 op, 313299000.00 ns, 37.3482 ns/op
+WorkloadPilot   21: 16777216 op, 613640958.00 ns, 36.5759 ns/op
+
+OverheadWarmup   1: 16777216 op, 29628042.00 ns, 1.7660 ns/op
+OverheadWarmup   2: 16777216 op, 28999625.00 ns, 1.7285 ns/op
+OverheadWarmup   3: 16777216 op, 28506125.00 ns, 1.6991 ns/op
+OverheadWarmup   4: 16777216 op, 28911792.00 ns, 1.7233 ns/op
+OverheadWarmup   5: 16777216 op, 28429250.00 ns, 1.6945 ns/op
+OverheadWarmup   6: 16777216 op, 28636167.00 ns, 1.7068 ns/op
+OverheadWarmup   7: 16777216 op, 29400458.00 ns, 1.7524 ns/op
+OverheadWarmup   8: 16777216 op, 28499709.00 ns, 1.6987 ns/op
+
+OverheadActual   1: 16777216 op, 28413542.00 ns, 1.6936 ns/op
+OverheadActual   2: 16777216 op, 28682708.00 ns, 1.7096 ns/op
+OverheadActual   3: 16777216 op, 28217084.00 ns, 1.6819 ns/op
+OverheadActual   4: 16777216 op, 28686791.00 ns, 1.7099 ns/op
+OverheadActual   5: 16777216 op, 28934917.00 ns, 1.7247 ns/op
+OverheadActual   6: 16777216 op, 29263458.00 ns, 1.7442 ns/op
+OverheadActual   7: 16777216 op, 28950833.00 ns, 1.7256 ns/op
+OverheadActual   8: 16777216 op, 29609292.00 ns, 1.7649 ns/op
+OverheadActual   9: 16777216 op, 29554209.00 ns, 1.7616 ns/op
+OverheadActual  10: 16777216 op, 21704541.00 ns, 1.2937 ns/op
+OverheadActual  11: 16777216 op, 20029958.00 ns, 1.1939 ns/op
+OverheadActual  12: 16777216 op, 20201375.00 ns, 1.2041 ns/op
+OverheadActual  13: 16777216 op, 20296709.00 ns, 1.2098 ns/op
+OverheadActual  14: 16777216 op, 20010250.00 ns, 1.1927 ns/op
+OverheadActual  15: 16777216 op, 20532125.00 ns, 1.2238 ns/op
+OverheadActual  16: 16777216 op, 20251458.00 ns, 1.2071 ns/op
+OverheadActual  17: 16777216 op, 21629709.00 ns, 1.2892 ns/op
+OverheadActual  18: 16777216 op, 20924291.00 ns, 1.2472 ns/op
+OverheadActual  19: 16777216 op, 20463291.00 ns, 1.2197 ns/op
+OverheadActual  20: 16777216 op, 19561958.00 ns, 1.1660 ns/op
+
+WorkloadWarmup   1: 16777216 op, 611874125.00 ns, 36.4705 ns/op
+WorkloadWarmup   2: 16777216 op, 616946875.00 ns, 36.7729 ns/op
+WorkloadWarmup   3: 16777216 op, 602090417.00 ns, 35.8874 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 16777216 op, 604231625.00 ns, 36.0150 ns/op
+WorkloadActual   2: 16777216 op, 611522792.00 ns, 36.4496 ns/op
+WorkloadActual   3: 16777216 op, 590413958.00 ns, 35.1914 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 16777216 op, 582564500.00 ns, 34.7236 ns/op
+WorkloadResult   2: 16777216 op, 589855667.00 ns, 35.1581 ns/op
+WorkloadResult   3: 16777216 op, 568746833.00 ns, 33.9000 ns/op
+// GC:  192 0 0 1610612800 16777216
+// Threading:  0 0 16777216
+
+// AfterAll
+// Benchmark Process 56527 has exited with code 0.
+
+Mean = 34.594 ns, StdErr = 0.369 ns (1.07%), N = 3, StdDev = 0.639 ns
+Min = 33.900 ns, Q1 = 34.312 ns, Median = 34.724 ns, Q3 = 34.941 ns, Max = 35.158 ns
+IQR = 0.629 ns, LowerFence = 33.368 ns, UpperFence = 35.884 ns
+ConfidenceInterval = [22.935 ns; 46.252 ns] (CI 99.9%), Margin = 11.658 ns (33.70% of Mean)
+Skewness = -0.19, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 8 (%88,9) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'Text.ConcatPooled 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.TextConcatPooled --job ShortRun --benchmarkId 1 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 111292.00 ns, 111.2920 us/op
+WorkloadJitting  1: 1 op, 1527042.00 ns, 1.5270 ms/op
+
+OverheadJitting  2: 16 op, 93125.00 ns, 5.8203 us/op
+WorkloadJitting  2: 16 op, 121667.00 ns, 7.6042 us/op
+
+WorkloadPilot    1: 16 op, 13292.00 ns, 830.7500 ns/op
+WorkloadPilot    2: 32 op, 20875.00 ns, 652.3438 ns/op
+WorkloadPilot    3: 64 op, 37375.00 ns, 583.9844 ns/op
+WorkloadPilot    4: 128 op, 77250.00 ns, 603.5156 ns/op
+WorkloadPilot    5: 256 op, 130583.00 ns, 510.0898 ns/op
+WorkloadPilot    6: 512 op, 250166.00 ns, 488.6055 ns/op
+WorkloadPilot    7: 1024 op, 605625.00 ns, 591.4307 ns/op
+WorkloadPilot    8: 2048 op, 1140625.00 ns, 556.9458 ns/op
+WorkloadPilot    9: 4096 op, 2234000.00 ns, 545.4102 ns/op
+WorkloadPilot   10: 8192 op, 4831959.00 ns, 589.8387 ns/op
+WorkloadPilot   11: 16384 op, 9073292.00 ns, 553.7898 ns/op
+WorkloadPilot   12: 32768 op, 17456584.00 ns, 532.7327 ns/op
+WorkloadPilot   13: 65536 op, 33197791.00 ns, 506.5581 ns/op
+WorkloadPilot   14: 131072 op, 66148458.00 ns, 504.6727 ns/op
+WorkloadPilot   15: 262144 op, 137060041.00 ns, 522.8426 ns/op
+WorkloadPilot   16: 524288 op, 35206125.00 ns, 67.1504 ns/op
+WorkloadPilot   17: 1048576 op, 60299541.00 ns, 57.5061 ns/op
+WorkloadPilot   18: 2097152 op, 118519917.00 ns, 56.5147 ns/op
+WorkloadPilot   19: 4194304 op, 239654750.00 ns, 57.1381 ns/op
+WorkloadPilot   20: 8388608 op, 485346208.00 ns, 57.8578 ns/op
+WorkloadPilot   21: 16777216 op, 1003081791.00 ns, 59.7883 ns/op
+
+OverheadWarmup   1: 16777216 op, 28344792.00 ns, 1.6895 ns/op
+OverheadWarmup   2: 16777216 op, 31670459.00 ns, 1.8877 ns/op
+OverheadWarmup   3: 16777216 op, 29934000.00 ns, 1.7842 ns/op
+OverheadWarmup   4: 16777216 op, 28816875.00 ns, 1.7176 ns/op
+OverheadWarmup   5: 16777216 op, 28976083.00 ns, 1.7271 ns/op
+OverheadWarmup   6: 16777216 op, 28978292.00 ns, 1.7272 ns/op
+OverheadWarmup   7: 16777216 op, 28422209.00 ns, 1.6941 ns/op
+
+OverheadActual   1: 16777216 op, 28665625.00 ns, 1.7086 ns/op
+OverheadActual   2: 16777216 op, 28680667.00 ns, 1.7095 ns/op
+OverheadActual   3: 16777216 op, 28414584.00 ns, 1.6936 ns/op
+OverheadActual   4: 16777216 op, 28637083.00 ns, 1.7069 ns/op
+OverheadActual   5: 16777216 op, 28538875.00 ns, 1.7010 ns/op
+OverheadActual   6: 16777216 op, 28642042.00 ns, 1.7072 ns/op
+OverheadActual   7: 16777216 op, 27878208.00 ns, 1.6617 ns/op
+OverheadActual   8: 16777216 op, 28561667.00 ns, 1.7024 ns/op
+OverheadActual   9: 16777216 op, 28218958.00 ns, 1.6820 ns/op
+OverheadActual  10: 16777216 op, 28407333.00 ns, 1.6932 ns/op
+OverheadActual  11: 16777216 op, 24280916.00 ns, 1.4473 ns/op
+OverheadActual  12: 16777216 op, 20229459.00 ns, 1.2058 ns/op
+OverheadActual  13: 16777216 op, 19320167.00 ns, 1.1516 ns/op
+OverheadActual  14: 16777216 op, 20698500.00 ns, 1.2337 ns/op
+OverheadActual  15: 16777216 op, 21085666.00 ns, 1.2568 ns/op
+OverheadActual  16: 16777216 op, 21143708.00 ns, 1.2603 ns/op
+OverheadActual  17: 16777216 op, 20894833.00 ns, 1.2454 ns/op
+OverheadActual  18: 16777216 op, 20457375.00 ns, 1.2194 ns/op
+OverheadActual  19: 16777216 op, 20180833.00 ns, 1.2029 ns/op
+OverheadActual  20: 16777216 op, 19779417.00 ns, 1.1789 ns/op
+
+WorkloadWarmup   1: 16777216 op, 975170292.00 ns, 58.1247 ns/op
+WorkloadWarmup   2: 16777216 op, 970884208.00 ns, 57.8692 ns/op
+WorkloadWarmup   3: 16777216 op, 968535541.00 ns, 57.7292 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 16777216 op, 969875750.00 ns, 57.8091 ns/op
+WorkloadActual   2: 16777216 op, 963975250.00 ns, 57.4574 ns/op
+WorkloadActual   3: 16777216 op, 975451125.00 ns, 58.1414 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 16777216 op, 943796188.00 ns, 56.2546 ns/op
+WorkloadResult   2: 16777216 op, 937895688.00 ns, 55.9029 ns/op
+WorkloadResult   3: 16777216 op, 949371563.00 ns, 56.5870 ns/op
+// GC:  0 0 0 736 16777216
+// Threading:  0 0 16777216
+
+// AfterAll
+// Benchmark Process 56548 has exited with code 0.
+
+Mean = 56.248 ns, StdErr = 0.197 ns (0.35%), N = 3, StdDev = 0.342 ns
+Min = 55.903 ns, Q1 = 56.079 ns, Median = 56.255 ns, Q3 = 56.421 ns, Max = 56.587 ns
+IQR = 0.342 ns, LowerFence = 55.566 ns, UpperFence = 56.934 ns
+ConfidenceInterval = [50.008 ns; 62.489 ns] (CI 99.9%), Margin = 6.240 ns (11.09% of Mean)
+Skewness = -0.02, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 7 (%77,8) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'Text.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.TextCreateInterpolation --job ShortRun --benchmarkId 2 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 106333.00 ns, 106.3330 us/op
+WorkloadJitting  1: 1 op, 610125.00 ns, 610.1250 us/op
+
+OverheadJitting  2: 16 op, 86208.00 ns, 5.3880 us/op
+WorkloadJitting  2: 16 op, 216917.00 ns, 13.5573 us/op
+
+WorkloadPilot    1: 16 op, 8291.00 ns, 518.1875 ns/op
+WorkloadPilot    2: 32 op, 12334.00 ns, 385.4375 ns/op
+WorkloadPilot    3: 64 op, 33959.00 ns, 530.6094 ns/op
+WorkloadPilot    4: 128 op, 55875.00 ns, 436.5234 ns/op
+WorkloadPilot    5: 256 op, 110250.00 ns, 430.6641 ns/op
+WorkloadPilot    6: 512 op, 189958.00 ns, 371.0117 ns/op
+WorkloadPilot    7: 1024 op, 333083.00 ns, 325.2764 ns/op
+WorkloadPilot    8: 2048 op, 709875.00 ns, 346.6187 ns/op
+WorkloadPilot    9: 4096 op, 1385917.00 ns, 338.3586 ns/op
+WorkloadPilot   10: 8192 op, 2815000.00 ns, 343.6279 ns/op
+WorkloadPilot   11: 16384 op, 5987209.00 ns, 365.4302 ns/op
+WorkloadPilot   12: 32768 op, 11483584.00 ns, 350.4512 ns/op
+WorkloadPilot   13: 65536 op, 22981333.00 ns, 350.6673 ns/op
+WorkloadPilot   14: 131072 op, 44695041.00 ns, 340.9961 ns/op
+WorkloadPilot   15: 262144 op, 78141834.00 ns, 298.0874 ns/op
+WorkloadPilot   16: 524288 op, 22400291.00 ns, 42.7252 ns/op
+WorkloadPilot   17: 1048576 op, 43183375.00 ns, 41.1829 ns/op
+WorkloadPilot   18: 2097152 op, 86699625.00 ns, 41.3416 ns/op
+WorkloadPilot   19: 4194304 op, 175708958.00 ns, 41.8923 ns/op
+WorkloadPilot   20: 8388608 op, 344376500.00 ns, 41.0529 ns/op
+WorkloadPilot   21: 16777216 op, 692566000.00 ns, 41.2802 ns/op
+
+OverheadWarmup   1: 16777216 op, 28873083.00 ns, 1.7210 ns/op
+OverheadWarmup   2: 16777216 op, 28545959.00 ns, 1.7015 ns/op
+OverheadWarmup   3: 16777216 op, 28434250.00 ns, 1.6948 ns/op
+OverheadWarmup   4: 16777216 op, 28925958.00 ns, 1.7241 ns/op
+OverheadWarmup   5: 16777216 op, 28462042.00 ns, 1.6965 ns/op
+OverheadWarmup   6: 16777216 op, 29332167.00 ns, 1.7483 ns/op
+OverheadWarmup   7: 16777216 op, 28932375.00 ns, 1.7245 ns/op
+
+OverheadActual   1: 16777216 op, 28522334.00 ns, 1.7001 ns/op
+OverheadActual   2: 16777216 op, 28378667.00 ns, 1.6915 ns/op
+OverheadActual   3: 16777216 op, 28411291.00 ns, 1.6934 ns/op
+OverheadActual   4: 16777216 op, 28618500.00 ns, 1.7058 ns/op
+OverheadActual   5: 16777216 op, 28648792.00 ns, 1.7076 ns/op
+OverheadActual   6: 16777216 op, 28721375.00 ns, 1.7119 ns/op
+OverheadActual   7: 16777216 op, 28459334.00 ns, 1.6963 ns/op
+OverheadActual   8: 16777216 op, 28742250.00 ns, 1.7132 ns/op
+OverheadActual   9: 16777216 op, 28151292.00 ns, 1.6779 ns/op
+OverheadActual  10: 16777216 op, 28879041.00 ns, 1.7213 ns/op
+OverheadActual  11: 16777216 op, 26412292.00 ns, 1.5743 ns/op
+OverheadActual  12: 16777216 op, 19754708.00 ns, 1.1775 ns/op
+OverheadActual  13: 16777216 op, 20264208.00 ns, 1.2078 ns/op
+OverheadActual  14: 16777216 op, 20863083.00 ns, 1.2435 ns/op
+OverheadActual  15: 16777216 op, 19977833.00 ns, 1.1908 ns/op
+OverheadActual  16: 16777216 op, 23861667.00 ns, 1.4223 ns/op
+OverheadActual  17: 16777216 op, 21947250.00 ns, 1.3082 ns/op
+OverheadActual  18: 16777216 op, 20682958.00 ns, 1.2328 ns/op
+OverheadActual  19: 16777216 op, 20187584.00 ns, 1.2033 ns/op
+OverheadActual  20: 16777216 op, 19959000.00 ns, 1.1896 ns/op
+
+WorkloadWarmup   1: 16777216 op, 659310792.00 ns, 39.2980 ns/op
+WorkloadWarmup   2: 16777216 op, 655184416.00 ns, 39.0520 ns/op
+WorkloadWarmup   3: 16777216 op, 651500541.00 ns, 38.8325 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 16777216 op, 649661291.00 ns, 38.7228 ns/op
+WorkloadActual   2: 16777216 op, 652122667.00 ns, 38.8695 ns/op
+WorkloadActual   3: 16777216 op, 648739000.00 ns, 38.6679 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 16777216 op, 622379499.00 ns, 37.0967 ns/op
+WorkloadResult   2: 16777216 op, 624840875.00 ns, 37.2434 ns/op
+WorkloadResult   3: 16777216 op, 621457208.00 ns, 37.0417 ns/op
+// GC:  192 0 0 1610613472 16777216
+// Threading:  0 0 16777216
+
+// AfterAll
+// Benchmark Process 56675 has exited with code 0.
+
+Mean = 37.127 ns, StdErr = 0.060 ns (0.16%), N = 3, StdDev = 0.104 ns
+Min = 37.042 ns, Q1 = 37.069 ns, Median = 37.097 ns, Q3 = 37.170 ns, Max = 37.243 ns
+IQR = 0.101 ns, LowerFence = 36.918 ns, UpperFence = 37.321 ns
+ConfidenceInterval = [35.225 ns; 39.029 ns] (CI 99.9%), Margin = 1.902 ns (5.12% of Mean)
+Skewness = 0.27, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 6 (%66,7) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'OwnedText.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.OwnedTextCreateInterpolation --job ShortRun --benchmarkId 3 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 118584.00 ns, 118.5840 us/op
+WorkloadJitting  1: 1 op, 1283625.00 ns, 1.2836 ms/op
+
+OverheadJitting  2: 16 op, 88667.00 ns, 5.5417 us/op
+WorkloadJitting  2: 16 op, 97416.00 ns, 6.0885 us/op
+
+WorkloadPilot    1: 16 op, 12042.00 ns, 752.6250 ns/op
+WorkloadPilot    2: 32 op, 24333.00 ns, 760.4063 ns/op
+WorkloadPilot    3: 64 op, 43167.00 ns, 674.4844 ns/op
+WorkloadPilot    4: 128 op, 72959.00 ns, 569.9922 ns/op
+WorkloadPilot    5: 256 op, 201084.00 ns, 785.4844 ns/op
+WorkloadPilot    6: 512 op, 250917.00 ns, 490.0723 ns/op
+WorkloadPilot    7: 1024 op, 476917.00 ns, 465.7393 ns/op
+WorkloadPilot    8: 2048 op, 1069583.00 ns, 522.2573 ns/op
+WorkloadPilot    9: 4096 op, 2061541.00 ns, 503.3059 ns/op
+WorkloadPilot   10: 8192 op, 4207417.00 ns, 513.6007 ns/op
+WorkloadPilot   11: 16384 op, 8065208.00 ns, 492.2612 ns/op
+WorkloadPilot   12: 32768 op, 15925667.00 ns, 486.0128 ns/op
+WorkloadPilot   13: 65536 op, 31869125.00 ns, 486.2843 ns/op
+WorkloadPilot   14: 131072 op, 65026666.00 ns, 496.1141 ns/op
+WorkloadPilot   15: 262144 op, 49552709.00 ns, 189.0286 ns/op
+WorkloadPilot   16: 524288 op, 24418125.00 ns, 46.5739 ns/op
+WorkloadPilot   17: 1048576 op, 51245292.00 ns, 48.8713 ns/op
+WorkloadPilot   18: 2097152 op, 96554166.00 ns, 46.0406 ns/op
+WorkloadPilot   19: 4194304 op, 202205875.00 ns, 48.2096 ns/op
+WorkloadPilot   20: 8388608 op, 401679708.00 ns, 47.8840 ns/op
+WorkloadPilot   21: 16777216 op, 790241459.00 ns, 47.1021 ns/op
+
+OverheadWarmup   1: 16777216 op, 28860792.00 ns, 1.7202 ns/op
+OverheadWarmup   2: 16777216 op, 29086334.00 ns, 1.7337 ns/op
+OverheadWarmup   3: 16777216 op, 28365542.00 ns, 1.6907 ns/op
+OverheadWarmup   4: 16777216 op, 28255833.00 ns, 1.6842 ns/op
+OverheadWarmup   5: 16777216 op, 28585584.00 ns, 1.7038 ns/op
+OverheadWarmup   6: 16777216 op, 28615708.00 ns, 1.7056 ns/op
+OverheadWarmup   7: 16777216 op, 28397292.00 ns, 1.6926 ns/op
+
+OverheadActual   1: 16777216 op, 28023333.00 ns, 1.6703 ns/op
+OverheadActual   2: 16777216 op, 28170042.00 ns, 1.6791 ns/op
+OverheadActual   3: 16777216 op, 28134333.00 ns, 1.6769 ns/op
+OverheadActual   4: 16777216 op, 28486667.00 ns, 1.6979 ns/op
+OverheadActual   5: 16777216 op, 28470500.00 ns, 1.6970 ns/op
+OverheadActual   6: 16777216 op, 28492333.00 ns, 1.6983 ns/op
+OverheadActual   7: 16777216 op, 28397291.00 ns, 1.6926 ns/op
+OverheadActual   8: 16777216 op, 28380042.00 ns, 1.6916 ns/op
+OverheadActual   9: 16777216 op, 28630500.00 ns, 1.7065 ns/op
+OverheadActual  10: 16777216 op, 28175375.00 ns, 1.6794 ns/op
+OverheadActual  11: 16777216 op, 27554000.00 ns, 1.6423 ns/op
+OverheadActual  12: 16777216 op, 19293792.00 ns, 1.1500 ns/op
+OverheadActual  13: 16777216 op, 20002083.00 ns, 1.1922 ns/op
+OverheadActual  14: 16777216 op, 19552500.00 ns, 1.1654 ns/op
+OverheadActual  15: 16777216 op, 19597875.00 ns, 1.1681 ns/op
+OverheadActual  16: 16777216 op, 19586542.00 ns, 1.1674 ns/op
+OverheadActual  17: 16777216 op, 19981666.00 ns, 1.1910 ns/op
+OverheadActual  18: 16777216 op, 20253666.00 ns, 1.2072 ns/op
+OverheadActual  19: 16777216 op, 19234875.00 ns, 1.1465 ns/op
+OverheadActual  20: 16777216 op, 19186000.00 ns, 1.1436 ns/op
+
+WorkloadWarmup   1: 16777216 op, 804138458.00 ns, 47.9304 ns/op
+WorkloadWarmup   2: 16777216 op, 828670583.00 ns, 49.3926 ns/op
+WorkloadWarmup   3: 16777216 op, 833028042.00 ns, 49.6523 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 16777216 op, 816166000.00 ns, 48.6473 ns/op
+WorkloadActual   2: 16777216 op, 813298292.00 ns, 48.4764 ns/op
+WorkloadActual   3: 16777216 op, 814844542.00 ns, 48.5685 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 16777216 op, 788377333.50 ns, 46.9910 ns/op
+WorkloadResult   2: 16777216 op, 785509625.50 ns, 46.8200 ns/op
+WorkloadResult   3: 16777216 op, 787055875.50 ns, 46.9122 ns/op
+// GC:  0 0 0 736 16777216
+// Threading:  0 0 16777216
+
+// AfterAll
+// Benchmark Process 56689 has exited with code 0.
+
+Mean = 46.908 ns, StdErr = 0.049 ns (0.11%), N = 3, StdDev = 0.086 ns
+Min = 46.820 ns, Q1 = 46.866 ns, Median = 46.912 ns, Q3 = 46.952 ns, Max = 46.991 ns
+IQR = 0.085 ns, LowerFence = 46.738 ns, UpperFence = 47.080 ns
+ConfidenceInterval = [45.347 ns; 48.469 ns] (CI 99.9%), Margin = 1.561 ns (3.33% of Mean)
+Skewness = -0.05, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 5 (%55,6) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'OwnedText.Create mixed types': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.OwnedTextCreateMixed --job ShortRun --benchmarkId 4 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 99625.00 ns, 99.6250 us/op
+WorkloadJitting  1: 1 op, 1757208.00 ns, 1.7572 ms/op
+
+OverheadJitting  2: 16 op, 91333.00 ns, 5.7083 us/op
+WorkloadJitting  2: 16 op, 87583.00 ns, 5.4739 us/op
+
+WorkloadPilot    1: 16 op, 29708.00 ns, 1.8568 us/op
+WorkloadPilot    2: 32 op, 41542.00 ns, 1.2982 us/op
+WorkloadPilot    3: 64 op, 59166.00 ns, 924.4688 ns/op
+WorkloadPilot    4: 128 op, 117000.00 ns, 914.0625 ns/op
+WorkloadPilot    5: 256 op, 242042.00 ns, 945.4766 ns/op
+WorkloadPilot    6: 512 op, 508292.00 ns, 992.7578 ns/op
+WorkloadPilot    7: 1024 op, 1048791.00 ns, 1.0242 us/op
+WorkloadPilot    8: 2048 op, 2305500.00 ns, 1.1257 us/op
+WorkloadPilot    9: 4096 op, 4324041.00 ns, 1.0557 us/op
+WorkloadPilot   10: 8192 op, 8217375.00 ns, 1.0031 us/op
+WorkloadPilot   11: 16384 op, 14822917.00 ns, 904.7191 ns/op
+WorkloadPilot   12: 32768 op, 29667583.00 ns, 905.3828 ns/op
+WorkloadPilot   13: 65536 op, 58992542.00 ns, 900.1548 ns/op
+WorkloadPilot   14: 131072 op, 67108542.00 ns, 511.9975 ns/op
+WorkloadPilot   15: 262144 op, 20363709.00 ns, 77.6814 ns/op
+WorkloadPilot   16: 524288 op, 39362375.00 ns, 75.0778 ns/op
+WorkloadPilot   17: 1048576 op, 79705541.00 ns, 76.0131 ns/op
+WorkloadPilot   18: 2097152 op, 159486791.00 ns, 76.0492 ns/op
+WorkloadPilot   19: 4194304 op, 321268000.00 ns, 76.5963 ns/op
+WorkloadPilot   20: 8388608 op, 646366625.00 ns, 77.0529 ns/op
+
+OverheadWarmup   1: 8388608 op, 14309500.00 ns, 1.7058 ns/op
+OverheadWarmup   2: 8388608 op, 14621500.00 ns, 1.7430 ns/op
+OverheadWarmup   3: 8388608 op, 14769875.00 ns, 1.7607 ns/op
+OverheadWarmup   4: 8388608 op, 14026666.00 ns, 1.6721 ns/op
+OverheadWarmup   5: 8388608 op, 14636833.00 ns, 1.7448 ns/op
+OverheadWarmup   6: 8388608 op, 14211833.00 ns, 1.6942 ns/op
+
+OverheadActual   1: 8388608 op, 14714292.00 ns, 1.7541 ns/op
+OverheadActual   2: 8388608 op, 14086333.00 ns, 1.6792 ns/op
+OverheadActual   3: 8388608 op, 14823500.00 ns, 1.7671 ns/op
+OverheadActual   4: 8388608 op, 14901042.00 ns, 1.7763 ns/op
+OverheadActual   5: 8388608 op, 14069000.00 ns, 1.6772 ns/op
+OverheadActual   6: 8388608 op, 14384833.00 ns, 1.7148 ns/op
+OverheadActual   7: 8388608 op, 14573541.00 ns, 1.7373 ns/op
+OverheadActual   8: 8388608 op, 14585708.00 ns, 1.7388 ns/op
+OverheadActual   9: 8388608 op, 14600542.00 ns, 1.7405 ns/op
+OverheadActual  10: 8388608 op, 15264750.00 ns, 1.8197 ns/op
+OverheadActual  11: 8388608 op, 14303375.00 ns, 1.7051 ns/op
+OverheadActual  12: 8388608 op, 14748459.00 ns, 1.7582 ns/op
+OverheadActual  13: 8388608 op, 14029417.00 ns, 1.6724 ns/op
+OverheadActual  14: 8388608 op, 14467541.00 ns, 1.7247 ns/op
+OverheadActual  15: 8388608 op, 13490125.00 ns, 1.6081 ns/op
+
+WorkloadWarmup   1: 8388608 op, 664885084.00 ns, 79.2605 ns/op
+WorkloadWarmup   2: 8388608 op, 656123459.00 ns, 78.2160 ns/op
+WorkloadWarmup   3: 8388608 op, 661036292.00 ns, 78.8017 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 8388608 op, 662356417.00 ns, 78.9590 ns/op
+WorkloadActual   2: 8388608 op, 656110625.00 ns, 78.2145 ns/op
+WorkloadActual   3: 8388608 op, 664057500.00 ns, 79.1618 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 8388608 op, 647782876.00 ns, 77.2217 ns/op
+WorkloadResult   2: 8388608 op, 641537084.00 ns, 76.4772 ns/op
+WorkloadResult   3: 8388608 op, 649483959.00 ns, 77.4245 ns/op
+// GC:  0 0 0 736 8388608
+// Threading:  0 0 8388608
+
+// AfterAll
+// Benchmark Process 56694 has exited with code 0.
+
+Mean = 77.041 ns, StdErr = 0.288 ns (0.37%), N = 3, StdDev = 0.499 ns
+Min = 76.477 ns, Q1 = 76.849 ns, Median = 77.222 ns, Q3 = 77.323 ns, Max = 77.425 ns
+IQR = 0.474 ns, LowerFence = 76.139 ns, UpperFence = 78.034 ns
+ConfidenceInterval = [67.941 ns; 86.142 ns] (CI 99.9%), Margin = 9.100 ns (11.81% of Mean)
+Skewness = -0.31, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 4 (%44,4) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'Text + operator': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.TextOperatorPlus --job ShortRun --benchmarkId 5 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 150958.00 ns, 150.9580 us/op
+WorkloadJitting  1: 1 op, 862542.00 ns, 862.5420 us/op
+
+OverheadJitting  2: 16 op, 95375.00 ns, 5.9609 us/op
+WorkloadJitting  2: 16 op, 97292.00 ns, 6.0808 us/op
+
+WorkloadPilot    1: 16 op, 4333.00 ns, 270.8125 ns/op
+WorkloadPilot    2: 32 op, 12000.00 ns, 375.0000 ns/op
+WorkloadPilot    3: 64 op, 19417.00 ns, 303.3906 ns/op
+WorkloadPilot    4: 128 op, 33500.00 ns, 261.7188 ns/op
+WorkloadPilot    5: 256 op, 59625.00 ns, 232.9102 ns/op
+WorkloadPilot    6: 512 op, 122875.00 ns, 239.9902 ns/op
+WorkloadPilot    7: 1024 op, 218750.00 ns, 213.6230 ns/op
+WorkloadPilot    8: 2048 op, 443084.00 ns, 216.3496 ns/op
+WorkloadPilot    9: 4096 op, 1121084.00 ns, 273.7021 ns/op
+WorkloadPilot   10: 8192 op, 2100583.00 ns, 256.4188 ns/op
+WorkloadPilot   11: 16384 op, 3764333.00 ns, 229.7567 ns/op
+WorkloadPilot   12: 32768 op, 7282959.00 ns, 222.2583 ns/op
+WorkloadPilot   13: 65536 op, 14854166.00 ns, 226.6566 ns/op
+WorkloadPilot   14: 131072 op, 29494833.00 ns, 225.0277 ns/op
+WorkloadPilot   15: 262144 op, 58234583.00 ns, 222.1473 ns/op
+WorkloadPilot   16: 524288 op, 47429667.00 ns, 90.4649 ns/op
+WorkloadPilot   17: 1048576 op, 31394500.00 ns, 29.9401 ns/op
+WorkloadPilot   18: 2097152 op, 62826625.00 ns, 29.9581 ns/op
+WorkloadPilot   19: 4194304 op, 125663708.00 ns, 29.9606 ns/op
+WorkloadPilot   20: 8388608 op, 241974209.00 ns, 28.8456 ns/op
+WorkloadPilot   21: 16777216 op, 479189167.00 ns, 28.5619 ns/op
+WorkloadPilot   22: 33554432 op, 957528584.00 ns, 28.5366 ns/op
+
+OverheadWarmup   1: 33554432 op, 55605292.00 ns, 1.6572 ns/op
+OverheadWarmup   2: 33554432 op, 57193375.00 ns, 1.7045 ns/op
+OverheadWarmup   3: 33554432 op, 56002666.00 ns, 1.6690 ns/op
+OverheadWarmup   4: 33554432 op, 51271791.00 ns, 1.5280 ns/op
+OverheadWarmup   5: 33554432 op, 37931291.00 ns, 1.1304 ns/op
+OverheadWarmup   6: 33554432 op, 37977667.00 ns, 1.1318 ns/op
+OverheadWarmup   7: 33554432 op, 39089333.00 ns, 1.1650 ns/op
+OverheadWarmup   8: 33554432 op, 38024375.00 ns, 1.1332 ns/op
+
+OverheadActual   1: 33554432 op, 38692542.00 ns, 1.1531 ns/op
+OverheadActual   2: 33554432 op, 38678541.00 ns, 1.1527 ns/op
+OverheadActual   3: 33554432 op, 38043542.00 ns, 1.1338 ns/op
+OverheadActual   4: 33554432 op, 37993916.00 ns, 1.1323 ns/op
+OverheadActual   5: 33554432 op, 38155000.00 ns, 1.1371 ns/op
+OverheadActual   6: 33554432 op, 37733750.00 ns, 1.1246 ns/op
+OverheadActual   7: 33554432 op, 37937166.00 ns, 1.1306 ns/op
+OverheadActual   8: 33554432 op, 38035125.00 ns, 1.1335 ns/op
+OverheadActual   9: 33554432 op, 37725792.00 ns, 1.1243 ns/op
+OverheadActual  10: 33554432 op, 39132042.00 ns, 1.1662 ns/op
+OverheadActual  11: 33554432 op, 37969709.00 ns, 1.1316 ns/op
+OverheadActual  12: 33554432 op, 46079917.00 ns, 1.3733 ns/op
+OverheadActual  13: 33554432 op, 39071250.00 ns, 1.1644 ns/op
+OverheadActual  14: 33554432 op, 39033084.00 ns, 1.1633 ns/op
+OverheadActual  15: 33554432 op, 38552375.00 ns, 1.1490 ns/op
+
+WorkloadWarmup   1: 33554432 op, 959745958.00 ns, 28.6027 ns/op
+WorkloadWarmup   2: 33554432 op, 956859083.00 ns, 28.5166 ns/op
+WorkloadWarmup   3: 33554432 op, 953464750.00 ns, 28.4155 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 960793458.00 ns, 28.6339 ns/op
+WorkloadActual   2: 33554432 op, 974313958.00 ns, 29.0368 ns/op
+WorkloadActual   3: 33554432 op, 958655500.00 ns, 28.5702 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 922638458.00 ns, 27.4968 ns/op
+WorkloadResult   2: 33554432 op, 936158958.00 ns, 27.8997 ns/op
+WorkloadResult   3: 33554432 op, 920500500.00 ns, 27.4331 ns/op
+// GC:  192 0 0 1610613472 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 56704 has exited with code 0.
+
+Mean = 27.610 ns, StdErr = 0.146 ns (0.53%), N = 3, StdDev = 0.253 ns
+Min = 27.433 ns, Q1 = 27.465 ns, Median = 27.497 ns, Q3 = 27.698 ns, Max = 27.900 ns
+IQR = 0.233 ns, LowerFence = 27.115 ns, UpperFence = 28.048 ns
+ConfidenceInterval = [22.993 ns; 32.226 ns] (CI 99.9%), Margin = 4.616 ns (16.72% of Mean)
+Skewness = 0.36, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 3 (%33,3) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'string.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.StringConcat --job ShortRun --benchmarkId 6 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 113708.00 ns, 113.7080 us/op
+WorkloadJitting  1: 1 op, 85250.00 ns, 85.2500 us/op
+
+OverheadJitting  2: 16 op, 208042.00 ns, 13.0026 us/op
+WorkloadJitting  2: 16 op, 210208.00 ns, 13.1380 us/op
+
+WorkloadPilot    1: 16 op, 708.00 ns, 44.2500 ns/op
+WorkloadPilot    2: 32 op, 1208.00 ns, 37.7500 ns/op
+WorkloadPilot    3: 64 op, 1542.00 ns, 24.0938 ns/op
+WorkloadPilot    4: 128 op, 2542.00 ns, 19.8594 ns/op
+WorkloadPilot    5: 256 op, 4750.00 ns, 18.5547 ns/op
+WorkloadPilot    6: 512 op, 9125.00 ns, 17.8223 ns/op
+WorkloadPilot    7: 1024 op, 17459.00 ns, 17.0498 ns/op
+WorkloadPilot    8: 2048 op, 42750.00 ns, 20.8740 ns/op
+WorkloadPilot    9: 4096 op, 79500.00 ns, 19.4092 ns/op
+WorkloadPilot   10: 8192 op, 145333.00 ns, 17.7408 ns/op
+WorkloadPilot   11: 16384 op, 293125.00 ns, 17.8909 ns/op
+WorkloadPilot   12: 32768 op, 582166.00 ns, 17.7663 ns/op
+WorkloadPilot   13: 65536 op, 1078750.00 ns, 16.4604 ns/op
+WorkloadPilot   14: 131072 op, 1823458.00 ns, 13.9119 ns/op
+WorkloadPilot   15: 262144 op, 3657750.00 ns, 13.9532 ns/op
+WorkloadPilot   16: 524288 op, 7420209.00 ns, 14.1529 ns/op
+WorkloadPilot   17: 1048576 op, 14918709.00 ns, 14.2276 ns/op
+WorkloadPilot   18: 2097152 op, 29775000.00 ns, 14.1978 ns/op
+WorkloadPilot   19: 4194304 op, 61414583.00 ns, 14.6424 ns/op
+WorkloadPilot   20: 8388608 op, 85441917.00 ns, 10.1855 ns/op
+WorkloadPilot   21: 16777216 op, 129111958.00 ns, 7.6957 ns/op
+WorkloadPilot   22: 33554432 op, 257547083.00 ns, 7.6755 ns/op
+WorkloadPilot   23: 67108864 op, 518653875.00 ns, 7.7285 ns/op
+
+OverheadWarmup   1: 67108864 op, 109350291.00 ns, 1.6294 ns/op
+OverheadWarmup   2: 67108864 op, 108339750.00 ns, 1.6144 ns/op
+OverheadWarmup   3: 67108864 op, 93792292.00 ns, 1.3976 ns/op
+OverheadWarmup   4: 67108864 op, 92153584.00 ns, 1.3732 ns/op
+OverheadWarmup   5: 67108864 op, 92924583.00 ns, 1.3847 ns/op
+OverheadWarmup   6: 67108864 op, 94576541.00 ns, 1.4093 ns/op
+OverheadWarmup   7: 67108864 op, 91910917.00 ns, 1.3696 ns/op
+OverheadWarmup   8: 67108864 op, 92078209.00 ns, 1.3721 ns/op
+OverheadWarmup   9: 67108864 op, 92981083.00 ns, 1.3855 ns/op
+OverheadWarmup  10: 67108864 op, 93310375.00 ns, 1.3904 ns/op
+
+OverheadActual   1: 67108864 op, 97779583.00 ns, 1.4570 ns/op
+OverheadActual   2: 67108864 op, 92733166.00 ns, 1.3818 ns/op
+OverheadActual   3: 67108864 op, 93543375.00 ns, 1.3939 ns/op
+OverheadActual   4: 67108864 op, 121316834.00 ns, 1.8078 ns/op
+OverheadActual   5: 67108864 op, 92280375.00 ns, 1.3751 ns/op
+OverheadActual   6: 67108864 op, 92703917.00 ns, 1.3814 ns/op
+OverheadActual   7: 67108864 op, 93352292.00 ns, 1.3911 ns/op
+OverheadActual   8: 67108864 op, 93532667.00 ns, 1.3937 ns/op
+OverheadActual   9: 67108864 op, 97125292.00 ns, 1.4473 ns/op
+OverheadActual  10: 67108864 op, 96424833.00 ns, 1.4368 ns/op
+OverheadActual  11: 67108864 op, 92022583.00 ns, 1.3712 ns/op
+OverheadActual  12: 67108864 op, 92765750.00 ns, 1.3823 ns/op
+OverheadActual  13: 67108864 op, 93312000.00 ns, 1.3905 ns/op
+OverheadActual  14: 67108864 op, 92262916.00 ns, 1.3748 ns/op
+OverheadActual  15: 67108864 op, 92130708.00 ns, 1.3729 ns/op
+
+WorkloadWarmup   1: 67108864 op, 512962666.00 ns, 7.6437 ns/op
+WorkloadWarmup   2: 67108864 op, 510518667.00 ns, 7.6073 ns/op
+WorkloadWarmup   3: 67108864 op, 515271334.00 ns, 7.6781 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 506885000.00 ns, 7.5532 ns/op
+WorkloadActual   2: 67108864 op, 505517958.00 ns, 7.5328 ns/op
+WorkloadActual   3: 67108864 op, 505172208.00 ns, 7.5277 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 413573000.00 ns, 6.1627 ns/op
+WorkloadResult   2: 67108864 op, 412205958.00 ns, 6.1423 ns/op
+WorkloadResult   3: 67108864 op, 411860208.00 ns, 6.1372 ns/op
+// GC:  1283 0 0 10737418976 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 56853 has exited with code 0.
+
+Mean = 6.147 ns, StdErr = 0.008 ns (0.13%), N = 3, StdDev = 0.013 ns
+Min = 6.137 ns, Q1 = 6.140 ns, Median = 6.142 ns, Q3 = 6.153 ns, Max = 6.163 ns
+IQR = 0.013 ns, LowerFence = 6.121 ns, UpperFence = 6.172 ns
+ConfidenceInterval = [5.901 ns; 6.394 ns] (CI 99.9%), Margin = 0.246 ns (4.01% of Mean)
+Skewness = 0.32, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 2 (%22,2) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'string interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.StringInterpolation --job ShortRun --benchmarkId 7 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 113333.00 ns, 113.3330 us/op
+WorkloadJitting  1: 1 op, 75750.00 ns, 75.7500 us/op
+
+OverheadJitting  2: 16 op, 210542.00 ns, 13.1589 us/op
+WorkloadJitting  2: 16 op, 185166.00 ns, 11.5729 us/op
+
+WorkloadPilot    1: 16 op, 166.00 ns, 10.3750 ns/op
+WorkloadPilot    2: 32 op, 292.00 ns, 9.1250 ns/op
+WorkloadPilot    3: 64 op, 208.00 ns, 3.2500 ns/op
+WorkloadPilot    4: 128 op, 542.00 ns, 4.2344 ns/op
+WorkloadPilot    5: 256 op, 417.00 ns, 1.6289 ns/op
+WorkloadPilot    6: 512 op, 917.00 ns, 1.7910 ns/op
+WorkloadPilot    7: 1024 op, 2000.00 ns, 1.9531 ns/op
+WorkloadPilot    8: 2048 op, 3500.00 ns, 1.7090 ns/op
+WorkloadPilot    9: 4096 op, 7292.00 ns, 1.7803 ns/op
+WorkloadPilot   10: 8192 op, 16583.00 ns, 2.0243 ns/op
+WorkloadPilot   11: 16384 op, 27458.00 ns, 1.6759 ns/op
+WorkloadPilot   12: 32768 op, 50292.00 ns, 1.5348 ns/op
+WorkloadPilot   13: 65536 op, 94334.00 ns, 1.4394 ns/op
+WorkloadPilot   14: 131072 op, 185916.00 ns, 1.4184 ns/op
+WorkloadPilot   15: 262144 op, 374125.00 ns, 1.4272 ns/op
+WorkloadPilot   16: 524288 op, 732458.00 ns, 1.3971 ns/op
+WorkloadPilot   17: 1048576 op, 1424417.00 ns, 1.3584 ns/op
+WorkloadPilot   18: 2097152 op, 2908750.00 ns, 1.3870 ns/op
+WorkloadPilot   19: 4194304 op, 5660750.00 ns, 1.3496 ns/op
+WorkloadPilot   20: 8388608 op, 11499041.00 ns, 1.3708 ns/op
+WorkloadPilot   21: 16777216 op, 23407125.00 ns, 1.3952 ns/op
+WorkloadPilot   22: 33554432 op, 46800458.00 ns, 1.3948 ns/op
+WorkloadPilot   23: 67108864 op, 93802875.00 ns, 1.3978 ns/op
+WorkloadPilot   24: 134217728 op, 190845708.00 ns, 1.4219 ns/op
+WorkloadPilot   25: 268435456 op, 395219583.00 ns, 1.4723 ns/op
+WorkloadPilot   26: 536870912 op, 747466584.00 ns, 1.3923 ns/op
+
+OverheadWarmup   1: 536870912 op, 787697000.00 ns, 1.4672 ns/op
+OverheadWarmup   2: 536870912 op, 744460875.00 ns, 1.3867 ns/op
+OverheadWarmup   3: 536870912 op, 753609250.00 ns, 1.4037 ns/op
+OverheadWarmup   4: 536870912 op, 754194208.00 ns, 1.4048 ns/op
+OverheadWarmup   5: 536870912 op, 771651584.00 ns, 1.4373 ns/op
+OverheadWarmup   6: 536870912 op, 756808125.00 ns, 1.4097 ns/op
+OverheadWarmup   7: 536870912 op, 758434333.00 ns, 1.4127 ns/op
+OverheadWarmup   8: 536870912 op, 786075875.00 ns, 1.4642 ns/op
+OverheadWarmup   9: 536870912 op, 788020334.00 ns, 1.4678 ns/op
+OverheadWarmup  10: 536870912 op, 754314959.00 ns, 1.4050 ns/op
+
+OverheadActual   1: 536870912 op, 753187292.00 ns, 1.4029 ns/op
+OverheadActual   2: 536870912 op, 746382542.00 ns, 1.3902 ns/op
+OverheadActual   3: 536870912 op, 750239458.00 ns, 1.3974 ns/op
+OverheadActual   4: 536870912 op, 768956375.00 ns, 1.4323 ns/op
+OverheadActual   5: 536870912 op, 744670750.00 ns, 1.3871 ns/op
+OverheadActual   6: 536870912 op, 770871250.00 ns, 1.4359 ns/op
+OverheadActual   7: 536870912 op, 764649042.00 ns, 1.4243 ns/op
+OverheadActual   8: 536870912 op, 748754000.00 ns, 1.3947 ns/op
+OverheadActual   9: 536870912 op, 759390875.00 ns, 1.4145 ns/op
+OverheadActual  10: 536870912 op, 749589459.00 ns, 1.3962 ns/op
+OverheadActual  11: 536870912 op, 749941125.00 ns, 1.3969 ns/op
+OverheadActual  12: 536870912 op, 751086000.00 ns, 1.3990 ns/op
+OverheadActual  13: 536870912 op, 748283292.00 ns, 1.3938 ns/op
+OverheadActual  14: 536870912 op, 751998292.00 ns, 1.4007 ns/op
+OverheadActual  15: 536870912 op, 752975459.00 ns, 1.4025 ns/op
+
+WorkloadWarmup   1: 536870912 op, 741790417.00 ns, 1.3817 ns/op
+WorkloadWarmup   2: 536870912 op, 752769625.00 ns, 1.4021 ns/op
+WorkloadWarmup   3: 536870912 op, 772517041.00 ns, 1.4389 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 536870912 op, 765222959.00 ns, 1.4253 ns/op
+WorkloadActual   2: 536870912 op, 772233584.00 ns, 1.4384 ns/op
+WorkloadActual   3: 536870912 op, 746694375.00 ns, 1.3908 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 536870912 op, 14136959.00 ns, 0.0263 ns/op
+WorkloadResult   2: 536870912 op, 21147584.00 ns, 0.0394 ns/op
+WorkloadResult   3: 536870912 op, 0.00 ns, 0.0000 ns/op
+// GC:  0 0 0 736 536870912
+// Threading:  0 0 536870912
+
+// AfterAll
+// Benchmark Process 56863 has exited with code 0.
+
+Mean = 0.022 ns, StdErr = 0.012 ns (52.88%), N = 3, StdDev = 0.020 ns
+Min = 0.000 ns, Q1 = 0.013 ns, Median = 0.026 ns, Q3 = 0.033 ns, Max = 0.039 ns
+IQR = 0.020 ns, LowerFence = -0.016 ns, UpperFence = 0.062 ns
+ConfidenceInterval = [-0.344 ns; 0.388 ns] (CI 99.9%), Margin = 0.366 ns (1670.89% of Mean)
+Skewness = -0.21, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 1 (%11,1) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.'string interpolation mixed': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet ead9b616-fae9-4276-8051-39adde2bf2bf.dll --anonymousPipes 120 121 --benchmarkName Glot.Benchmarks.TextConcatBenchmarks.StringInterpolationMixed --job ShortRun --benchmarkId 8 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/ead9b616-fae9-4276-8051-39adde2bf2bf/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 114542.00 ns, 114.5420 us/op
+WorkloadJitting  1: 1 op, 93708.00 ns, 93.7080 us/op
+
+OverheadJitting  2: 16 op, 275000.00 ns, 17.1875 us/op
+WorkloadJitting  2: 16 op, 233167.00 ns, 14.5729 us/op
+
+WorkloadPilot    1: 16 op, 2125.00 ns, 132.8125 ns/op
+WorkloadPilot    2: 32 op, 4208.00 ns, 131.5000 ns/op
+WorkloadPilot    3: 64 op, 5916.00 ns, 92.4375 ns/op
+WorkloadPilot    4: 128 op, 10875.00 ns, 84.9609 ns/op
+WorkloadPilot    5: 256 op, 20917.00 ns, 81.7070 ns/op
+WorkloadPilot    6: 512 op, 37792.00 ns, 73.8125 ns/op
+WorkloadPilot    7: 1024 op, 69125.00 ns, 67.5049 ns/op
+WorkloadPilot    8: 2048 op, 149084.00 ns, 72.7949 ns/op
+WorkloadPilot    9: 4096 op, 274750.00 ns, 67.0776 ns/op
+WorkloadPilot   10: 8192 op, 549375.00 ns, 67.0624 ns/op
+WorkloadPilot   11: 16384 op, 1195291.00 ns, 72.9548 ns/op
+WorkloadPilot   12: 32768 op, 2183166.00 ns, 66.6249 ns/op
+WorkloadPilot   13: 65536 op, 4471208.00 ns, 68.2252 ns/op
+WorkloadPilot   14: 131072 op, 8156167.00 ns, 62.2266 ns/op
+WorkloadPilot   15: 262144 op, 16879375.00 ns, 64.3897 ns/op
+WorkloadPilot   16: 524288 op, 34456000.00 ns, 65.7196 ns/op
+WorkloadPilot   17: 1048576 op, 68099208.00 ns, 64.9445 ns/op
+WorkloadPilot   18: 2097152 op, 148192584.00 ns, 70.6637 ns/op
+WorkloadPilot   19: 4194304 op, 105291042.00 ns, 25.1033 ns/op
+WorkloadPilot   20: 8388608 op, 209740000.00 ns, 25.0030 ns/op
+WorkloadPilot   21: 16777216 op, 417553834.00 ns, 24.8881 ns/op
+WorkloadPilot   22: 33554432 op, 842272083.00 ns, 25.1017 ns/op
+
+OverheadWarmup   1: 33554432 op, 59610291.00 ns, 1.7765 ns/op
+OverheadWarmup   2: 33554432 op, 56921709.00 ns, 1.6964 ns/op
+OverheadWarmup   3: 33554432 op, 54744500.00 ns, 1.6315 ns/op
+OverheadWarmup   4: 33554432 op, 52621541.00 ns, 1.5682 ns/op
+OverheadWarmup   5: 33554432 op, 46449000.00 ns, 1.3843 ns/op
+OverheadWarmup   6: 33554432 op, 46230166.00 ns, 1.3778 ns/op
+OverheadWarmup   7: 33554432 op, 46635333.00 ns, 1.3898 ns/op
+OverheadWarmup   8: 33554432 op, 46928709.00 ns, 1.3986 ns/op
+OverheadWarmup   9: 33554432 op, 46108333.00 ns, 1.3741 ns/op
+OverheadWarmup  10: 33554432 op, 46370875.00 ns, 1.3820 ns/op
+
+OverheadActual   1: 33554432 op, 45960542.00 ns, 1.3697 ns/op
+OverheadActual   2: 33554432 op, 46481667.00 ns, 1.3853 ns/op
+OverheadActual   3: 33554432 op, 45894708.00 ns, 1.3678 ns/op
+OverheadActual   4: 33554432 op, 46243458.00 ns, 1.3782 ns/op
+OverheadActual   5: 33554432 op, 46864542.00 ns, 1.3967 ns/op
+OverheadActual   6: 33554432 op, 46257166.00 ns, 1.3786 ns/op
+OverheadActual   7: 33554432 op, 46696458.00 ns, 1.3917 ns/op
+OverheadActual   8: 33554432 op, 46192292.00 ns, 1.3766 ns/op
+OverheadActual   9: 33554432 op, 46506459.00 ns, 1.3860 ns/op
+OverheadActual  10: 33554432 op, 46657167.00 ns, 1.3905 ns/op
+OverheadActual  11: 33554432 op, 47089375.00 ns, 1.4034 ns/op
+OverheadActual  12: 33554432 op, 46286000.00 ns, 1.3794 ns/op
+OverheadActual  13: 33554432 op, 46169583.00 ns, 1.3760 ns/op
+OverheadActual  14: 33554432 op, 46318375.00 ns, 1.3804 ns/op
+OverheadActual  15: 33554432 op, 47236833.00 ns, 1.4078 ns/op
+
+WorkloadWarmup   1: 33554432 op, 843317833.00 ns, 25.1328 ns/op
+WorkloadWarmup   2: 33554432 op, 843915958.00 ns, 25.1507 ns/op
+WorkloadWarmup   3: 33554432 op, 849508000.00 ns, 25.3173 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 844736792.00 ns, 25.1751 ns/op
+WorkloadActual   2: 33554432 op, 854129083.00 ns, 25.4550 ns/op
+WorkloadActual   3: 33554432 op, 851766625.00 ns, 25.3846 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 798418417.00 ns, 23.7947 ns/op
+WorkloadResult   2: 33554432 op, 807810708.00 ns, 24.0746 ns/op
+WorkloadResult   3: 33554432 op, 805448250.00 ns, 24.0042 ns/op
+// GC:  673 0 0 5637145312 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 57017 has exited with code 0.
+
+Mean = 23.958 ns, StdErr = 0.084 ns (0.35%), N = 3, StdDev = 0.146 ns
+Min = 23.795 ns, Q1 = 23.899 ns, Median = 24.004 ns, Q3 = 24.039 ns, Max = 24.075 ns
+IQR = 0.140 ns, LowerFence = 23.690 ns, UpperFence = 24.249 ns
+ConfidenceInterval = [21.302 ns; 26.614 ns] (CI 99.9%), Margin = 2.656 ns (11.09% of Mean)
+Skewness = -0.29, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 0 (%0,0) benchmark(s) to run. Estimated finish 2026-04-13 5:40 (0h 0m from now) **
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  BenchmarkDotNet.Artifacts/results/Glot.Benchmarks.TextConcatBenchmarks-report.csv
+  BenchmarkDotNet.Artifacts/results/Glot.Benchmarks.TextConcatBenchmarks-report-github.md
+  BenchmarkDotNet.Artifacts/results/Glot.Benchmarks.TextConcatBenchmarks-report.html
+
+// * Detailed results *
+TextConcatBenchmarks.'Text.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 34.594 ns, StdErr = 0.369 ns (1.07%), N = 3, StdDev = 0.639 ns
+Min = 33.900 ns, Q1 = 34.312 ns, Median = 34.724 ns, Q3 = 34.941 ns, Max = 35.158 ns
+IQR = 0.629 ns, LowerFence = 33.368 ns, UpperFence = 35.884 ns
+ConfidenceInterval = [22.935 ns; 46.252 ns] (CI 99.9%), Margin = 11.658 ns (33.70% of Mean)
+Skewness = -0.19, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[33.318 ns ; 34.359 ns) | @
+[34.359 ns ; 35.740 ns) | @@
+---------------------------------------------------
+
+TextConcatBenchmarks.'Text.ConcatPooled 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 56.248 ns, StdErr = 0.197 ns (0.35%), N = 3, StdDev = 0.342 ns
+Min = 55.903 ns, Q1 = 56.079 ns, Median = 56.255 ns, Q3 = 56.421 ns, Max = 56.587 ns
+IQR = 0.342 ns, LowerFence = 55.566 ns, UpperFence = 56.934 ns
+ConfidenceInterval = [50.008 ns; 62.489 ns] (CI 99.9%), Margin = 6.240 ns (11.09% of Mean)
+Skewness = -0.02, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[55.857 ns ; 56.898 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'Text.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 37.127 ns, StdErr = 0.060 ns (0.16%), N = 3, StdDev = 0.104 ns
+Min = 37.042 ns, Q1 = 37.069 ns, Median = 37.097 ns, Q3 = 37.170 ns, Max = 37.243 ns
+IQR = 0.101 ns, LowerFence = 36.918 ns, UpperFence = 37.321 ns
+ConfidenceInterval = [35.225 ns; 39.029 ns] (CI 99.9%), Margin = 1.902 ns (5.12% of Mean)
+Skewness = 0.27, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[36.947 ns ; 37.338 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'OwnedText.Create interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 46.908 ns, StdErr = 0.049 ns (0.11%), N = 3, StdDev = 0.086 ns
+Min = 46.820 ns, Q1 = 46.866 ns, Median = 46.912 ns, Q3 = 46.952 ns, Max = 46.991 ns
+IQR = 0.085 ns, LowerFence = 46.738 ns, UpperFence = 47.080 ns
+ConfidenceInterval = [45.347 ns; 48.469 ns] (CI 99.9%), Margin = 1.561 ns (3.33% of Mean)
+Skewness = -0.05, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[46.742 ns ; 47.069 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'OwnedText.Create mixed types': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 77.041 ns, StdErr = 0.288 ns (0.37%), N = 3, StdDev = 0.499 ns
+Min = 76.477 ns, Q1 = 76.849 ns, Median = 77.222 ns, Q3 = 77.323 ns, Max = 77.425 ns
+IQR = 0.474 ns, LowerFence = 76.139 ns, UpperFence = 78.034 ns
+ConfidenceInterval = [67.941 ns; 86.142 ns] (CI 99.9%), Margin = 9.100 ns (11.81% of Mean)
+Skewness = -0.31, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[76.023 ns ; 77.879 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'Text + operator': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 27.610 ns, StdErr = 0.146 ns (0.53%), N = 3, StdDev = 0.253 ns
+Min = 27.433 ns, Q1 = 27.465 ns, Median = 27.497 ns, Q3 = 27.698 ns, Max = 27.900 ns
+IQR = 0.233 ns, LowerFence = 27.115 ns, UpperFence = 28.048 ns
+ConfidenceInterval = [22.993 ns; 32.226 ns] (CI 99.9%), Margin = 4.616 ns (16.72% of Mean)
+Skewness = 0.36, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[27.203 ns ; 28.130 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'string.Concat 4 parts': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 6.147 ns, StdErr = 0.008 ns (0.13%), N = 3, StdDev = 0.013 ns
+Min = 6.137 ns, Q1 = 6.140 ns, Median = 6.142 ns, Q3 = 6.153 ns, Max = 6.163 ns
+IQR = 0.013 ns, LowerFence = 6.121 ns, UpperFence = 6.172 ns
+ConfidenceInterval = [5.901 ns; 6.394 ns] (CI 99.9%), Margin = 0.246 ns (4.01% of Mean)
+Skewness = 0.32, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[6.125 ns ; 6.175 ns) | @@@
+---------------------------------------------------
+
+TextConcatBenchmarks.'string interpolation': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 0.022 ns, StdErr = 0.012 ns (52.88%), N = 3, StdDev = 0.020 ns
+Min = 0.000 ns, Q1 = 0.013 ns, Median = 0.026 ns, Q3 = 0.033 ns, Max = 0.039 ns
+IQR = 0.020 ns, LowerFence = -0.016 ns, UpperFence = 0.062 ns
+ConfidenceInterval = [-0.344 ns; 0.388 ns] (CI 99.9%), Margin = 0.366 ns (1670.89% of Mean)
+Skewness = -0.21, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[-0.018 ns ; 0.015 ns) | @
+[ 0.015 ns ; 0.058 ns) | @@
+---------------------------------------------------
+
+TextConcatBenchmarks.'string interpolation mixed': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+Runtime = .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD; GC = Concurrent Workstation
+Mean = 23.958 ns, StdErr = 0.084 ns (0.35%), N = 3, StdDev = 0.146 ns
+Min = 23.795 ns, Q1 = 23.899 ns, Median = 24.004 ns, Q3 = 24.039 ns, Max = 24.075 ns
+IQR = 0.140 ns, LowerFence = 23.690 ns, UpperFence = 24.249 ns
+ConfidenceInterval = [21.302 ns; 26.614 ns] (CI 99.9%), Margin = 2.656 ns (11.09% of Mean)
+Skewness = -0.29, Kurtosis = 0.67, MValue = 2
+-------------------- Histogram --------------------
+[23.662 ns ; 24.207 ns) | @@@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.14.0, macOS 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host]   : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+  ShortRun : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+
+| Method                           | Mean       | Error      | StdDev    | Median     | Ratio  | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|--------------------------------- |-----------:|-----------:|----------:|-----------:|-------:|--------:|-------:|----------:|------------:|
+| 'Text.Concat 4 parts'            | 34.5939 ns | 11.6584 ns | 0.6390 ns | 34.7236 ns |  5.627 |    0.09 | 0.0114 |      96 B |        0.60 |
+| 'Text.ConcatPooled 4 parts'      | 56.2482 ns |  6.2403 ns | 0.3421 ns | 56.2546 ns |  9.150 |    0.05 |      - |         - |        0.00 |
+| 'Text.Create interpolation'      | 37.1273 ns |  1.9021 ns | 0.1043 ns | 37.0967 ns |  6.040 |    0.02 | 0.0114 |      96 B |        0.60 |
+| 'OwnedText.Create interpolation' | 46.9077 ns |  1.5608 ns | 0.0856 ns | 46.9122 ns |  7.630 |    0.02 |      - |         - |        0.00 |
+| 'OwnedText.Create mixed types'   | 77.0411 ns |  9.1004 ns | 0.4988 ns | 77.2217 ns | 12.532 |    0.07 |      - |         - |        0.00 |
+| 'Text + operator'                | 27.6098 ns |  4.6165 ns | 0.2530 ns | 27.4968 ns |  4.491 |    0.04 | 0.0057 |      48 B |        0.30 |
+| 'string.Concat 4 parts'          |  6.1474 ns |  0.2462 ns | 0.0135 ns |  6.1423 ns |  1.000 |    0.00 | 0.0191 |     160 B |        1.00 |
+| 'string interpolation'           |  0.0219 ns |  0.3661 ns | 0.0201 ns |  0.0263 ns |  0.004 |    0.00 |      - |         - |        0.00 |
+| 'string interpolation mixed'     | 23.9579 ns |  2.6563 ns | 0.1456 ns | 24.0042 ns |  3.897 |    0.02 | 0.0201 |     168 B |        1.05 |
+
+// * Warnings *
+ZeroMeasurement
+  TextConcatBenchmarks.'string interpolation': ShortRun -> The method duration is indistinguishable from the empty method duration
+
+// * Legends *
+  Mean        : Arithmetic mean of all measurements
+  Error       : Half of 99.9% confidence interval
+  StdDev      : Standard deviation of all measurements
+  Median      : Value separating the higher half of all measurements (50th percentile)
+  Ratio       : Mean of the ratio distribution ([Current]/[Baseline])
+  RatioSD     : Standard deviation of the ratio distribution ([Current]/[Baseline])
+  Gen0        : GC Generation 0 collects per 1000 operations
+  Allocated   : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  Alloc Ratio : Allocated memory ratio distribution ([Current]/[Baseline])
+  1 ns        : 1 Nanosecond (0.000000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:01:30 (90.07 sec), executed benchmarks: 9
+
+Global total time: 00:01:37 (97.79 sec), executed benchmarks: 9
+// * Artifacts cleanup *
+Artifacts cleanup is finished

@@ -115,13 +115,13 @@ public partial class TextInterpolationTests
     }
 
     [Test]
-    public async Task FormatPooled_ReturnsOwnedText()
+    public async Task CreateOwned_ReturnsOwnedText()
     {
         // Arrange
         const string expected = "Hello World";
 
         // Act
-        using var result = Text.CreatePooled($"Hello {"World"}");
+        using var result = OwnedText.Create($"Hello {"World"}")!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo(expected);
@@ -192,10 +192,10 @@ public partial class TextInterpolationTests
     }
 
     [Test]
-    public Task FormatPooled_ExplicitEncoding_Works()
+    public Task CreateOwned_ExplicitEncoding_Works()
     {
         // Act
-        using var result = Text.CreatePooled(TextEncoding.Utf32, $"Hi {42}");
+        using var result = OwnedText.Create(TextEncoding.Utf32, $"Hi {42}")!;
 
         // Assert
         return Verify(new { result = result.Text.ToString(), encoding = result.Text.Encoding });
@@ -379,13 +379,13 @@ public partial class TextInterpolationTests
     // Dispose explicitly
 
     [Test]
-    public async Task FormatPooled_Dispose_IsIdempotent()
+    public async Task CreateOwned_Dispose_IsIdempotent()
     {
         // Arrange
         const string expected = "Hello 42";
 
         // Act — verify double dispose doesn't throw
-        var result = Text.CreatePooled($"Hello {42}");
+        var result = OwnedText.Create($"Hello {42}")!;
         var textBefore = result.Text.ToString();
         result.Dispose();
         result.Dispose(); // second dispose should not throw

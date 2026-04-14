@@ -65,16 +65,16 @@ public partial class LinkedTextUtf16Tests
         return Verify(new { linked.SegmentCount, result = linked.AsSpan().ToString() });
     }
 
-    // CreateOwned with Text
+    // Create (Owned) with Text
 
     [Test]
-    public async Task CreateOwned_Text_Works()
+    public async Task Create_Text_Works()
     {
         // Arrange
         var text = Text.FromUtf8("café"u8);
 
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned(text);
+        using var owned = OwnedLinkedTextUtf16.Create(text);
 
         // Assert
         const string expected = "café";
@@ -82,14 +82,14 @@ public partial class LinkedTextUtf16Tests
     }
 
     [Test]
-    public async Task CreateOwned_MixedTexts_TranscodesCorrectly()
+    public async Task Create_MixedTexts_TranscodesCorrectly()
     {
         // Arrange
         var utf8 = Text.FromUtf8("hello"u8);
         var utf16 = Text.From(" world");
 
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned(utf8, utf16);
+        using var owned = OwnedLinkedTextUtf16.Create(utf8, utf16);
 
         // Assert
         const string expected = "hello world";
@@ -144,16 +144,16 @@ public partial class LinkedTextUtf16Tests
         await Assert.That(linked.AsSpan().ToString()).IsEqualTo(expected);
     }
 
-    // CreateOwned interpolation with Text
+    // Create (Owned) interpolation with Text
 
     [Test]
-    public async Task CreateOwned_Interpolation_WithText()
+    public async Task Create_Interpolation_WithText()
     {
         // Arrange
         var name = Text.FromUtf8("world"u8);
 
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned($"Hello {name}!");
+        using var owned = OwnedLinkedTextUtf16.Create($"Hello {name}!");
 
         // Assert
         const string expected = "Hello world!";

@@ -1,4 +1,7 @@
 using System.Buffers;
+#if NET8_0_OR_GREATER
+using System.Runtime.CompilerServices;
+#endif
 
 namespace Glot;
 
@@ -7,16 +10,22 @@ namespace Glot;
 /// Holds <see cref="ReadOnlyMemory{T}"/> references to the original data
 /// without copying byte data.
 /// </summary>
+#if NET8_0_OR_GREATER
+[InterpolatedStringHandler]
+#endif
 public sealed partial class LinkedTextUtf8
 {
 #if NET8_0_OR_GREATER
     InlineSegmentBuffer _inlineSegments;
 #endif
-    ReadOnlyMemory<byte>[]? _overflowSegments;
+    Segment[]? _overflowSegments;
     byte[]? _formatBuffer;
     int _formatPosition;
 
     LinkedTextUtf8() { }
+
+    /// <summary>Controls how <see cref="OwnedText"/> values are handled during interpolation.</summary>
+    internal OwnedTextHandling OwnedTextHandling { get; set; }
 
     /// <summary>The number of segments in this linked text.</summary>
     public int SegmentCount { get; private set; }
@@ -30,8 +39,10 @@ public sealed partial class LinkedTextUtf8
     /// <summary>An empty <see cref="LinkedTextUtf8"/>.</summary>
     public static LinkedTextUtf8 Empty { get; } = new();
 
-    /// <summary>Gets the segment at the specified index.</summary>
-    internal ReadOnlyMemory<byte> GetSegment(int index)
+    /// <summary>Gets the memory at the specified segment index.</summary>
+    internal ReadOnlyMemory<byte> GetSegment(int index) => GetSegmentEntry(index).Memory;
+
+    internal Segment GetSegmentEntry(int index)
     {
 #if NET8_0_OR_GREATER
         if (index < InlineCapacity)

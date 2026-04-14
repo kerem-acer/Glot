@@ -38,7 +38,7 @@ public struct TextBuilder : IDisposable
     }
 
     /// <summary>The target encoding for this builder.</summary>
-    public readonly TextEncoding Encoding { get; }
+    public TextEncoding Encoding { get; }
 
     /// <summary>The number of bytes written so far.</summary>
     public int ByteLength { get; private set; }
@@ -160,14 +160,14 @@ public struct TextBuilder : IDisposable
     /// Creates an <see cref="OwnedText"/> by transferring the current buffer.
     /// The builder resets and rents a fresh buffer for continued use.
     /// </summary>
-    public OwnedText ToOwnedText()
+    public OwnedText? ToOwnedText()
     {
         if (ByteLength == 0)
         {
-            return default;
+            return null;
         }
 
-        var result = OwnedText.Create(_buffer, ByteLength, Encoding);
+        var result = OwnedText.Create(_buffer, ByteLength, Encoding, RuneLength);
         _buffer = ArrayPool<byte>.Shared.Rent(DefaultCapacity);
         ByteLength = 0;
         RuneLength = 0;

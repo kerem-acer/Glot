@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA1707;CA1051</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="U8String" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../src/Glot/Glot.csproj" />
+    <ProjectReference Include="../src/Glot.SystemTextJson/Glot.SystemTextJson.csproj" />
+  </ItemGroup>
+</Project>

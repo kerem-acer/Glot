@@ -3,7 +3,16 @@ namespace Glot;
 public readonly partial struct Text
 {
     /// <summary>Returns <c>true</c> if this text and <paramref name="other"/> contain the same rune sequence, regardless of encoding.</summary>
-    public bool Equals(Text other) => AsSpan().Equals(other.AsSpan());
+    public bool Equals(Text other)
+    {
+        // Same-encoding fast path: compare raw bytes directly, skip AsSpan() overhead.
+        if (Encoding == other.Encoding)
+        {
+            return RawBytes.SequenceEqual(other.RawBytes);
+        }
+
+        return AsSpan().Equals(other.AsSpan());
+    }
 
     /// <inheritdoc cref="Equals(Text)"/>
     public bool Equals(string? other)
@@ -31,16 +40,29 @@ public readonly partial struct Text
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Text other && Equals(other);
 
-    /// <summary>Returns an encoding-independent hash code based on the rune sequence. O(1) for factory-created values; O(n) for sliced values.</summary>
-    /// <remarks>
-    /// Factory methods store the hash with <c>| 1</c> so it is never 0. A zero <c>_hashCode</c>
-    /// means "not cached" (e.g. after slicing), triggering a recompute here.
-    /// </remarks>
+    /// <summary>Returns a hash code based on the raw byte content via XxHash3. O(n) — not cached.</summary>
     public override int GetHashCode()
-        => _hashCode != 0 ? _hashCode : TextSpan.ComputeHashCode(AsSpan().Bytes, Encoding) | 1;
+    {
+        var bytes = RawBytes;
+        if (bytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        var hash = System.IO.Hashing.XxHash3.HashToUInt64(bytes, (long)Encoding);
+        return (int)hash ^ (int)(hash >> 32);
+    }
 
     /// <summary>Compares two texts lexicographically by rune value, regardless of encoding.</summary>
-    public int CompareTo(Text other) => AsSpan().CompareTo(other.AsSpan());
+    public int CompareTo(Text other)
+    {
+        if (Encoding == other.Encoding)
+        {
+            return RawBytes.SequenceCompareTo(other.RawBytes);
+        }
+
+        return AsSpan().CompareTo(other.AsSpan());
+    }
 
     /// <inheritdoc cref="Equals(Text)"/>
     public static bool operator ==(Text left, Text right) => left.Equals(right);

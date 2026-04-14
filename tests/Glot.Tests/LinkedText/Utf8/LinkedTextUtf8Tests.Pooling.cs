@@ -3,10 +3,10 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8Tests
 {
     [Test]
-    public Task CreateOwned_Dispose_ResetsInstance()
+    public Task Create_Dispose_ResetsInstance()
     {
         // Arrange
-        var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"), Utf8(" - "), Utf8("world"));
+        var owned = OwnedLinkedTextUtf8.Create(Utf8("hello"), Utf8(" - "), Utf8("world"));
         var data = owned.Data!;
         _ = data.AsSequence();
 
@@ -18,27 +18,27 @@ public partial class LinkedTextUtf8Tests
     }
 
     [Test]
-    public Task CreateOwned_Dispose_InstanceCanBeReused()
+    public Task Create_Dispose_InstanceCanBeReused()
     {
         // Arrange — dispose returns to pool
-        var owned = LinkedTextUtf8.CreateOwned(Utf8("hello"));
+        var owned = OwnedLinkedTextUtf8.Create(Utf8("hello"));
         owned.Dispose();
 
-        // Act — next CreateOwned gets a clean instance
-        using var owned2 = LinkedTextUtf8.CreateOwned(Utf8("world"));
+        // Act — next Create gets a clean instance
+        using var owned2 = OwnedLinkedTextUtf8.Create(Utf8("world"));
 
         // Assert
         return Verify(new { segmentCount = owned2.Data!.SegmentCount, result = owned2.AsSpan().ToString() });
     }
 
     [Test]
-    public async Task CreateOwned_PoolFull_DiscardsExcessInstances()
+    public async Task Create_PoolFull_DiscardsExcessInstances()
     {
         // Arrange
-        var instances = new LinkedTextUtf8Owned[35];
+        var instances = new OwnedLinkedTextUtf8[35];
         for (var i = 0; i < instances.Length; i++)
         {
-            instances[i] = LinkedTextUtf8.CreateOwned(Utf8("test"));
+            instances[i] = OwnedLinkedTextUtf8.Create(Utf8("test"));
         }
 
         // Act
@@ -48,7 +48,7 @@ public partial class LinkedTextUtf8Tests
         }
 
         // Assert
-        using var owned = LinkedTextUtf8.CreateOwned(Utf8("verify"));
+        using var owned = OwnedLinkedTextUtf8.Create(Utf8("verify"));
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("verify");
     }
 }

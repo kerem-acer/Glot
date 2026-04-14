@@ -289,7 +289,7 @@ var linked = LinkedTextUtf16.Create("hello", " - ", "world");
 var linked = LinkedTextUtf16.Create($"Hello {name}, count={count}");
 
 // Pooled — object and buffers returned on dispose
-using var owned = LinkedTextUtf16.CreateOwned($"Hello {name}!");
+using var owned = OwnedLinkedTextUtf16.Create($"Hello {name}!");
 
 // Span view, slicing, enumeration
 LinkedTextUtf16Span span = linked.AsSpan();
@@ -304,7 +304,7 @@ foreach (ReadOnlyMemory<char> segment in span.EnumerateSegments())
 ReadOnlySequence<char> seq = linked.AsSequence();
 ```
 
-After warmup, `CreateOwned` with string interpolation is **zero-alloc**: the instance is reused from the pool, string holes are zero-copy, and non-string values are formatted directly into a retained buffer via `ISpanFormattable`.
+After warmup, `OwnedLinkedTextUtf16.Create` with string interpolation is **zero-alloc**: the instance is reused from the pool, string holes are zero-copy, and non-string values are formatted directly into a retained buffer via `ISpanFormattable`.
 
 ## Lifetime
 

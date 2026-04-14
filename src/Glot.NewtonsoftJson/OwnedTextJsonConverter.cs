@@ -9,17 +9,25 @@ namespace Glot.NewtonsoftJson;
 public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
 {
     /// <inheritdoc/>
-    public override OwnedText ReadJson(JsonReader reader, Type objectType, OwnedText existingValue, bool hasExistingValue, JsonSerializer serializer)
+    public override OwnedText? ReadJson(JsonReader reader, Type objectType, OwnedText? existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
         if (reader.TokenType == JsonToken.Null)
         {
-            return default;
+            return null;
         }
 
         return OwnedText.FromChars(((string)reader.Value!).AsSpan());
     }
 
     /// <inheritdoc/>
-    public override void WriteJson(JsonWriter writer, OwnedText value, JsonSerializer serializer)
-        => writer.WriteValue(value.Text.ToString());
+    public override void WriteJson(JsonWriter writer, OwnedText? value, JsonSerializer serializer)
+    {
+        if (value is null)
+        {
+            writer.WriteNull();
+            return;
+        }
+
+        writer.WriteValue(value.Text.ToString());
+    }
 }

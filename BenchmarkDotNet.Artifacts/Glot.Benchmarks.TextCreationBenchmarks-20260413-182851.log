@@ -1,0 +1,161 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 72 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c
+// command took 1.94 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0/" --output "/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c
+// command took 5.68 sec and exited with 0
+// ***** Done, took 00:00:07 (7.7 sec)   *****
+// Found 72 benchmarks:
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.'Text.FromBytes(byte[])': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.Text.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.OwnedText.FromBytes(span): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf8]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf16]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Ascii, Enc=Utf32]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf8]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf16]
+//   TextCreationBenchmarks.'string (no-op)': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+//   TextCreationBenchmarks.Text.From(string): ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=4096, Locale=Mixed, Enc=Utf32]
+
+// **************************
+// Benchmark: TextCreationBenchmarks.'System baseline': ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [N=256, Locale=Ascii, Enc=Utf8]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 67a8ae61-1b2f-4283-8a31-77db40cda91c.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextCreationBenchmarks.SystemBaseline(N: 256, Locale: Ascii, Enc: Utf8)" --job ShortRun --benchmarkId 0 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/67a8ae61-1b2f-4283-8a31-77db40cda91c/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 127750.00 ns, 127.7500 us/op
+WorkloadJitting  1: 1 op, 112083.00 ns, 112.0830 us/op
+
+OverheadJitting  2: 16 op, 214042.00 ns, 13.3776 us/op
+WorkloadJitting  2: 16 op, 182458.00 ns, 11.4036 us/op
+
+WorkloadPilot    1: 16 op, 1500.00 ns, 93.7500 ns/op
+WorkloadPilot    2: 32 op, 2416.00 ns, 75.5000 ns/op
+WorkloadPilot    3: 64 op, 4333.00 ns, 67.7031 ns/op
+WorkloadPilot    4: 128 op, 6500.00 ns, 50.7813 ns/op
+WorkloadPilot    5: 256 op, 16833.00 ns, 65.7539 ns/op
+WorkloadPilot    6: 512 op, 43208.00 ns, 84.3906 ns/op
+WorkloadPilot    7: 1024 op, 75250.00 ns, 73.4863 ns/op
+WorkloadPilot    8: 2048 op, 151459.00 ns, 73.9546 ns/op
+WorkloadPilot    9: 4096 op, 269916.00 ns, 65.8975 ns/op
+WorkloadPilot   10: 8192 op, 505000.00 ns, 61.6455 ns/op
+WorkloadPilot   11: 16384 op, 1040542.00 ns, 63.5096 ns/op
+WorkloadPilot   12: 32768 op, 1467541.00 ns, 44.7858 ns/op
+WorkloadPilot   13: 65536 op, 3116875.00 ns, 47.5597 ns/op
+WorkloadPilot   14: 131072 op, 6218084.00 ns, 47.4402 ns/op
+WorkloadPilot   15: 262144 op, 12477750.00 ns, 47.5988 ns/op
+WorkloadPilot   16: 524288 op, 25132500.00 ns, 47.9364 ns/op
+WorkloadPilot   17: 1048576 op, 50098959.00 ns, 47.7781 ns/op
+WorkloadPilot   18: 2097152 op, 93229375.00 ns, 44.4552 ns/op
+WorkloadPilot   19: 4194304 op, 125717291.00 ns, 29.9733 ns/op
+WorkloadPilot   20: 8388608 op, 250580916.00 ns, 29.8716 ns/op
+WorkloadPilot   21: 16777216 op, 485470334.00 ns, 28.9363 ns/op
+WorkloadPilot   22: 33554432 op, 969461083.00 ns, 28.8922 ns/op
+
+OverheadWarmup   1: 33554432 op, 56336125.00 ns, 1.6789 ns/op
+OverheadWarmup   2: 33554432 op, 55837583.00 ns, 1.6641 ns/op
+OverheadWarmup   3: 33554432 op, 55045417.00 ns, 1.6405 ns/op
+OverheadWarmup   4: 33554432 op, 54897333.00 ns, 1.6361 ns/op
+OverheadWarmup   5: 33554432 op, 46827250.00 ns, 1.3956 ns/op
+OverheadWarmup   6: 33554432 op, 47212792.00 ns, 1.4071 ns/op
+OverheadWarmup   7: 33554432 op, 46449500.00 ns, 1.3843 ns/op
+OverheadWarmup   8: 33554432 op, 48397166.00 ns, 1.4423 ns/op
+OverheadWarmup   9: 33554432 op, 50363083.00 ns, 1.5009 ns/op
+OverheadWarmup  10: 33554432 op, 48087667.00 ns, 1.4331 ns/op
+
+OverheadActual   1: 33554432 op, 50660500.00 ns, 1.5098 ns/op
+OverheadActual   2: 33554432 op, 47150667.00 ns, 1.4052 ns/op
+OverheadActual   3: 33554432 op, 48683084.00 ns, 1.4509 ns/op
+OverheadActual   4: 33554432 op, 48163541.00 ns, 1.4354 ns/op
+OverheadActual   5: 33554432 op, 47840000.00 ns, 1.4257 ns/op
+OverheadActual   6: 33554432 op, 47971875.00 ns, 1.4297 ns/op
+OverheadActual   7: 33554432 op, 51725708.00 ns, 1.5415 ns/op
+OverheadActual   8: 33554432 op, 46868833.00 ns, 1.3968 ns/op
+OverheadActual   9: 33554432 op, 46790125.00 ns, 1.3945 ns/op
+OverheadActual  10: 33554432 op, 47271250.00 ns, 1.4088 ns/op
+OverheadActual  11: 33554432 op, 47968791.00 ns, 1.4296 ns/op
+OverheadActual  12: 33554432 op, 47742708.00 ns, 1.4228 ns/op
+OverheadActual  13: 33554432 op, 50887417.00 ns, 1.5166 ns/op
+OverheadActual  14: 33554432 op, 48610750.00 ns, 1.4487 ns/op
+OverheadActual  15: 33554432 op, 47414542.00 ns, 1.4131 ns/op
+
+WorkloadWarmup   1: 33554432 op, 968482667.00 ns, 28.8630 ns/op
+WorkloadWarmup   2: 33554432 op, 991082750.00 ns, 29.5366 ns/op
+WorkloadWarmup   3: 33554432 op, 1004412250.00 ns, 29.9338 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 965501792.00 ns, 28.7742 ns/op
+WorkloadActual   2: 33554432 op, 1025214125.00 ns, 30.5538

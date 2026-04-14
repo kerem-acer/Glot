@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net8.0;net6.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net8.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <!-- Match ObjectPool version to the target ASP.NET shared framework to avoid MSB3277 -->
+    <AspNetCoreObjectPoolVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.11</AspNetCoreObjectPoolVersion>
+    <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.5</AspNetCoreObjectPoolVersion>
     <PolyPublic>true</PolyPublic>
   </PropertyGroup>
 
@@ -9,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" PrivateAssets="compile;contentFiles;build;buildTransitive;analyzers;native" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" PrivateAssets="compile;contentFiles;build;buildTransitive;analyzers;native" VersionOverride="$(AspNetCoreObjectPoolVersion)" />
+    <PackageReference Include="System.IO.Hashing" />
     <PackageReference Include="Polyfill" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -34,7 +34,7 @@ public sealed partial class LinkedTextUtf8
 
         if (overflowCount > 0)
         {
-            _overflowSegments = ArrayPool<ReadOnlyMemory<byte>>.Shared.Rent(overflowCount);
+            _overflowSegments = ArrayPool<Segment>.Shared.Rent(overflowCount);
         }
 
         foreach (var t in segments)
@@ -44,17 +44,19 @@ public sealed partial class LinkedTextUtf8
                 continue;
             }
 
+            var seg = new Segment { Memory = t };
+
 #if NET8_0_OR_GREATER
             if (segIndex < InlineCapacity)
             {
-                _inlineSegments[segIndex] = t;
+                _inlineSegments[segIndex] = seg;
             }
             else
             {
-                _overflowSegments![segIndex - InlineCapacity] = t;
+                _overflowSegments![segIndex - InlineCapacity] = seg;
             }
 #else
-            _overflowSegments![segIndex] = t;
+            _overflowSegments![segIndex] = seg;
 #endif
             segIndex++;
         }
@@ -104,23 +106,7 @@ public sealed partial class LinkedTextUtf8
         return linked;
     }
 
-    /// <summary>Creates a pooled <see cref="LinkedTextUtf8Owned"/> from memory segments.</summary>
-    public static LinkedTextUtf8Owned CreateOwned(params ReadOnlySpan<ReadOnlyMemory<byte>> segments)
-    {
-        var linked = Pool.Get();
-        linked.Populate(segments);
-        return new LinkedTextUtf8Owned(linked);
-    }
-
-    /// <summary>Creates a pooled <see cref="LinkedTextUtf8Owned"/> from <see cref="Text"/> values.</summary>
-    public static LinkedTextUtf8Owned CreateOwned(params ReadOnlySpan<Text> segments)
-    {
-        var linked = Pool.Get();
-        linked.PopulateTexts(segments);
-        return new LinkedTextUtf8Owned(linked);
-    }
-
-    void PopulateTexts(ReadOnlySpan<Text> segments)
+    internal void PopulateTexts(ReadOnlySpan<Text> segments)
     {
         foreach (var t in segments)
         {
@@ -140,7 +126,7 @@ public sealed partial class LinkedTextUtf8
         }
     }
 
-    void Populate(ReadOnlySpan<ReadOnlyMemory<byte>> segments)
+    internal void Populate(ReadOnlySpan<ReadOnlyMemory<byte>> segments)
     {
         foreach (var t in segments)
         {
@@ -149,20 +135,22 @@ public sealed partial class LinkedTextUtf8
                 continue;
             }
 
+            var seg = new Segment { Memory = t };
+
 #if NET8_0_OR_GREATER
             if (SegmentCount < InlineCapacity)
             {
-                _inlineSegments[SegmentCount] = t;
+                _inlineSegments[SegmentCount] = seg;
             }
             else
             {
                 var overflowIndex = SegmentCount - InlineCapacity;
                 EnsureOverflowCapacity(overflowIndex + 1);
-                _overflowSegments![overflowIndex] = t;
+                _overflowSegments![overflowIndex] = seg;
             }
 #else
             EnsureOverflowCapacity(SegmentCount + 1);
-            _overflowSegments![SegmentCount] = t;
+            _overflowSegments![SegmentCount] = seg;
 #endif
 
             SegmentCount++;
@@ -170,26 +158,42 @@ public sealed partial class LinkedTextUtf8
         }
     }
 
-    void AddSegment(ReadOnlyMemory<byte> segment)
+    void AddSegment(ReadOnlyMemory<byte> memory, byte[]? pooledBuffer = null)
     {
+        var seg = new Segment { Memory = memory, PooledBuffer = pooledBuffer };
+
 #if NET8_0_OR_GREATER
         if (SegmentCount < InlineCapacity)
         {
-            _inlineSegments[SegmentCount] = segment;
+            _inlineSegments[SegmentCount] = seg;
         }
         else
         {
             var overflowIndex = SegmentCount - InlineCapacity;
             EnsureOverflowCapacity(overflowIndex + 1);
-            _overflowSegments![overflowIndex] = segment;
+            _overflowSegments![overflowIndex] = seg;
         }
 #else
         EnsureOverflowCapacity(SegmentCount + 1);
-        _overflowSegments![SegmentCount] = segment;
+        _overflowSegments![SegmentCount] = seg;
 #endif
 
         SegmentCount++;
-        Length += segment.Length;
+        Length += memory.Length;
+    }
+
+    internal void EnsureCapacity(int required)
+    {
+#if NET8_0_OR_GREATER
+        if (required <= InlineCapacity)
+        {
+            return;
+        }
+
+        EnsureOverflowCapacity(required - InlineCapacity);
+#else
+        EnsureOverflowCapacity(required);
+#endif
     }
 
     void EnsureOverflowCapacity(int required)
@@ -199,12 +203,12 @@ public sealed partial class LinkedTextUtf8
             return;
         }
 
-        var newArr = ArrayPool<ReadOnlyMemory<byte>>.Shared.Rent(Math.Max(required, 8));
+        var newArr = ArrayPool<Segment>.Shared.Rent(Math.Max(required, 8));
 
         if (_overflowSegments is not null)
         {
             Array.Copy(_overflowSegments, newArr, _overflowSegments.Length < newArr.Length ? _overflowSegments.Length : newArr.Length);
-            ArrayPool<ReadOnlyMemory<byte>>.Shared.Return(_overflowSegments, clearArray: true);
+            ArrayPool<Segment>.Shared.Return(_overflowSegments, clearArray: true);
         }
 
         _overflowSegments = newArr;

@@ -1,5 +1,6 @@
 #if NET6_0_OR_GREATER
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Glot;
 
@@ -58,6 +59,64 @@ public sealed partial class LinkedTextUtf16
         else
         {
             AppendTextSpan(value.AsSpan());
+        }
+    }
+
+    /// <summary>
+    /// Appends an <see cref="OwnedText"/> value. Behavior depends on <see cref="OwnedTextHandling"/>:
+    /// <see cref="Glot.OwnedTextHandling.Copy"/> copies data into the format buffer (safe default).
+    /// <see cref="Glot.OwnedTextHandling.TakeOwnership"/> detaches the buffer for zero-copy ownership transfer.
+    /// <see cref="Glot.OwnedTextHandling.Borrow"/> references the buffer without ownership (caller retains lifetime).
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void AppendFormatted(OwnedText? value)
+    {
+        if (value is null or { IsEmpty: true })
+        {
+            return;
+        }
+
+        switch (OwnedTextHandling)
+        {
+            case OwnedTextHandling.Copy:
+                AppendTextSpan(value.Text.AsSpan());
+                break;
+
+            case OwnedTextHandling.TakeOwnership:
+                var text = value.Text;
+                var detached = value.Detach();
+
+                if (text.TryGetUtf16Memory(out var memory)
+                    && MemoryMarshal.TryGetArray(memory, out var segment))
+                {
+                    AddSegment(memory, segment.Array);
+                }
+                else
+                {
+                    AppendTextSpan(text.AsSpan());
+                    ReturnDetachedBuffer(detached);
+                }
+                break;
+
+            case OwnedTextHandling.Borrow:
+                AppendFormatted(value.Text);
+                break;
+        }
+    }
+
+    static void ReturnDetachedBuffer(object? buffer)
+    {
+        switch (buffer)
+        {
+            case byte[] bytes:
+                System.Buffers.ArrayPool<byte>.Shared.Return(bytes);
+                break;
+            case char[] chars:
+                System.Buffers.ArrayPool<char>.Shared.Return(chars);
+                break;
+            case int[] ints:
+                System.Buffers.ArrayPool<int>.Shared.Return(ints);
+                break;
         }
     }
 

@@ -159,24 +159,24 @@ public partial class LinkedTextUtf16Tests
         return Verify(new { linked.SegmentCount, linked.Length, result = linked.AsSpan().ToString() });
     }
 
-    // CreateOwned — Memory overloads
+    // Create (Owned) — Memory overloads
 
     [Test]
-    public async Task CreateOwned_SingleMemory_Works()
+    public async Task Create_SingleMemory_Works()
     {
         // Act
         const string expected = "hello";
-        using var owned = LinkedTextUtf16.CreateOwned(expected.AsMemory());
+        using var owned = OwnedLinkedTextUtf16.Create(expected.AsMemory());
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo(expected);
     }
 
     [Test]
-    public async Task CreateOwned_TwoMemory_Works()
+    public async Task Create_TwoMemory_Works()
     {
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned("hello".AsMemory(), " world".AsMemory());
+        using var owned = OwnedLinkedTextUtf16.Create("hello".AsMemory(), " world".AsMemory());
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
@@ -262,13 +262,13 @@ public partial class LinkedTextUtf16Tests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    // CreateOwned — four strings
+    // Create (Owned) — four strings
 
     [Test]
-    public async Task CreateOwned_FourStrings_Works()
+    public async Task Create_FourStrings_Works()
     {
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned("a", "b", "c", "d");
+        using var owned = OwnedLinkedTextUtf16.Create("a", "b", "c", "d");
 
         // Assert
         await Verify(new { segmentCount = owned.Data!.SegmentCount, result = owned.AsSpan().ToString() });
@@ -335,7 +335,7 @@ public partial class LinkedTextUtf16Tests
         var span = text.AsSpan();
 
         // Act
-        using LinkedTextUtf16Owned owned = $"hello {span}";
+        using var owned = OwnedLinkedTextUtf16.Create($"hello {span}");
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("hello world");
@@ -345,7 +345,7 @@ public partial class LinkedTextUtf16Tests
     public async Task Owned_GenericHole_FormatsValue()
     {
         // Act
-        using LinkedTextUtf16Owned owned = $"count={42}";
+        using var owned = OwnedLinkedTextUtf16.Create($"count={42}");
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("count=42");
@@ -355,13 +355,13 @@ public partial class LinkedTextUtf16Tests
     public async Task Owned_GenericHoleWithFormat_FormatsValue()
     {
         // Act
-        using LinkedTextUtf16Owned owned = $"val={42:D5}";
+        using var owned = OwnedLinkedTextUtf16.Create($"val={42:D5}");
 
         // Assert
         await Assert.That(owned.AsSpan().ToString()).IsEqualTo("val=00042");
     }
 
-    // CreateOwned with overflow Memory segments
+    // Create (Owned) with overflow Memory segments
 
     [Test]
     public async Task CreateOwned_NineMemorySegments_UsesOverflow()
@@ -372,7 +372,7 @@ public partial class LinkedTextUtf16Tests
             .ToArray();
 
         // Act
-        using var owned = LinkedTextUtf16.CreateOwned(segments.AsSpan());
+        using var owned = OwnedLinkedTextUtf16.Create(segments.AsSpan());
 
         // Assert
         await Verify(new { segmentCount = owned.Data!.SegmentCount, result = owned.AsSpan().ToString() });

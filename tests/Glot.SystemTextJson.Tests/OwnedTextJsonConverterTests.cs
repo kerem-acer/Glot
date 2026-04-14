@@ -16,7 +16,7 @@ public class OwnedTextJsonConverterTests
     {
         // Arrange
         const string value = "hello";
-        using var owned = OwnedText.FromChars(value.AsSpan());
+        using var owned = OwnedText.FromChars(value.AsSpan())!;
 
         // Act
         var json = JsonSerializer.Serialize(owned, _options);
@@ -30,7 +30,7 @@ public class OwnedTextJsonConverterTests
     {
         // Arrange
         const string value = "hello";
-        using var owned = OwnedText.FromUtf8(Encoding.UTF8.GetBytes(value));
+        using var owned = OwnedText.FromUtf8(Encoding.UTF8.GetBytes(value))!;
 
         // Act
         var json = JsonSerializer.Serialize(owned, _options);
@@ -45,7 +45,7 @@ public class OwnedTextJsonConverterTests
         // Arrange
         const string value = "hello";
         var codePoints = new int[] { 'h', 'e', 'l', 'l', 'o' };
-        using var owned = OwnedText.FromUtf32(codePoints);
+        using var owned = OwnedText.FromUtf32(codePoints)!;
 
         // Act
         var json = JsonSerializer.Serialize(owned, _options);
@@ -64,14 +64,14 @@ public class OwnedTextJsonConverterTests
             codePoints[i] = 'A' + (i % 26);
         }
 
-        using var owned = OwnedText.FromUtf32(codePoints);
+        using var owned = OwnedText.FromUtf32(codePoints)!;
 
         // Act
         var json = JsonSerializer.Serialize(owned, _options);
         using var deserialized = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(deserialized.Text).IsEqualTo(owned.Text);
+        await Assert.That(deserialized!.Text).IsEqualTo(owned.Text);
     }
 
     [Test]
@@ -84,7 +84,7 @@ public class OwnedTextJsonConverterTests
         using var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("hello");
+        await Assert.That(owned!.Text.ToString()).IsEqualTo("hello");
     }
 
     [Test]
@@ -97,7 +97,7 @@ public class OwnedTextJsonConverterTests
         using var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("hello\nworld");
+        await Assert.That(owned!.Text.ToString()).IsEqualTo("hello\nworld");
     }
 
     [Test]
@@ -117,7 +117,7 @@ public class OwnedTextJsonConverterTests
         using var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned.Text.RuneLength).IsEqualTo(900);
+        await Assert.That(owned!.Text.RuneLength).IsEqualTo(900);
     }
 
     [Test]
@@ -125,7 +125,7 @@ public class OwnedTextJsonConverterTests
     {
         // Arrange
         const string value = "hello";
-        using var original = OwnedText.FromChars(value.AsSpan());
+        using var original = OwnedText.FromChars(value.AsSpan())!;
         var originalText = original.Text;
 
         // Act
@@ -133,24 +133,24 @@ public class OwnedTextJsonConverterTests
         using var deserialized = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(deserialized.Text).IsEqualTo(originalText);
+        await Assert.That(deserialized!.Text).IsEqualTo(originalText);
     }
 
     [Test]
-    public async Task Serialize_Empty_WritesEmptyString()
+    public async Task Serialize_Null_WritesNull()
     {
         // Arrange
-        var owned = default(OwnedText);
+        OwnedText? owned = null;
 
         // Act
         var json = JsonSerializer.Serialize(owned, _options);
 
         // Assert
-        await Assert.That(json).IsEqualTo("\"\"");
+        await Assert.That(json).IsEqualTo("null");
     }
 
     [Test]
-    public async Task Deserialize_Null_ReturnsEmpty()
+    public async Task Deserialize_Null_ReturnsNull()
     {
         // Arrange
         const string json = "null";
@@ -159,20 +159,20 @@ public class OwnedTextJsonConverterTests
         var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     [Test]
-    public async Task Deserialize_EmptyString_ReturnsEmpty()
+    public async Task Deserialize_EmptyString_ReturnsNull()
     {
         // Arrange
         const string json = "\"\"";
 
         // Act
-        using var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
+        var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     [Test]
@@ -180,7 +180,7 @@ public class OwnedTextJsonConverterTests
     {
         // Arrange
         const string value = "Hello \U0001F600 \u4E16\u754C";
-        using var original = OwnedText.FromChars(value.AsSpan());
+        using var original = OwnedText.FromChars(value.AsSpan())!;
         var originalText = original.Text;
 
         // Act
@@ -188,7 +188,7 @@ public class OwnedTextJsonConverterTests
         using var deserialized = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(deserialized.Text).IsEqualTo(originalText);
+        await Assert.That(deserialized!.Text).IsEqualTo(originalText);
     }
 
     [Test]
@@ -206,7 +206,7 @@ public class OwnedTextJsonConverterTests
         using var owned = JsonSerializer.Deserialize<OwnedText>(ref reader, _options);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("hello world");
+        await Assert.That(owned!.Text.ToString()).IsEqualTo("hello world");
     }
 
     [Test]
@@ -224,7 +224,7 @@ public class OwnedTextJsonConverterTests
         using var owned = JsonSerializer.Deserialize<OwnedText>(ref reader, _options);
 
         // Assert
-        await Assert.That(owned.Text.ToString()).IsEqualTo("hello\nworld");
+        await Assert.That(owned!.Text.ToString()).IsEqualTo("hello\nworld");
     }
 
     sealed class MemorySegment<T> : ReadOnlySequenceSegment<T>

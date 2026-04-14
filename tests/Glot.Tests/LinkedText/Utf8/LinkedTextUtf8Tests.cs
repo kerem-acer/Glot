@@ -162,17 +162,17 @@ public partial class LinkedTextUtf8Tests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    // CreateOwned — Memory segments
+    // Create (Owned) — Memory segments
 
     [Test]
-    public async Task CreateOwned_FromMemorySegments_Works()
+    public async Task Create_FromMemorySegments_Works()
     {
         // Arrange
         var bytes1 = "hello"u8.ToArray().AsMemory();
         var bytes2 = " world"u8.ToArray().AsMemory();
 
         // Act
-        using var owned = LinkedTextUtf8.CreateOwned(bytes1, bytes2);
+        using var owned = OwnedLinkedTextUtf8.Create(bytes1, bytes2);
         var result = owned.AsSpan().ToString();
 
         // Assert
@@ -227,19 +227,19 @@ public partial class LinkedTextUtf8Tests
         return Verify(segments);
     }
 
-    // LinkedTextUtf8Owned IsEmpty
+    // OwnedLinkedTextUtf8 IsEmpty
 
     [Test]
     public async Task Owned_IsEmpty_WhenEmpty()
     {
         // Act
-        using var owned = LinkedTextUtf8.CreateOwned(ReadOnlyMemory<byte>.Empty);
+        using var owned = OwnedLinkedTextUtf8.Create(ReadOnlyMemory<byte>.Empty);
 
         // Assert
         await Assert.That(owned.IsEmpty).IsTrue();
     }
 
-    // CreateOwned with overflow segments
+    // Create (Owned) with overflow segments
 
     [Test]
     public Task CreateOwned_NineSegments_UsesOverflow()
@@ -250,7 +250,7 @@ public partial class LinkedTextUtf8Tests
             .ToArray();
 
         // Act
-        using var owned = LinkedTextUtf8.CreateOwned(segments.AsSpan());
+        using var owned = OwnedLinkedTextUtf8.Create(segments.AsSpan());
 
         // Assert
         return Verify(new { SegmentCount = owned.Data!.SegmentCount, text = owned.AsSpan().ToString() });

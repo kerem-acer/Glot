@@ -1,0 +1,1877 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 480 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef
+// command took 2.74 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:IntermediateOutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/obj/Release/net10.0/" /p:OutDir="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0/" /p:OutputPath="/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0/" --output "/Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0/" in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef
+// command took 8.92 sec and exited with 0
+// ***** Done, took 00:00:11 (11.78 sec)   *****
+// Found 480 benchmarks:
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=8, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=64, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=2, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=4, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=16, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=64, Locale=Mixed]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Ascii]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Latin]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cjk]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Cyrillic]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Emoji]
+//   TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Mixed]
+//   TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1024, Parts=256, Locale=Mixed]
+
+// **************************
+// Benchmark: TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.StringConcat(PartSize: 1, Parts: 2, Locale: Ascii)" --job ShortRun --benchmarkId 0 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 132750.00 ns, 132.7500 us/op
+WorkloadJitting  1: 1 op, 141125.00 ns, 141.1250 us/op
+
+OverheadJitting  2: 16 op, 404667.00 ns, 25.2917 us/op
+WorkloadJitting  2: 16 op, 280125.00 ns, 17.5078 us/op
+
+WorkloadPilot    1: 16 op, 1750.00 ns, 109.3750 ns/op
+WorkloadPilot    2: 32 op, 1584.00 ns, 49.5000 ns/op
+WorkloadPilot    3: 64 op, 12375.00 ns, 193.3594 ns/op
+WorkloadPilot    4: 128 op, 2417.00 ns, 18.8828 ns/op
+WorkloadPilot    5: 256 op, 3292.00 ns, 12.8594 ns/op
+WorkloadPilot    6: 512 op, 6000.00 ns, 11.7188 ns/op
+WorkloadPilot    7: 1024 op, 11250.00 ns, 10.9863 ns/op
+WorkloadPilot    8: 2048 op, 20292.00 ns, 9.9082 ns/op
+WorkloadPilot    9: 4096 op, 37375.00 ns, 9.1248 ns/op
+WorkloadPilot   10: 8192 op, 84583.00 ns, 10.3251 ns/op
+WorkloadPilot   11: 16384 op, 170042.00 ns, 10.3785 ns/op
+WorkloadPilot   12: 32768 op, 355083.00 ns, 10.8363 ns/op
+WorkloadPilot   13: 65536 op, 643875.00 ns, 9.8248 ns/op
+WorkloadPilot   14: 131072 op, 1291375.00 ns, 9.8524 ns/op
+WorkloadPilot   15: 262144 op, 2713833.00 ns, 10.3525 ns/op
+WorkloadPilot   16: 524288 op, 4743458.00 ns, 9.0474 ns/op
+WorkloadPilot   17: 1048576 op, 9504292.00 ns, 9.0640 ns/op
+WorkloadPilot   18: 2097152 op, 19229542.00 ns, 9.1694 ns/op
+WorkloadPilot   19: 4194304 op, 39159667.00 ns, 9.3364 ns/op
+WorkloadPilot   20: 8388608 op, 89747459.00 ns, 10.6987 ns/op
+WorkloadPilot   21: 16777216 op, 141358333.00 ns, 8.4256 ns/op
+WorkloadPilot   22: 33554432 op, 530565500.00 ns, 15.8121 ns/op
+
+OverheadWarmup   1: 33554432 op, 62473667.00 ns, 1.8619 ns/op
+OverheadWarmup   2: 33554432 op, 68961250.00 ns, 2.0552 ns/op
+OverheadWarmup   3: 33554432 op, 62793125.00 ns, 1.8714 ns/op
+OverheadWarmup   4: 33554432 op, 57666792.00 ns, 1.7186 ns/op
+OverheadWarmup   5: 33554432 op, 53263875.00 ns, 1.5874 ns/op
+OverheadWarmup   6: 33554432 op, 53909334.00 ns, 1.6066 ns/op
+OverheadWarmup   7: 33554432 op, 53204958.00 ns, 1.5856 ns/op
+
+OverheadActual   1: 33554432 op, 52364042.00 ns, 1.5606 ns/op
+OverheadActual   2: 33554432 op, 52524000.00 ns, 1.5653 ns/op
+OverheadActual   3: 33554432 op, 53428375.00 ns, 1.5923 ns/op
+OverheadActual   4: 33554432 op, 52047667.00 ns, 1.5511 ns/op
+OverheadActual   5: 33554432 op, 53529125.00 ns, 1.5953 ns/op
+OverheadActual   6: 33554432 op, 52744709.00 ns, 1.5719 ns/op
+OverheadActual   7: 33554432 op, 52776834.00 ns, 1.5729 ns/op
+OverheadActual   8: 33554432 op, 52477333.00 ns, 1.5639 ns/op
+OverheadActual   9: 33554432 op, 52261084.00 ns, 1.5575 ns/op
+OverheadActual  10: 33554432 op, 52297750.00 ns, 1.5586 ns/op
+OverheadActual  11: 33554432 op, 52232250.00 ns, 1.5566 ns/op
+OverheadActual  12: 33554432 op, 52166459.00 ns, 1.5547 ns/op
+OverheadActual  13: 33554432 op, 52971875.00 ns, 1.5787 ns/op
+OverheadActual  14: 33554432 op, 54108667.00 ns, 1.6126 ns/op
+OverheadActual  15: 33554432 op, 53499834.00 ns, 1.5944 ns/op
+
+WorkloadWarmup   1: 33554432 op, 378169667.00 ns, 11.2703 ns/op
+WorkloadWarmup   2: 33554432 op, 267831000.00 ns, 7.9820 ns/op
+WorkloadWarmup   3: 33554432 op, 263003833.00 ns, 7.8381 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 260649917.00 ns, 7.7680 ns/op
+WorkloadActual   2: 33554432 op, 264109458.00 ns, 7.8711 ns/op
+WorkloadActual   3: 33554432 op, 266219916.00 ns, 7.9340 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 208125917.00 ns, 6.2026 ns/op
+WorkloadResult   2: 33554432 op, 211585458.00 ns, 6.3057 ns/op
+WorkloadResult   3: 33554432 op, 213695916.00 ns, 6.3686 ns/op
+// GC:  128 0 0 1073741888 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 44359 has exited with code 0.
+
+Mean = 6.292 ns, StdErr = 0.048 ns (0.77%), N = 3, StdDev = 0.084 ns
+Min = 6.203 ns, Q1 = 6.254 ns, Median = 6.306 ns, Q3 = 6.337 ns, Max = 6.369 ns
+IQR = 0.083 ns, LowerFence = 6.130 ns, UpperFence = 6.462 ns
+ConfidenceInterval = [4.763 ns; 7.821 ns] (CI 99.9%), Margin = 1.529 ns (24.30% of Mean)
+Skewness = -0.16, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 479 (%99,8) benchmark(s) to run. Estimated finish 2026-04-13 17:50 (0h 34m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcat(PartSize: 1, Parts: 2, Locale: Ascii)" --job ShortRun --benchmarkId 1 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 106292.00 ns, 106.2920 us/op
+WorkloadJitting  1: 1 op, 494083.00 ns, 494.0830 us/op
+
+OverheadJitting  2: 16 op, 96208.00 ns, 6.0130 us/op
+WorkloadJitting  2: 16 op, 97625.00 ns, 6.1016 us/op
+
+WorkloadPilot    1: 16 op, 1792.00 ns, 112.0000 ns/op
+WorkloadPilot    2: 32 op, 3458.00 ns, 108.0625 ns/op
+WorkloadPilot    3: 64 op, 4750.00 ns, 74.2188 ns/op
+WorkloadPilot    4: 128 op, 11875.00 ns, 92.7734 ns/op
+WorkloadPilot    5: 256 op, 19500.00 ns, 76.1719 ns/op
+WorkloadPilot    6: 512 op, 39833.00 ns, 77.7988 ns/op
+WorkloadPilot    7: 1024 op, 76000.00 ns, 74.2188 ns/op
+WorkloadPilot    8: 2048 op, 150709.00 ns, 73.5884 ns/op
+WorkloadPilot    9: 4096 op, 378583.00 ns, 92.4275 ns/op
+WorkloadPilot   10: 8192 op, 766292.00 ns, 93.5415 ns/op
+WorkloadPilot   11: 16384 op, 1377166.00 ns, 84.0555 ns/op
+WorkloadPilot   12: 32768 op, 2594333.00 ns, 79.1728 ns/op
+WorkloadPilot   13: 65536 op, 5052333.00 ns, 77.0925 ns/op
+WorkloadPilot   14: 131072 op, 9785917.00 ns, 74.6606 ns/op
+WorkloadPilot   15: 262144 op, 19707708.00 ns, 75.1789 ns/op
+WorkloadPilot   16: 524288 op, 38955792.00 ns, 74.3023 ns/op
+WorkloadPilot   17: 1048576 op, 76522583.00 ns, 72.9776 ns/op
+WorkloadPilot   18: 2097152 op, 26609875.00 ns, 12.6886 ns/op
+WorkloadPilot   19: 4194304 op, 36750875.00 ns, 8.7621 ns/op
+WorkloadPilot   20: 8388608 op, 73323375.00 ns, 8.7408 ns/op
+WorkloadPilot   21: 16777216 op, 145927375.00 ns, 8.6979 ns/op
+WorkloadPilot   22: 33554432 op, 294665125.00 ns, 8.7817 ns/op
+WorkloadPilot   23: 67108864 op, 660426667.00 ns, 9.8411 ns/op
+
+OverheadWarmup   1: 67108864 op, 123544084.00 ns, 1.8410 ns/op
+OverheadWarmup   2: 67108864 op, 113744666.00 ns, 1.6949 ns/op
+OverheadWarmup   3: 67108864 op, 83344500.00 ns, 1.2419 ns/op
+OverheadWarmup   4: 67108864 op, 86545000.00 ns, 1.2896 ns/op
+OverheadWarmup   5: 67108864 op, 85647125.00 ns, 1.2762 ns/op
+OverheadWarmup   6: 67108864 op, 84393583.00 ns, 1.2576 ns/op
+OverheadWarmup   7: 67108864 op, 83627292.00 ns, 1.2461 ns/op
+OverheadWarmup   8: 67108864 op, 85828125.00 ns, 1.2789 ns/op
+OverheadWarmup   9: 67108864 op, 84870208.00 ns, 1.2647 ns/op
+
+OverheadActual   1: 67108864 op, 84177625.00 ns, 1.2543 ns/op
+OverheadActual   2: 67108864 op, 85507791.00 ns, 1.2742 ns/op
+OverheadActual   3: 67108864 op, 85153292.00 ns, 1.2689 ns/op
+OverheadActual   4: 67108864 op, 84945500.00 ns, 1.2658 ns/op
+OverheadActual   5: 67108864 op, 84907959.00 ns, 1.2652 ns/op
+OverheadActual   6: 67108864 op, 85858333.00 ns, 1.2794 ns/op
+OverheadActual   7: 67108864 op, 80864541.00 ns, 1.2050 ns/op
+OverheadActual   8: 67108864 op, 86467833.00 ns, 1.2885 ns/op
+OverheadActual   9: 67108864 op, 86385375.00 ns, 1.2872 ns/op
+OverheadActual  10: 67108864 op, 85418791.00 ns, 1.2728 ns/op
+OverheadActual  11: 67108864 op, 86019458.00 ns, 1.2818 ns/op
+OverheadActual  12: 67108864 op, 85722958.00 ns, 1.2774 ns/op
+OverheadActual  13: 67108864 op, 86510291.00 ns, 1.2891 ns/op
+OverheadActual  14: 67108864 op, 85990292.00 ns, 1.2814 ns/op
+OverheadActual  15: 67108864 op, 86952334.00 ns, 1.2957 ns/op
+
+WorkloadWarmup   1: 67108864 op, 580927791.00 ns, 8.6565 ns/op
+WorkloadWarmup   2: 67108864 op, 582110583.00 ns, 8.6741 ns/op
+WorkloadWarmup   3: 67108864 op, 579032125.00 ns, 8.6283 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 582363584.00 ns, 8.6779 ns/op
+WorkloadActual   2: 67108864 op, 581828958.00 ns, 8.6699 ns/op
+WorkloadActual   3: 67108864 op, 579532417.00 ns, 8.6357 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 496640626.00 ns, 7.4005 ns/op
+WorkloadResult   2: 67108864 op, 496106000.00 ns, 7.3926 ns/op
+WorkloadResult   3: 67108864 op, 493809459.00 ns, 7.3583 ns/op
+// GC:  256 0 0 2147484384 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44378 has exited with code 0.
+
+Mean = 7.384 ns, StdErr = 0.013 ns (0.18%), N = 3, StdDev = 0.022 ns
+Min = 7.358 ns, Q1 = 7.375 ns, Median = 7.393 ns, Q3 = 7.397 ns, Max = 7.401 ns
+IQR = 0.021 ns, LowerFence = 7.344 ns, UpperFence = 7.428 ns
+ConfidenceInterval = [6.975 ns; 7.793 ns] (CI 99.9%), Margin = 0.409 ns (5.54% of Mean)
+Skewness = -0.33, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 478 (%99,6) benchmark(s) to run. Estimated finish 2026-04-13 18:04 (0h 47m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcatPooled(PartSize: 1, Parts: 2, Locale: Ascii)" --job ShortRun --benchmarkId 2 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 93625.00 ns, 93.6250 us/op
+WorkloadJitting  1: 1 op, 1011208.00 ns, 1.0112 ms/op
+
+OverheadJitting  2: 16 op, 120542.00 ns, 7.5339 us/op
+WorkloadJitting  2: 16 op, 95167.00 ns, 5.9479 us/op
+
+WorkloadPilot    1: 16 op, 3375.00 ns, 210.9375 ns/op
+WorkloadPilot    2: 32 op, 6917.00 ns, 216.1563 ns/op
+WorkloadPilot    3: 64 op, 10750.00 ns, 167.9688 ns/op
+WorkloadPilot    4: 128 op, 22375.00 ns, 174.8047 ns/op
+WorkloadPilot    5: 256 op, 42291.00 ns, 165.1992 ns/op
+WorkloadPilot    6: 512 op, 80458.00 ns, 157.1445 ns/op
+WorkloadPilot    7: 1024 op, 158500.00 ns, 154.7852 ns/op
+WorkloadPilot    8: 2048 op, 314958.00 ns, 153.7881 ns/op
+WorkloadPilot    9: 4096 op, 737750.00 ns, 180.1147 ns/op
+WorkloadPilot   10: 8192 op, 1498625.00 ns, 182.9376 ns/op
+WorkloadPilot   11: 16384 op, 2743167.00 ns, 167.4296 ns/op
+WorkloadPilot   12: 32768 op, 5242667.00 ns, 159.9935 ns/op
+WorkloadPilot   13: 65536 op, 10282250.00 ns, 156.8947 ns/op
+WorkloadPilot   14: 131072 op, 20359416.00 ns, 155.3300 ns/op
+WorkloadPilot   15: 262144 op, 40391208.00 ns, 154.0802 ns/op
+WorkloadPilot   16: 524288 op, 80965791.00 ns, 154.4300 ns/op
+WorkloadPilot   17: 1048576 op, 23412042.00 ns, 22.3275 ns/op
+WorkloadPilot   18: 2097152 op, 31191583.00 ns, 14.8733 ns/op
+WorkloadPilot   19: 4194304 op, 66280583.00 ns, 15.8025 ns/op
+WorkloadPilot   20: 8388608 op, 131486250.00 ns, 15.6744 ns/op
+WorkloadPilot   21: 16777216 op, 258755583.00 ns, 15.4230 ns/op
+WorkloadPilot   22: 33554432 op, 518859250.00 ns, 15.4632 ns/op
+
+OverheadWarmup   1: 33554432 op, 62873250.00 ns, 1.8738 ns/op
+OverheadWarmup   2: 33554432 op, 63503458.00 ns, 1.8926 ns/op
+OverheadWarmup   3: 33554432 op, 63151833.00 ns, 1.8821 ns/op
+OverheadWarmup   4: 33554432 op, 50405875.00 ns, 1.5022 ns/op
+OverheadWarmup   5: 33554432 op, 45119166.00 ns, 1.3447 ns/op
+OverheadWarmup   6: 33554432 op, 43334959.00 ns, 1.2915 ns/op
+OverheadWarmup   7: 33554432 op, 43594542.00 ns, 1.2992 ns/op
+OverheadWarmup   8: 33554432 op, 44113375.00 ns, 1.3147 ns/op
+OverheadWarmup   9: 33554432 op, 44714833.00 ns, 1.3326 ns/op
+OverheadWarmup  10: 33554432 op, 43949958.00 ns, 1.3098 ns/op
+
+OverheadActual   1: 33554432 op, 44888708.00 ns, 1.3378 ns/op
+OverheadActual   2: 33554432 op, 43975666.00 ns, 1.3106 ns/op
+OverheadActual   3: 33554432 op, 42745584.00 ns, 1.2739 ns/op
+OverheadActual   4: 33554432 op, 44073125.00 ns, 1.3135 ns/op
+OverheadActual   5: 33554432 op, 44360750.00 ns, 1.3221 ns/op
+OverheadActual   6: 33554432 op, 43267417.00 ns, 1.2895 ns/op
+OverheadActual   7: 33554432 op, 44460875.00 ns, 1.3250 ns/op
+OverheadActual   8: 33554432 op, 43707583.00 ns, 1.3026 ns/op
+OverheadActual   9: 33554432 op, 44572833.00 ns, 1.3284 ns/op
+OverheadActual  10: 33554432 op, 43630958.00 ns, 1.3003 ns/op
+OverheadActual  11: 33554432 op, 44748875.00 ns, 1.3336 ns/op
+OverheadActual  12: 33554432 op, 44265833.00 ns, 1.3192 ns/op
+OverheadActual  13: 33554432 op, 43334750.00 ns, 1.2915 ns/op
+OverheadActual  14: 33554432 op, 45217042.00 ns, 1.3476 ns/op
+OverheadActual  15: 33554432 op, 45274625.00 ns, 1.3493 ns/op
+
+WorkloadWarmup   1: 33554432 op, 524537666.00 ns, 15.6324 ns/op
+WorkloadWarmup   2: 33554432 op, 521555375.00 ns, 15.5436 ns/op
+WorkloadWarmup   3: 33554432 op, 519615125.00 ns, 15.4857 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 523087333.00 ns, 15.5892 ns/op
+WorkloadActual   2: 33554432 op, 526629209.00 ns, 15.6948 ns/op
+WorkloadActual   3: 33554432 op, 521146375.00 ns, 15.5314 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 478821500.00 ns, 14.2700 ns/op
+WorkloadResult   2: 33554432 op, 482363376.00 ns, 14.3755 ns/op
+WorkloadResult   3: 33554432 op, 476880542.00 ns, 14.2121 ns/op
+// GC:  0 0 0 736 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 44408 has exited with code 0.
+
+Mean = 14.286 ns, StdErr = 0.048 ns (0.33%), N = 3, StdDev = 0.083 ns
+Min = 14.212 ns, Q1 = 14.241 ns, Median = 14.270 ns, Q3 = 14.323 ns, Max = 14.376 ns
+IQR = 0.082 ns, LowerFence = 14.119 ns, UpperFence = 14.445 ns
+ConfidenceInterval = [12.774 ns; 15.797 ns] (CI 99.9%), Margin = 1.512 ns (10.58% of Mean)
+Skewness = 0.18, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 477 (%99,4) benchmark(s) to run. Estimated finish 2026-04-13 18:04 (0h 47m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Ascii]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.U8Concat(PartSize: 1, Parts: 2, Locale: Ascii)" --job ShortRun --benchmarkId 3 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 141875.00 ns, 141.8750 us/op
+WorkloadJitting  1: 1 op, 424875.00 ns, 424.8750 us/op
+
+OverheadJitting  2: 16 op, 105542.00 ns, 6.5964 us/op
+WorkloadJitting  2: 16 op, 154542.00 ns, 9.6589 us/op
+
+WorkloadPilot    1: 16 op, 2792.00 ns, 174.5000 ns/op
+WorkloadPilot    2: 32 op, 3542.00 ns, 110.6875 ns/op
+WorkloadPilot    3: 64 op, 5625.00 ns, 87.8906 ns/op
+WorkloadPilot    4: 128 op, 10042.00 ns, 78.4531 ns/op
+WorkloadPilot    5: 256 op, 16542.00 ns, 64.6172 ns/op
+WorkloadPilot    6: 512 op, 32291.00 ns, 63.0684 ns/op
+WorkloadPilot    7: 1024 op, 63292.00 ns, 61.8086 ns/op
+WorkloadPilot    8: 2048 op, 124541.00 ns, 60.8110 ns/op
+WorkloadPilot    9: 4096 op, 287833.00 ns, 70.2717 ns/op
+WorkloadPilot   10: 8192 op, 569166.00 ns, 69.4783 ns/op
+WorkloadPilot   11: 16384 op, 1080334.00 ns, 65.9384 ns/op
+WorkloadPilot   12: 32768 op, 2117875.00 ns, 64.6324 ns/op
+WorkloadPilot   13: 65536 op, 4194542.00 ns, 64.0036 ns/op
+WorkloadPilot   14: 131072 op, 8254583.00 ns, 62.9775 ns/op
+WorkloadPilot   15: 262144 op, 16549375.00 ns, 63.1309 ns/op
+WorkloadPilot   16: 524288 op, 32314750.00 ns, 61.6355 ns/op
+WorkloadPilot   17: 1048576 op, 64838250.00 ns, 61.8346 ns/op
+WorkloadPilot   18: 2097152 op, 38281416.00 ns, 18.2540 ns/op
+WorkloadPilot   19: 4194304 op, 27530916.00 ns, 6.5639 ns/op
+WorkloadPilot   20: 8388608 op, 53496583.00 ns, 6.3773 ns/op
+WorkloadPilot   21: 16777216 op, 110374084.00 ns, 6.5788 ns/op
+WorkloadPilot   22: 33554432 op, 220985208.00 ns, 6.5859 ns/op
+WorkloadPilot   23: 67108864 op, 441290041.00 ns, 6.5757 ns/op
+WorkloadPilot   24: 134217728 op, 878383459.00 ns, 6.5445 ns/op
+
+OverheadWarmup   1: 134217728 op, 237544958.00 ns, 1.7698 ns/op
+OverheadWarmup   2: 134217728 op, 171973500.00 ns, 1.2813 ns/op
+OverheadWarmup   3: 134217728 op, 172219833.00 ns, 1.2831 ns/op
+OverheadWarmup   4: 134217728 op, 172960208.00 ns, 1.2887 ns/op
+OverheadWarmup   5: 134217728 op, 173423458.00 ns, 1.2921 ns/op
+OverheadWarmup   6: 134217728 op, 170205916.00 ns, 1.2681 ns/op
+OverheadWarmup   7: 134217728 op, 173825000.00 ns, 1.2951 ns/op
+OverheadWarmup   8: 134217728 op, 169717709.00 ns, 1.2645 ns/op
+
+OverheadActual   1: 134217728 op, 171604125.00 ns, 1.2786 ns/op
+OverheadActual   2: 134217728 op, 170443000.00 ns, 1.2699 ns/op
+OverheadActual   3: 134217728 op, 171166500.00 ns, 1.2753 ns/op
+OverheadActual   4: 134217728 op, 169486250.00 ns, 1.2628 ns/op
+OverheadActual   5: 134217728 op, 171460000.00 ns, 1.2775 ns/op
+OverheadActual   6: 134217728 op, 173803167.00 ns, 1.2949 ns/op
+OverheadActual   7: 134217728 op, 172884750.00 ns, 1.2881 ns/op
+OverheadActual   8: 134217728 op, 171210042.00 ns, 1.2756 ns/op
+OverheadActual   9: 134217728 op, 168528875.00 ns, 1.2556 ns/op
+OverheadActual  10: 134217728 op, 172490333.00 ns, 1.2852 ns/op
+OverheadActual  11: 134217728 op, 172657875.00 ns, 1.2864 ns/op
+OverheadActual  12: 134217728 op, 170767708.00 ns, 1.2723 ns/op
+OverheadActual  13: 134217728 op, 171638750.00 ns, 1.2788 ns/op
+OverheadActual  14: 134217728 op, 171859292.00 ns, 1.2805 ns/op
+OverheadActual  15: 134217728 op, 169647750.00 ns, 1.2640 ns/op
+
+WorkloadWarmup   1: 134217728 op, 880560291.00 ns, 6.5607 ns/op
+WorkloadWarmup   2: 134217728 op, 878888000.00 ns, 6.5482 ns/op
+WorkloadWarmup   3: 134217728 op, 875689000.00 ns, 6.5244 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 134217728 op, 882226541.00 ns, 6.5731 ns/op
+WorkloadActual   2: 134217728 op, 878815584.00 ns, 6.5477 ns/op
+WorkloadActual   3: 134217728 op, 881566917.00 ns, 6.5682 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 134217728 op, 710766541.00 ns, 5.2956 ns/op
+WorkloadResult   2: 134217728 op, 707355584.00 ns, 5.2702 ns/op
+WorkloadResult   3: 134217728 op, 710106917.00 ns, 5.2907 ns/op
+// GC:  513 0 0 4294968032 134217728
+// Threading:  0 0 134217728
+
+// AfterAll
+// Benchmark Process 44515 has exited with code 0.
+
+Mean = 5.286 ns, StdErr = 0.008 ns (0.15%), N = 3, StdDev = 0.013 ns
+Min = 5.270 ns, Q1 = 5.280 ns, Median = 5.291 ns, Q3 = 5.293 ns, Max = 5.296 ns
+IQR = 0.013 ns, LowerFence = 5.261 ns, UpperFence = 5.312 ns
+ConfidenceInterval = [5.040 ns; 5.531 ns] (CI 99.9%), Margin = 0.246 ns (4.65% of Mean)
+Skewness = -0.33, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 476 (%99,2) benchmark(s) to run. Estimated finish 2026-04-13 18:16 (1h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.StringConcat(PartSize: 1, Parts: 2, Locale: Latin)" --job ShortRun --benchmarkId 4 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 114208.00 ns, 114.2080 us/op
+WorkloadJitting  1: 1 op, 81000.00 ns, 81.0000 us/op
+
+OverheadJitting  2: 16 op, 271625.00 ns, 16.9766 us/op
+WorkloadJitting  2: 16 op, 228333.00 ns, 14.2708 us/op
+
+WorkloadPilot    1: 16 op, 1125.00 ns, 70.3125 ns/op
+WorkloadPilot    2: 32 op, 1375.00 ns, 42.9688 ns/op
+WorkloadPilot    3: 64 op, 875.00 ns, 13.6719 ns/op
+WorkloadPilot    4: 128 op, 1708.00 ns, 13.3438 ns/op
+WorkloadPilot    5: 256 op, 2709.00 ns, 10.5820 ns/op
+WorkloadPilot    6: 512 op, 4875.00 ns, 9.5215 ns/op
+WorkloadPilot    7: 1024 op, 9458.00 ns, 9.2363 ns/op
+WorkloadPilot    8: 2048 op, 18709.00 ns, 9.1353 ns/op
+WorkloadPilot    9: 4096 op, 36750.00 ns, 8.9722 ns/op
+WorkloadPilot   10: 8192 op, 80458.00 ns, 9.8215 ns/op
+WorkloadPilot   11: 16384 op, 162667.00 ns, 9.9284 ns/op
+WorkloadPilot   12: 32768 op, 316458.00 ns, 9.6575 ns/op
+WorkloadPilot   13: 65536 op, 655667.00 ns, 10.0047 ns/op
+WorkloadPilot   14: 131072 op, 1272750.00 ns, 9.7103 ns/op
+WorkloadPilot   15: 262144 op, 2632792.00 ns, 10.0433 ns/op
+WorkloadPilot   16: 524288 op, 4752333.00 ns, 9.0644 ns/op
+WorkloadPilot   17: 1048576 op, 9537709.00 ns, 9.0959 ns/op
+WorkloadPilot   18: 2097152 op, 18943250.00 ns, 9.0328 ns/op
+WorkloadPilot   19: 4194304 op, 38006291.00 ns, 9.0614 ns/op
+WorkloadPilot   20: 8388608 op, 75936667.00 ns, 9.0524 ns/op
+WorkloadPilot   21: 16777216 op, 133413041.00 ns, 7.9520 ns/op
+WorkloadPilot   22: 33554432 op, 260594917.00 ns, 7.7663 ns/op
+WorkloadPilot   23: 67108864 op, 521836750.00 ns, 7.7760 ns/op
+
+OverheadWarmup   1: 67108864 op, 122087208.00 ns, 1.8192 ns/op
+OverheadWarmup   2: 67108864 op, 116226041.00 ns, 1.7319 ns/op
+OverheadWarmup   3: 67108864 op, 104585750.00 ns, 1.5584 ns/op
+OverheadWarmup   4: 67108864 op, 104534042.00 ns, 1.5577 ns/op
+OverheadWarmup   5: 67108864 op, 103233125.00 ns, 1.5383 ns/op
+OverheadWarmup   6: 67108864 op, 100911875.00 ns, 1.5037 ns/op
+OverheadWarmup   7: 67108864 op, 102038209.00 ns, 1.5205 ns/op
+OverheadWarmup   8: 67108864 op, 101019750.00 ns, 1.5053 ns/op
+OverheadWarmup   9: 67108864 op, 103345458.00 ns, 1.5400 ns/op
+OverheadWarmup  10: 67108864 op, 104561292.00 ns, 1.5581 ns/op
+
+OverheadActual   1: 67108864 op, 104298375.00 ns, 1.5542 ns/op
+OverheadActual   2: 67108864 op, 102578709.00 ns, 1.5285 ns/op
+OverheadActual   3: 67108864 op, 104773542.00 ns, 1.5612 ns/op
+OverheadActual   4: 67108864 op, 104685875.00 ns, 1.5599 ns/op
+OverheadActual   5: 67108864 op, 104793541.00 ns, 1.5615 ns/op
+OverheadActual   6: 67108864 op, 104699750.00 ns, 1.5601 ns/op
+OverheadActual   7: 67108864 op, 104627000.00 ns, 1.5591 ns/op
+OverheadActual   8: 67108864 op, 102639250.00 ns, 1.5294 ns/op
+OverheadActual   9: 67108864 op, 103446500.00 ns, 1.5415 ns/op
+OverheadActual  10: 67108864 op, 103592083.00 ns, 1.5436 ns/op
+OverheadActual  11: 67108864 op, 104902625.00 ns, 1.5632 ns/op
+OverheadActual  12: 67108864 op, 103524542.00 ns, 1.5426 ns/op
+OverheadActual  13: 67108864 op, 103176375.00 ns, 1.5374 ns/op
+OverheadActual  14: 67108864 op, 104399208.00 ns, 1.5557 ns/op
+OverheadActual  15: 67108864 op, 102375125.00 ns, 1.5255 ns/op
+
+WorkloadWarmup   1: 67108864 op, 520069375.00 ns, 7.7496 ns/op
+WorkloadWarmup   2: 67108864 op, 522069709.00 ns, 7.7794 ns/op
+WorkloadWarmup   3: 67108864 op, 519574208.00 ns, 7.7423 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 518460416.00 ns, 7.7257 ns/op
+WorkloadActual   2: 67108864 op, 518804542.00 ns, 7.7308 ns/op
+WorkloadActual   3: 67108864 op, 519961084.00 ns, 7.7480 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 414162041.00 ns, 6.1715 ns/op
+WorkloadResult   2: 67108864 op, 414506167.00 ns, 6.1766 ns/op
+WorkloadResult   3: 67108864 op, 415662709.00 ns, 6.1939 ns/op
+// GC:  256 0 0 2147484384 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44532 has exited with code 0.
+
+Mean = 6.181 ns, StdErr = 0.007 ns (0.11%), N = 3, StdDev = 0.012 ns
+Min = 6.171 ns, Q1 = 6.174 ns, Median = 6.177 ns, Q3 = 6.185 ns, Max = 6.194 ns
+IQR = 0.011 ns, LowerFence = 6.157 ns, UpperFence = 6.202 ns
+ConfidenceInterval = [5.967 ns; 6.394 ns] (CI 99.9%), Margin = 0.214 ns (3.46% of Mean)
+Skewness = 0.3, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 475 (%99,0) benchmark(s) to run. Estimated finish 2026-04-13 18:16 (0h 59m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcat(PartSize: 1, Parts: 2, Locale: Latin)" --job ShortRun --benchmarkId 5 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 128875.00 ns, 128.8750 us/op
+WorkloadJitting  1: 1 op, 544250.00 ns, 544.2500 us/op
+
+OverheadJitting  2: 16 op, 104666.00 ns, 6.5416 us/op
+WorkloadJitting  2: 16 op, 109708.00 ns, 6.8568 us/op
+
+WorkloadPilot    1: 16 op, 2333.00 ns, 145.8125 ns/op
+WorkloadPilot    2: 32 op, 3042.00 ns, 95.0625 ns/op
+WorkloadPilot    3: 64 op, 5584.00 ns, 87.2500 ns/op
+WorkloadPilot    4: 128 op, 10125.00 ns, 79.1016 ns/op
+WorkloadPilot    5: 256 op, 19625.00 ns, 76.6602 ns/op
+WorkloadPilot    6: 512 op, 38875.00 ns, 75.9277 ns/op
+WorkloadPilot    7: 1024 op, 77375.00 ns, 75.5615 ns/op
+WorkloadPilot    8: 2048 op, 151500.00 ns, 73.9746 ns/op
+WorkloadPilot    9: 4096 op, 383375.00 ns, 93.5974 ns/op
+WorkloadPilot   10: 8192 op, 767708.00 ns, 93.7144 ns/op
+WorkloadPilot   11: 16384 op, 1377125.00 ns, 84.0530 ns/op
+WorkloadPilot   12: 32768 op, 2611416.00 ns, 79.6941 ns/op
+WorkloadPilot   13: 65536 op, 5076084.00 ns, 77.4549 ns/op
+WorkloadPilot   14: 131072 op, 9687416.00 ns, 73.9091 ns/op
+WorkloadPilot   15: 262144 op, 19819875.00 ns, 75.6068 ns/op
+WorkloadPilot   16: 524288 op, 39988917.00 ns, 76.2728 ns/op
+WorkloadPilot   17: 1048576 op, 78015208.00 ns, 74.4011 ns/op
+WorkloadPilot   18: 2097152 op, 19106083.00 ns, 9.1105 ns/op
+WorkloadPilot   19: 4194304 op, 37251791.00 ns, 8.8815 ns/op
+WorkloadPilot   20: 8388608 op, 75055292.00 ns, 8.9473 ns/op
+WorkloadPilot   21: 16777216 op, 152820500.00 ns, 9.1088 ns/op
+WorkloadPilot   22: 33554432 op, 305733209.00 ns, 9.1116 ns/op
+WorkloadPilot   23: 67108864 op, 608057333.00 ns, 9.0608 ns/op
+
+OverheadWarmup   1: 67108864 op, 126342250.00 ns, 1.8826 ns/op
+OverheadWarmup   2: 67108864 op, 114670416.00 ns, 1.7087 ns/op
+OverheadWarmup   3: 67108864 op, 86134125.00 ns, 1.2835 ns/op
+OverheadWarmup   4: 67108864 op, 86622958.00 ns, 1.2908 ns/op
+OverheadWarmup   5: 67108864 op, 86618709.00 ns, 1.2907 ns/op
+OverheadWarmup   6: 67108864 op, 85463583.00 ns, 1.2735 ns/op
+OverheadWarmup   7: 67108864 op, 86433958.00 ns, 1.2880 ns/op
+OverheadWarmup   8: 67108864 op, 86413917.00 ns, 1.2877 ns/op
+
+OverheadActual   1: 67108864 op, 85471500.00 ns, 1.2736 ns/op
+OverheadActual   2: 67108864 op, 86276500.00 ns, 1.2856 ns/op
+OverheadActual   3: 67108864 op, 84993917.00 ns, 1.2665 ns/op
+OverheadActual   4: 67108864 op, 85810000.00 ns, 1.2787 ns/op
+OverheadActual   5: 67108864 op, 85303292.00 ns, 1.2711 ns/op
+OverheadActual   6: 67108864 op, 84728542.00 ns, 1.2626 ns/op
+OverheadActual   7: 67108864 op, 84248375.00 ns, 1.2554 ns/op
+OverheadActual   8: 67108864 op, 84600917.00 ns, 1.2607 ns/op
+OverheadActual   9: 67108864 op, 84832208.00 ns, 1.2641 ns/op
+OverheadActual  10: 67108864 op, 86548167.00 ns, 1.2897 ns/op
+OverheadActual  11: 67108864 op, 86411041.00 ns, 1.2876 ns/op
+OverheadActual  12: 67108864 op, 86730667.00 ns, 1.2924 ns/op
+OverheadActual  13: 67108864 op, 86608750.00 ns, 1.2906 ns/op
+OverheadActual  14: 67108864 op, 86628792.00 ns, 1.2909 ns/op
+OverheadActual  15: 67108864 op, 87332500.00 ns, 1.3014 ns/op
+
+WorkloadWarmup   1: 67108864 op, 608437958.00 ns, 9.0664 ns/op
+WorkloadWarmup   2: 67108864 op, 607255709.00 ns, 9.0488 ns/op
+WorkloadWarmup   3: 67108864 op, 611179458.00 ns, 9.1073 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 610178625.00 ns, 9.0924 ns/op
+WorkloadActual   2: 67108864 op, 636246250.00 ns, 9.4808 ns/op
+WorkloadActual   3: 67108864 op, 613802083.00 ns, 9.1464 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 524368625.00 ns, 7.8137 ns/op
+WorkloadResult   2: 67108864 op, 550436250.00 ns, 8.2021 ns/op
+WorkloadResult   3: 67108864 op, 527992083.00 ns, 7.8677 ns/op
+// GC:  256 0 0 2147484096 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44542 has exited with code 0.
+
+Mean = 7.961 ns, StdErr = 0.121 ns (1.53%), N = 3, StdDev = 0.210 ns
+Min = 7.814 ns, Q1 = 7.841 ns, Median = 7.868 ns, Q3 = 8.035 ns, Max = 8.202 ns
+IQR = 0.194 ns, LowerFence = 7.549 ns, UpperFence = 8.326 ns
+ConfidenceInterval = [4.122 ns; 11.800 ns] (CI 99.9%), Margin = 3.839 ns (48.22% of Mean)
+Skewness = 0.36, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 474 (%98,8) benchmark(s) to run. Estimated finish 2026-04-13 18:17 (0h 59m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcatPooled(PartSize: 1, Parts: 2, Locale: Latin)" --job ShortRun --benchmarkId 6 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 94167.00 ns, 94.1670 us/op
+WorkloadJitting  1: 1 op, 1278125.00 ns, 1.2781 ms/op
+
+OverheadJitting  2: 16 op, 86042.00 ns, 5.3776 us/op
+WorkloadJitting  2: 16 op, 103125.00 ns, 6.4453 us/op
+
+WorkloadPilot    1: 16 op, 3375.00 ns, 210.9375 ns/op
+WorkloadPilot    2: 32 op, 5750.00 ns, 179.6875 ns/op
+WorkloadPilot    3: 64 op, 11667.00 ns, 182.2969 ns/op
+WorkloadPilot    4: 128 op, 20792.00 ns, 162.4375 ns/op
+WorkloadPilot    5: 256 op, 40416.00 ns, 157.8750 ns/op
+WorkloadPilot    6: 512 op, 80833.00 ns, 157.8770 ns/op
+WorkloadPilot    7: 1024 op, 158334.00 ns, 154.6230 ns/op
+WorkloadPilot    8: 2048 op, 315000.00 ns, 153.8086 ns/op
+WorkloadPilot    9: 4096 op, 733000.00 ns, 178.9551 ns/op
+WorkloadPilot   10: 8192 op, 1493792.00 ns, 182.3477 ns/op
+WorkloadPilot   11: 16384 op, 2763292.00 ns, 168.6580 ns/op
+WorkloadPilot   12: 32768 op, 5257792.00 ns, 160.4551 ns/op
+WorkloadPilot   13: 65536 op, 10332875.00 ns, 157.6672 ns/op
+WorkloadPilot   14: 131072 op, 20538666.00 ns, 156.6976 ns/op
+WorkloadPilot   15: 262144 op, 40564000.00 ns, 154.7394 ns/op
+WorkloadPilot   16: 524288 op, 81373459.00 ns, 155.2076 ns/op
+WorkloadPilot   17: 1048576 op, 16556208.00 ns, 15.7892 ns/op
+WorkloadPilot   18: 2097152 op, 32223083.00 ns, 15.3652 ns/op
+WorkloadPilot   19: 4194304 op, 66451000.00 ns, 15.8432 ns/op
+WorkloadPilot   20: 8388608 op, 130264625.00 ns, 15.5288 ns/op
+WorkloadPilot   21: 16777216 op, 258940042.00 ns, 15.4340 ns/op
+WorkloadPilot   22: 33554432 op, 525388541.00 ns, 15.6578 ns/op
+
+OverheadWarmup   1: 33554432 op, 63416875.00 ns, 1.8900 ns/op
+OverheadWarmup   2: 33554432 op, 63669167.00 ns, 1.8975 ns/op
+OverheadWarmup   3: 33554432 op, 63259167.00 ns, 1.8853 ns/op
+OverheadWarmup   4: 33554432 op, 48830833.00 ns, 1.4553 ns/op
+OverheadWarmup   5: 33554432 op, 42582375.00 ns, 1.2691 ns/op
+OverheadWarmup   6: 33554432 op, 43010834.00 ns, 1.2818 ns/op
+OverheadWarmup   7: 33554432 op, 45039500.00 ns, 1.3423 ns/op
+OverheadWarmup   8: 33554432 op, 42915125.00 ns, 1.2790 ns/op
+
+OverheadActual   1: 33554432 op, 44109666.00 ns, 1.3146 ns/op
+OverheadActual   2: 33554432 op, 43352708.00 ns, 1.2920 ns/op
+OverheadActual   3: 33554432 op, 43025125.00 ns, 1.2822 ns/op
+OverheadActual   4: 33554432 op, 43544833.00 ns, 1.2977 ns/op
+OverheadActual   5: 33554432 op, 43991042.00 ns, 1.3110 ns/op
+OverheadActual   6: 33554432 op, 43207000.00 ns, 1.2877 ns/op
+OverheadActual   7: 33554432 op, 44453333.00 ns, 1.3248 ns/op
+OverheadActual   8: 33554432 op, 45271959.00 ns, 1.3492 ns/op
+OverheadActual   9: 33554432 op, 45280750.00 ns, 1.3495 ns/op
+OverheadActual  10: 33554432 op, 44102125.00 ns, 1.3143 ns/op
+OverheadActual  11: 33554432 op, 43700625.00 ns, 1.3024 ns/op
+OverheadActual  12: 33554432 op, 45177583.00 ns, 1.3464 ns/op
+OverheadActual  13: 33554432 op, 44861084.00 ns, 1.3370 ns/op
+OverheadActual  14: 33554432 op, 44840625.00 ns, 1.3364 ns/op
+OverheadActual  15: 33554432 op, 45025625.00 ns, 1.3419 ns/op
+
+WorkloadWarmup   1: 33554432 op, 526289917.00 ns, 15.6847 ns/op
+WorkloadWarmup   2: 33554432 op, 614226417.00 ns, 18.3054 ns/op
+WorkloadWarmup   3: 33554432 op, 549263250.00 ns, 16.3693 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 541640000.00 ns, 16.1421 ns/op
+WorkloadActual   2: 33554432 op, 542209666.00 ns, 16.1591 ns/op
+WorkloadActual   3: 33554432 op, 547037250.00 ns, 16.3030 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 497530334.00 ns, 14.8276 ns/op
+WorkloadResult   2: 33554432 op, 498100000.00 ns, 14.8445 ns/op
+WorkloadResult   3: 33554432 op, 502927584.00 ns, 14.9884 ns/op
+// GC:  0 0 0 736 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 44623 has exited with code 0.
+
+Mean = 14.887 ns, StdErr = 0.051 ns (0.34%), N = 3, StdDev = 0.088 ns
+Min = 14.828 ns, Q1 = 14.836 ns, Median = 14.845 ns, Q3 = 14.916 ns, Max = 14.988 ns
+IQR = 0.080 ns, LowerFence = 14.715 ns, UpperFence = 15.037 ns
+ConfidenceInterval = [13.275 ns; 16.499 ns] (CI 99.9%), Margin = 1.612 ns (10.83% of Mean)
+Skewness = 0.37, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 473 (%98,5) benchmark(s) to run. Estimated finish 2026-04-13 18:15 (0h 58m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Latin]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.U8Concat(PartSize: 1, Parts: 2, Locale: Latin)" --job ShortRun --benchmarkId 7 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 432167.00 ns, 432.1670 us/op
+WorkloadJitting  1: 1 op, 498708.00 ns, 498.7080 us/op
+
+OverheadJitting  2: 16 op, 124792.00 ns, 7.7995 us/op
+WorkloadJitting  2: 16 op, 112916.00 ns, 7.0573 us/op
+
+WorkloadPilot    1: 16 op, 2250.00 ns, 140.6250 ns/op
+WorkloadPilot    2: 32 op, 3917.00 ns, 122.4063 ns/op
+WorkloadPilot    3: 64 op, 4791.00 ns, 74.8594 ns/op
+WorkloadPilot    4: 128 op, 7750.00 ns, 60.5469 ns/op
+WorkloadPilot    5: 256 op, 18708.00 ns, 73.0781 ns/op
+WorkloadPilot    6: 512 op, 29125.00 ns, 56.8848 ns/op
+WorkloadPilot    7: 1024 op, 56833.00 ns, 55.5010 ns/op
+WorkloadPilot    8: 2048 op, 125875.00 ns, 61.4624 ns/op
+WorkloadPilot    9: 4096 op, 296583.00 ns, 72.4080 ns/op
+WorkloadPilot   10: 8192 op, 571750.00 ns, 69.7937 ns/op
+WorkloadPilot   11: 16384 op, 1091041.00 ns, 66.5919 ns/op
+WorkloadPilot   12: 32768 op, 2112333.00 ns, 64.4633 ns/op
+WorkloadPilot   13: 65536 op, 4166208.00 ns, 63.5713 ns/op
+WorkloadPilot   14: 131072 op, 8324250.00 ns, 63.5090 ns/op
+WorkloadPilot   15: 262144 op, 16870333.00 ns, 64.3552 ns/op
+WorkloadPilot   16: 524288 op, 32255500.00 ns, 61.5225 ns/op
+WorkloadPilot   17: 1048576 op, 69200750.00 ns, 65.9950 ns/op
+WorkloadPilot   18: 2097152 op, 37183625.00 ns, 17.7305 ns/op
+WorkloadPilot   19: 4194304 op, 27272167.00 ns, 6.5022 ns/op
+WorkloadPilot   20: 8388608 op, 54696542.00 ns, 6.5203 ns/op
+WorkloadPilot   21: 16777216 op, 111838666.00 ns, 6.6661 ns/op
+WorkloadPilot   22: 33554432 op, 223863375.00 ns, 6.6716 ns/op
+WorkloadPilot   23: 67108864 op, 440657292.00 ns, 6.5663 ns/op
+WorkloadPilot   24: 134217728 op, 879347334.00 ns, 6.5516 ns/op
+
+OverheadWarmup   1: 134217728 op, 237410584.00 ns, 1.7688 ns/op
+OverheadWarmup   2: 134217728 op, 169946125.00 ns, 1.2662 ns/op
+OverheadWarmup   3: 134217728 op, 174127791.00 ns, 1.2974 ns/op
+OverheadWarmup   4: 134217728 op, 172979667.00 ns, 1.2888 ns/op
+OverheadWarmup   5: 134217728 op, 172035042.00 ns, 1.2818 ns/op
+OverheadWarmup   6: 134217728 op, 172310750.00 ns, 1.2838 ns/op
+OverheadWarmup   7: 134217728 op, 173091833.00 ns, 1.2896 ns/op
+OverheadWarmup   8: 134217728 op, 171270917.00 ns, 1.2761 ns/op
+
+OverheadActual   1: 134217728 op, 169281458.00 ns, 1.2612 ns/op
+OverheadActual   2: 134217728 op, 169829750.00 ns, 1.2653 ns/op
+OverheadActual   3: 134217728 op, 171074208.00 ns, 1.2746 ns/op
+OverheadActual   4: 134217728 op, 170696042.00 ns, 1.2718 ns/op
+OverheadActual   5: 134217728 op, 169695000.00 ns, 1.2643 ns/op
+OverheadActual   6: 134217728 op, 170627000.00 ns, 1.2713 ns/op
+OverheadActual   7: 134217728 op, 173222417.00 ns, 1.2906 ns/op
+OverheadActual   8: 134217728 op, 168320834.00 ns, 1.2541 ns/op
+OverheadActual   9: 134217728 op, 171440917.00 ns, 1.2773 ns/op
+OverheadActual  10: 134217728 op, 171303041.00 ns, 1.2763 ns/op
+OverheadActual  11: 134217728 op, 172312292.00 ns, 1.2838 ns/op
+OverheadActual  12: 134217728 op, 173512916.00 ns, 1.2928 ns/op
+OverheadActual  13: 134217728 op, 170539792.00 ns, 1.2706 ns/op
+OverheadActual  14: 134217728 op, 173195083.00 ns, 1.2904 ns/op
+OverheadActual  15: 134217728 op, 173853959.00 ns, 1.2953 ns/op
+
+WorkloadWarmup   1: 134217728 op, 881492375.00 ns, 6.5676 ns/op
+WorkloadWarmup   2: 134217728 op, 880119083.00 ns, 6.5574 ns/op
+WorkloadWarmup   3: 134217728 op, 881669708.00 ns, 6.5690 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 134217728 op, 881644750.00 ns, 6.5688 ns/op
+WorkloadActual   2: 134217728 op, 879018625.00 ns, 6.5492 ns/op
+WorkloadActual   3: 134217728 op, 876437375.00 ns, 6.5300 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 134217728 op, 710570542.00 ns, 5.2942 ns/op
+WorkloadResult   2: 134217728 op, 707944417.00 ns, 5.2746 ns/op
+WorkloadResult   3: 134217728 op, 705363167.00 ns, 5.2554 ns/op
+// GC:  513 0 0 4294968032 134217728
+// Threading:  0 0 134217728
+
+// AfterAll
+// Benchmark Process 44666 has exited with code 0.
+
+Mean = 5.275 ns, StdErr = 0.011 ns (0.21%), N = 3, StdDev = 0.019 ns
+Min = 5.255 ns, Q1 = 5.265 ns, Median = 5.275 ns, Q3 = 5.284 ns, Max = 5.294 ns
+IQR = 0.019 ns, LowerFence = 5.236 ns, UpperFence = 5.313 ns
+ConfidenceInterval = [4.921 ns; 5.629 ns] (CI 99.9%), Margin = 0.354 ns (6.71% of Mean)
+Skewness = 0.01, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 472 (%98,3) benchmark(s) to run. Estimated finish 2026-04-13 18:20 (1h 2m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.StringConcat(PartSize: 1, Parts: 2, Locale: Cjk)" --job ShortRun --benchmarkId 8 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 124042.00 ns, 124.0420 us/op
+WorkloadJitting  1: 1 op, 72084.00 ns, 72.0840 us/op
+
+OverheadJitting  2: 16 op, 199292.00 ns, 12.4558 us/op
+WorkloadJitting  2: 16 op, 177917.00 ns, 11.1198 us/op
+
+WorkloadPilot    1: 16 op, 500.00 ns, 31.2500 ns/op
+WorkloadPilot    2: 32 op, 1250.00 ns, 39.0625 ns/op
+WorkloadPilot    3: 64 op, 1000.00 ns, 15.6250 ns/op
+WorkloadPilot    4: 128 op, 2084.00 ns, 16.2813 ns/op
+WorkloadPilot    5: 256 op, 3000.00 ns, 11.7188 ns/op
+WorkloadPilot    6: 512 op, 5459.00 ns, 10.6621 ns/op
+WorkloadPilot    7: 1024 op, 9708.00 ns, 9.4805 ns/op
+WorkloadPilot    8: 2048 op, 18833.00 ns, 9.1958 ns/op
+WorkloadPilot    9: 4096 op, 37291.00 ns, 9.1042 ns/op
+WorkloadPilot   10: 8192 op, 82667.00 ns, 10.0912 ns/op
+WorkloadPilot   11: 16384 op, 196792.00 ns, 12.0112 ns/op
+WorkloadPilot   12: 32768 op, 329750.00 ns, 10.0632 ns/op
+WorkloadPilot   13: 65536 op, 657125.00 ns, 10.0269 ns/op
+WorkloadPilot   14: 131072 op, 1287333.00 ns, 9.8216 ns/op
+WorkloadPilot   15: 262144 op, 2684042.00 ns, 10.2388 ns/op
+WorkloadPilot   16: 524288 op, 4763667.00 ns, 9.0860 ns/op
+WorkloadPilot   17: 1048576 op, 9483250.00 ns, 9.0439 ns/op
+WorkloadPilot   18: 2097152 op, 18867417.00 ns, 8.9967 ns/op
+WorkloadPilot   19: 4194304 op, 37517542.00 ns, 8.9449 ns/op
+WorkloadPilot   20: 8388608 op, 74326625.00 ns, 8.8604 ns/op
+WorkloadPilot   21: 16777216 op, 131170208.00 ns, 7.8184 ns/op
+WorkloadPilot   22: 33554432 op, 259782542.00 ns, 7.7421 ns/op
+WorkloadPilot   23: 67108864 op, 519431125.00 ns, 7.7401 ns/op
+
+OverheadWarmup   1: 67108864 op, 120469667.00 ns, 1.7951 ns/op
+OverheadWarmup   2: 67108864 op, 115889292.00 ns, 1.7269 ns/op
+OverheadWarmup   3: 67108864 op, 107431667.00 ns, 1.6009 ns/op
+OverheadWarmup   4: 67108864 op, 103547209.00 ns, 1.5430 ns/op
+OverheadWarmup   5: 67108864 op, 103267167.00 ns, 1.5388 ns/op
+OverheadWarmup   6: 67108864 op, 103015125.00 ns, 1.5350 ns/op
+OverheadWarmup   7: 67108864 op, 103670500.00 ns, 1.5448 ns/op
+OverheadWarmup   8: 67108864 op, 103190416.00 ns, 1.5377 ns/op
+OverheadWarmup   9: 67108864 op, 103038750.00 ns, 1.5354 ns/op
+OverheadWarmup  10: 67108864 op, 102938416.00 ns, 1.5339 ns/op
+
+OverheadActual   1: 67108864 op, 104699583.00 ns, 1.5601 ns/op
+OverheadActual   2: 67108864 op, 104713167.00 ns, 1.5603 ns/op
+OverheadActual   3: 67108864 op, 131882875.00 ns, 1.9652 ns/op
+OverheadActual   4: 67108864 op, 104460125.00 ns, 1.5566 ns/op
+OverheadActual   5: 67108864 op, 104716041.00 ns, 1.5604 ns/op
+OverheadActual   6: 67108864 op, 103235833.00 ns, 1.5383 ns/op
+OverheadActual   7: 67108864 op, 104657166.00 ns, 1.5595 ns/op
+OverheadActual   8: 67108864 op, 105285584.00 ns, 1.5689 ns/op
+OverheadActual   9: 67108864 op, 103708917.00 ns, 1.5454 ns/op
+OverheadActual  10: 67108864 op, 104668334.00 ns, 1.5597 ns/op
+OverheadActual  11: 67108864 op, 103670709.00 ns, 1.5448 ns/op
+OverheadActual  12: 67108864 op, 104564792.00 ns, 1.5581 ns/op
+OverheadActual  13: 67108864 op, 103722250.00 ns, 1.5456 ns/op
+OverheadActual  14: 67108864 op, 104255375.00 ns, 1.5535 ns/op
+OverheadActual  15: 67108864 op, 104566208.00 ns, 1.5582 ns/op
+
+WorkloadWarmup   1: 67108864 op, 518716625.00 ns, 7.7295 ns/op
+WorkloadWarmup   2: 67108864 op, 521186542.00 ns, 7.7663 ns/op
+WorkloadWarmup   3: 67108864 op, 521876250.00 ns, 7.7766 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 520007417.00 ns, 7.7487 ns/op
+WorkloadActual   2: 67108864 op, 517470083.00 ns, 7.7109 ns/op
+WorkloadActual   3: 67108864 op, 517314084.00 ns, 7.7086 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 415441209.00 ns, 6.1906 ns/op
+WorkloadResult   2: 67108864 op, 412903875.00 ns, 6.1527 ns/op
+WorkloadResult   3: 67108864 op, 412747876.00 ns, 6.1504 ns/op
+// GC:  256 0 0 2147484096 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44687 has exited with code 0.
+
+Mean = 6.165 ns, StdErr = 0.013 ns (0.21%), N = 3, StdDev = 0.023 ns
+Min = 6.150 ns, Q1 = 6.152 ns, Median = 6.153 ns, Q3 = 6.172 ns, Max = 6.191 ns
+IQR = 0.020 ns, LowerFence = 6.121 ns, UpperFence = 6.202 ns
+ConfidenceInterval = [5.754 ns; 6.576 ns] (CI 99.9%), Margin = 0.411 ns (6.67% of Mean)
+Skewness = 0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 471 (%98,1) benchmark(s) to run. Estimated finish 2026-04-13 18:19 (1h 2m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcat(PartSize: 1, Parts: 2, Locale: Cjk)" --job ShortRun --benchmarkId 9 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 119417.00 ns, 119.4170 us/op
+WorkloadJitting  1: 1 op, 525458.00 ns, 525.4580 us/op
+
+OverheadJitting  2: 16 op, 101167.00 ns, 6.3229 us/op
+WorkloadJitting  2: 16 op, 142625.00 ns, 8.9141 us/op
+
+WorkloadPilot    1: 16 op, 2000.00 ns, 125.0000 ns/op
+WorkloadPilot    2: 32 op, 3166.00 ns, 98.9375 ns/op
+WorkloadPilot    3: 64 op, 5416.00 ns, 84.6250 ns/op
+WorkloadPilot    4: 128 op, 10792.00 ns, 84.3125 ns/op
+WorkloadPilot    5: 256 op, 20792.00 ns, 81.2188 ns/op
+WorkloadPilot    6: 512 op, 39041.00 ns, 76.2520 ns/op
+WorkloadPilot    7: 1024 op, 78083.00 ns, 76.2529 ns/op
+WorkloadPilot    8: 2048 op, 155042.00 ns, 75.7041 ns/op
+WorkloadPilot    9: 4096 op, 383083.00 ns, 93.5261 ns/op
+WorkloadPilot   10: 8192 op, 785958.00 ns, 95.9421 ns/op
+WorkloadPilot   11: 16384 op, 1402750.00 ns, 85.6171 ns/op
+WorkloadPilot   12: 32768 op, 2670375.00 ns, 81.4934 ns/op
+WorkloadPilot   13: 65536 op, 5205584.00 ns, 79.4309 ns/op
+WorkloadPilot   14: 131072 op, 10235750.00 ns, 78.0926 ns/op
+WorkloadPilot   15: 262144 op, 20518791.00 ns, 78.2730 ns/op
+WorkloadPilot   16: 524288 op, 40521959.00 ns, 77.2895 ns/op
+WorkloadPilot   17: 1048576 op, 81014542.00 ns, 77.2615 ns/op
+WorkloadPilot   18: 2097152 op, 20095458.00 ns, 9.5823 ns/op
+WorkloadPilot   19: 4194304 op, 38285375.00 ns, 9.1279 ns/op
+WorkloadPilot   20: 8388608 op, 76526750.00 ns, 9.1227 ns/op
+WorkloadPilot   21: 16777216 op, 153711833.00 ns, 9.1619 ns/op
+WorkloadPilot   22: 33554432 op, 307910167.00 ns, 9.1764 ns/op
+WorkloadPilot   23: 67108864 op, 616648667.00 ns, 9.1888 ns/op
+
+OverheadWarmup   1: 67108864 op, 127367500.00 ns, 1.8979 ns/op
+OverheadWarmup   2: 67108864 op, 112085083.00 ns, 1.6702 ns/op
+OverheadWarmup   3: 67108864 op, 84670291.00 ns, 1.2617 ns/op
+OverheadWarmup   4: 67108864 op, 84953834.00 ns, 1.2659 ns/op
+OverheadWarmup   5: 67108864 op, 86962041.00 ns, 1.2958 ns/op
+OverheadWarmup   6: 67108864 op, 86681334.00 ns, 1.2917 ns/op
+OverheadWarmup   7: 67108864 op, 85127250.00 ns, 1.2685 ns/op
+OverheadWarmup   8: 67108864 op, 87162625.00 ns, 1.2988 ns/op
+OverheadWarmup   9: 67108864 op, 85376083.00 ns, 1.2722 ns/op
+
+OverheadActual   1: 67108864 op, 93434209.00 ns, 1.3923 ns/op
+OverheadActual   2: 67108864 op, 91194125.00 ns, 1.3589 ns/op
+OverheadActual   3: 67108864 op, 89149875.00 ns, 1.3284 ns/op
+OverheadActual   4: 67108864 op, 87997292.00 ns, 1.3113 ns/op
+OverheadActual   5: 67108864 op, 88990208.00 ns, 1.3261 ns/op
+OverheadActual   6: 67108864 op, 92463792.00 ns, 1.3778 ns/op
+OverheadActual   7: 67108864 op, 90793334.00 ns, 1.3529 ns/op
+OverheadActual   8: 67108864 op, 89658709.00 ns, 1.3360 ns/op
+OverheadActual   9: 67108864 op, 86260750.00 ns, 1.2854 ns/op
+OverheadActual  10: 67108864 op, 101176333.00 ns, 1.5076 ns/op
+OverheadActual  11: 67108864 op, 87906084.00 ns, 1.3099 ns/op
+OverheadActual  12: 67108864 op, 85540917.00 ns, 1.2747 ns/op
+OverheadActual  13: 67108864 op, 85395208.00 ns, 1.2725 ns/op
+OverheadActual  14: 67108864 op, 86352875.00 ns, 1.2868 ns/op
+OverheadActual  15: 67108864 op, 86854583.00 ns, 1.2942 ns/op
+
+WorkloadWarmup   1: 67108864 op, 618950209.00 ns, 9.2231 ns/op
+WorkloadWarmup   2: 67108864 op, 615589083.00 ns, 9.1730 ns/op
+WorkloadWarmup   3: 67108864 op, 626804084.00 ns, 9.3401 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 615193250.00 ns, 9.1671 ns/op
+WorkloadActual   2: 67108864 op, 615159500.00 ns, 9.1666 ns/op
+WorkloadActual   3: 67108864 op, 612280625.00 ns, 9.1237 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 526203042.00 ns, 7.8410 ns/op
+WorkloadResult   2: 67108864 op, 526169292.00 ns, 7.8405 ns/op
+WorkloadResult   3: 67108864 op, 523290417.00 ns, 7.7976 ns/op
+// GC:  256 0 0 2147484384 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44700 has exited with code 0.
+
+Mean = 7.826 ns, StdErr = 0.014 ns (0.18%), N = 3, StdDev = 0.025 ns
+Min = 7.798 ns, Q1 = 7.819 ns, Median = 7.841 ns, Q3 = 7.841 ns, Max = 7.841 ns
+IQR = 0.022 ns, LowerFence = 7.787 ns, UpperFence = 7.873 ns
+ConfidenceInterval = [7.372 ns; 8.281 ns] (CI 99.9%), Margin = 0.455 ns (5.81% of Mean)
+Skewness = -0.38, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 470 (%97,9) benchmark(s) to run. Estimated finish 2026-04-13 18:19 (1h 2m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcatPooled(PartSize: 1, Parts: 2, Locale: Cjk)" --job ShortRun --benchmarkId 10 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 113041.00 ns, 113.0410 us/op
+WorkloadJitting  1: 1 op, 2201000.00 ns, 2.2010 ms/op
+
+OverheadJitting  2: 16 op, 138750.00 ns, 8.6719 us/op
+WorkloadJitting  2: 16 op, 126291.00 ns, 7.8932 us/op
+
+WorkloadPilot    1: 16 op, 5375.00 ns, 335.9375 ns/op
+WorkloadPilot    2: 32 op, 9916.00 ns, 309.8750 ns/op
+WorkloadPilot    3: 64 op, 15292.00 ns, 238.9375 ns/op
+WorkloadPilot    4: 128 op, 32375.00 ns, 252.9297 ns/op
+WorkloadPilot    5: 256 op, 43208.00 ns, 168.7813 ns/op
+WorkloadPilot    6: 512 op, 124583.00 ns, 243.3262 ns/op
+WorkloadPilot    7: 1024 op, 170417.00 ns, 166.4229 ns/op
+WorkloadPilot    8: 2048 op, 343791.00 ns, 167.8667 ns/op
+WorkloadPilot    9: 4096 op, 788250.00 ns, 192.4438 ns/op
+WorkloadPilot   10: 8192 op, 1527958.00 ns, 186.5183 ns/op
+WorkloadPilot   11: 16384 op, 2817458.00 ns, 171.9640 ns/op
+WorkloadPilot   12: 32768 op, 5350958.00 ns, 163.2983 ns/op
+WorkloadPilot   13: 65536 op, 10234834.00 ns, 156.1712 ns/op
+WorkloadPilot   14: 131072 op, 20665250.00 ns, 157.6633 ns/op
+WorkloadPilot   15: 262144 op, 40756209.00 ns, 155.4726 ns/op
+WorkloadPilot   16: 524288 op, 38914792.00 ns, 74.2241 ns/op
+WorkloadPilot   17: 1048576 op, 16483458.00 ns, 15.7199 ns/op
+WorkloadPilot   18: 2097152 op, 33387625.00 ns, 15.9205 ns/op
+WorkloadPilot   19: 4194304 op, 66197125.00 ns, 15.7826 ns/op
+WorkloadPilot   20: 8388608 op, 131786459.00 ns, 15.7102 ns/op
+WorkloadPilot   21: 16777216 op, 259364250.00 ns, 15.4593 ns/op
+WorkloadPilot   22: 33554432 op, 527802791.00 ns, 15.7297 ns/op
+
+OverheadWarmup   1: 33554432 op, 63398333.00 ns, 1.8894 ns/op
+OverheadWarmup   2: 33554432 op, 62651167.00 ns, 1.8672 ns/op
+OverheadWarmup   3: 33554432 op, 63389208.00 ns, 1.8891 ns/op
+OverheadWarmup   4: 33554432 op, 49496375.00 ns, 1.4751 ns/op
+OverheadWarmup   5: 33554432 op, 44821792.00 ns, 1.3358 ns/op
+OverheadWarmup   6: 33554432 op, 44775583.00 ns, 1.3344 ns/op
+OverheadWarmup   7: 33554432 op, 44512917.00 ns, 1.3266 ns/op
+OverheadWarmup   8: 33554432 op, 44450916.00 ns, 1.3247 ns/op
+OverheadWarmup   9: 33554432 op, 44440084.00 ns, 1.3244 ns/op
+OverheadWarmup  10: 33554432 op, 42489625.00 ns, 1.2663 ns/op
+
+OverheadActual   1: 33554432 op, 44828584.00 ns, 1.3360 ns/op
+OverheadActual   2: 33554432 op, 42382375.00 ns, 1.2631 ns/op
+OverheadActual   3: 33554432 op, 44620792.00 ns, 1.3298 ns/op
+OverheadActual   4: 33554432 op, 43851167.00 ns, 1.3069 ns/op
+OverheadActual   5: 33554432 op, 43917542.00 ns, 1.3088 ns/op
+OverheadActual   6: 33554432 op, 43023000.00 ns, 1.2822 ns/op
+OverheadActual   7: 33554432 op, 44819500.00 ns, 1.3357 ns/op
+OverheadActual   8: 33554432 op, 43575542.00 ns, 1.2987 ns/op
+OverheadActual   9: 33554432 op, 43997917.00 ns, 1.3112 ns/op
+OverheadActual  10: 33554432 op, 46742916.00 ns, 1.3930 ns/op
+OverheadActual  11: 33554432 op, 44622458.00 ns, 1.3299 ns/op
+OverheadActual  12: 33554432 op, 43865958.00 ns, 1.3073 ns/op
+OverheadActual  13: 33554432 op, 43920583.00 ns, 1.3089 ns/op
+OverheadActual  14: 33554432 op, 43402916.00 ns, 1.2935 ns/op
+OverheadActual  15: 33554432 op, 43854375.00 ns, 1.3070 ns/op
+
+WorkloadWarmup   1: 33554432 op, 526918417.00 ns, 15.7034 ns/op
+WorkloadWarmup   2: 33554432 op, 525162459.00 ns, 15.6511 ns/op
+WorkloadWarmup   3: 33554432 op, 529690417.00 ns, 15.7860 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 33554432 op, 530177167.00 ns, 15.8005 ns/op
+WorkloadActual   2: 33554432 op, 526819792.00 ns, 15.7005 ns/op
+WorkloadActual   3: 33554432 op, 524024000.00 ns, 15.6171 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 33554432 op, 486259625.00 ns, 14.4917 ns/op
+WorkloadResult   2: 33554432 op, 482902250.00 ns, 14.3916 ns/op
+WorkloadResult   3: 33554432 op, 480106458.00 ns, 14.3083 ns/op
+// GC:  0 0 0 736 33554432
+// Threading:  0 0 33554432
+
+// AfterAll
+// Benchmark Process 44823 has exited with code 0.
+
+Mean = 14.397 ns, StdErr = 0.053 ns (0.37%), N = 3, StdDev = 0.092 ns
+Min = 14.308 ns, Q1 = 14.350 ns, Median = 14.392 ns, Q3 = 14.442 ns, Max = 14.492 ns
+IQR = 0.092 ns, LowerFence = 14.212 ns, UpperFence = 14.579 ns
+ConfidenceInterval = [12.722 ns; 16.072 ns] (CI 99.9%), Margin = 1.675 ns (11.63% of Mean)
+Skewness = 0.06, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 469 (%97,7) benchmark(s) to run. Estimated finish 2026-04-13 18:18 (1h 0m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.U8String.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cjk]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.U8Concat(PartSize: 1, Parts: 2, Locale: Cjk)" --job ShortRun --benchmarkId 11 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 460750.00 ns, 460.7500 us/op
+WorkloadJitting  1: 1 op, 429667.00 ns, 429.6670 us/op
+
+OverheadJitting  2: 16 op, 127417.00 ns, 7.9636 us/op
+WorkloadJitting  2: 16 op, 158625.00 ns, 9.9141 us/op
+
+WorkloadPilot    1: 16 op, 2833.00 ns, 177.0625 ns/op
+WorkloadPilot    2: 32 op, 3542.00 ns, 110.6875 ns/op
+WorkloadPilot    3: 64 op, 5500.00 ns, 85.9375 ns/op
+WorkloadPilot    4: 128 op, 9041.00 ns, 70.6328 ns/op
+WorkloadPilot    5: 256 op, 16125.00 ns, 62.9883 ns/op
+WorkloadPilot    6: 512 op, 32125.00 ns, 62.7441 ns/op
+WorkloadPilot    7: 1024 op, 70709.00 ns, 69.0518 ns/op
+WorkloadPilot    8: 2048 op, 127250.00 ns, 62.1338 ns/op
+WorkloadPilot    9: 4096 op, 299250.00 ns, 73.0591 ns/op
+WorkloadPilot   10: 8192 op, 576750.00 ns, 70.4041 ns/op
+WorkloadPilot   11: 16384 op, 1100375.00 ns, 67.1616 ns/op
+WorkloadPilot   12: 32768 op, 2163500.00 ns, 66.0248 ns/op
+WorkloadPilot   13: 65536 op, 4210667.00 ns, 64.2497 ns/op
+WorkloadPilot   14: 131072 op, 9368583.00 ns, 71.4766 ns/op
+WorkloadPilot   15: 262144 op, 16752916.00 ns, 63.9073 ns/op
+WorkloadPilot   16: 524288 op, 33008583.00 ns, 62.9589 ns/op
+WorkloadPilot   17: 1048576 op, 65279500.00 ns, 62.2554 ns/op
+WorkloadPilot   18: 2097152 op, 37975458.00 ns, 18.1081 ns/op
+WorkloadPilot   19: 4194304 op, 29127375.00 ns, 6.9445 ns/op
+WorkloadPilot   20: 8388608 op, 58095708.00 ns, 6.9255 ns/op
+WorkloadPilot   21: 16777216 op, 116098375.00 ns, 6.9200 ns/op
+WorkloadPilot   22: 33554432 op, 230811750.00 ns, 6.8787 ns/op
+WorkloadPilot   23: 67108864 op, 463087375.00 ns, 6.9005 ns/op
+WorkloadPilot   24: 134217728 op, 925927625.00 ns, 6.8987 ns/op
+
+OverheadWarmup   1: 134217728 op, 240933125.00 ns, 1.7951 ns/op
+OverheadWarmup   2: 134217728 op, 175390792.00 ns, 1.3068 ns/op
+OverheadWarmup   3: 134217728 op, 171943292.00 ns, 1.2811 ns/op
+OverheadWarmup   4: 134217728 op, 172271083.00 ns, 1.2835 ns/op
+OverheadWarmup   5: 134217728 op, 170556125.00 ns, 1.2707 ns/op
+OverheadWarmup   6: 134217728 op, 169756708.00 ns, 1.2648 ns/op
+OverheadWarmup   7: 134217728 op, 169270125.00 ns, 1.2612 ns/op
+OverheadWarmup   8: 134217728 op, 170658625.00 ns, 1.2715 ns/op
+OverheadWarmup   9: 134217728 op, 172602709.00 ns, 1.2860 ns/op
+OverheadWarmup  10: 134217728 op, 180673791.00 ns, 1.3461 ns/op
+
+OverheadActual   1: 134217728 op, 176077167.00 ns, 1.3119 ns/op
+OverheadActual   2: 134217728 op, 175805625.00 ns, 1.3099 ns/op
+OverheadActual   3: 134217728 op, 174600791.00 ns, 1.3009 ns/op
+OverheadActual   4: 134217728 op, 179049167.00 ns, 1.3340 ns/op
+OverheadActual   5: 134217728 op, 173592292.00 ns, 1.2934 ns/op
+OverheadActual   6: 134217728 op, 179581000.00 ns, 1.3380 ns/op
+OverheadActual   7: 134217728 op, 174375167.00 ns, 1.2992 ns/op
+OverheadActual   8: 134217728 op, 172880458.00 ns, 1.2881 ns/op
+OverheadActual   9: 134217728 op, 171560917.00 ns, 1.2782 ns/op
+OverheadActual  10: 134217728 op, 171919125.00 ns, 1.2809 ns/op
+OverheadActual  11: 134217728 op, 171913458.00 ns, 1.2809 ns/op
+OverheadActual  12: 134217728 op, 171716834.00 ns, 1.2794 ns/op
+OverheadActual  13: 134217728 op, 172116375.00 ns, 1.2824 ns/op
+OverheadActual  14: 134217728 op, 174053333.00 ns, 1.2968 ns/op
+OverheadActual  15: 134217728 op, 171588542.00 ns, 1.2784 ns/op
+
+WorkloadWarmup   1: 134217728 op, 927727625.00 ns, 6.9121 ns/op
+WorkloadWarmup   2: 134217728 op, 926770708.00 ns, 6.9050 ns/op
+WorkloadWarmup   3: 134217728 op, 927974667.00 ns, 6.9140 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 134217728 op, 923563833.00 ns, 6.8811 ns/op
+WorkloadActual   2: 134217728 op, 927314708.00 ns, 6.9090 ns/op
+WorkloadActual   3: 134217728 op, 920609750.00 ns, 6.8591 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 134217728 op, 749971541.00 ns, 5.5877 ns/op
+WorkloadResult   2: 134217728 op, 753722416.00 ns, 5.6157 ns/op
+WorkloadResult   3: 134217728 op, 747017458.00 ns, 5.5657 ns/op
+// GC:  513 0 0 4294968032 134217728
+// Threading:  0 0 134217728
+
+// AfterAll
+// Benchmark Process 44848 has exited with code 0.
+
+Mean = 5.590 ns, StdErr = 0.014 ns (0.26%), N = 3, StdDev = 0.025 ns
+Min = 5.566 ns, Q1 = 5.577 ns, Median = 5.588 ns, Q3 = 5.602 ns, Max = 5.616 ns
+IQR = 0.025 ns, LowerFence = 5.539 ns, UpperFence = 5.639 ns
+ConfidenceInterval = [5.133 ns; 6.046 ns] (CI 99.9%), Margin = 0.457 ns (8.17% of Mean)
+Skewness = 0.08, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 468 (%97,5) benchmark(s) to run. Estimated finish 2026-04-13 18:22 (1h 4m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.string.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.StringConcat(PartSize: 1, Parts: 2, Locale: Cyrillic)" --job ShortRun --benchmarkId 12 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 134459.00 ns, 134.4590 us/op
+WorkloadJitting  1: 1 op, 120750.00 ns, 120.7500 us/op
+
+OverheadJitting  2: 16 op, 238458.00 ns, 14.9036 us/op
+WorkloadJitting  2: 16 op, 207500.00 ns, 12.9688 us/op
+
+WorkloadPilot    1: 16 op, 667.00 ns, 41.6875 ns/op
+WorkloadPilot    2: 32 op, 625.00 ns, 19.5313 ns/op
+WorkloadPilot    3: 64 op, 917.00 ns, 14.3281 ns/op
+WorkloadPilot    4: 128 op, 2958.00 ns, 23.1094 ns/op
+WorkloadPilot    5: 256 op, 3250.00 ns, 12.6953 ns/op
+WorkloadPilot    6: 512 op, 6958.00 ns, 13.5898 ns/op
+WorkloadPilot    7: 1024 op, 11667.00 ns, 11.3936 ns/op
+WorkloadPilot    8: 2048 op, 23084.00 ns, 11.2715 ns/op
+WorkloadPilot    9: 4096 op, 37208.00 ns, 9.0840 ns/op
+WorkloadPilot   10: 8192 op, 80083.00 ns, 9.7758 ns/op
+WorkloadPilot   11: 16384 op, 163500.00 ns, 9.9792 ns/op
+WorkloadPilot   12: 32768 op, 344958.00 ns, 10.5273 ns/op
+WorkloadPilot   13: 65536 op, 634667.00 ns, 9.6842 ns/op
+WorkloadPilot   14: 131072 op, 1265042.00 ns, 9.6515 ns/op
+WorkloadPilot   15: 262144 op, 2586583.00 ns, 9.8670 ns/op
+WorkloadPilot   16: 524288 op, 4709583.00 ns, 8.9828 ns/op
+WorkloadPilot   17: 1048576 op, 9193417.00 ns, 8.7675 ns/op
+WorkloadPilot   18: 2097152 op, 18772041.00 ns, 8.9512 ns/op
+WorkloadPilot   19: 4194304 op, 37876750.00 ns, 9.0305 ns/op
+WorkloadPilot   20: 8388608 op, 74552541.00 ns, 8.8874 ns/op
+WorkloadPilot   21: 16777216 op, 132559500.00 ns, 7.9012 ns/op
+WorkloadPilot   22: 33554432 op, 259263834.00 ns, 7.7267 ns/op
+WorkloadPilot   23: 67108864 op, 521413833.00 ns, 7.7697 ns/op
+
+OverheadWarmup   1: 67108864 op, 121936042.00 ns, 1.8170 ns/op
+OverheadWarmup   2: 67108864 op, 117335083.00 ns, 1.7484 ns/op
+OverheadWarmup   3: 67108864 op, 105019375.00 ns, 1.5649 ns/op
+OverheadWarmup   4: 67108864 op, 104976917.00 ns, 1.5643 ns/op
+OverheadWarmup   5: 67108864 op, 104223791.00 ns, 1.5531 ns/op
+OverheadWarmup   6: 67108864 op, 104779375.00 ns, 1.5613 ns/op
+OverheadWarmup   7: 67108864 op, 104943625.00 ns, 1.5638 ns/op
+OverheadWarmup   8: 67108864 op, 104397500.00 ns, 1.5556 ns/op
+OverheadWarmup   9: 67108864 op, 103413041.00 ns, 1.5410 ns/op
+OverheadWarmup  10: 67108864 op, 104516500.00 ns, 1.5574 ns/op
+
+OverheadActual   1: 67108864 op, 104500250.00 ns, 1.5572 ns/op
+OverheadActual   2: 67108864 op, 104154125.00 ns, 1.5520 ns/op
+OverheadActual   3: 67108864 op, 104482167.00 ns, 1.5569 ns/op
+OverheadActual   4: 67108864 op, 104719209.00 ns, 1.5604 ns/op
+OverheadActual   5: 67108864 op, 104583792.00 ns, 1.5584 ns/op
+OverheadActual   6: 67108864 op, 104965750.00 ns, 1.5641 ns/op
+OverheadActual   7: 67108864 op, 104598250.00 ns, 1.5586 ns/op
+OverheadActual   8: 67108864 op, 104597250.00 ns, 1.5586 ns/op
+OverheadActual   9: 67108864 op, 105219042.00 ns, 1.5679 ns/op
+OverheadActual  10: 67108864 op, 104686875.00 ns, 1.5600 ns/op
+OverheadActual  11: 67108864 op, 104628000.00 ns, 1.5591 ns/op
+OverheadActual  12: 67108864 op, 103325958.00 ns, 1.5397 ns/op
+OverheadActual  13: 67108864 op, 104470959.00 ns, 1.5567 ns/op
+OverheadActual  14: 67108864 op, 105010167.00 ns, 1.5648 ns/op
+OverheadActual  15: 67108864 op, 104725791.00 ns, 1.5605 ns/op
+
+WorkloadWarmup   1: 67108864 op, 518963000.00 ns, 7.7332 ns/op
+WorkloadWarmup   2: 67108864 op, 520075459.00 ns, 7.7497 ns/op
+WorkloadWarmup   3: 67108864 op, 521328125.00 ns, 7.7684 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 526167625.00 ns, 7.8405 ns/op
+WorkloadActual   2: 67108864 op, 558761750.00 ns, 8.3262 ns/op
+WorkloadActual   3: 67108864 op, 537654875.00 ns, 8.0117 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 421569375.00 ns, 6.2819 ns/op
+WorkloadResult   2: 67108864 op, 454163500.00 ns, 6.7676 ns/op
+WorkloadResult   3: 67108864 op, 433056625.00 ns, 6.4530 ns/op
+// GC:  256 0 0 2147484384 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44888 has exited with code 0.
+
+Mean = 6.501 ns, StdErr = 0.142 ns (2.19%), N = 3, StdDev = 0.246 ns
+Min = 6.282 ns, Q1 = 6.367 ns, Median = 6.453 ns, Q3 = 6.610 ns, Max = 6.768 ns
+IQR = 0.243 ns, LowerFence = 6.003 ns, UpperFence = 6.975 ns
+ConfidenceInterval = [2.007 ns; 10.995 ns] (CI 99.9%), Margin = 4.494 ns (69.13% of Mean)
+Skewness = 0.19, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 467 (%97,3) benchmark(s) to run. Estimated finish 2026-04-13 18:21 (1h 3m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.Concat: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcat(PartSize: 1, Parts: 2, Locale: Cyrillic)" --job ShortRun --benchmarkId 13 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 123542.00 ns, 123.5420 us/op
+WorkloadJitting  1: 1 op, 520667.00 ns, 520.6670 us/op
+
+OverheadJitting  2: 16 op, 100917.00 ns, 6.3073 us/op
+WorkloadJitting  2: 16 op, 99500.00 ns, 6.2188 us/op
+
+WorkloadPilot    1: 16 op, 1875.00 ns, 117.1875 ns/op
+WorkloadPilot    2: 32 op, 2875.00 ns, 89.8438 ns/op
+WorkloadPilot    3: 64 op, 6083.00 ns, 95.0469 ns/op
+WorkloadPilot    4: 128 op, 10375.00 ns, 81.0547 ns/op
+WorkloadPilot    5: 256 op, 20000.00 ns, 78.1250 ns/op
+WorkloadPilot    6: 512 op, 38958.00 ns, 76.0898 ns/op
+WorkloadPilot    7: 1024 op, 77333.00 ns, 75.5205 ns/op
+WorkloadPilot    8: 2048 op, 155000.00 ns, 75.6836 ns/op
+WorkloadPilot    9: 4096 op, 385292.00 ns, 94.0654 ns/op
+WorkloadPilot   10: 8192 op, 776583.00 ns, 94.7977 ns/op
+WorkloadPilot   11: 16384 op, 1394250.00 ns, 85.0983 ns/op
+WorkloadPilot   12: 32768 op, 2643833.00 ns, 80.6834 ns/op
+WorkloadPilot   13: 65536 op, 5127541.00 ns, 78.2401 ns/op
+WorkloadPilot   14: 131072 op, 10252125.00 ns, 78.2175 ns/op
+WorkloadPilot   15: 262144 op, 20337542.00 ns, 77.5816 ns/op
+WorkloadPilot   16: 524288 op, 39545042.00 ns, 75.4262 ns/op
+WorkloadPilot   17: 1048576 op, 79875500.00 ns, 76.1752 ns/op
+WorkloadPilot   18: 2097152 op, 19316541.00 ns, 9.2108 ns/op
+WorkloadPilot   19: 4194304 op, 38452917.00 ns, 9.1679 ns/op
+WorkloadPilot   20: 8388608 op, 77219667.00 ns, 9.2053 ns/op
+WorkloadPilot   21: 16777216 op, 153476792.00 ns, 9.1479 ns/op
+WorkloadPilot   22: 33554432 op, 309377166.00 ns, 9.2202 ns/op
+WorkloadPilot   23: 67108864 op, 615460292.00 ns, 9.1711 ns/op
+
+OverheadWarmup   1: 67108864 op, 129450458.00 ns, 1.9290 ns/op
+OverheadWarmup   2: 67108864 op, 111609166.00 ns, 1.6631 ns/op
+OverheadWarmup   3: 67108864 op, 86421333.00 ns, 1.2878 ns/op
+OverheadWarmup   4: 67108864 op, 86880125.00 ns, 1.2946 ns/op
+OverheadWarmup   5: 67108864 op, 86484209.00 ns, 1.2887 ns/op
+OverheadWarmup   6: 67108864 op, 86382209.00 ns, 1.2872 ns/op
+OverheadWarmup   7: 67108864 op, 85957792.00 ns, 1.2809 ns/op
+OverheadWarmup   8: 67108864 op, 86206791.00 ns, 1.2846 ns/op
+OverheadWarmup   9: 67108864 op, 86476209.00 ns, 1.2886 ns/op
+OverheadWarmup  10: 67108864 op, 117553417.00 ns, 1.7517 ns/op
+
+OverheadActual   1: 67108864 op, 90958917.00 ns, 1.3554 ns/op
+OverheadActual   2: 67108864 op, 85515042.00 ns, 1.2743 ns/op
+OverheadActual   3: 67108864 op, 86607625.00 ns, 1.2906 ns/op
+OverheadActual   4: 67108864 op, 88148584.00 ns, 1.3135 ns/op
+OverheadActual   5: 67108864 op, 86508791.00 ns, 1.2891 ns/op
+OverheadActual   6: 67108864 op, 87035209.00 ns, 1.2969 ns/op
+OverheadActual   7: 67108864 op, 86744667.00 ns, 1.2926 ns/op
+OverheadActual   8: 67108864 op, 89904875.00 ns, 1.3397 ns/op
+OverheadActual   9: 67108864 op, 86233542.00 ns, 1.2850 ns/op
+OverheadActual  10: 67108864 op, 86309750.00 ns, 1.2861 ns/op
+OverheadActual  11: 67108864 op, 86543459.00 ns, 1.2896 ns/op
+OverheadActual  12: 67108864 op, 86445917.00 ns, 1.2881 ns/op
+OverheadActual  13: 67108864 op, 86427333.00 ns, 1.2879 ns/op
+OverheadActual  14: 67108864 op, 84307750.00 ns, 1.2563 ns/op
+OverheadActual  15: 67108864 op, 87474458.00 ns, 1.3035 ns/op
+
+WorkloadWarmup   1: 67108864 op, 615399208.00 ns, 9.1702 ns/op
+WorkloadWarmup   2: 67108864 op, 622984292.00 ns, 9.2832 ns/op
+WorkloadWarmup   3: 67108864 op, 623134709.00 ns, 9.2854 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 67108864 op, 614358625.00 ns, 9.1547 ns/op
+WorkloadActual   2: 67108864 op, 617112708.00 ns, 9.1957 ns/op
+WorkloadActual   3: 67108864 op, 615577083.00 ns, 9.1728 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 67108864 op, 527815166.00 ns, 7.8651 ns/op
+WorkloadResult   2: 67108864 op, 530569249.00 ns, 7.9061 ns/op
+WorkloadResult   3: 67108864 op, 529033624.00 ns, 7.8832 ns/op
+// GC:  256 0 0 2147484384 67108864
+// Threading:  0 0 67108864
+
+// AfterAll
+// Benchmark Process 44973 has exited with code 0.
+
+Mean = 7.885 ns, StdErr = 0.012 ns (0.15%), N = 3, StdDev = 0.021 ns
+Min = 7.865 ns, Q1 = 7.874 ns, Median = 7.883 ns, Q3 = 7.895 ns, Max = 7.906 ns
+IQR = 0.021 ns, LowerFence = 7.843 ns, UpperFence = 7.925 ns
+ConfidenceInterval = [7.510 ns; 8.260 ns] (CI 99.9%), Margin = 0.375 ns (4.76% of Mean)
+Skewness = 0.08, Kurtosis = 0.67, MValue = 2
+
+// ** Remained 466 (%97,1) benchmark(s) to run. Estimated finish 2026-04-13 18:21 (1h 3m from now) **
+// **************************
+// Benchmark: TextConcatBenchmarks.Text.ConcatPooled: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3) [PartSize=1, Parts=2, Locale=Cyrillic]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet 1359afc7-4c21-43ba-8fe4-2eff820400ef.dll --anonymousPipes 123 124 --benchmarkName "Glot.Benchmarks.TextConcatBenchmarks.TextConcatPooled(PartSize: 1, Parts: 2, Locale: Cyrillic)" --job ShortRun --benchmarkId 14 in /Users/kerem/Projects/Glot/benchmarks/Glot.Benchmarks/bin/Release/net10.0/1359afc7-4c21-43ba-8fe4-2eff820400ef/bin/Release/net10.0
+// Failed to set up high priority (Permission denied). In order to run benchmarks with high priority, make sure you have the right permissions.
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.14.0
+// Runtime=.NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AdvSIMD,AES,CRC32,DP,RDM,SHA1,SHA256 VectorSize=128
+// Job: ShortRun(IterationCount=3, LaunchCount=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 97750.00 ns, 97.7500 us/op
+WorkloadJitting  1: 1 op, 1879709.00 ns, 1.8797 ms/op
+
+OverheadJitting  2: 16 op, 124292.00 ns, 7.7683 us/op
+WorkloadJitting  2: 16 op, 134000.00 ns, 8.3750 us/op
+
+WorkloadPilot    1: 16 op, 4292.00 ns, 268.2500 ns/op
+WorkloadPilot    2: 32 op, 7000.00 ns, 218.7500 ns/op
+WorkloadPilot    3: 64 op, 11042.00 ns, 172.5313 ns/op
+WorkloadPilot    4: 128 op, 22209.00 ns, 173.5078 ns/op
+WorkloadPilot    5: 256 op, 40750.00 ns, 159.1797 ns/op
+WorkloadPilot    6: 512 op, 78792.00 ns, 153.8906 ns/op
+WorkloadPilot   

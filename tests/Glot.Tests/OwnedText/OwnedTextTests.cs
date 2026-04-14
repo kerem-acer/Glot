@@ -1,6 +1,6 @@
 namespace Glot.Tests;
 
-public class OwnedTextTests
+public partial class OwnedTextTests
 {
     // Factory — FromUtf8
 
@@ -8,7 +8,7 @@ public class OwnedTextTests
     public Task FromUtf8_StoresCorrectEncoding()
     {
         // Arrange & Act
-        using var owned = OwnedText.FromUtf8("Hello"u8);
+        using var owned = OwnedText.FromUtf8("Hello"u8)!;
 
         // Assert
         return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength, owned.IsEmpty });
@@ -18,20 +18,20 @@ public class OwnedTextTests
     public Task FromUtf8_MultiByte_CountsRunesCorrectly()
     {
         // Arrange & Act
-        using var owned = OwnedText.FromUtf8("café🎉"u8);
+        using var owned = OwnedText.FromUtf8("café🎉"u8)!;
 
         // Assert — c(1) a(1) f(1) é(2) 🎉(4)
         return Verify(new { owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
-    public Task FromUtf8_Empty_ReturnsDefault()
+    public async Task FromUtf8_Empty_ReturnsNull()
     {
         // Act
-        using var owned = OwnedText.FromUtf8([]);
+        var owned = OwnedText.FromUtf8([]);
 
         // Assert
-        return Verify(new { owned.IsEmpty, owned.ByteLength });
+        await Assert.That(owned).IsNull();
     }
 
     // Factory — FromChars
@@ -40,20 +40,20 @@ public class OwnedTextTests
     public Task FromChars_StoresUtf16()
     {
         // Arrange & Act
-        using var owned = OwnedText.FromChars("Hello".AsSpan());
+        using var owned = OwnedText.FromChars("Hello".AsSpan())!;
 
         // Assert
         return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
-    public async Task FromChars_Empty_ReturnsDefault()
+    public async Task FromChars_Empty_ReturnsNull()
     {
         // Act
-        using var owned = OwnedText.FromChars([]);
+        var owned = OwnedText.FromChars([]);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     // Factory — FromUtf32
@@ -65,20 +65,20 @@ public class OwnedTextTests
         ReadOnlySpan<int> codePoints = [0x48, 0x65, 0x6C]; // H, e, l
 
         // Act
-        using var owned = OwnedText.FromUtf32(codePoints);
+        using var owned = OwnedText.FromUtf32(codePoints)!;
 
         // Assert
         return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength });
     }
 
     [Test]
-    public async Task FromUtf32_Empty_ReturnsDefault()
+    public async Task FromUtf32_Empty_ReturnsNull()
     {
         // Act
-        using var owned = OwnedText.FromUtf32([]);
+        var owned = OwnedText.FromUtf32([]);
 
         // Assert
-        await Assert.That(owned.IsEmpty).IsTrue();
+        await Assert.That(owned).IsNull();
     }
 
     // Factory — FromBytes
@@ -90,7 +90,7 @@ public class OwnedTextTests
         var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf16);
 
         // Act
-        using var owned = OwnedText.FromBytes(bytes, TextEncoding.Utf16);
+        using var owned = OwnedText.FromBytes(bytes, TextEncoding.Utf16)!;
 
         // Assert
         return Verify(new { owned.Encoding, owned.RuneLength });
@@ -163,7 +163,7 @@ public class OwnedTextTests
     public Task Text_ReturnsCorrectValue()
     {
         // Arrange
-        using var owned = OwnedText.FromUtf8("Hello"u8);
+        using var owned = OwnedText.FromUtf8("Hello"u8)!;
 
         // Act
         var text = owned.Text;
@@ -176,7 +176,7 @@ public class OwnedTextTests
     public async Task Text_CrossEncodingEquality()
     {
         // Arrange
-        using var owned = OwnedText.FromUtf8("Hello"u8);
+        using var owned = OwnedText.FromUtf8("Hello"u8)!;
         var directText = Text.From("Hello");
 
         // Act
@@ -190,7 +190,7 @@ public class OwnedTextTests
     public async Task Text_MultiByte_CorrectContent()
     {
         // Arrange
-        using var owned = OwnedText.FromChars("café🎉".AsSpan());
+        using var owned = OwnedText.FromChars("café🎉".AsSpan())!;
 
         // Act
         var result = owned.Text.ToString();
@@ -202,14 +202,13 @@ public class OwnedTextTests
     // Dispose
 
     [Test]
-    public async Task Dispose_Default_DoesNotThrow()
+    public async Task Dispose_Null_DoesNotThrow()
     {
         // Arrange
-        var owned = default(OwnedText);
+        OwnedText? owned = null;
 
-        // Act & Assert — no exception
-        owned.Dispose();
-        await Assert.That(owned.IsEmpty).IsTrue();
+        // Act & Assert — null is the class equivalent of default(struct)
+        await Assert.That(owned).IsNull();
     }
 
     // Using pattern
@@ -221,7 +220,7 @@ public class OwnedTextTests
         string result;
 
         // Act
-        using (var owned = OwnedText.FromUtf8("Hello World"u8))
+        using (var owned = OwnedText.FromUtf8("Hello World"u8)!)
         {
             result = owned.Text.ToString();
         }
@@ -239,7 +238,7 @@ public class OwnedTextTests
         var lastRuneLength = 0;
         for (var i = 0; i < 10000; i++)
         {
-            using var owned = OwnedText.FromUtf8("Hello World café 🎉"u8);
+            using var owned = OwnedText.FromUtf8("Hello World café 🎉"u8)!;
             lastRuneLength = owned.Text.RuneLength;
         }
 
@@ -253,7 +252,7 @@ public class OwnedTextTests
     public Task Text_SearchOperations_Work()
     {
         // Arrange
-        using var owned = OwnedText.FromUtf8("Hello World"u8);
+        using var owned = OwnedText.FromUtf8("Hello World"u8)!;
         var text = owned.Text;
 
         // Act & Assert
@@ -269,7 +268,7 @@ public class OwnedTextTests
     public async Task Text_TrimOperations_Work()
     {
         // Arrange
-        using var owned = OwnedText.FromUtf8("  Hello  "u8);
+        using var owned = OwnedText.FromUtf8("  Hello  "u8)!;
 
         // Act
         var trimmed = owned.Text.Trim();
@@ -282,7 +281,7 @@ public class OwnedTextTests
     public async Task Text_SplitOperations_Work()
     {
         // Arrange
-        using var owned = OwnedText.FromUtf8("a,b,c"u8);
+        using var owned = OwnedText.FromUtf8("a,b,c"u8)!;
 
         // Act
         var count = 0;

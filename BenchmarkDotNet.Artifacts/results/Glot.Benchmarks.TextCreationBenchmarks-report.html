@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextCreationBenchmarks-20260413-171918</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, macOS 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host]   : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+  ShortRun : .NET 10.0.5 (10.0.526.15411), Arm64 RyuJIT AdvSIMD
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  Categories=FromUtf8  
+</code></pre>
+
+<table>
+<thead><tr><th>Method            </th><th>N</th><th>Locale</th><th>Mean </th><th>Error </th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>Encoding.GetString</td><td>256</td><td>Ascii</td><td>28.68 ns</td><td>3.222 ns</td><td>0.177 ns</td><td>1.00</td><td>0.01</td><td>0.0641</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(byte[])&#39;</td><td>256</td><td>Ascii</td><td>481.85 ns</td><td>192.696 ns</td><td>10.562 ns</td><td>16.80</td><td>0.33</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromUtf8(span)</td><td>256</td><td>Ascii</td><td>485.17 ns</td><td>54.165 ns</td><td>2.969 ns</td><td>16.92</td><td>0.13</td><td>0.0334</td><td>-</td><td>280 B</td><td>0.52</td>
+</tr><tr><td>&#39;new U8String(span)&#39;</td><td>256</td><td>Ascii</td><td>17.29 ns</td><td>2.627 ns</td><td>0.144 ns</td><td>0.60</td><td>0.01</td><td>0.0344</td><td>0.0000</td><td>288 B</td><td>0.54</td>
+</tr><tr><td>OwnedText.FromUtf8(span)</td><td>256</td><td>Ascii</td><td>19.38 ns</td><td>1.536 ns</td><td>0.084 ns</td><td>0.68</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>256</td><td>Mixed</td><td>252.38 ns</td><td>59.648 ns</td><td>3.269 ns</td><td>1.00</td><td>0.02</td><td>0.0639</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(byte[])&#39;</td><td>256</td><td>Mixed</td><td>601.93 ns</td><td>18.347 ns</td><td>1.006 ns</td><td>2.39</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromUtf8(span)</td><td>256</td><td>Mixed</td><td>589.90 ns</td><td>169.147 ns</td><td>9.272 ns</td><td>2.34</td><td>0.04</td><td>0.0448</td><td>-</td><td>376 B</td><td>0.70</td>
+</tr><tr><td>&#39;new U8String(span)&#39;</td><td>256</td><td>Mixed</td><td>164.02 ns</td><td>25.169 ns</td><td>1.380 ns</td><td>0.65</td><td>0.01</td><td>0.0458</td><td>-</td><td>384 B</td><td>0.72</td>
+</tr><tr><td>OwnedText.FromUtf8(span)</td><td>256</td><td>Mixed</td><td>23.39 ns</td><td>2.251 ns</td><td>0.123 ns</td><td>0.09</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>4096</td><td>Ascii</td><td>378.10 ns</td><td>61.212 ns</td><td>3.355 ns</td><td>1.00</td><td>0.01</td><td>0.9813</td><td>-</td><td>8216 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(byte[])&#39;</td><td>4096</td><td>Ascii</td><td>7,776.99 ns</td><td>2,971.372 ns</td><td>162.871 ns</td><td>20.57</td><td>0.40</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromUtf8(span)</td><td>4096</td><td>Ascii</td><td>7,737.00 ns</td><td>675.958 ns</td><td>37.052 ns</td><td>20.46</td><td>0.18</td><td>0.4883</td><td>-</td><td>4120 B</td><td>0.50</td>
+</tr><tr><td>&#39;new U8String(span)&#39;</td><td>4096</td><td>Ascii</td><td>215.98 ns</td><td>4.890 ns</td><td>0.268 ns</td><td>0.57</td><td>0.00</td><td>0.4933</td><td>0.0074</td><td>4128 B</td><td>0.50</td>
+</tr><tr><td>OwnedText.FromUtf8(span)</td><td>4096</td><td>Ascii</td><td>181.47 ns</td><td>35.722 ns</td><td>1.958 ns</td><td>0.48</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>4096</td><td>Mixed</td><td>3,930.13 ns</td><td>730.440 ns</td><td>40.038 ns</td><td>1.00</td><td>0.01</td><td>0.9766</td><td>-</td><td>8216 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(byte[])&#39;</td><td>4096</td><td>Mixed</td><td>9,583.22 ns</td><td>933.210 ns</td><td>51.152 ns</td><td>2.44</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromUtf8(span)</td><td>4096</td><td>Mixed</td><td>9,199.08 ns</td><td>522.968 ns</td><td>28.666 ns</td><td>2.34</td><td>0.02</td><td>0.6714</td><td>-</td><td>5664 B</td><td>0.69</td>
+</tr><tr><td>&#39;new U8String(span)&#39;</td><td>4096</td><td>Mixed</td><td>2,753.91 ns</td><td>109.910 ns</td><td>6.025 ns</td><td>0.70</td><td>0.01</td><td>0.6752</td><td>0.0114</td><td>5672 B</td><td>0.69</td>
+</tr><tr><td>OwnedText.FromUtf8(span)</td><td>4096</td><td>Mixed</td><td>254.38 ns</td><td>18.887 ns</td><td>1.035 ns</td><td>0.06</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr></tbody></table>
+</body>
+</html>

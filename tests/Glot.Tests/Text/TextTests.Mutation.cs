@@ -78,7 +78,7 @@ public partial class TextTests
         var text = Text.From("Hello World");
 
         // Act
-        using var result = text.ReplacePooled("World", "Glot");
+        using var result = text.ReplacePooled("World", "Glot")!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello Glot");
@@ -91,7 +91,7 @@ public partial class TextTests
         var text = Text.From("Hello");
 
         // Act
-        using var result = text.ReplacePooled("xyz", "abc");
+        using var result = text.ReplacePooled("xyz", "abc")!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
@@ -160,7 +160,7 @@ public partial class TextTests
         var text = Text.From("Hello");
 
         // Act
-        using var result = text.InsertPooled(5, " World");
+        using var result = text.InsertPooled(5, " World")!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello World");
@@ -173,7 +173,7 @@ public partial class TextTests
         var text = Text.From("Hello");
 
         // Act
-        using var result = text.InsertPooled(2, Text.Empty);
+        using var result = text.InsertPooled(2, Text.Empty)!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
@@ -255,7 +255,7 @@ public partial class TextTests
         var text = Text.From("Hello World");
 
         // Act
-        using var result = text.RemovePooled(5, 1);
+        using var result = text.RemovePooled(5, 1)!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("HelloWorld");
@@ -268,7 +268,7 @@ public partial class TextTests
         var text = Text.From("Hello");
 
         // Act
-        using var result = text.RemovePooled(2, 0);
+        using var result = text.RemovePooled(2, 0)!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello");
@@ -375,7 +375,7 @@ public partial class TextTests
         var text = Text.From("hello");
 
         // Act
-        using var result = text.ToUpperInvariantPooled();
+        using var result = text.ToUpperInvariantPooled()!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("HELLO");
@@ -388,7 +388,7 @@ public partial class TextTests
         var text = Text.From("HELLO");
 
         // Act
-        using var result = text.ToLowerInvariantPooled();
+        using var result = text.ToLowerInvariantPooled()!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("hello");
@@ -401,7 +401,7 @@ public partial class TextTests
         var text = Text.From("HELLO");
 
         // Act
-        using var result = text.ToUpperInvariantPooled();
+        using var result = text.ToUpperInvariantPooled()!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("HELLO");
@@ -507,20 +507,20 @@ public partial class TextTests
     public async Task ConcatPooled_ReturnsOwnedText()
     {
         // Act
-        using var result = Text.ConcatPooled(Text.From("Hello"), Text.From(" World"));
+        using var result = Text.ConcatPooled(Text.From("Hello"), Text.From(" World"))!;
 
         // Assert
         await Assert.That(result.Text.ToString()).IsEqualTo("Hello World");
     }
 
     [Test]
-    public async Task ConcatPooled_Empty_ReturnsDefault()
+    public async Task ConcatPooled_Empty_ReturnsNull()
     {
         // Act
-        using var result = Text.ConcatPooled();
+        var result = Text.ConcatPooled();
 
         // Assert
-        await Assert.That(result.IsEmpty).IsTrue();
+        await Assert.That(result).IsNull();
     }
 
     // Operator +

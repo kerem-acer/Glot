@@ -19,6 +19,12 @@ public sealed class OwnedTextYamlFormatter : IYamlFormatter<OwnedText>
     /// <inheritdoc/>
     public void Serialize(ref Utf8YamlEmitter emitter, OwnedText value, YamlSerializationContext context)
     {
+        if (value is null)
+        {
+            emitter.WriteNull();
+            return;
+        }
+
         var text = value.Text;
         if (text.IsEmpty)
         {
@@ -63,12 +69,12 @@ public sealed class OwnedTextYamlFormatter : IYamlFormatter<OwnedText>
         if (parser.IsNullScalar())
         {
             parser.Read();
-            return default;
+            return null!;
         }
 
         parser.TryGetScalarAsSpan(out var span);
         var owned = OwnedText.FromBytes(span, TextEncoding.Utf8);
         parser.ReadWithVerify(ParseEventType.Scalar);
-        return owned;
+        return owned!;
     }
 }

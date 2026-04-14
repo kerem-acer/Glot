@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -8,7 +9,7 @@ public readonly partial struct Text
     delegate TResult BuilderFinisher<out TResult>(ref TextBuilder builder);
 
     static Text FinishAsText(ref TextBuilder b) => b.ToText();
-    static OwnedText FinishAsOwnedText(ref TextBuilder b) => b.ToOwnedText();
+    static OwnedText FinishAsOwnedText(ref TextBuilder b) => b.ToOwnedText()!;
 
     // Replace
 
@@ -61,7 +62,7 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="Replace(Text, Text)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public OwnedText ReplacePooled(Text oldValue, Text newValue)
+    public OwnedText? ReplacePooled(Text oldValue, Text newValue)
     {
         if (oldValue.IsEmpty)
         {
@@ -70,7 +71,7 @@ public readonly partial struct Text
 
         if (IsEmpty)
         {
-            return default;
+            return null;
         }
 
         var firstBytePos = AsSpan().ByteIndexOf(oldValue.AsSpan());
@@ -83,7 +84,7 @@ public readonly partial struct Text
     }
 
     /// <inheritdoc cref="ReplacePooled(Text, Text)"/>
-    public OwnedText ReplacePooled(string oldValue, string newValue)
+    public OwnedText? ReplacePooled(string oldValue, string newValue)
     {
         if (string.IsNullOrEmpty(oldValue))
         {
@@ -92,7 +93,7 @@ public readonly partial struct Text
 
         if (IsEmpty)
         {
-            return default;
+            return null;
         }
 
         var oldSpan = new TextSpan(
@@ -180,7 +181,7 @@ public readonly partial struct Text
         => Insert(runeIndex, From(value));
 
     /// <summary>Like <see cref="Insert(int, Text)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public OwnedText InsertPooled(int runeIndex, Text value)
+    public OwnedText? InsertPooled(int runeIndex, Text value)
     {
         if ((uint)runeIndex > (uint)RuneLength)
         {
@@ -196,7 +197,7 @@ public readonly partial struct Text
     }
 
     /// <inheritdoc cref="InsertPooled(int, Text)"/>
-    public OwnedText InsertPooled(int runeIndex, string value)
+    public OwnedText? InsertPooled(int runeIndex, string value)
         => InsertPooled(runeIndex, From(value));
 
     TResult InsertCore<TResult>(int runeIndex, TextSpan value, BuilderFinisher<TResult> finish)
@@ -243,7 +244,7 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="Remove(int, int)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public OwnedText RemovePooled(int runeIndex, int runeCount)
+    public OwnedText? RemovePooled(int runeIndex, int runeCount)
     {
         ValidateRemoveRange(runeIndex, runeCount);
 
@@ -313,7 +314,7 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToUpperInvariant()"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public OwnedText ToUpperInvariantPooled()
+    public OwnedText? ToUpperInvariantPooled()
     {
         var firstChangeOffset = FindFirstCaseChange(upper: true, out var prefixRuneCount);
         if (firstChangeOffset < 0)
@@ -325,7 +326,7 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToLowerInvariant()"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public OwnedText ToLowerInvariantPooled()
+    public OwnedText? ToLowerInvariantPooled()
     {
         var firstChangeOffset = FindFirstCaseChange(upper: false, out var prefixRuneCount);
         if (firstChangeOffset < 0)
@@ -336,7 +337,34 @@ public readonly partial struct Text
         return CaseCore(upper: false, firstChangeOffset, prefixRuneCount, FinishAsOwnedText);
     }
 
-    // Concat
+    // Concat — dedicated overloads for 2 args (avoids span/loop overhead)
+
+    /// <summary>Concatenates two <see cref="Text"/> values.</summary>
+    public static Text Concat(Text a, Text b)
+    {
+        if (a.IsEmpty)
+        {
+            return b;
+        }
+
+        if (b.IsEmpty)
+        {
+            return a;
+        }
+
+        var encoding = a.Encoding;
+        if (encoding == b.Encoding)
+        {
+            var totalBytes = a.ByteLength + b.ByteLength;
+            var totalRunes = a.RuneLength + b.RuneLength;
+            var buffer = new byte[totalBytes];
+            a.RawBytes.CopyTo(buffer);
+            b.RawBytes.CopyTo(buffer.AsSpan(a.ByteLength));
+            return new Text(buffer, 0, totalBytes, encoding, totalRunes);
+        }
+
+        return ConcatCore([a, b], encoding, FinishAsText);
+    }
 
     /// <summary>
     /// Concatenates <see cref="Text"/> values into a new <see cref="Text"/>.
@@ -359,6 +387,18 @@ public readonly partial struct Text
             return values[0];
         }
 
+        if (TrySumSameEncoding(values, encoding, out var totalBytes, out var totalRunes))
+        {
+            if (totalBytes == 0)
+            {
+                return Empty;
+            }
+
+            var buffer = new byte[totalBytes];
+            CopyAll(values, buffer);
+            return new Text(buffer, 0, totalBytes, encoding, totalRunes);
+        }
+
         return ConcatCore(values, encoding, FinishAsText);
     }
 
@@ -367,18 +407,70 @@ public readonly partial struct Text
     /// The result uses the encoding of the first non-empty value (or UTF-8 if all are empty).
     /// Use the overload with an explicit encoding parameter to control the output encoding.
     /// </summary>
-    public static OwnedText ConcatPooled(params ReadOnlySpan<Text> values)
+    public static OwnedText? ConcatPooled(params ReadOnlySpan<Text> values)
         => ConcatPooled(values, ResolveEncoding(values));
 
     /// <summary>Like <see cref="Concat(ReadOnlySpan{Text}, TextEncoding)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
-    public static OwnedText ConcatPooled(ReadOnlySpan<Text> values, TextEncoding encoding)
+    public static OwnedText? ConcatPooled(ReadOnlySpan<Text> values, TextEncoding encoding)
     {
         if (values.IsEmpty)
         {
-            return default;
+            return null;
+        }
+
+        if (TrySumSameEncoding(values, encoding, out var totalBytes, out var totalRunes))
+        {
+            if (totalBytes == 0)
+            {
+                return null;
+            }
+
+            var buffer = ArrayPool<byte>.Shared.Rent(totalBytes);
+            CopyAll(values, buffer);
+            return OwnedText.Create(buffer, totalBytes, encoding, totalRunes);
         }
 
         return ConcatCore(values, encoding, FinishAsOwnedText);
+    }
+
+    /// <summary>
+    /// Single-pass check + sum: returns <c>true</c> if all non-empty values share <paramref name="encoding"/>,
+    /// with <paramref name="totalBytes"/> and <paramref name="totalRunes"/> accumulated in the same loop.
+    /// </summary>
+    static bool TrySumSameEncoding(
+        ReadOnlySpan<Text> values, TextEncoding encoding,
+        out int totalBytes, out int totalRunes)
+    {
+        totalBytes = 0;
+        totalRunes = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (values[i].IsEmpty)
+            {
+                continue;
+            }
+
+            if (values[i].Encoding != encoding)
+            {
+                return false;
+            }
+
+            totalBytes += values[i].ByteLength;
+            totalRunes += values[i].RuneLength;
+        }
+
+        return true;
+    }
+
+    static void CopyAll(ReadOnlySpan<Text> values, byte[] buffer)
+    {
+        var offset = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            var bytes = values[i].RawBytes;
+            bytes.CopyTo(buffer.AsSpan(offset));
+            offset += bytes.Length;
+        }
     }
 
     static TResult ConcatCore<TResult>(ReadOnlySpan<Text> values, TextEncoding encoding, BuilderFinisher<TResult> finish)
@@ -386,9 +478,9 @@ public readonly partial struct Text
         var builder = new TextBuilder(encoding);
         try
         {
-            for (var i = 0; i < values.Length; i++)
+            foreach (var t in values)
             {
-                builder.Append(values[i]);
+                builder.Append(t);
             }
 
             return finish(ref builder);
