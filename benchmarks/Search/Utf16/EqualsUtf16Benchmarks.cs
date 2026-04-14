@@ -7,6 +7,7 @@ public class EqualsUtf16Benchmarks
 {
     [EqualitySizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -23,6 +24,9 @@ public class EqualsUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.Equals")]
     public bool StringEquals() => string.Equals(A.Str, B.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.SequenceEqual UTF-8")]
+    public bool SpanSequenceEqual() => A.RawBytes.AsSpan().SequenceEqual(B.RawBytes);
+
     [Benchmark(Description = "Text.Equals UTF-8")]
     public bool TextEquals_Utf8() => A.Utf8.Equals(B.Utf8);
 
@@ -35,6 +39,9 @@ public class EqualsUtf16Benchmarks
     [Benchmark(Description = "string.Equals different")]
     public bool StringEquals_Diff() => string.Equals(A.Str, Diff.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.SequenceEqual UTF-8 different")]
+    public bool SpanSequenceEqual_Diff() => A.RawBytes.AsSpan().SequenceEqual(Diff.RawBytes);
+
     [Benchmark(Description = "Text.Equals UTF-8 different")]
     public bool TextEquals_Utf8_Diff() => A.Utf8.Equals(Diff.Utf8);
 
@@ -43,5 +50,4 @@ public class EqualsUtf16Benchmarks
 
     [Benchmark(Description = "Text.Equals UTF-32 different")]
     public bool TextEquals_Utf32_Diff() => A.Utf8.Equals(Diff.Utf32);
-
 }

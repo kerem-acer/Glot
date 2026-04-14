@@ -7,6 +7,7 @@ public class CompareToUtf8Benchmarks
 {
     [EqualitySizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -19,7 +20,13 @@ public class CompareToUtf8Benchmarks
         _diff = EncodedSet.From(TestData.Mutate(_a.Str));
     }
 
-    [Benchmark(Baseline = true, Description = "U8String.CompareTo")]
+    [Benchmark(Baseline = true, Description = "string.Compare")]
+    public int StringCompare() => string.Compare(_a.Str, _diff.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.SequenceCompareTo UTF-8")]
+    public int SpanSequenceCompareTo() => _a.RawBytes.AsSpan().SequenceCompareTo(_diff.RawBytes);
+
+    [Benchmark(Description = "U8String.CompareTo")]
     public int U8CompareTo() => _a.U8.CompareTo(_diff.U8);
 
     [Benchmark(Description = "Text.CompareTo UTF-8")]
@@ -30,5 +37,4 @@ public class CompareToUtf8Benchmarks
 
     [Benchmark(Description = "Text.CompareTo UTF-32")]
     public int TextCompareTo_Utf32() => _a.Utf8.CompareTo(_diff.Utf32);
-
 }

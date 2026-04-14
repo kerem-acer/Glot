@@ -8,6 +8,7 @@ CoverageReport/
 *.DotSettings.user
 coverage*.xml
 TestResults/
+BenchmarkDotNet.Artifacts/
 *.nupkg
 
 # Verify

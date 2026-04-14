@@ -7,6 +7,7 @@ public class ContainsUtf8Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -20,7 +21,13 @@ public class ContainsUtf8Benchmarks
         _missingNeedle = EncodedSet.From(TestData.MissingNeedle(Locale));
     }
 
-    [Benchmark(Baseline = true, Description = "U8String.Contains")]
+    [Benchmark(Baseline = true, Description = "string.Contains")]
+    public bool StringContains() => _haystack.Str.Contains(_needle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.Contains UTF-8")]
+    public bool SpanContains() => _haystack.RawBytes.AsSpan().IndexOf(_needle.RawBytes) >= 0;
+
+    [Benchmark(Description = "U8String.Contains")]
     public bool U8Contains() => _haystack.U8.Contains(_needle.U8);
 
     [Benchmark(Description = "Text.Contains UTF-8")]
@@ -31,6 +38,12 @@ public class ContainsUtf8Benchmarks
 
     [Benchmark(Description = "Text.Contains UTF-32")]
     public bool TextContains_Utf32() => _haystack.Utf8.Contains(_needle.Utf32);
+
+    [Benchmark(Description = "string.Contains miss")]
+    public bool StringContains_Miss() => _haystack.Str.Contains(_missingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.Contains UTF-8 miss")]
+    public bool SpanContains_Miss() => _haystack.RawBytes.AsSpan().IndexOf(_missingNeedle.RawBytes) >= 0;
 
     [Benchmark(Description = "U8String.Contains miss")]
     public bool U8Contains_Miss() => _haystack.U8.Contains(_missingNeedle.U8);

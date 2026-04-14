@@ -20,26 +20,29 @@ public class HttpPipelineBenchmarks
 
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
     byte[] _jsonPayload = null!;
-    string _needleStr = null!;
-    string _markerStr = null!;
-    string _replacementStr = null!;
+    EncodedSet _needle;
+    EncodedSet _marker;
+    EncodedSet _replacement;
 
     [GlobalSetup]
     public void Setup()
     {
-        _needleStr = TestData.Needle(Locale);
-        (_markerStr, _replacementStr) = TestData.MarkerPair(Locale);
+        _needle = EncodedSet.From(TestData.Needle(Locale));
+        var (markerStr, replacementStr) = TestData.MarkerPair(Locale);
+        _marker = EncodedSet.From(markerStr);
+        _replacement = EncodedSet.From(replacementStr);
 
         var msg = TestData.Generate(N, Locale);
         _jsonPayload = JsonSerializer.SerializeToUtf8Bytes(new
         {
             source = "stripe.payment",
             level = "error",
-            message = msg + _markerStr + msg,
+            message = msg + markerStr + msg,
             tags = TestData.GenerateCsv(Math.Max(32, N / 4), Locale)
         });
     }
@@ -48,9 +51,7 @@ public class HttpPipelineBenchmarks
     public byte[] StringPipeline()
     {
         var evt = JsonSerializer.Deserialize<StringEvent>(_jsonPayload, StringOptions)!;
-
-        _ = evt.Message.Contains(_needleStr, StringComparison.Ordinal);
-
+        _ = evt.Message.Contains(_needle.Str, StringComparison.Ordinal);
         foreach (var tag in evt.Tags.Split(','))
         {
             if (tag.Trim().Length > 0)
@@ -58,8 +59,7 @@ public class HttpPipelineBenchmarks
                 break;
             }
         }
-
-        _ = evt.Message.Replace(_markerStr, _replacementStr);
+        _ = evt.Message.Replace(_marker.Str, _replacement.Str);
         return JsonSerializer.SerializeToUtf8Bytes(evt, StringOptions);
     }
 
@@ -67,9 +67,7 @@ public class HttpPipelineBenchmarks
     public byte[] GlotPipeline()
     {
         var evt = JsonSerializer.Deserialize<GlotEvent>(_jsonPayload, GlotOptions)!;
-
-        _ = evt.Message.Contains(_needleStr);
-
+        _ = evt.Message.Contains(_needle.Str);
         foreach (var tag in evt.Tags.Split(","))
         {
             if (!tag.Trim().IsEmpty)
@@ -77,8 +75,7 @@ public class HttpPipelineBenchmarks
                 break;
             }
         }
-
-        using var sanitized = evt.Message.ReplacePooled(_markerStr, _replacementStr);
+        using var sanitized = evt.Message.ReplacePooled(_marker.Str, _replacement.Str);
         return JsonSerializer.SerializeToUtf8Bytes(evt, GlotOptions);
     }
 
@@ -86,11 +83,8 @@ public class HttpPipelineBenchmarks
     public void GlotPipeline_Pooled()
     {
         var evt = JsonSerializer.Deserialize<GlotEvent>(_jsonPayload, GlotOptions)!;
-
-        _ = evt.Message.Contains(_needleStr);
-
-        using var sanitized = evt.Message.ReplacePooled(_markerStr, _replacementStr);
+        _ = evt.Message.Contains(_needle.Str);
+        using var sanitized = evt.Message.ReplacePooled(_marker.Str, _replacement.Str);
         using var json = JsonSerializer.SerializeToUtf8OwnedText(evt, GlotOptions);
     }
-
 }

@@ -7,6 +7,7 @@ public class EqualsUtf8Benchmarks
 {
     [EqualitySizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -20,7 +21,13 @@ public class EqualsUtf8Benchmarks
         _diff = EncodedSet.From(TestData.Mutate(_a.Str));
     }
 
-    [Benchmark(Baseline = true, Description = "U8String.Equals")]
+    [Benchmark(Baseline = true, Description = "string.Equals")]
+    public bool StringEquals() => _a.Str.Equals(_b.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.SequenceEqual UTF-8")]
+    public bool SpanSequenceEqual() => _a.RawBytes.AsSpan().SequenceEqual(_b.RawBytes);
+
+    [Benchmark(Description = "U8String.Equals")]
     public bool U8Equals() => _a.U8.Equals(_b.U8);
 
     [Benchmark(Description = "Text.Equals UTF-8")]
@@ -31,6 +38,12 @@ public class EqualsUtf8Benchmarks
 
     [Benchmark(Description = "Text.Equals UTF-32")]
     public bool TextEquals_Utf32() => _a.Utf8.Equals(_b.Utf32);
+
+    [Benchmark(Description = "string.Equals different")]
+    public bool StringEquals_Diff() => _a.Str.Equals(_diff.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.SequenceEqual UTF-8 different")]
+    public bool SpanSequenceEqual_Diff() => _a.RawBytes.AsSpan().SequenceEqual(_diff.RawBytes);
 
     [Benchmark(Description = "U8String.Equals different")]
     public bool U8Equals_Diff() => _a.U8.Equals(_diff.U8);
@@ -43,5 +56,4 @@ public class EqualsUtf8Benchmarks
 
     [Benchmark(Description = "Text.Equals UTF-32 different")]
     public bool TextEquals_Utf32_Diff() => _a.Utf8.Equals(_diff.Utf32);
-
 }

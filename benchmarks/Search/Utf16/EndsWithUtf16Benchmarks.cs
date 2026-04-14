@@ -7,6 +7,7 @@ public class EndsWithUtf16Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -23,6 +24,9 @@ public class EndsWithUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.EndsWith")]
     public bool StringEndsWith() => Haystack.Str.EndsWith(Needle.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.EndsWith UTF-8")]
+    public bool SpanEndsWith() => Haystack.RawBytes.AsSpan().EndsWith(Needle.RawBytes);
+
     [Benchmark(Description = "Text.EndsWith UTF-8")]
     public bool TextEndsWith_Utf8() => Haystack.Utf8.EndsWith(Needle.Utf8);
 
@@ -34,6 +38,9 @@ public class EndsWithUtf16Benchmarks
 
     [Benchmark(Description = "string.EndsWith miss")]
     public bool StringEndsWith_Miss() => Haystack.Str.EndsWith(MissingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.EndsWith UTF-8 miss")]
+    public bool SpanEndsWith_Miss() => Haystack.RawBytes.AsSpan().EndsWith(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.EndsWith UTF-8 miss")]
     public bool TextEndsWith_Utf8_Miss() => Haystack.Utf8.EndsWith(MissingNeedle.Utf8);

@@ -1,104 +1,621 @@
+using System.Runtime.InteropServices;
+
 namespace Glot;
 
 public readonly partial struct Text
 {
     /// <summary>Returns <c>true</c> if this text contains the specified value, compared rune-by-rune across encodings.</summary>
-    public bool Contains(Text value) => AsSpan().Contains(value.AsSpan());
+    public bool Contains(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
 
-    public bool Contains(string value) => AsSpan().Contains(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            return RawBytes.IndexOf(value.RawBytes) >= 0;
+        }
+
+        return AsSpan().Contains(value.AsSpan());
+    }
+
+    public bool Contains(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.IndexOf(valueBytes) >= 0;
+        }
+
+        return AsSpan().Contains(value.AsSpan());
+    }
 
     public bool Contains(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().Contains(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == encoding)
+        {
+            return RawBytes.IndexOf(value) >= 0;
+        }
+
+        return AsSpan().Contains(value, encoding);
+    }
 
     public bool Contains(ReadOnlySpan<char> value)
-        => AsSpan().Contains(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.IndexOf(valueBytes) >= 0;
+        }
+
+        return AsSpan().Contains(value);
+    }
 
     public bool Contains(ReadOnlySpan<int> value)
-        => AsSpan().Contains(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            return RawBytes.IndexOf(valueBytes) >= 0;
+        }
+
+        return AsSpan().Contains(value);
+    }
 
     /// <summary>Returns <c>true</c> if this text begins with <paramref name="value"/>, compared rune-by-rune across encodings.</summary>
-    public bool StartsWith(Text value) => AsSpan().StartsWith(value.AsSpan());
+    public bool StartsWith(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
 
-    public bool StartsWith(string value) => AsSpan().StartsWith(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            return RawBytes.StartsWith(value.RawBytes);
+        }
+
+        return AsSpan().StartsWith(value.AsSpan());
+    }
+
+    public bool StartsWith(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.StartsWith(valueBytes);
+        }
+
+        return AsSpan().StartsWith(value.AsSpan());
+    }
 
     public bool StartsWith(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().StartsWith(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == encoding)
+        {
+            return RawBytes.StartsWith(value);
+        }
+
+        return AsSpan().StartsWith(value, encoding);
+    }
 
     public bool StartsWith(ReadOnlySpan<char> value)
-        => AsSpan().StartsWith(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.StartsWith(valueBytes);
+        }
+
+        return AsSpan().StartsWith(value);
+    }
 
     public bool StartsWith(ReadOnlySpan<int> value)
-        => AsSpan().StartsWith(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            return RawBytes.StartsWith(valueBytes);
+        }
+
+        return AsSpan().StartsWith(value);
+    }
 
     /// <summary>Returns <c>true</c> if this text ends with <paramref name="value"/>, compared rune-by-rune across encodings.</summary>
-    public bool EndsWith(Text value) => AsSpan().EndsWith(value.AsSpan());
+    public bool EndsWith(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
 
-    public bool EndsWith(string value) => AsSpan().EndsWith(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            return RawBytes.EndsWith(value.RawBytes);
+        }
+
+        return AsSpan().EndsWith(value.AsSpan());
+    }
+
+    public bool EndsWith(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.EndsWith(valueBytes);
+        }
+
+        return AsSpan().EndsWith(value.AsSpan());
+    }
 
     public bool EndsWith(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().EndsWith(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == encoding)
+        {
+            return RawBytes.EndsWith(value);
+        }
+
+        return AsSpan().EndsWith(value, encoding);
+    }
 
     public bool EndsWith(ReadOnlySpan<char> value)
-        => AsSpan().EndsWith(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.EndsWith(valueBytes);
+        }
+
+        return AsSpan().EndsWith(value);
+    }
 
     public bool EndsWith(ReadOnlySpan<int> value)
-        => AsSpan().EndsWith(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            return RawBytes.EndsWith(valueBytes);
+        }
+
+        return AsSpan().EndsWith(value);
+    }
 
     /// <summary>Returns the zero-based rune index of the first occurrence of <paramref name="value"/>, or -1 if not found.</summary>
-    public int RuneIndexOf(Text value) => AsSpan().RuneIndexOf(value.AsSpan());
+    public int RuneIndexOf(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return 0;
+        }
 
-    public int RuneIndexOf(string value) => AsSpan().RuneIndexOf(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            var bytePos = RawBytes.IndexOf(value.RawBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().RuneIndexOf(value.AsSpan());
+    }
+
+    public int RuneIndexOf(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            var bytePos = RawBytes.IndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().RuneIndexOf(value.AsSpan());
+    }
 
     public int RuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().RuneIndexOf(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == encoding)
+        {
+            var bytePos = RawBytes.IndexOf(value);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().RuneIndexOf(value, encoding);
+    }
 
     public int RuneIndexOf(ReadOnlySpan<char> value)
-        => AsSpan().RuneIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            var bytePos = RawBytes.IndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().RuneIndexOf(value);
+    }
 
     public int RuneIndexOf(ReadOnlySpan<int> value)
-        => AsSpan().RuneIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            var bytePos = RawBytes.IndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().RuneIndexOf(value);
+    }
 
     /// <summary>Returns the zero-based rune index of the last occurrence of <paramref name="value"/>, or -1 if not found.</summary>
-    public int LastRuneIndexOf(Text value) => AsSpan().LastRuneIndexOf(value.AsSpan());
+    public int LastRuneIndexOf(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return RuneLength;
+        }
 
-    public int LastRuneIndexOf(string value) => AsSpan().LastRuneIndexOf(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            var bytePos = RawBytes.LastIndexOf(value.RawBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().LastRuneIndexOf(value.AsSpan());
+    }
+
+    public int LastRuneIndexOf(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return RuneLength;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().LastRuneIndexOf(value.AsSpan());
+    }
 
     public int LastRuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().LastRuneIndexOf(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return RuneLength;
+        }
+
+        if (Encoding == encoding)
+        {
+            var bytePos = RawBytes.LastIndexOf(value);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().LastRuneIndexOf(value, encoding);
+    }
 
     public int LastRuneIndexOf(ReadOnlySpan<char> value)
-        => AsSpan().LastRuneIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return RuneLength;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().LastRuneIndexOf(value);
+    }
 
     public int LastRuneIndexOf(ReadOnlySpan<int> value)
-        => AsSpan().LastRuneIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return RuneLength;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            if (bytePos < 0)
+            {
+                return -1;
+            }
+
+            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+        }
+
+        return AsSpan().LastRuneIndexOf(value);
+    }
 
     /// <summary>Returns the zero-based byte offset of the first occurrence of <paramref name="value"/>, or -1 if not found.</summary>
-    public int ByteIndexOf(Text value) => AsSpan().ByteIndexOf(value.AsSpan());
+    public int ByteIndexOf(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return 0;
+        }
 
-    public int ByteIndexOf(string value) => AsSpan().ByteIndexOf(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            return RawBytes.IndexOf(value.RawBytes);
+        }
+
+        return AsSpan().ByteIndexOf(value.AsSpan());
+    }
+
+    public int ByteIndexOf(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.IndexOf(valueBytes);
+        }
+
+        return AsSpan().ByteIndexOf(value.AsSpan());
+    }
 
     public int ByteIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().ByteIndexOf(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == encoding)
+        {
+            return RawBytes.IndexOf(value);
+        }
+
+        return AsSpan().ByteIndexOf(value, encoding);
+    }
 
     public int ByteIndexOf(ReadOnlySpan<char> value)
-        => AsSpan().ByteIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.IndexOf(valueBytes);
+        }
+
+        return AsSpan().ByteIndexOf(value);
+    }
 
     public int ByteIndexOf(ReadOnlySpan<int> value)
-        => AsSpan().ByteIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return 0;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            return RawBytes.IndexOf(valueBytes);
+        }
+
+        return AsSpan().ByteIndexOf(value);
+    }
 
     /// <summary>Returns the zero-based byte offset of the last occurrence of <paramref name="value"/>, or -1 if not found.</summary>
-    public int LastByteIndexOf(Text value) => AsSpan().LastByteIndexOf(value.AsSpan());
+    public int LastByteIndexOf(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return ByteLength;
+        }
 
-    public int LastByteIndexOf(string value) => AsSpan().LastByteIndexOf(value.AsSpan());
+        if (Encoding == value.Encoding)
+        {
+            return RawBytes.LastIndexOf(value.RawBytes);
+        }
+
+        return AsSpan().LastByteIndexOf(value.AsSpan());
+    }
+
+    public int LastByteIndexOf(string value)
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value.AsSpan());
+        if (valueBytes.IsEmpty)
+        {
+            return ByteLength;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.LastIndexOf(valueBytes);
+        }
+
+        return AsSpan().LastByteIndexOf(value.AsSpan());
+    }
 
     public int LastByteIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().LastByteIndexOf(value, encoding);
+    {
+        if (value.IsEmpty)
+        {
+            return ByteLength;
+        }
+
+        if (Encoding == encoding)
+        {
+            return RawBytes.LastIndexOf(value);
+        }
+
+        return AsSpan().LastByteIndexOf(value, encoding);
+    }
 
     public int LastByteIndexOf(ReadOnlySpan<char> value)
-        => AsSpan().LastByteIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return ByteLength;
+        }
+
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return RawBytes.LastIndexOf(valueBytes);
+        }
+
+        return AsSpan().LastByteIndexOf(value);
+    }
 
     public int LastByteIndexOf(ReadOnlySpan<int> value)
-        => AsSpan().LastByteIndexOf(value);
+    {
+        var valueBytes = MemoryMarshal.AsBytes(value);
+        if (valueBytes.IsEmpty)
+        {
+            return ByteLength;
+        }
+
+        if (Encoding == TextEncoding.Utf32)
+        {
+            return RawBytes.LastIndexOf(valueBytes);
+        }
+
+        return AsSpan().LastByteIndexOf(value);
+    }
 
     /// <summary>Removes leading and trailing whitespace. Returns a non-copying sub-view of the same backing data.</summary>
     public Text Trim() => TrimStart().TrimEnd();

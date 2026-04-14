@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -10,6 +11,11 @@ public readonly ref partial struct TextSpan
     // is used for SIMD scanning; each hit is verified rune-by-rune for the remainder.
     // 512 bytes covers patterns up to ~128 runes (UTF-32) or ~512 ASCII chars (UTF-8).
     const int CrossEncodingPatternLimit = 512;
+
+    // Maximum codepoints for the ASCII narrowing fast path.
+    // Patterns within this limit are checked for all-ASCII and narrowed directly to
+    // single-byte form, bypassing Transcode and generic dispatch entirely.
+    const int AsciiNarrowLimit = 128;
 
     /// <summary>Returns <c>true</c> if this span contains the specified value, compared rune-by-rune across encodings.</summary>
     public bool Contains(TextSpan value) => IndexOfByteOffset(value) >= 0;
@@ -76,6 +82,7 @@ public readonly ref partial struct TextSpan
         => LastRuneIndexOf(Uncounted(MemoryMarshal.AsBytes(value), TextEncoding.Utf32));
 
     /// <summary>Returns the zero-based byte offset of the first occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ByteIndexOf(TextSpan value) => IndexOfByteOffset(value);
 
     public int ByteIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -88,6 +95,7 @@ public readonly ref partial struct TextSpan
         => ByteIndexOf(Uncounted(MemoryMarshal.AsBytes(value), TextEncoding.Utf32));
 
     /// <summary>Returns the zero-based byte offset of the last occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int LastByteIndexOf(TextSpan value) => LastIndexOfByteOffset(value);
 
     public int LastByteIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -187,6 +195,7 @@ public readonly ref partial struct TextSpan
     // SIMD-scan for the prefix, verify remainder at each hit.
     // If the full value fits in the limit, no verification needed.
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IndexOfByteOffset(TextSpan value)
     {
         if (value.IsEmpty)
@@ -197,6 +206,7 @@ public readonly ref partial struct TextSpan
         return Encoding == value.Encoding ? Bytes.IndexOf(value.Bytes) : IndexOfCrossEncoding(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int LastIndexOfByteOffset(TextSpan value)
     {
         if (value.IsEmpty)
@@ -212,6 +222,17 @@ public readonly ref partial struct TextSpan
 
     int IndexOfCrossEncoding(TextSpan value)
     {
+        // ASCII fast path: when the haystack is UTF-8 and the needle is all-ASCII,
+        // narrow the needle directly to single-byte form and use SIMD IndexOf.
+        if (Encoding == TextEncoding.Utf8)
+        {
+            Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit];
+            if (TryNarrowAsciiToUtf8(value, narrowBuf, out var narrowLen))
+            {
+                return Bytes.IndexOf(narrowBuf[..narrowLen]);
+            }
+        }
+
         var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
         Span<byte> patternBuf = stackalloc byte[patternBufLen];
         var patternLen = value.Transcode(
@@ -251,6 +272,17 @@ public readonly ref partial struct TextSpan
 
     int LastIndexOfCrossEncoding(TextSpan value)
     {
+        // ASCII fast path: when the haystack is UTF-8 and the needle is all-ASCII,
+        // narrow the needle directly to single-byte form and use SIMD LastIndexOf.
+        if (Encoding == TextEncoding.Utf8)
+        {
+            Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit];
+            if (TryNarrowAsciiToUtf8(value, narrowBuf, out var narrowLen))
+            {
+                return Bytes.LastIndexOf(narrowBuf[..narrowLen]);
+            }
+        }
+
         var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
         Span<byte> patternBuf = stackalloc byte[patternBufLen];
         var patternLen = value.Transcode(
@@ -374,5 +406,65 @@ public readonly ref partial struct TextSpan
             valueRemainder,
             value.Encoding,
             out _);
+    }
+
+    // Try to narrow a UTF-16 or UTF-32 pattern to UTF-8 bytes when every codepoint is ASCII.
+    // Returns false when the pattern is non-ASCII, too large, or already UTF-8.
+    static bool TryNarrowAsciiToUtf8(TextSpan value, Span<byte> utf8, out int length)
+    {
+        switch (value.Encoding)
+        {
+            case TextEncoding.Utf16:
+            {
+                var chars = MemoryMarshal.Cast<byte, char>(value.Bytes);
+                if (chars.Length > utf8.Length)
+                {
+                    length = 0;
+                    return false;
+                }
+
+                for (var i = 0; i < chars.Length; i++)
+                {
+                    if (chars[i] > 0x7F)
+                    {
+                        length = 0;
+                        return false;
+                    }
+
+                    utf8[i] = (byte)chars[i];
+                }
+
+                length = chars.Length;
+                return true;
+            }
+
+            case TextEncoding.Utf32:
+            {
+                var ints = MemoryMarshal.Cast<byte, int>(value.Bytes);
+                if (ints.Length > utf8.Length)
+                {
+                    length = 0;
+                    return false;
+                }
+
+                for (var i = 0; i < ints.Length; i++)
+                {
+                    if ((uint)ints[i] > 0x7F)
+                    {
+                        length = 0;
+                        return false;
+                    }
+
+                    utf8[i] = (byte)ints[i];
+                }
+
+                length = ints.Length;
+                return true;
+            }
+
+            default:
+                length = 0;
+                return false;
+        }
     }
 }

@@ -23,13 +23,14 @@ public class JsonSerializationBenchmarks
 
     [EqualitySizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
     byte[] _jsonBytes = null!;
     GlotEvent _glotEvent = null!;
     StringEvent _stringEvent = null!;
-    string _needle = null!;
+    EncodedSet _needle;
 
     [GlobalSetup]
     public void Setup()
@@ -38,7 +39,7 @@ public class JsonSerializationBenchmarks
         var level = TestData.Generate(Math.Max(4, N / 16), Locale);
         var message = TestData.Generate(N, Locale);
         var tags = TestData.GenerateCsv(Math.Max(8, N / 4), Locale);
-        _needle = TestData.Needle(Locale);
+        _needle = EncodedSet.From(TestData.Needle(Locale));
 
         _jsonBytes = JsonSerializer.SerializeToUtf8Bytes(
             new StringEvent(source, level, message, tags), StringOptions);
@@ -78,7 +79,7 @@ public class JsonSerializationBenchmarks
     public byte[] RoundTrip_String()
     {
         var evt = JsonSerializer.Deserialize<StringEvent>(_jsonBytes, StringOptions)!;
-        _ = evt.Message.Contains(_needle, StringComparison.Ordinal);
+        _ = evt.Message.Contains(_needle.Str, StringComparison.Ordinal);
         return JsonSerializer.SerializeToUtf8Bytes(evt, StringOptions);
     }
 
@@ -86,7 +87,7 @@ public class JsonSerializationBenchmarks
     public byte[] RoundTrip_Text()
     {
         var evt = JsonSerializer.Deserialize<GlotEvent>(_jsonBytes, GlotOptions)!;
-        _ = evt.Message.Contains(_needle);
+        _ = evt.Message.Contains(_needle.Str);
         return JsonSerializer.SerializeToUtf8Bytes(evt, GlotOptions);
     }
 }

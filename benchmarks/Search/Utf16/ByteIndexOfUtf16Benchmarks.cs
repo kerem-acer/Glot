@@ -7,6 +7,7 @@ public class ByteIndexOfUtf16Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -23,6 +24,9 @@ public class ByteIndexOfUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.IndexOf")]
     public int StringIndexOf() => Haystack.Str.IndexOf(Needle.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.IndexOf UTF-8")]
+    public int SpanIndexOf() => Haystack.RawBytes.AsSpan().IndexOf(Needle.RawBytes);
+
     [Benchmark(Description = "Text.ByteIndexOf UTF-8")]
     public int TextByteIndexOf_Utf8() => Haystack.Utf8.ByteIndexOf(Needle.Utf8);
 
@@ -34,6 +38,9 @@ public class ByteIndexOfUtf16Benchmarks
 
     [Benchmark(Description = "string.IndexOf miss")]
     public int StringIndexOf_Miss() => Haystack.Str.IndexOf(MissingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.IndexOf UTF-8 miss")]
+    public int SpanIndexOf_Miss() => Haystack.RawBytes.AsSpan().IndexOf(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.ByteIndexOf UTF-8 miss")]
     public int TextByteIndexOf_Utf8_Miss() => Haystack.Utf8.ByteIndexOf(MissingNeedle.Utf8);

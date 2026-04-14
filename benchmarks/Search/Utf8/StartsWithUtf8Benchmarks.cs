@@ -7,6 +7,7 @@ public class StartsWithUtf8Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -20,7 +21,13 @@ public class StartsWithUtf8Benchmarks
         _missingNeedle = EncodedSet.From(TestData.MissingNeedle(Locale));
     }
 
-    [Benchmark(Baseline = true, Description = "U8String.StartsWith")]
+    [Benchmark(Baseline = true, Description = "string.StartsWith")]
+    public bool StringStartsWith() => _haystack.Str.StartsWith(_needle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.StartsWith UTF-8")]
+    public bool SpanStartsWith() => _haystack.RawBytes.AsSpan().StartsWith(_needle.RawBytes);
+
+    [Benchmark(Description = "U8String.StartsWith")]
     public bool U8StartsWith() => _haystack.U8.StartsWith(_needle.U8);
 
     [Benchmark(Description = "Text.StartsWith UTF-8")]
@@ -31,6 +38,12 @@ public class StartsWithUtf8Benchmarks
 
     [Benchmark(Description = "Text.StartsWith UTF-32")]
     public bool TextStartsWith_Utf32() => _haystack.Utf8.StartsWith(_needle.Utf32);
+
+    [Benchmark(Description = "string.StartsWith miss")]
+    public bool StringStartsWith_Miss() => _haystack.Str.StartsWith(_missingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.StartsWith UTF-8 miss")]
+    public bool SpanStartsWith_Miss() => _haystack.RawBytes.AsSpan().StartsWith(_missingNeedle.RawBytes);
 
     [Benchmark(Description = "U8String.StartsWith miss")]
     public bool U8StartsWith_Miss() => _haystack.U8.StartsWith(_missingNeedle.U8);

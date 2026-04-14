@@ -7,6 +7,7 @@ public class StartsWithUtf16Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -23,6 +24,9 @@ public class StartsWithUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.StartsWith")]
     public bool StringStartsWith() => Haystack.Str.StartsWith(Needle.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.StartsWith UTF-8")]
+    public bool SpanStartsWith() => Haystack.RawBytes.AsSpan().StartsWith(Needle.RawBytes);
+
     [Benchmark(Description = "Text.StartsWith UTF-8")]
     public bool TextStartsWith_Utf8() => Haystack.Utf8.StartsWith(Needle.Utf8);
 
@@ -34,6 +38,9 @@ public class StartsWithUtf16Benchmarks
 
     [Benchmark(Description = "string.StartsWith miss")]
     public bool StringStartsWith_Miss() => Haystack.Str.StartsWith(MissingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.StartsWith UTF-8 miss")]
+    public bool SpanStartsWith_Miss() => Haystack.RawBytes.AsSpan().StartsWith(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.StartsWith UTF-8 miss")]
     public bool TextStartsWith_Utf8_Miss() => Haystack.Utf8.StartsWith(MissingNeedle.Utf8);

@@ -7,6 +7,7 @@ public class CompareToUtf16Benchmarks
 {
     [EqualitySizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -22,6 +23,9 @@ public class CompareToUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.Compare")]
     public int StringCompare() => string.Compare(A.Str, Diff.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.SequenceCompareTo UTF-8")]
+    public int SpanSequenceCompareTo() => A.RawBytes.AsSpan().SequenceCompareTo(Diff.RawBytes);
+
     [Benchmark(Description = "Text.CompareTo UTF-8")]
     public int TextCompareTo_Utf8() => A.Utf8.CompareTo(Diff.Utf8);
 
@@ -30,5 +34,4 @@ public class CompareToUtf16Benchmarks
 
     [Benchmark(Description = "Text.CompareTo UTF-32")]
     public int TextCompareTo_Utf32() => A.Utf8.CompareTo(Diff.Utf32);
-
 }

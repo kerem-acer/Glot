@@ -7,6 +7,7 @@ public class EndsWithUtf8Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -20,7 +21,13 @@ public class EndsWithUtf8Benchmarks
         _missingNeedle = EncodedSet.From(TestData.MissingNeedle(Locale));
     }
 
-    [Benchmark(Baseline = true, Description = "U8String.EndsWith")]
+    [Benchmark(Baseline = true, Description = "string.EndsWith")]
+    public bool StringEndsWith() => _haystack.Str.EndsWith(_needle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.EndsWith UTF-8")]
+    public bool SpanEndsWith() => _haystack.RawBytes.AsSpan().EndsWith(_needle.RawBytes);
+
+    [Benchmark(Description = "U8String.EndsWith")]
     public bool U8EndsWith() => _haystack.U8.EndsWith(_needle.U8);
 
     [Benchmark(Description = "Text.EndsWith UTF-8")]
@@ -31,6 +38,12 @@ public class EndsWithUtf8Benchmarks
 
     [Benchmark(Description = "Text.EndsWith UTF-32")]
     public bool TextEndsWith_Utf32() => _haystack.Utf8.EndsWith(_needle.Utf32);
+
+    [Benchmark(Description = "string.EndsWith miss")]
+    public bool StringEndsWith_Miss() => _haystack.Str.EndsWith(_missingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.EndsWith UTF-8 miss")]
+    public bool SpanEndsWith_Miss() => _haystack.RawBytes.AsSpan().EndsWith(_missingNeedle.RawBytes);
 
     [Benchmark(Description = "U8String.EndsWith miss")]
     public bool U8EndsWith_Miss() => _haystack.U8.EndsWith(_missingNeedle.U8);

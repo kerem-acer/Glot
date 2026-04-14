@@ -7,6 +7,7 @@ public class LastByteIndexOfUtf16Benchmarks
 {
     [SearchSizeParams]
     public int N;
+
     [ScriptParams]
     public Script Locale;
 
@@ -23,6 +24,9 @@ public class LastByteIndexOfUtf16Benchmarks
     [Benchmark(Baseline = true, Description = "string.LastIndexOf")]
     public int StringLastIndexOf() => Haystack.Str.LastIndexOf(Needle.Str, StringComparison.Ordinal);
 
+    [Benchmark(Description = "Span.LastIndexOf UTF-8")]
+    public int SpanLastIndexOf() => Haystack.RawBytes.AsSpan().LastIndexOf(Needle.RawBytes);
+
     [Benchmark(Description = "Text.LastByteIndexOf UTF-8")]
     public int TextLastByteIndexOf_Utf8() => Haystack.Utf8.LastByteIndexOf(Needle.Utf8);
 
@@ -34,6 +38,9 @@ public class LastByteIndexOfUtf16Benchmarks
 
     [Benchmark(Description = "string.LastIndexOf miss")]
     public int StringLastIndexOf_Miss() => Haystack.Str.LastIndexOf(MissingNeedle.Str, StringComparison.Ordinal);
+
+    [Benchmark(Description = "Span.LastIndexOf UTF-8 miss")]
+    public int SpanLastIndexOf_Miss() => Haystack.RawBytes.AsSpan().LastIndexOf(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.LastByteIndexOf UTF-8 miss")]
     public int TextLastByteIndexOf_Utf8_Miss() => Haystack.Utf8.LastByteIndexOf(MissingNeedle.Utf8);
