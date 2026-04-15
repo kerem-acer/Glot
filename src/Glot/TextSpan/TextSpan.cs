@@ -56,6 +56,13 @@ public readonly ref partial struct TextSpan
     /// <summary>Returns <c>true</c> if this span contains no bytes.</summary>
     public bool IsEmpty => Bytes.IsEmpty;
 
-    /// <summary>The number of Unicode runes (scalar values) in this span. O(1) — computed at construction.</summary>
-    public int RuneLength => _encodedLength.RuneLength;
+    /// <summary>The number of Unicode runes (scalar values) in this span. O(1) when cached; SIMD O(n) when not.</summary>
+    public int RuneLength
+    {
+        get
+        {
+            var cached = _encodedLength.RuneLength;
+            return cached != 0 || Bytes.IsEmpty ? cached : RuneCount.Count(Bytes, Encoding);
+        }
+    }
 }

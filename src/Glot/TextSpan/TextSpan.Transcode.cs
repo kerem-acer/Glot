@@ -54,7 +54,7 @@ public readonly ref partial struct TextSpan
                 destination);
         }
 
-        // UTF-32→UTF-8: no direct bulk API, rune-by-rune.
+        // UTF-32→UTF-8: rune-by-rune (BCL Encoding.UTF32 is scalar, no SIMD benefit).
         var offset = 0;
         foreach (var rune in EnumerateRunes())
         {

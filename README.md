@@ -403,6 +403,19 @@ public readonly struct LinkedTextUtf8Span
 public struct LinkedTextUtf8.Owned : IDisposable
 ```
 
+## Benchmarks
+
+Performance is measured with [BenchmarkDotNet](https://benchmarkdotnet.org/) across search, equality, mutation, creation, concatenation, interpolation, split, and serialization operations. Each benchmark compares `Text` against `string`, raw `Span<byte>`, and `U8String` baselines.
+
+```bash
+make quick F=ContainsUtf8                       # short run, one class
+make dry F=Contains                             # smoke test, all Contains
+make bench                                      # full run, all benchmarks
+make dry F=ContainsUtf8 P='N=256 Locale=Ascii'  # filtered params
+```
+
+Results are in [`benchmarks/artifacts/results/`](benchmarks/artifacts/results/). See [`benchmarks/README.md`](benchmarks/README.md) for details.
+
 ## Target frameworks
 
 `net10.0`, `net8.0`, `net6.0`, `netstandard2.1`, `netstandard2.0`

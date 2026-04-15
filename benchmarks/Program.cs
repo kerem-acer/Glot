@@ -1,9 +1,12 @@
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 
-var config = DefaultConfig.Instance;
+var config = DefaultConfig.Instance
+    .AddExporter(MarkdownExporter.GitHub)
+    .WithArtifactsPath("benchmarks/artifacts");
 var bdnArgs = new List<string>();
 
 foreach (var arg in args)

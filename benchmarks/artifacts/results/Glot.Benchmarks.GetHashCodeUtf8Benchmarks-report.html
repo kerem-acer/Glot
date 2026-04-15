@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.GetHashCodeUtf8Benchmarks-20260415-054036</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host] : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+  Dry    : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>Job=Dry  IterationCount=1  LaunchCount=1  
+RunStrategy=ColdStart  UnrollFactor=1  WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>Method             </th><th>N</th><th>Locale</th><th>Mean</th><th>Error</th><th>Ratio</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>string.GetHashCode</td><td>8</td><td>Ascii</td><td>117.6 &mu;s</td><td>NA</td><td>1.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;HashCode.AddBytes UTF-8&#39;</td><td>8</td><td>Ascii</td><td>137.6 &mu;s</td><td>NA</td><td>1.17</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.GetHashCode</td><td>8</td><td>Ascii</td><td>1,593.9 &mu;s</td><td>NA</td><td>13.56</td><td>-</td><td>NA</td>
+</tr><tr><td>Text.GetHashCode</td><td>8</td><td>Ascii</td><td>475.3 &mu;s</td><td>NA</td><td>4.04</td><td>-</td><td>NA</td>
+</tr></tbody></table>
+</body>
+</html>

@@ -14,28 +14,62 @@ globs: ["**/benchmarks/**", "**/*Benchmarks*.cs"]
 ## Architecture
 
 - **No base classes.** Every benchmark class is self-contained.
-- Shared data generation lives in `TestContent` (static methods).
+- Shared data generation lives in `TestData` (static methods).
 - Shared encoding conversion lives in `EncodedSet` (record struct with factory).
 - Shared parameter values live in custom `ParamsAttribute` subclasses (`BenchmarkParams.cs`).
-- One class per file. One file per method per encoding group.
+- One class per file. One file per method per encoding.
+
+## Directory Structure
+
+Benchmarks are organized **by method, then by encoding** — not by encoding first:
+
+```
+benchmarks/
+  Search/
+    Contains/
+      ContainsUtf8Benchmarks.cs
+      ContainsUtf16Benchmarks.cs
+      ContainsUtf32Benchmarks.cs
+    ByteIndexOf/
+      ...
+  Mutation/
+    Replace/
+      ReplaceUtf8Benchmarks.cs
+      ...
+    ToUpper/
+      ...
+  Concat/
+    TextConcatUtf8Benchmarks.cs
+    TextConcatUtf16Benchmarks.cs
+    TextConcatUtf32Benchmarks.cs
+  Builder/
+    TextBuilderUtf8Benchmarks.cs
+    ...
+  Creation/
+    TextCreationUtf8Benchmarks.cs
+    ...
+  Interpolation/
+    TextInterpolationUtf8Benchmarks.cs
+    ...
+  Split/
+    TextSplitUtf8Benchmarks.cs
+    ...
+  Pipeline/
+    HttpPipelineBenchmarks.cs
+    JsonSerializationBenchmarks.cs
+  Shared/
+    EncodedSet.cs
+    TestData.cs
+    BenchmarkParams.cs
+    Script.cs
+```
 
 ## Naming
 
-- **Class:** `{Method}{Utf8|Utf16|Utf32}Benchmarks` for search/equality, `{Feature}Benchmarks` for others.
-- **File:** matches class name, placed in encoding subdirectory for search (`Search/Utf8/`, `Search/Utf16/`, `Search/Utf32/`).
+- **Class:** `{Method}{Utf8|Utf16|Utf32}Benchmarks` for search/equality, `{Feature}{Utf8|Utf16|Utf32}Benchmarks` for others.
+- **File:** matches class name.
 - **Method:** `{Library}{Operation}` for hit, `{Library}{Operation}_Miss` for miss, `{Library}{Operation}_Diff` for different-value.
 - **Description attribute:** `"{Library}.{Method}"` or `"{Library}.{Method} {encoding}"` or `"{Library}.{Method} {encoding} miss"`.
-
-```csharp
-[Benchmark(Baseline = true, Description = "U8String.IndexOf")]
-public int U8IndexOf() => _haystack.U8.IndexOf(_needle.U8);
-
-[Benchmark(Description = "Text.ByteIndexOf UTF-16")]
-public int TextByteIndexOf_Utf16() => _haystack.Utf8.ByteIndexOf(_needle.Utf16);
-
-[Benchmark(Description = "Text.ByteIndexOf UTF-32 miss")]
-public int TextByteIndexOf_Utf32_Miss() => _haystack.Utf8.ByteIndexOf(_missingNeedle.Utf32);
-```
 
 ## Code Style
 
@@ -51,36 +85,9 @@ Respect `.editorconfig` and `.globalconfig`. Key rules for benchmarks:
 Class layout order:
 
 1. Custom param attributes on fields (`[SearchSizeParams]`, `[ScriptParams]`) — attribute on its own line
-2. Private fields (`EncodedSet` record struct preferred; `null!` acceptable for reference types like `string`, `byte[]`, `Text[]`)
+2. Private fields (`EncodedSet` preferred — see EncodedSet section below)
 3. `[GlobalSetup]` method named `Setup`
-4. Benchmark methods — baseline first, then Text variants, then miss/diff variants
-
-```csharp
-[MemoryDiagnoser]
-public class ContainsUtf8Benchmarks
-{
-    [SearchSizeParams]
-    public int N;
-
-    [ScriptParams]
-    public Script Locale;
-
-    EncodedSet _haystack, _needle, _missingNeedle;
-
-    [GlobalSetup]
-    public void Setup()
-    {
-        _haystack = EncodedSet.From(TestContent.Generate(N, Locale));
-        _needle = EncodedSet.From(TestContent.Needle(Locale));
-        _missingNeedle = EncodedSet.From(TestContent.MissingNeedle(Locale));
-    }
-
-    [Benchmark(Baseline = true, Description = "U8String.Contains")]
-    public bool U8Contains() => _haystack.U8.Contains(_needle.U8);
-
-    // ... Text UTF-8, UTF-16, UTF-32 variants, then miss variants
-}
-```
+4. Benchmark methods — baseline first, then competitors, then Text variants, then miss/diff variants
 
 ## Parameters
 
@@ -94,58 +101,43 @@ Use custom attributes from `BenchmarkParams.cs` instead of inline `[Params(...)]
 | `[PartSizeParams]` | 1, 8, 64, 1024 | Builder, concat, interpolation benchmarks |
 
 - Add new custom attributes to `BenchmarkParams.cs` when a parameter set is reused across multiple classes.
-- Use inline `[Params(...)]` only for one-off parameters unique to a single class (e.g. `Parts`, `PartSize`).
+- Use inline `[Params(...)]` only for one-off parameters unique to a single class (e.g. `Parts`).
 - **Never modify `[Params]` values to reduce runtime.** Use `--filter` or `--param:` CLI args instead.
 
 ## Baselines
 
-Each encoding group has a specific competitor as baseline:
+Each encoding group has a native-encoding baseline:
 
 | Group | Baseline | Rationale |
 |---|---|---|
-| `Utf8` | `U8String` | Both operate on UTF-8 bytes natively |
-| `Utf16` | `string` | Both operate on UTF-16 chars natively |
+| `Utf8` | `Span<byte>` operations or `U8String` | Both operate on UTF-8 bytes natively |
+| `Utf16` | `string` | Native UTF-16 representation in .NET |
 | `Utf32` | none | No established UTF-32 competitor exists |
 
+- **`string` is UTF-16** — never use `string` as baseline in a UTF-8 benchmark class.
+- For UTF-8 benchmarks, use raw `Span<byte>` operations (e.g. `Span.IndexOf`, `Span.LastIndexOf`, `HashCode.AddBytes`) or `U8String` as baseline.
 - Mark exactly one method `Baseline = true` per class (or per category if using `[BenchmarkCategory]`).
 - If the class has no competitor, omit `Baseline = true` entirely.
 
-## Encoding Coverage
+## Required Competitors
 
-Every Text benchmark method must test **all three needle encodings** (UTF-8, UTF-16, UTF-32):
+Every benchmark class should include these competitors where applicable:
 
-```csharp
-[Benchmark(Description = "Text.Contains UTF-8")]
-public bool TextContains_Utf8() => _haystack.Utf8.Contains(_needle.Utf8);
-
-[Benchmark(Description = "Text.Contains UTF-16")]
-public bool TextContains_Utf16() => _haystack.Utf8.Contains(_needle.Utf16);
-
-[Benchmark(Description = "Text.Contains UTF-32")]
-public bool TextContains_Utf32() => _haystack.Utf8.Contains(_needle.Utf32);
-```
-
-For search benchmarks, also test **miss scenarios** (needle not found) for every encoding:
-
-```csharp
-[Benchmark(Description = "Text.Contains UTF-8 miss")]
-public bool TextContains_Utf8_Miss() => _haystack.Utf8.Contains(_missingNeedle.Utf8);
-```
-
-For equality benchmarks, test **different-value scenarios**:
-
-```csharp
-[Benchmark(Description = "Text.Equals UTF-8 different")]
-public bool TextEquals_Utf8_Diff() => _a.Utf8.Equals(_diff.Utf8);
-```
+| Competitor | When to include | Example |
+|---|---|---|
+| `string` | UTF-16 classes, or as cross-reference | `_source.Str.Contains(...)` |
+| `Span<byte>` / raw bytes | UTF-8 classes | `_haystack.RawBytes.AsSpan().IndexOf(_needle.RawBytes)` |
+| `U8String` | UTF-8 classes (search/equality) | `_haystack.U8.Contains(_needle.U8)` |
+| `Text` | All classes | The type under test |
 
 ## EncodedSet
 
-`EncodedSet` is a `record struct` that holds a string in all five representations: `Str`, `Utf8`, `Utf16`, `Utf32`, `U8`.
+`EncodedSet` is a `record struct` that holds a string in all six representations: `Str`, `RawBytes`, `Utf8`, `Utf16`, `Utf32`, `U8`.
 
+- **Always use `EncodedSet`** for benchmark data — never manually call `Encoding.UTF8.GetBytes()` or create separate `string[]`, `byte[][]`, `Text[]` fields when `EncodedSet` can hold them.
 - Use `EncodedSet.From(string)` whenever a benchmark needs the same value in multiple encodings.
-- Access fields directly: `_haystack.Utf8`, `_needle.U8`, `_a.Str`.
-- Declare only the `EncodedSet` fields you need — don't create unused ones.
+- Access fields directly: `_haystack.Utf8`, `_needle.RawBytes`, `_a.Str`, `_source.U8`.
+- When APIs need typed arrays (e.g. `string[]` for `string.Concat`), derive them from `EncodedSet[]` in Setup — not as independently constructed fields.
 
 ```csharp
 // Search: haystack + needle + missing needle
@@ -156,11 +148,24 @@ EncodedSet _a, _b, _diff;
 
 // GetHashCode: single value
 EncodedSet _a;
+
+// Concat: array of parts, with derived typed arrays for APIs that need them
+EncodedSet[] _parts = null!;
+string[] _strings = null!;     // derived from _parts in Setup
+Text[] _textsUtf8 = null!;     // derived from _parts in Setup
 ```
+
+## Encoding Coverage
+
+Each benchmark class tests **one encoding group** (Utf8, Utf16, or Utf32). Cross-encoding operations (e.g. UTF-16 needle in UTF-8 haystack) belong in the haystack's encoding class.
+
+For search benchmarks, also test **miss scenarios** (needle not found) for every encoding variant.
+
+For equality benchmarks, test **different-value scenarios**.
 
 ## Categories
 
-Use `[BenchmarkCategory]` + `[GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]` + `[CategoriesColumn]` when a single class benchmarks **multiple distinct operations** (e.g. Replace + ToUpper in `TextMutationBenchmarks`). Each category gets its own baseline.
+Use `[BenchmarkCategory]` + `[GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]` + `[CategoriesColumn]` when a single class benchmarks **multiple distinct operations** (e.g. Split + EnumerateRunes). Each category gets its own baseline.
 
 Do **not** use categories when a class benchmarks one operation — just use a flat class.
 
@@ -172,11 +177,11 @@ Benchmarks returning pooled or disposable results use `void` return and `using v
 [Benchmark(Description = "Text.ReplacePooled")]
 public void TextReplacePooled()
 {
-    using var result = _sourceUtf8.ReplacePooled(_markerUtf8, _replacementUtf8);
+    using var result = _source.Utf8.ReplacePooled(_marker.Utf8, _replacement.Utf8);
 }
 ```
 
-## TestContent Helpers
+## TestData Helpers
 
 | Method | Returns | Purpose |
 |---|---|---|
@@ -197,7 +202,11 @@ dotnet build benchmarks/Glot.Benchmarks.csproj -c Release
 dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
   --filter '*ContainsUtf8*' --quick
 
-# Filter by parameter
+# Dry run (1 iteration, fastest — just verifies benchmarks run)
+dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
+  --filter '*ContainsUtf8*' --job dry
+
+# Filter by parameter (use actual param names from the class)
 dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
   --filter '*ContainsUtf8*' --param:N=256 --param:Locale=Ascii
 
@@ -211,9 +220,11 @@ dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- --list flat
 ## Don'ts
 
 - **Don't** use abstract base classes for benchmarks — each class is self-contained.
-- **Don't** use `null!` when `EncodedSet` (record struct) can replace individual encoding fields. `null!` is acceptable for reference types (`string`, `byte[]`, `Text[]`) that have no value-type alternative.
+- **Don't** manually encode bytes — use `EncodedSet.From()` and access `.RawBytes`, `.Utf8`, `.U8`, etc.
+- **Don't** create separate `string[]`, `byte[][]`, `Text[]` fields independently — derive them from `EncodedSet[]` in Setup.
+- **Don't** use `string` as baseline in UTF-8 benchmark classes — `string` is UTF-16.
 - **Don't** modify `[Params]` attribute values to speed up runs — use `--filter` and `--param:` CLI args.
 - **Don't** add BenchmarkDotNet or U8String versions to the benchmark csproj — central package management handles this.
 - **Don't** create a benchmark without a competitor baseline (except Utf32 group where none exists).
-- **Don't** test only one needle encoding — always test UTF-8, UTF-16, and UTF-32.
 - **Don't** test only the hit path — always include miss/different scenarios for search and equality benchmarks.
+- **Don't** organize directories by encoding first — organize by method/feature, then encoding files within.

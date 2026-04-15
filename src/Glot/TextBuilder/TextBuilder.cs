@@ -1,7 +1,11 @@
 using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
+#if NET6_0_OR_GREATER
+using System.Text.Unicode;
+#else
 using static System.Text.Encoding;
+#endif
 
 namespace Glot;
 
@@ -65,29 +69,28 @@ public struct TextBuilder : IDisposable
         if (value.Encoding == Encoding)
         {
             AppendBytes(value.Bytes);
-            RuneLength += !value.IsEmpty && value.RuneLength == 0
-                ? RuneCount.Count(value.Bytes, value.Encoding)
-                : value.RuneLength;
+            RuneLength += value.RuneLength;
             return;
         }
 
-        // Bulk path for UTF-8↔UTF-16 (SIMD-accelerated on .NET 6+, via Polyfill on netstandard).
-        if (value.Encoding == TextEncoding.Utf16 && Encoding == TextEncoding.Utf8)
+        switch (value.Encoding, Encoding)
         {
-            AppendBulkUtf16ToUtf8(value);
-            return;
-        }
+            case (TextEncoding.Utf16, TextEncoding.Utf8):
+                AppendBulkUtf16ToUtf8(value);
+                break;
 
-        if (value.Encoding == TextEncoding.Utf8 && Encoding == TextEncoding.Utf16)
-        {
-            AppendBulkUtf8ToUtf16(value);
-            return;
-        }
+            case (TextEncoding.Utf8, TextEncoding.Utf16):
+                AppendBulkUtf8ToUtf16(value);
+                break;
 
-        // UTF-32 paths: rune-by-rune (no bulk BCL API for UTF-32).
-        foreach (var rune in value.EnumerateRunes())
-        {
-            AppendRune(rune);
+            default:
+                // UTF-32 paths: rune-by-rune (BCL Encoding.UTF32 is scalar, no SIMD benefit).
+                foreach (var rune in value.EnumerateRunes())
+                {
+                    AppendRune(rune);
+                }
+
+                break;
         }
     }
 
@@ -153,7 +156,12 @@ public struct TextBuilder : IDisposable
 
         var bytes = new byte[ByteLength];
         _buffer.AsSpan(0, ByteLength).CopyTo(bytes);
-        return new Text(bytes, 0, ByteLength, Encoding, RuneLength);
+        return new Text(
+            bytes,
+            0,
+            ByteLength,
+            Encoding,
+            RuneLength);
     }
 
     /// <summary>
@@ -167,7 +175,12 @@ public struct TextBuilder : IDisposable
             return null;
         }
 
-        var result = OwnedText.Create(_buffer, ByteLength, Encoding, RuneLength);
+        var result = OwnedText.Create(
+            _buffer,
+            ByteLength,
+            Encoding,
+            RuneLength);
+
         _buffer = ArrayPool<byte>.Shared.Rent(DefaultCapacity);
         ByteLength = 0;
         RuneLength = 0;
@@ -225,27 +238,34 @@ public struct TextBuilder : IDisposable
 
     void AppendBulkUtf16ToUtf8(TextSpan value)
     {
-        var chars = value.Chars;
-        var byteCount = UTF8.GetByteCount(chars);
-        EnsureCapacity(ByteLength + byteCount);
-        var written = UTF8.GetBytes(chars, _buffer.AsSpan(ByteLength));
-        ByteLength += written;
-        RuneLength += value.RuneLength != 0
-            ? value.RuneLength
-            : RuneCount.Count(value.Bytes, value.Encoding);
+        AppendCharsAsUtf8(value.Chars);
+        RuneLength += value.RuneLength;
     }
 
     void AppendBulkUtf8ToUtf16(TextSpan value)
     {
-        var charCount = UTF8.GetCharCount(value.Bytes);
-        var byteCount = charCount * 2;
-        EnsureCapacity(ByteLength + byteCount);
-        var charDest = MemoryMarshal.Cast<byte, char>(_buffer.AsSpan(ByteLength, byteCount));
-        UTF8.GetChars(value.Bytes, charDest);
-        ByteLength += byteCount;
-        RuneLength += value.RuneLength != 0
-            ? value.RuneLength
-            : RuneCount.Count(value.Bytes, value.Encoding);
+        // Max 1 char (2 bytes) per UTF-8 byte.
+        EnsureCapacity(ByteLength + (value.Bytes.Length * 2));
+        var charDest = MemoryMarshal.Cast<byte, char>(_buffer.AsSpan(ByteLength));
+#if NET6_0_OR_GREATER
+        Utf8.ToUtf16(value.Bytes, charDest, out _, out var charsWritten);
+#else
+        var charsWritten = UTF8.GetChars(value.Bytes, charDest);
+#endif
+        ByteLength += charsWritten * 2;
+        RuneLength += value.RuneLength;
+    }
+
+    /// <summary>Converts UTF-16 chars to UTF-8 and appends to the builder buffer. Max 3 UTF-8 bytes per char.</summary>
+    void AppendCharsAsUtf8(ReadOnlySpan<char> chars)
+    {
+        EnsureCapacity(ByteLength + (chars.Length * 3));
+#if NET6_0_OR_GREATER
+        Utf8.FromUtf16(chars, _buffer.AsSpan(ByteLength), out _, out var bytesWritten);
+#else
+        var bytesWritten = UTF8.GetBytes(chars, _buffer.AsSpan(ByteLength));
+#endif
+        ByteLength += bytesWritten;
     }
 
     void EnsureCapacity(int required)

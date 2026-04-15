@@ -9,6 +9,8 @@ CoverageReport/
 coverage*.xml
 TestResults/
 BenchmarkDotNet.Artifacts/
+benchmarks/artifacts/*
+!benchmarks/artifacts/results/
 *.nupkg
 
 # Verify
