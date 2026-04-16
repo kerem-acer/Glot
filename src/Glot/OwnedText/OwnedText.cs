@@ -16,6 +16,7 @@ public sealed partial class OwnedText : IDisposable
 
     object? _buffer; // byte[], char[], or int[] — returned to the appropriate ArrayPool on dispose
     EncodedLength _encodedLength;
+    BackingType _backingType;
 
     OwnedText() { }
 
@@ -38,13 +39,14 @@ public sealed partial class OwnedText : IDisposable
     /// Returns a <see cref="Glot.Text"/> view over the pooled buffer. O(1).
     /// The returned value is valid only while this <see cref="OwnedText"/> has not been disposed.
     /// </summary>
-    public Text Text => _buffer is null ? default : new(_buffer, 0, ByteLength, Encoding, RuneLength);
+    public Text Text => _buffer is null ? default : new(_buffer, 0, ByteLength, Encoding, RuneLength, _backingType);
 
-    internal void Initialize(object buffer, int byteLength, TextEncoding encoding, int runeLength)
+    internal void Initialize(object buffer, int byteLength, TextEncoding encoding, int runeLength, BackingType backingType)
     {
         _buffer = buffer;
         ByteLength = byteLength;
         _encodedLength = new EncodedLength(encoding, runeLength);
+        _backingType = backingType;
     }
 
     /// <summary>
@@ -63,6 +65,29 @@ public sealed partial class OwnedText : IDisposable
     /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying bytes into a pooled buffer.</summary>
     public static OwnedText? FromUtf8(ReadOnlySpan<byte> value, bool countRunes = true)
         => FromBytes(value, TextEncoding.Utf8, countRunes);
+
+    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying a multi-segment sequence into a pooled buffer.</summary>
+    public static OwnedText? FromUtf8(ReadOnlySequence<byte> value, bool countRunes = true)
+    {
+        if (value.IsEmpty)
+        {
+            return null;
+        }
+
+        if (value.IsSingleSegment)
+        {
+            return FromUtf8(value.First.Span, countRunes);
+        }
+
+        var length = checked((int)value.Length);
+        var buffer = ArrayPool<byte>.Shared.Rent(length);
+        value.CopyTo(buffer);
+        var runeLength = countRunes ? RuneCount.Count(buffer.AsSpan(0, length), TextEncoding.Utf8) : 0;
+
+        var owned = GetFromPool();
+        owned.Initialize(buffer, length, TextEncoding.Utf8, runeLength, BackingType.ByteArray);
+        return owned;
+    }
 
     /// <summary>Creates a UTF-16 <see cref="OwnedText"/> by copying chars into a pooled byte buffer.</summary>
     public static OwnedText? FromChars(ReadOnlySpan<char> value, bool countRunes = true)
@@ -85,7 +110,7 @@ public sealed partial class OwnedText : IDisposable
         var runeLength = countRunes ? RuneCount.Count(value, encoding) : 0;
 
         var owned = GetFromPool();
-        owned.Initialize(buffer, value.Length, encoding, runeLength);
+        owned.Initialize(buffer, value.Length, encoding, runeLength, BackingType.ByteArray);
         return owned;
     }
 
@@ -97,7 +122,7 @@ public sealed partial class OwnedText : IDisposable
     {
         var runeLength = RuneCount.Count(buffer.AsSpan(0, byteLength), encoding);
         var owned = GetFromPool();
-        owned.Initialize(buffer, byteLength, encoding, runeLength);
+        owned.Initialize(buffer, byteLength, encoding, runeLength, BackingType.ByteArray);
         return owned;
     }
 
@@ -108,7 +133,7 @@ public sealed partial class OwnedText : IDisposable
     internal static OwnedText Create(byte[] buffer, int byteLength, TextEncoding encoding, int runeLength)
     {
         var owned = GetFromPool();
-        owned.Initialize(buffer, byteLength, encoding, runeLength);
+        owned.Initialize(buffer, byteLength, encoding, runeLength, BackingType.ByteArray);
         return owned;
     }
 
@@ -121,7 +146,7 @@ public sealed partial class OwnedText : IDisposable
         var bytes = MemoryMarshal.AsBytes(buffer.AsSpan(0, charLength));
         var runeLength = RuneCount.Count(bytes, TextEncoding.Utf16);
         var owned = GetFromPool();
-        owned.Initialize(buffer, charLength * 2, TextEncoding.Utf16, runeLength);
+        owned.Initialize(buffer, charLength * 2, TextEncoding.Utf16, runeLength, BackingType.CharArray);
         return owned;
     }
 
@@ -134,7 +159,7 @@ public sealed partial class OwnedText : IDisposable
         var bytes = MemoryMarshal.AsBytes(buffer.AsSpan(0, intLength));
         var runeLength = RuneCount.Count(bytes, TextEncoding.Utf32);
         var owned = GetFromPool();
-        owned.Initialize(buffer, intLength * 4, TextEncoding.Utf32, runeLength);
+        owned.Initialize(buffer, intLength * 4, TextEncoding.Utf32, runeLength, BackingType.IntArray);
         return owned;
     }
 

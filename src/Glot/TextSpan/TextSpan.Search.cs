@@ -43,7 +43,7 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.Count(Bytes[..bytePos], Encoding);
+        return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
     }
 
     public int RuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -69,7 +69,7 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.Count(Bytes[..bytePos], Encoding);
+        return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
     }
 
     public int LastRuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)

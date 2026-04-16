@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.StartsWithUtf8Benchmarks-20260415-232736</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                 </th><th>N</th><th>Locale</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Ratio</th><th>RatioSD</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>string.StartsWith</td><td>64</td><td>Ascii</td><td>0.0707 ns</td><td>0.4541 ns</td><td>0.0249 ns</td><td>0.0820 ns</td><td>1.11</td><td>0.56</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>64</td><td>Ascii</td><td>0.0495 ns</td><td>0.0607 ns</td><td>0.0033 ns</td><td>0.0478 ns</td><td>0.78</td><td>0.30</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>64</td><td>Ascii</td><td>0.1699 ns</td><td>0.0265 ns</td><td>0.0014 ns</td><td>0.1693 ns</td><td>2.68</td><td>1.02</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>64</td><td>Ascii</td><td>1.8538 ns</td><td>0.1115 ns</td><td>0.0061 ns</td><td>1.8528 ns</td><td>29.23</td><td>11.09</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>64</td><td>Ascii</td><td>12.3316 ns</td><td>3.7383 ns</td><td>0.2049 ns</td><td>12.2171 ns</td><td>194.45</td><td>73.86</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>64</td><td>Ascii</td><td>11.0362 ns</td><td>2.7297 ns</td><td>0.1496 ns</td><td>10.9560 ns</td><td>174.02</td><td>66.08</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>64</td><td>Ascii</td><td>0.0745 ns</td><td>0.4520 ns</td><td>0.0248 ns</td><td>0.0743 ns</td><td>1.17</td><td>0.57</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Ascii</td><td>0.2548 ns</td><td>0.0664 ns</td><td>0.0036 ns</td><td>0.2535 ns</td><td>4.02</td><td>1.53</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>64</td><td>Ascii</td><td>0.2976 ns</td><td>0.3862 ns</td><td>0.0212 ns</td><td>0.2939 ns</td><td>4.69</td><td>1.81</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Ascii</td><td>1.8759 ns</td><td>0.1150 ns</td><td>0.0063 ns</td><td>1.8725 ns</td><td>29.58</td><td>11.23</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>64</td><td>Ascii</td><td>12.4881 ns</td><td>1.4649 ns</td><td>0.0803 ns</td><td>12.4671 ns</td><td>196.91</td><td>74.75</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>64</td><td>Ascii</td><td>10.2187 ns</td><td>0.4491 ns</td><td>0.0246 ns</td><td>10.2325 ns</td><td>161.13</td><td>61.16</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>64</td><td>Latin</td><td>0.0549 ns</td><td>0.6649 ns</td><td>0.0364 ns</td><td>0.0511 ns</td><td>1.45</td><td>1.36</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>64</td><td>Latin</td><td>0.0643 ns</td><td>0.0666 ns</td><td>0.0037 ns</td><td>0.0649 ns</td><td>1.69</td><td>1.11</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>64</td><td>Latin</td><td>0.0859 ns</td><td>0.0141 ns</td><td>0.0008 ns</td><td>0.0862 ns</td><td>2.26</td><td>1.48</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>64</td><td>Latin</td><td>1.9358 ns</td><td>0.1029 ns</td><td>0.0056 ns</td><td>1.9338 ns</td><td>50.95</td><td>33.24</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>64</td><td>Latin</td><td>12.3805 ns</td><td>0.5061 ns</td><td>0.0277 ns</td><td>12.3685 ns</td><td>325.83</td><td>212.59</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>64</td><td>Latin</td><td>10.2663 ns</td><td>0.3345 ns</td><td>0.0183 ns</td><td>10.2563 ns</td><td>270.19</td><td>176.28</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>64</td><td>Latin</td><td>0.0792 ns</td><td>0.8223 ns</td><td>0.0451 ns</td><td>0.0710 ns</td><td>2.08</td><td>1.82</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Latin</td><td>0.0295 ns</td><td>0.0781 ns</td><td>0.0043 ns</td><td>0.0275 ns</td><td>0.78</td><td>0.52</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>64</td><td>Latin</td><td>0.0605 ns</td><td>0.0189 ns</td><td>0.0010 ns</td><td>0.0604 ns</td><td>1.59</td><td>1.04</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Latin</td><td>1.8916 ns</td><td>0.1670 ns</td><td>0.0092 ns</td><td>1.8909 ns</td><td>49.78</td><td>32.48</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>64</td><td>Latin</td><td>11.8781 ns</td><td>5.6990 ns</td><td>0.3124 ns</td><td>11.7082 ns</td><td>312.61</td><td>204.13</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>64</td><td>Latin</td><td>11.0068 ns</td><td>2.2070 ns</td><td>0.1210 ns</td><td>10.9413 ns</td><td>289.67</td><td>189.02</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>64</td><td>Cjk</td><td>0.1361 ns</td><td>1.4256 ns</td><td>0.0781 ns</td><td>0.1600 ns</td><td>1.441</td><td>1.33</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>64</td><td>Cjk</td><td>0.0294 ns</td><td>0.1273 ns</td><td>0.0070 ns</td><td>0.0267 ns</td><td>0.311</td><td>0.23</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>64</td><td>Cjk</td><td>0.0703 ns</td><td>0.1193 ns</td><td>0.0065 ns</td><td>0.0708 ns</td><td>0.745</td><td>0.53</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>64</td><td>Cjk</td><td>1.9127 ns</td><td>0.0509 ns</td><td>0.0028 ns</td><td>1.9143 ns</td><td>20.261</td><td>14.27</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>64</td><td>Cjk</td><td>12.6602 ns</td><td>1.1753 ns</td><td>0.0644 ns</td><td>12.6899 ns</td><td>134.106</td><td>94.45</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>64</td><td>Cjk</td><td>10.9311 ns</td><td>0.3736 ns</td><td>0.0205 ns</td><td>10.9352 ns</td><td>115.790</td><td>81.54</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>64</td><td>Cjk</td><td>0.0522 ns</td><td>0.3385 ns</td><td>0.0186 ns</td><td>0.0557 ns</td><td>0.553</td><td>0.44</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Cjk</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>64</td><td>Cjk</td><td>0.0556 ns</td><td>0.0230 ns</td><td>0.0013 ns</td><td>0.0551 ns</td><td>0.589</td><td>0.42</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Cjk</td><td>1.9361 ns</td><td>0.6055 ns</td><td>0.0332 ns</td><td>1.9181 ns</td><td>20.509</td><td>14.45</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>64</td><td>Cjk</td><td>11.9946 ns</td><td>0.9148 ns</td><td>0.0501 ns</td><td>11.9693 ns</td><td>127.055</td><td>89.48</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>64</td><td>Cjk</td><td>11.0742 ns</td><td>0.1070 ns</td><td>0.0059 ns</td><td>11.0724 ns</td><td>117.306</td><td>82.61</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>64</td><td>Emoji</td><td>0.0764 ns</td><td>0.5091 ns</td><td>0.0279 ns</td><td>0.0674 ns</td><td>1.09</td><td>0.47</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>64</td><td>Emoji</td><td>0.0567 ns</td><td>0.1833 ns</td><td>0.0100 ns</td><td>0.0559 ns</td><td>0.81</td><td>0.26</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>64</td><td>Emoji</td><td>0.1673 ns</td><td>0.0583 ns</td><td>0.0032 ns</td><td>0.1673 ns</td><td>2.38</td><td>0.67</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>64</td><td>Emoji</td><td>1.8748 ns</td><td>0.1052 ns</td><td>0.0058 ns</td><td>1.8763 ns</td><td>26.64</td><td>7.54</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>64</td><td>Emoji</td><td>12.6422 ns</td><td>0.5278 ns</td><td>0.0289 ns</td><td>12.6315 ns</td><td>179.64</td><td>50.83</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>64</td><td>Emoji</td><td>10.3966 ns</td><td>1.5040 ns</td><td>0.0824 ns</td><td>10.3884 ns</td><td>147.73</td><td>41.81</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>64</td><td>Emoji</td><td>0.0507 ns</td><td>0.5687 ns</td><td>0.0312 ns</td><td>0.0440 ns</td><td>0.72</td><td>0.45</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Emoji</td><td>0.0548 ns</td><td>0.1066 ns</td><td>0.0058 ns</td><td>0.0515 ns</td><td>0.78</td><td>0.23</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>64</td><td>Emoji</td><td>0.1712 ns</td><td>0.1973 ns</td><td>0.0108 ns</td><td>0.1679 ns</td><td>2.43</td><td>0.70</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Emoji</td><td>1.8187 ns</td><td>0.1596 ns</td><td>0.0087 ns</td><td>1.8163 ns</td><td>25.84</td><td>7.31</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>64</td><td>Emoji</td><td>13.0594 ns</td><td>2.3209 ns</td><td>0.1272 ns</td><td>13.0008 ns</td><td>185.57</td><td>52.53</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>64</td><td>Emoji</td><td>10.4139 ns</td><td>0.2655 ns</td><td>0.0146 ns</td><td>10.4159 ns</td><td>147.98</td><td>41.87</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>64</td><td>Mixed</td><td>0.0338 ns</td><td>0.4898 ns</td><td>0.0268 ns</td><td>0.0325 ns</td><td>2.005</td><td>2.58</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>64</td><td>Mixed</td><td>0.0469 ns</td><td>0.0538 ns</td><td>0.0029 ns</td><td>0.0468 ns</td><td>2.780</td><td>2.54</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>64</td><td>Mixed</td><td>0.1030 ns</td><td>0.0937 ns</td><td>0.0051 ns</td><td>0.1009 ns</td><td>6.107</td><td>5.57</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>64</td><td>Mixed</td><td>1.9283 ns</td><td>0.1108 ns</td><td>0.0061 ns</td><td>1.9308 ns</td><td>114.326</td><td>104.13</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>64</td><td>Mixed</td><td>11.5882 ns</td><td>0.4105 ns</td><td>0.0225 ns</td><td>11.5885 ns</td><td>687.055</td><td>625.76</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>64</td><td>Mixed</td><td>10.2313 ns</td><td>0.4423 ns</td><td>0.0242 ns</td><td>10.2425 ns</td><td>606.603</td><td>552.49</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>64</td><td>Mixed</td><td>0.1105 ns</td><td>1.0160 ns</td><td>0.0557 ns</td><td>0.1093 ns</td><td>6.550</td><td>7.06</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>64</td><td>Mixed</td><td>0.0623 ns</td><td>0.0713 ns</td><td>0.0039 ns</td><td>0.0605 ns</td><td>3.694</td><td>3.38</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>64</td><td>Mixed</td><td>1.9132 ns</td><td>0.1169 ns</td><td>0.0064 ns</td><td>1.9108 ns</td><td>113.430</td><td>103.31</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>64</td><td>Mixed</td><td>11.8151 ns</td><td>5.8282 ns</td><td>0.3195 ns</td><td>11.7407 ns</td><td>700.504</td><td>638.37</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>64</td><td>Mixed</td><td>10.8176 ns</td><td>0.5088 ns</td><td>0.0279 ns</td><td>10.8091 ns</td><td>641.364</td><td>584.15</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>256</td><td>Ascii</td><td>0.0913 ns</td><td>0.1365 ns</td><td>0.0075 ns</td><td>0.0925 ns</td><td>1.00</td><td>0.10</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>256</td><td>Ascii</td><td>0.0791 ns</td><td>0.1060 ns</td><td>0.0058 ns</td><td>0.0800 ns</td><td>0.87</td><td>0.08</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>256</td><td>Ascii</td><td>0.1663 ns</td><td>0.0517 ns</td><td>0.0028 ns</td><td>0.1677 ns</td><td>1.83</td><td>0.14</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>256</td><td>Ascii</td><td>1.8467 ns</td><td>0.1138 ns</td><td>0.0062 ns</td><td>1.8446 ns</td><td>20.33</td><td>1.48</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>256</td><td>Ascii</td><td>11.6661 ns</td><td>1.2587 ns</td><td>0.0690 ns</td><td>11.6577 ns</td><td>128.42</td><td>9.35</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>256</td><td>Ascii</td><td>10.2624 ns</td><td>0.6477 ns</td><td>0.0355 ns</td><td>10.2718 ns</td><td>112.97</td><td>8.21</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>256</td><td>Ascii</td><td>0.1077 ns</td><td>1.2369 ns</td><td>0.0678 ns</td><td>0.1363 ns</td><td>1.19</td><td>0.65</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Ascii</td><td>0.2535 ns</td><td>0.2157 ns</td><td>0.0118 ns</td><td>0.2511 ns</td><td>2.79</td><td>0.23</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>256</td><td>Ascii</td><td>0.2900 ns</td><td>0.1027 ns</td><td>0.0056 ns</td><td>0.2893 ns</td><td>3.19</td><td>0.24</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Ascii</td><td>1.8911 ns</td><td>0.3018 ns</td><td>0.0165 ns</td><td>1.8872 ns</td><td>20.82</td><td>1.52</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>256</td><td>Ascii</td><td>11.6157 ns</td><td>0.5650 ns</td><td>0.0310 ns</td><td>11.6289 ns</td><td>127.86</td><td>9.29</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>256</td><td>Ascii</td><td>10.9910 ns</td><td>0.4426 ns</td><td>0.0243 ns</td><td>10.9771 ns</td><td>120.99</td><td>8.79</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>256</td><td>Latin</td><td>0.0560 ns</td><td>0.4415 ns</td><td>0.0242 ns</td><td>0.0542 ns</td><td>1.145</td><td>0.64</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>256</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>256</td><td>Latin</td><td>0.1154 ns</td><td>0.1820 ns</td><td>0.0100 ns</td><td>0.1137 ns</td><td>2.359</td><td>0.94</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>256</td><td>Latin</td><td>1.8989 ns</td><td>0.0755 ns</td><td>0.0041 ns</td><td>1.8965 ns</td><td>38.818</td><td>15.23</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>256</td><td>Latin</td><td>12.3795 ns</td><td>0.2745 ns</td><td>0.0150 ns</td><td>12.3862 ns</td><td>253.066</td><td>99.30</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>256</td><td>Latin</td><td>10.9444 ns</td><td>2.5307 ns</td><td>0.1387 ns</td><td>10.9609 ns</td><td>223.729</td><td>87.83</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>256</td><td>Latin</td><td>0.1010 ns</td><td>1.6673 ns</td><td>0.0914 ns</td><td>0.0654 ns</td><td>2.064</td><td>1.91</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>256</td><td>Latin</td><td>0.1341 ns</td><td>0.0204 ns</td><td>0.0011 ns</td><td>0.1341 ns</td><td>2.741</td><td>1.08</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Latin</td><td>1.8969 ns</td><td>0.0880 ns</td><td>0.0048 ns</td><td>1.8987 ns</td><td>38.776</td><td>15.22</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>256</td><td>Latin</td><td>11.6131 ns</td><td>0.2836 ns</td><td>0.0155 ns</td><td>11.6168 ns</td><td>237.399</td><td>93.15</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>256</td><td>Latin</td><td>10.9464 ns</td><td>0.2509 ns</td><td>0.0138 ns</td><td>10.9410 ns</td><td>223.770</td><td>87.80</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>256</td><td>Cjk</td><td>0.1051 ns</td><td>0.9090 ns</td><td>0.0498 ns</td><td>0.1232 ns</td><td>1.248</td><td>0.90</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>256</td><td>Cjk</td><td>0.0576 ns</td><td>0.0050 ns</td><td>0.0003 ns</td><td>0.0575 ns</td><td>0.684</td><td>0.38</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>256</td><td>Cjk</td><td>0.1102 ns</td><td>0.0141 ns</td><td>0.0008 ns</td><td>0.1105 ns</td><td>1.309</td><td>0.72</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>256</td><td>Cjk</td><td>1.9147 ns</td><td>0.3298 ns</td><td>0.0181 ns</td><td>1.9111 ns</td><td>22.743</td><td>12.47</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>256</td><td>Cjk</td><td>12.5476 ns</td><td>0.4789 ns</td><td>0.0262 ns</td><td>12.5426 ns</td><td>149.036</td><td>81.73</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>256</td><td>Cjk</td><td>10.4165 ns</td><td>0.5112 ns</td><td>0.0280 ns</td><td>10.4289 ns</td><td>123.724</td><td>67.85</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>256</td><td>Cjk</td><td>0.1126 ns</td><td>0.4980 ns</td><td>0.0273 ns</td><td>0.1207 ns</td><td>1.338</td><td>0.80</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Cjk</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>256</td><td>Cjk</td><td>0.0758 ns</td><td>0.0188 ns</td><td>0.0010 ns</td><td>0.0763 ns</td><td>0.901</td><td>0.49</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Cjk</td><td>1.8766 ns</td><td>0.0359 ns</td><td>0.0020 ns</td><td>1.8763 ns</td><td>22.289</td><td>12.22</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>256</td><td>Cjk</td><td>11.9297 ns</td><td>0.2498 ns</td><td>0.0137 ns</td><td>11.9229 ns</td><td>141.696</td><td>77.70</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>256</td><td>Cjk</td><td>11.0077 ns</td><td>3.1969 ns</td><td>0.1752 ns</td><td>10.9238 ns</td><td>130.745</td><td>71.72</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>256</td><td>Emoji</td><td>0.0663 ns</td><td>0.6582 ns</td><td>0.0361 ns</td><td>0.0492 ns</td><td>1.18</td><td>0.73</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>256</td><td>Emoji</td><td>0.0449 ns</td><td>0.0380 ns</td><td>0.0021 ns</td><td>0.0439 ns</td><td>0.80</td><td>0.30</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>256</td><td>Emoji</td><td>0.1679 ns</td><td>0.0346 ns</td><td>0.0019 ns</td><td>0.1690 ns</td><td>2.99</td><td>1.11</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>256</td><td>Emoji</td><td>1.8463 ns</td><td>0.2236 ns</td><td>0.0123 ns</td><td>1.8490 ns</td><td>32.92</td><td>12.17</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>256</td><td>Emoji</td><td>12.5238 ns</td><td>0.3785 ns</td><td>0.0207 ns</td><td>12.5302 ns</td><td>223.29</td><td>82.53</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>256</td><td>Emoji</td><td>10.3354 ns</td><td>0.1980 ns</td><td>0.0109 ns</td><td>10.3308 ns</td><td>184.27</td><td>68.10</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>256</td><td>Emoji</td><td>0.0944 ns</td><td>0.8591 ns</td><td>0.0471 ns</td><td>0.0900 ns</td><td>1.68</td><td>0.99</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Emoji</td><td>0.0527 ns</td><td>0.0368 ns</td><td>0.0020 ns</td><td>0.0527 ns</td><td>0.94</td><td>0.35</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>256</td><td>Emoji</td><td>0.1676 ns</td><td>0.0258 ns</td><td>0.0014 ns</td><td>0.1669 ns</td><td>2.99</td><td>1.10</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Emoji</td><td>1.8327 ns</td><td>0.1592 ns</td><td>0.0087 ns</td><td>1.8351 ns</td><td>32.68</td><td>12.08</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>256</td><td>Emoji</td><td>12.3515 ns</td><td>0.3857 ns</td><td>0.0211 ns</td><td>12.3624 ns</td><td>220.22</td><td>81.39</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>256</td><td>Emoji</td><td>11.1638 ns</td><td>0.5367 ns</td><td>0.0294 ns</td><td>11.1562 ns</td><td>199.04</td><td>73.56</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>256</td><td>Mixed</td><td>0.1049 ns</td><td>0.7665 ns</td><td>0.0420 ns</td><td>0.1275 ns</td><td>1.161</td><td>0.68</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>256</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>256</td><td>Mixed</td><td>0.1384 ns</td><td>0.0796 ns</td><td>0.0044 ns</td><td>0.1366 ns</td><td>1.532</td><td>0.69</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>256</td><td>Mixed</td><td>1.9027 ns</td><td>0.2209 ns</td><td>0.0121 ns</td><td>1.9034 ns</td><td>21.071</td><td>9.50</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>256</td><td>Mixed</td><td>12.2380 ns</td><td>0.6953 ns</td><td>0.0381 ns</td><td>12.2201 ns</td><td>135.528</td><td>61.11</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>256</td><td>Mixed</td><td>10.2284 ns</td><td>0.3753 ns</td><td>0.0206 ns</td><td>10.2392 ns</td><td>113.274</td><td>51.07</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>256</td><td>Mixed</td><td>0.0588 ns</td><td>0.5359 ns</td><td>0.0294 ns</td><td>0.0696 ns</td><td>0.652</td><td>0.42</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Mixed</td><td>0.0236 ns</td><td>0.0950 ns</td><td>0.0052 ns</td><td>0.0258 ns</td><td>0.262</td><td>0.13</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>256</td><td>Mixed</td><td>0.0816 ns</td><td>0.0137 ns</td><td>0.0008 ns</td><td>0.0814 ns</td><td>0.904</td><td>0.41</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>256</td><td>Mixed</td><td>1.9110 ns</td><td>0.0243 ns</td><td>0.0013 ns</td><td>1.9115 ns</td><td>21.163</td><td>9.54</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>256</td><td>Mixed</td><td>11.5895 ns</td><td>0.6723 ns</td><td>0.0368 ns</td><td>11.5870 ns</td><td>128.347</td><td>57.87</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>256</td><td>Mixed</td><td>10.1869 ns</td><td>0.5013 ns</td><td>0.0275 ns</td><td>10.1954 ns</td><td>112.814</td><td>50.87</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>4096</td><td>Ascii</td><td>0.0196 ns</td><td>0.1631 ns</td><td>0.0089 ns</td><td>0.0231 ns</td><td>1.22</td><td>0.84</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>4096</td><td>Ascii</td><td>0.0416 ns</td><td>0.0585 ns</td><td>0.0032 ns</td><td>0.0417 ns</td><td>2.59</td><td>1.37</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>4096</td><td>Ascii</td><td>0.1639 ns</td><td>0.0231 ns</td><td>0.0013 ns</td><td>0.1633 ns</td><td>10.21</td><td>5.34</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>4096</td><td>Ascii</td><td>1.8611 ns</td><td>0.7849 ns</td><td>0.0430 ns</td><td>1.8369 ns</td><td>115.88</td><td>60.61</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>4096</td><td>Ascii</td><td>12.3427 ns</td><td>0.2691 ns</td><td>0.0147 ns</td><td>12.3458 ns</td><td>768.51</td><td>401.63</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>4096</td><td>Ascii</td><td>10.9428 ns</td><td>0.0950 ns</td><td>0.0052 ns</td><td>10.9431 ns</td><td>681.35</td><td>356.08</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>4096</td><td>Ascii</td><td>0.0138 ns</td><td>0.1515 ns</td><td>0.0083 ns</td><td>0.0116 ns</td><td>0.86</td><td>0.67</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Ascii</td><td>0.2630 ns</td><td>0.1339 ns</td><td>0.0073 ns</td><td>0.2654 ns</td><td>16.38</td><td>8.57</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>4096</td><td>Ascii</td><td>0.2860 ns</td><td>0.1783 ns</td><td>0.0098 ns</td><td>0.2825 ns</td><td>17.81</td><td>9.33</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Ascii</td><td>1.9155 ns</td><td>0.2681 ns</td><td>0.0147 ns</td><td>1.9133 ns</td><td>119.26</td><td>62.33</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>4096</td><td>Ascii</td><td>11.5579 ns</td><td>0.1603 ns</td><td>0.0088 ns</td><td>11.5536 ns</td><td>719.64</td><td>376.09</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>4096</td><td>Ascii</td><td>11.2244 ns</td><td>1.0194 ns</td><td>0.0559 ns</td><td>11.1933 ns</td><td>698.88</td><td>365.26</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>4096</td><td>Latin</td><td>0.0174 ns</td><td>0.0389 ns</td><td>0.0021 ns</td><td>0.0172 ns</td><td>1.010</td><td>0.15</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>4096</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>4096</td><td>Latin</td><td>0.0833 ns</td><td>0.0303 ns</td><td>0.0017 ns</td><td>0.0825 ns</td><td>4.846</td><td>0.52</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>4096</td><td>Latin</td><td>1.9152 ns</td><td>0.0907 ns</td><td>0.0050 ns</td><td>1.9171 ns</td><td>111.468</td><td>11.82</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>4096</td><td>Latin</td><td>12.2391 ns</td><td>1.9332 ns</td><td>0.1060 ns</td><td>12.2958 ns</td><td>712.337</td><td>75.73</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>4096</td><td>Latin</td><td>10.8817 ns</td><td>0.5497 ns</td><td>0.0301 ns</td><td>10.8871 ns</td><td>633.333</td><td>67.18</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>4096</td><td>Latin</td><td>0.0191 ns</td><td>0.1399 ns</td><td>0.0077 ns</td><td>0.0171 ns</td><td>1.114</td><td>0.41</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>4096</td><td>Latin</td><td>0.0592 ns</td><td>0.0317 ns</td><td>0.0017 ns</td><td>0.0593 ns</td><td>3.446</td><td>0.38</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Latin</td><td>1.9031 ns</td><td>0.0631 ns</td><td>0.0035 ns</td><td>1.9049 ns</td><td>110.765</td><td>11.75</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>4096</td><td>Latin</td><td>11.7104 ns</td><td>1.0465 ns</td><td>0.0574 ns</td><td>11.7132 ns</td><td>681.565</td><td>72.33</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>4096</td><td>Latin</td><td>11.2321 ns</td><td>0.2465 ns</td><td>0.0135 ns</td><td>11.2367 ns</td><td>653.728</td><td>69.33</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>4096</td><td>Cjk</td><td>0.0212 ns</td><td>0.0911 ns</td><td>0.0050 ns</td><td>0.0195 ns</td><td>1.03</td><td>0.29</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>4096</td><td>Cjk</td><td>0.0412 ns</td><td>0.0074 ns</td><td>0.0004 ns</td><td>0.0415 ns</td><td>2.01</td><td>0.37</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>4096</td><td>Cjk</td><td>0.1103 ns</td><td>0.0211 ns</td><td>0.0012 ns</td><td>0.1097 ns</td><td>5.37</td><td>1.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>4096</td><td>Cjk</td><td>1.9169 ns</td><td>0.1087 ns</td><td>0.0060 ns</td><td>1.9158 ns</td><td>93.36</td><td>17.35</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>4096</td><td>Cjk</td><td>12.7131 ns</td><td>0.4385 ns</td><td>0.0240 ns</td><td>12.7158 ns</td><td>619.17</td><td>115.07</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>4096</td><td>Cjk</td><td>10.6927 ns</td><td>2.4781 ns</td><td>0.1358 ns</td><td>10.6666 ns</td><td>520.77</td><td>96.95</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>4096</td><td>Cjk</td><td>0.0323 ns</td><td>0.3904 ns</td><td>0.0214 ns</td><td>0.0211 ns</td><td>1.57</td><td>0.96</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Cjk</td><td>0.0048 ns</td><td>0.0838 ns</td><td>0.0046 ns</td><td>0.0051 ns</td><td>0.23</td><td>0.20</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>4096</td><td>Cjk</td><td>0.0615 ns</td><td>0.0941 ns</td><td>0.0052 ns</td><td>0.0598 ns</td><td>3.00</td><td>0.60</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Cjk</td><td>1.8836 ns</td><td>0.0386 ns</td><td>0.0021 ns</td><td>1.8848 ns</td><td>91.74</td><td>17.05</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>4096</td><td>Cjk</td><td>12.0491 ns</td><td>5.3040 ns</td><td>0.2907 ns</td><td>11.8855 ns</td><td>586.83</td><td>109.76</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>4096</td><td>Cjk</td><td>13.5435 ns</td><td>13.2284 ns</td><td>0.7251 ns</td><td>13.3574 ns</td><td>659.62</td><td>126.45</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>4096</td><td>Emoji</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>4096</td><td>Emoji</td><td>0.0015 ns</td><td>0.0478 ns</td><td>0.0026 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>U8String.StartsWith</td><td>4096</td><td>Emoji</td><td>0.1136 ns</td><td>0.0328 ns</td><td>0.0018 ns</td><td>0.1141 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>4096</td><td>Emoji</td><td>1.7963 ns</td><td>0.1784 ns</td><td>0.0098 ns</td><td>1.8008 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>4096</td><td>Emoji</td><td>12.9699 ns</td><td>0.4696 ns</td><td>0.0257 ns</td><td>12.9744 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>4096</td><td>Emoji</td><td>10.9445 ns</td><td>0.3919 ns</td><td>0.0215 ns</td><td>10.9541 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>4096</td><td>Emoji</td><td>0.0011 ns</td><td>0.0337 ns</td><td>0.0018 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Emoji</td><td>0.0240 ns</td><td>0.0397 ns</td><td>0.0022 ns</td><td>0.0252 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>4096</td><td>Emoji</td><td>0.1565 ns</td><td>0.2848 ns</td><td>0.0156 ns</td><td>0.1589 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Emoji</td><td>1.7866 ns</td><td>0.1274 ns</td><td>0.0070 ns</td><td>1.7896 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>4096</td><td>Emoji</td><td>12.4303 ns</td><td>1.2064 ns</td><td>0.0661 ns</td><td>12.3956 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>4096</td><td>Emoji</td><td>10.6057 ns</td><td>1.9631 ns</td><td>0.1076 ns</td><td>10.5720 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>string.StartsWith</td><td>4096</td><td>Mixed</td><td>0.0362 ns</td><td>0.6358 ns</td><td>0.0349 ns</td><td>0.0310 ns</td><td>3.429</td><td>5.74</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>4096</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>4096</td><td>Mixed</td><td>0.0873 ns</td><td>0.2222 ns</td><td>0.0122 ns</td><td>0.0820 ns</td><td>8.274</td><td>9.55</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>4096</td><td>Mixed</td><td>1.8821 ns</td><td>0.0516 ns</td><td>0.0028 ns</td><td>1.8830 ns</td><td>178.334</td><td>203.34</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>4096</td><td>Mixed</td><td>11.6468 ns</td><td>1.0868 ns</td><td>0.0596 ns</td><td>11.6249 ns</td><td>1,103.567</td><td>1,258.31</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>4096</td><td>Mixed</td><td>11.1374 ns</td><td>0.6183 ns</td><td>0.0339 ns</td><td>11.1374 ns</td><td>1,055.294</td><td>1,203.26</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>4096</td><td>Mixed</td><td>0.0022 ns</td><td>0.0550 ns</td><td>0.0030 ns</td><td>0.0011 ns</td><td>0.212</td><td>0.44</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>4096</td><td>Mixed</td><td>0.0667 ns</td><td>0.5280 ns</td><td>0.0289 ns</td><td>0.0503 ns</td><td>6.317</td><td>8.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>4096</td><td>Mixed</td><td>1.8553 ns</td><td>0.1757 ns</td><td>0.0096 ns</td><td>1.8531 ns</td><td>175.797</td><td>200.45</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>4096</td><td>Mixed</td><td>12.5570 ns</td><td>2.9405 ns</td><td>0.1612 ns</td><td>12.5239 ns</td><td>1,189.805</td><td>1,356.76</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>4096</td><td>Mixed</td><td>10.7644 ns</td><td>6.8945 ns</td><td>0.3779 ns</td><td>10.5530 ns</td><td>1,019.957</td><td>1,163.85</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>65536</td><td>Ascii</td><td>0.0310 ns</td><td>0.4501 ns</td><td>0.0247 ns</td><td>0.0205 ns</td><td>1.45</td><td>1.37</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>65536</td><td>Ascii</td><td>0.0086 ns</td><td>0.0311 ns</td><td>0.0017 ns</td><td>0.0093 ns</td><td>0.40</td><td>0.23</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>65536</td><td>Ascii</td><td>0.1237 ns</td><td>0.0915 ns</td><td>0.0050 ns</td><td>0.1221 ns</td><td>5.81</td><td>3.13</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>65536</td><td>Ascii</td><td>1.8740 ns</td><td>0.1165 ns</td><td>0.0064 ns</td><td>1.8728 ns</td><td>87.93</td><td>47.24</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>65536</td><td>Ascii</td><td>12.1154 ns</td><td>1.4033 ns</td><td>0.0769 ns</td><td>12.1044 ns</td><td>568.49</td><td>305.39</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>65536</td><td>Ascii</td><td>10.8639 ns</td><td>0.7395 ns</td><td>0.0405 ns</td><td>10.8586 ns</td><td>509.77</td><td>273.83</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>65536</td><td>Ascii</td><td>0.0190 ns</td><td>0.0966 ns</td><td>0.0053 ns</td><td>0.0214 ns</td><td>0.89</td><td>0.54</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Ascii</td><td>0.2864 ns</td><td>1.0921 ns</td><td>0.0599 ns</td><td>0.2559 ns</td><td>13.44</td><td>7.72</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>65536</td><td>Ascii</td><td>0.2531 ns</td><td>0.0303 ns</td><td>0.0017 ns</td><td>0.2535 ns</td><td>11.88</td><td>6.38</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Ascii</td><td>1.9351 ns</td><td>0.1125 ns</td><td>0.0062 ns</td><td>1.9317 ns</td><td>90.80</td><td>48.78</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>65536</td><td>Ascii</td><td>12.1998 ns</td><td>0.1595 ns</td><td>0.0087 ns</td><td>12.1988 ns</td><td>572.45</td><td>307.49</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>65536</td><td>Ascii</td><td>11.2529 ns</td><td>3.4930 ns</td><td>0.1915 ns</td><td>11.1593 ns</td><td>528.02</td><td>283.76</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>65536</td><td>Latin</td><td>0.0101 ns</td><td>0.1545 ns</td><td>0.0085 ns</td><td>0.0133 ns</td><td>7.902</td><td>14.34</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>65536</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>65536</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>65536</td><td>Latin</td><td>2.0062 ns</td><td>0.0306 ns</td><td>0.0017 ns</td><td>2.0061 ns</td><td>1,574.664</td><td>2,157.56</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>65536</td><td>Latin</td><td>12.2370 ns</td><td>0.4360 ns</td><td>0.0239 ns</td><td>12.2374 ns</td><td>9,605.001</td><td>13,160.55</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>65536</td><td>Latin</td><td>11.4746 ns</td><td>0.5303 ns</td><td>0.0291 ns</td><td>11.4834 ns</td><td>9,006.588</td><td>12,340.63</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>65536</td><td>Latin</td><td>0.0083 ns</td><td>0.0833 ns</td><td>0.0046 ns</td><td>0.0060 ns</td><td>6.516</td><td>10.27</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>65536</td><td>Latin</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Latin</td><td>1.9577 ns</td><td>0.0547 ns</td><td>0.0030 ns</td><td>1.9586 ns</td><td>1,536.605</td><td>2,105.42</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>65536</td><td>Latin</td><td>12.1905 ns</td><td>1.4541 ns</td><td>0.0797 ns</td><td>12.1527 ns</td><td>9,568.470</td><td>13,110.76</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>65536</td><td>Latin</td><td>11.6450 ns</td><td>0.8496 ns</td><td>0.0466 ns</td><td>11.6606 ns</td><td>9,140.293</td><td>12,523.90</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>65536</td><td>Cjk</td><td>0.0150 ns</td><td>0.4750 ns</td><td>0.0260 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>65536</td><td>Cjk</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>U8String.StartsWith</td><td>65536</td><td>Cjk</td><td>0.0292 ns</td><td>0.2829 ns</td><td>0.0155 ns</td><td>0.0210 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>65536</td><td>Cjk</td><td>1.9758 ns</td><td>0.2994 ns</td><td>0.0164 ns</td><td>1.9714 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>65536</td><td>Cjk</td><td>12.6027 ns</td><td>1.1014 ns</td><td>0.0604 ns</td><td>12.6209 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>65536</td><td>Cjk</td><td>11.0731 ns</td><td>0.6091 ns</td><td>0.0334 ns</td><td>11.0902 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>65536</td><td>Cjk</td><td>0.0298 ns</td><td>0.0992 ns</td><td>0.0054 ns</td><td>0.0305 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Cjk</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>65536</td><td>Cjk</td><td>0.0028 ns</td><td>0.0335 ns</td><td>0.0018 ns</td><td>0.0038 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Cjk</td><td>2.0025 ns</td><td>0.2571 ns</td><td>0.0141 ns</td><td>2.0052 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>65536</td><td>Cjk</td><td>13.2683 ns</td><td>0.5653 ns</td><td>0.0310 ns</td><td>13.2797 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>65536</td><td>Cjk</td><td>11.1630 ns</td><td>0.4390 ns</td><td>0.0241 ns</td><td>11.1636 ns</td><td>?</td><td>?</td><td>-</td><td>?</td>
+</tr><tr><td>string.StartsWith</td><td>65536</td><td>Emoji</td><td>0.0206 ns</td><td>0.1502 ns</td><td>0.0082 ns</td><td>0.0235 ns</td><td>1.15</td><td>0.66</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>65536</td><td>Emoji</td><td>0.0003 ns</td><td>0.0080 ns</td><td>0.0004 ns</td><td>0.0000 ns</td><td>0.01</td><td>0.02</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>65536</td><td>Emoji</td><td>0.1106 ns</td><td>0.0931 ns</td><td>0.0051 ns</td><td>0.1130 ns</td><td>6.20</td><td>2.72</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>65536</td><td>Emoji</td><td>1.9358 ns</td><td>0.1325 ns</td><td>0.0073 ns</td><td>1.9381 ns</td><td>108.44</td><td>47.34</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>65536</td><td>Emoji</td><td>13.6479 ns</td><td>2.1848 ns</td><td>0.1198 ns</td><td>13.6844 ns</td><td>764.55</td><td>333.81</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>65536</td><td>Emoji</td><td>10.9984 ns</td><td>0.7253 ns</td><td>0.0398 ns</td><td>10.9870 ns</td><td>616.13</td><td>268.97</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>65536</td><td>Emoji</td><td>0.0352 ns</td><td>0.4198 ns</td><td>0.0230 ns</td><td>0.0227 ns</td><td>1.97</td><td>1.48</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Emoji</td><td>0.0042 ns</td><td>0.1329 ns</td><td>0.0073 ns</td><td>0.0000 ns</td><td>0.24</td><td>0.40</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>65536</td><td>Emoji</td><td>0.1439 ns</td><td>0.1652 ns</td><td>0.0091 ns</td><td>0.1420 ns</td><td>8.06</td><td>3.55</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Emoji</td><td>1.8867 ns</td><td>0.0903 ns</td><td>0.0050 ns</td><td>1.8874 ns</td><td>105.69</td><td>46.14</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>65536</td><td>Emoji</td><td>13.2154 ns</td><td>1.4560 ns</td><td>0.0798 ns</td><td>13.2296 ns</td><td>740.32</td><td>323.20</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>65536</td><td>Emoji</td><td>11.3216 ns</td><td>1.2683 ns</td><td>0.0695 ns</td><td>11.3014 ns</td><td>634.23</td><td>276.89</td><td>-</td><td>NA</td>
+</tr><tr><td>string.StartsWith</td><td>65536</td><td>Mixed</td><td>0.0839 ns</td><td>0.4831 ns</td><td>0.0265 ns</td><td>0.0934 ns</td><td>1.086</td><td>0.47</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8&#39;</td><td>65536</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>U8String.StartsWith</td><td>65536</td><td>Mixed</td><td>0.0591 ns</td><td>0.0351 ns</td><td>0.0019 ns</td><td>0.0582 ns</td><td>0.766</td><td>0.25</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8&#39;</td><td>65536</td><td>Mixed</td><td>1.9685 ns</td><td>0.2185 ns</td><td>0.0120 ns</td><td>1.9716 ns</td><td>25.481</td><td>8.31</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16&#39;</td><td>65536</td><td>Mixed</td><td>12.5227 ns</td><td>3.3317 ns</td><td>0.1826 ns</td><td>12.4248 ns</td><td>162.101</td><td>52.93</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32&#39;</td><td>65536</td><td>Mixed</td><td>10.5239 ns</td><td>0.7380 ns</td><td>0.0405 ns</td><td>10.5084 ns</td><td>136.228</td><td>44.45</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.StartsWith miss&#39;</td><td>65536</td><td>Mixed</td><td>0.0356 ns</td><td>0.7254 ns</td><td>0.0398 ns</td><td>0.0193 ns</td><td>0.461</td><td>0.49</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Span.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Mixed</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.0000 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;U8String.StartsWith miss&#39;</td><td>65536</td><td>Mixed</td><td>0.0060 ns</td><td>0.1896 ns</td><td>0.0104 ns</td><td>0.0000 ns</td><td>0.078</td><td>0.12</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-8 miss&#39;</td><td>65536</td><td>Mixed</td><td>1.8482 ns</td><td>0.6237 ns</td><td>0.0342 ns</td><td>1.8289 ns</td><td>23.924</td><td>7.82</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-16 miss&#39;</td><td>65536</td><td>Mixed</td><td>11.6777 ns</td><td>0.2045 ns</td><td>0.0112 ns</td><td>11.6745 ns</td><td>151.164</td><td>49.32</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.StartsWith UTF-32 miss&#39;</td><td>65536</td><td>Mixed</td><td>10.4205 ns</td><td>2.6962 ns</td><td>0.1478 ns</td><td>10.3619 ns</td><td>134.890</td><td>44.04</td><td>-</td><td>NA</td>
+</tr></tbody></table>
+</body>
+</html>

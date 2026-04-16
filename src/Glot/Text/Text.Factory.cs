@@ -1,3 +1,4 @@
+using System.Buffers;
 #if NET8_0_OR_GREATER
 using System.Collections.Immutable;
 #endif
@@ -30,7 +31,8 @@ public readonly partial struct Text
             0,
             value.Length * 2,
             TextEncoding.Utf16,
-            runeLength);
+            runeLength,
+            BackingType.String);
     }
 
     // --- ASCII ---
@@ -48,7 +50,8 @@ public readonly partial struct Text
             0,
             value.Length,
             TextEncoding.Utf8,
-            value.Length);
+            value.Length,
+            BackingType.ByteArray);
     }
 
     /// <summary>Creates a UTF-16 <see cref="Text"/> from an ASCII string. Zero-copy, O(1) rune count.</summary>
@@ -64,7 +67,8 @@ public readonly partial struct Text
             0,
             value.Length * 2,
             TextEncoding.Utf16,
-            value.Length);
+            value.Length,
+            BackingType.String);
     }
 
     // --- UTF-8 ---
@@ -84,7 +88,8 @@ public readonly partial struct Text
             0,
             value.Length,
             TextEncoding.Utf8,
-            runeLength);
+            runeLength,
+            BackingType.ByteArray);
     }
 
     /// <summary>Creates a UTF-8 <see cref="Text"/>. Zero-copy — stores the array reference directly.</summary>
@@ -96,7 +101,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(value, TextEncoding.Utf8) : 0;
-        return new Text(value, 0, value.Length, TextEncoding.Utf8, runeLength);
+        return new Text(value, 0, value.Length, TextEncoding.Utf8, runeLength, BackingType.ByteArray);
     }
 
     /// <summary>Creates a UTF-8 <see cref="Text"/>. Zero-copy — references the segment's backing array.</summary>
@@ -108,7 +113,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(array.AsSpan(value.Offset, value.Count), TextEncoding.Utf8) : 0;
-        return new Text(array, value.Offset, value.Count, TextEncoding.Utf8, runeLength);
+        return new Text(array, value.Offset, value.Count, TextEncoding.Utf8, runeLength, BackingType.ByteArray);
     }
 
     /// <summary>Creates a UTF-8 <see cref="Text"/>. Zero-copy when array-backed; copies otherwise.</summary>
@@ -122,7 +127,7 @@ public readonly partial struct Text
         if (MemoryMarshal.TryGetArray(value, out var segment) && segment.Array is { } array)
         {
             var runeLength = countRunes ? RuneCount.Count(array.AsSpan(segment.Offset, segment.Count), TextEncoding.Utf8) : 0;
-            return new Text(array, segment.Offset, segment.Count, TextEncoding.Utf8, runeLength);
+            return new Text(array, segment.Offset, segment.Count, TextEncoding.Utf8, runeLength, BackingType.ByteArray);
         }
 
         return FromUtf8(value.Span, countRunes);
@@ -144,9 +149,30 @@ public readonly partial struct Text
             0,
             array.Length,
             TextEncoding.Utf8,
-            runeLength);
+            runeLength,
+            BackingType.ByteArray);
     }
 #endif
+
+    /// <summary>Creates a UTF-8 <see cref="Text"/>. Zero-copy when single-segment and array-backed; copies otherwise.</summary>
+    public static Text FromUtf8(ReadOnlySequence<byte> value, bool countRunes = true)
+    {
+        if (value.IsEmpty)
+        {
+            return default;
+        }
+
+        if (value.IsSingleSegment)
+        {
+            return FromUtf8(value.First, countRunes);
+        }
+
+        var length = checked((int)value.Length);
+        var array = new byte[length];
+        value.CopyTo(array);
+        var runeLength = countRunes ? RuneCount.Count(array, TextEncoding.Utf8) : 0;
+        return new Text(array, 0, length, TextEncoding.Utf8, runeLength, BackingType.ByteArray);
+    }
 
     // --- UTF-16 ---
 
@@ -166,7 +192,8 @@ public readonly partial struct Text
             0,
             bytes.Length,
             TextEncoding.Utf16,
-            runeLength);
+            runeLength,
+            BackingType.CharArray);
     }
 
     /// <summary>Creates a UTF-16 <see cref="Text"/>. Zero-copy — stores the array reference directly.</summary>
@@ -178,7 +205,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(MemoryMarshal.AsBytes(value.AsSpan()), TextEncoding.Utf16) : 0;
-        return new Text(value, 0, value.Length * 2, TextEncoding.Utf16, runeLength);
+        return new Text(value, 0, value.Length * 2, TextEncoding.Utf16, runeLength, BackingType.CharArray);
     }
 
     /// <summary>Creates a UTF-16 <see cref="Text"/>. Zero-copy — references the segment's backing array.</summary>
@@ -190,7 +217,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(MemoryMarshal.AsBytes(array.AsSpan(value.Offset, value.Count)), TextEncoding.Utf16) : 0;
-        return new Text(array, value.Offset * 2, value.Count * 2, TextEncoding.Utf16, runeLength);
+        return new Text(array, value.Offset * 2, value.Count * 2, TextEncoding.Utf16, runeLength, BackingType.CharArray);
     }
 
     /// <summary>Creates a UTF-16 <see cref="Text"/>. Zero-copy when string/array-backed; copies otherwise.</summary>
@@ -204,16 +231,37 @@ public readonly partial struct Text
         if (MemoryMarshal.TryGetString(value, out var text, out var start, out var length))
         {
             var runeLength = countRunes ? RuneCount.Count(MemoryMarshal.AsBytes(text.AsSpan(start, length)), TextEncoding.Utf16) : 0;
-            return new Text(text, start * 2, length * 2, TextEncoding.Utf16, runeLength);
+            return new Text(text, start * 2, length * 2, TextEncoding.Utf16, runeLength, BackingType.String);
         }
 
         if (MemoryMarshal.TryGetArray(value, out var segment) && segment.Array is { } array)
         {
             var runeLength = countRunes ? RuneCount.Count(MemoryMarshal.AsBytes(array.AsSpan(segment.Offset, segment.Count)), TextEncoding.Utf16) : 0;
-            return new Text(array, segment.Offset * 2, segment.Count * 2, TextEncoding.Utf16, runeLength);
+            return new Text(array, segment.Offset * 2, segment.Count * 2, TextEncoding.Utf16, runeLength, BackingType.CharArray);
         }
 
         return FromChars(value.Span, countRunes);
+    }
+
+    /// <summary>Creates a UTF-16 <see cref="Text"/>. Zero-copy when single-segment and string/array-backed; copies otherwise.</summary>
+    public static Text FromChars(ReadOnlySequence<char> value, bool countRunes = true)
+    {
+        if (value.IsEmpty)
+        {
+            return default;
+        }
+
+        if (value.IsSingleSegment)
+        {
+            return FromChars(value.First, countRunes);
+        }
+
+        var length = checked((int)value.Length);
+        var array = new char[length];
+        value.CopyTo(array);
+        var bytes = MemoryMarshal.AsBytes(array.AsSpan());
+        var runeLength = countRunes ? RuneCount.Count(bytes, TextEncoding.Utf16) : 0;
+        return new Text(array, 0, bytes.Length, TextEncoding.Utf16, runeLength, BackingType.CharArray);
     }
 
     // --- UTF-32 ---
@@ -232,7 +280,8 @@ public readonly partial struct Text
             0,
             value.Length * 4,
             TextEncoding.Utf32,
-            value.Length);
+            value.Length,
+            BackingType.IntArray);
     }
 
     /// <summary>Creates a UTF-32 <see cref="Text"/>. Zero-copy. Rune count = array length.</summary>
@@ -248,7 +297,8 @@ public readonly partial struct Text
             0,
             value.Length * 4,
             TextEncoding.Utf32,
-            value.Length);
+            value.Length,
+            BackingType.IntArray);
     }
 
     /// <summary>Creates a UTF-32 <see cref="Text"/>. Zero-copy. Rune count = segment count.</summary>
@@ -264,7 +314,8 @@ public readonly partial struct Text
             value.Offset * 4,
             value.Count * 4,
             TextEncoding.Utf32,
-            value.Count);
+            value.Count,
+            BackingType.IntArray);
     }
 
     /// <summary>Creates a UTF-32 <see cref="Text"/>. Zero-copy when array-backed.</summary>
@@ -282,10 +333,30 @@ public readonly partial struct Text
                 segment.Offset * 4,
                 segment.Count * 4,
                 TextEncoding.Utf32,
-                segment.Count);
+                segment.Count,
+                BackingType.IntArray);
         }
 
         return FromUtf32(value.Span);
+    }
+
+    /// <summary>Creates a UTF-32 <see cref="Text"/>. Zero-copy when single-segment and array-backed; copies otherwise.</summary>
+    public static Text FromUtf32(ReadOnlySequence<int> value)
+    {
+        if (value.IsEmpty)
+        {
+            return default;
+        }
+
+        if (value.IsSingleSegment)
+        {
+            return FromUtf32(value.First);
+        }
+
+        var length = checked((int)value.Length);
+        var array = new int[length];
+        value.CopyTo(array);
+        return new Text(array, 0, length * 4, TextEncoding.Utf32, length, BackingType.IntArray);
     }
 
     // --- Generic encoding ---
@@ -305,7 +376,8 @@ public readonly partial struct Text
             0,
             value.Length,
             encoding,
-            runeLength);
+            runeLength,
+            BackingType.ByteArray);
     }
 
     /// <summary>Creates a <see cref="Text"/>. Zero-copy — stores the array reference directly.</summary>
@@ -317,7 +389,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(value, encoding) : 0;
-        return new Text(value, 0, value.Length, encoding, runeLength);
+        return new Text(value, 0, value.Length, encoding, runeLength, BackingType.ByteArray);
     }
 
     /// <summary>Creates a <see cref="Text"/>. Zero-copy — references the segment's backing array.</summary>
@@ -329,7 +401,7 @@ public readonly partial struct Text
         }
 
         var runeLength = countRunes ? RuneCount.Count(array.AsSpan(value.Offset, value.Count), encoding) : 0;
-        return new Text(array, value.Offset, value.Count, encoding, runeLength);
+        return new Text(array, value.Offset, value.Count, encoding, runeLength, BackingType.ByteArray);
     }
 
     /// <summary>Creates a <see cref="Text"/>. Zero-copy when array-backed; copies otherwise.</summary>
@@ -343,10 +415,30 @@ public readonly partial struct Text
         if (MemoryMarshal.TryGetArray(value, out var segment) && segment.Array is { } array)
         {
             var runeLength = countRunes ? RuneCount.Count(array.AsSpan(segment.Offset, segment.Count), encoding) : 0;
-            return new Text(array, segment.Offset, segment.Count, encoding, runeLength);
+            return new Text(array, segment.Offset, segment.Count, encoding, runeLength, BackingType.ByteArray);
         }
 
         return FromBytes(value.Span, encoding, countRunes);
+    }
+
+    /// <summary>Creates a <see cref="Text"/>. Zero-copy when single-segment and array-backed; copies otherwise.</summary>
+    public static Text FromBytes(ReadOnlySequence<byte> value, TextEncoding encoding, bool countRunes = true)
+    {
+        if (value.IsEmpty)
+        {
+            return default;
+        }
+
+        if (value.IsSingleSegment)
+        {
+            return FromBytes(value.First, encoding, countRunes);
+        }
+
+        var length = checked((int)value.Length);
+        var array = new byte[length];
+        value.CopyTo(array);
+        var runeLength = countRunes ? RuneCount.Count(array, encoding) : 0;
+        return new Text(array, 0, length, encoding, runeLength, BackingType.ByteArray);
     }
 
 #if NET6_0_OR_GREATER

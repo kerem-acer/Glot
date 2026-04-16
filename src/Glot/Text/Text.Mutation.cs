@@ -111,11 +111,133 @@ public readonly partial struct Text
 
     TResult ReplaceCore<TResult>(TextSpan oldValue, TextSpan newValue, int firstBytePos, BuilderFinisher<TResult> finish)
     {
+        if (Encoding == oldValue.Encoding && Encoding == newValue.Encoding)
+        {
+            return ReplaceSameEncoding(
+                oldValue.Bytes, newValue.Bytes,
+                RuneLength, oldValue.RuneLength, newValue.RuneLength,
+                firstBytePos, finish);
+        }
+
+        return ReplaceCrossEncoding(oldValue, newValue, firstBytePos, finish);
+    }
+
+    TResult ReplaceCrossEncoding<TResult>(TextSpan oldValue, TextSpan newValue, int firstBytePos, BuilderFinisher<TResult> finish)
+    {
+        // Transcode needle and replacement to this Text's encoding, then use the fast path.
+        var encoding = Encoding;
+        var maxOld = TextSpan.EstimateTranscodeSize(oldValue.Bytes.Length, oldValue.Encoding, encoding);
+        var maxNew = TextSpan.EstimateTranscodeSize(newValue.Bytes.Length, newValue.Encoding, encoding);
+
+        byte[]? rentedOld = null, rentedNew = null;
+        Span<byte> oldBuf = maxOld <= 256
+            ? stackalloc byte[maxOld]
+            : (rentedOld = ArrayPool<byte>.Shared.Rent(maxOld));
+        Span<byte> newBuf = maxNew <= 256
+            ? stackalloc byte[maxNew]
+            : (rentedNew = ArrayPool<byte>.Shared.Rent(maxNew));
+
+        try
+        {
+            var oldWritten = TextSpan.TranscodeToEncoding(oldValue, oldBuf, encoding);
+            var newWritten = TextSpan.TranscodeToEncoding(newValue, newBuf, encoding);
+
+            var transcodedOld = oldBuf[..oldWritten];
+            var transcodedNew = newBuf[..newWritten];
+
+            // Re-find firstBytePos using the transcoded needle bytes.
+            var reFoundPos = Bytes.IndexOf(transcodedOld);
+            if (reFoundPos < 0)
+            {
+                // Transcoded pattern not found as raw bytes — fall back to rune-by-rune.
+                return ReplaceCrossSlow(oldValue, newValue, firstBytePos, finish);
+            }
+
+            return ReplaceSameEncoding(
+                transcodedOld, transcodedNew,
+                RuneLength, oldValue.RuneLength, newValue.RuneLength,
+                reFoundPos, finish);
+        }
+        finally
+        {
+            if (rentedOld is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedOld);
+            }
+
+            if (rentedNew is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedNew);
+            }
+        }
+    }
+
+    TResult ReplaceSameEncoding<TResult>(
+        ReadOnlySpan<byte> needleBytes,
+        ReadOnlySpan<byte> replacementBytes,
+        int sourceRuneLength,
+        int needleRuneLength,
+        int replacementRuneLength,
+        int firstBytePos,
+        BuilderFinisher<TResult> finish)
+    {
+        var builder = new TextBuilder(Encoding);
+        try
+        {
+            var source = Bytes;
+            var cursor = 0;
+            var bytePos = firstBytePos;
+            var matchCount = 0;
+
+            while (true)
+            {
+                // Append bytes before the match (rune count deferred).
+                var segEnd = cursor + bytePos;
+                if (segEnd > cursor)
+                {
+                    builder.AppendCounted(source[cursor..segEnd], 0);
+                }
+
+                // Append replacement (rune count deferred).
+                builder.AppendCounted(replacementBytes, 0);
+                matchCount++;
+
+                cursor = segEnd + needleBytes.Length;
+
+                var next = source[cursor..].IndexOf(needleBytes);
+                if (next < 0)
+                {
+                    // Append tail.
+                    if (cursor < source.Length)
+                    {
+                        builder.AppendCounted(source[cursor..], 0);
+                    }
+
+                    break;
+                }
+
+                bytePos = next;
+            }
+
+            // Fix up rune length via O(1) arithmetic.
+            builder.RuneLength = sourceRuneLength
+                - (matchCount * needleRuneLength)
+                + (matchCount * replacementRuneLength);
+
+            return finish(ref builder);
+        }
+        finally
+        {
+            builder.Dispose();
+        }
+    }
+
+    TResult ReplaceCrossSlow<TResult>(TextSpan oldValue, TextSpan newValue, int firstBytePos, BuilderFinisher<TResult> finish)
+    {
         var builder = new TextBuilder(Encoding);
         try
         {
             var remaining = AsSpan();
-            var sameEncoding = remaining.Encoding == oldValue.Encoding;
             var bytePos = firstBytePos;
 
             while (true)
@@ -127,20 +249,12 @@ public readonly partial struct Text
 
                 builder.Append(newValue);
 
-                int matchByteLen;
-                if (sameEncoding)
-                {
-                    matchByteLen = oldValue.ByteLength;
-                }
-                else
-                {
-                    RunePrefix.TryMatch(
-                        remaining.Bytes[bytePos..],
-                        remaining.Encoding,
-                        oldValue.Bytes,
-                        oldValue.Encoding,
-                        out matchByteLen);
-                }
+                RunePrefix.TryMatch(
+                    remaining.Bytes[bytePos..],
+                    remaining.Encoding,
+                    oldValue.Bytes,
+                    oldValue.Encoding,
+                    out var matchByteLen);
 
                 remaining = remaining.ByteSlice(bytePos + matchByteLen);
 
@@ -358,9 +472,9 @@ public readonly partial struct Text
             var totalBytes = a.ByteLength + b.ByteLength;
             var totalRunes = a.RuneLength + b.RuneLength;
             var buffer = new byte[totalBytes];
-            a.RawBytes.CopyTo(buffer);
-            b.RawBytes.CopyTo(buffer.AsSpan(a.ByteLength));
-            return new Text(buffer, 0, totalBytes, encoding, totalRunes);
+            a.Bytes.CopyTo(buffer);
+            b.Bytes.CopyTo(buffer.AsSpan(a.ByteLength));
+            return new Text(buffer, 0, totalBytes, encoding, totalRunes, BackingType.ByteArray);
         }
 
         return ConcatCore([a, b], encoding, FinishAsText);
@@ -396,7 +510,7 @@ public readonly partial struct Text
 
             var buffer = new byte[totalBytes];
             CopyAll(values, buffer);
-            return new Text(buffer, 0, totalBytes, encoding, totalRunes);
+            return new Text(buffer, 0, totalBytes, encoding, totalRunes, BackingType.ByteArray);
         }
 
         return ConcatCore(values, encoding, FinishAsText);
@@ -467,7 +581,7 @@ public readonly partial struct Text
         var offset = 0;
         for (var i = 0; i < values.Length; i++)
         {
-            var bytes = values[i].RawBytes;
+            var bytes = values[i].Bytes;
             bytes.CopyTo(buffer.AsSpan(offset));
             offset += bytes.Length;
         }

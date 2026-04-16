@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -17,41 +19,51 @@ public readonly ref partial struct TextSpan
             return Bytes.SequenceEqual(other.Bytes);
         }
 
-        var a = Bytes;
-        var b = other.Bytes;
-        var encA = Encoding;
-        var encB = other.Encoding;
-
-        while (!a.IsEmpty && !b.IsEmpty)
+        // Rune-length short-circuit: if both sides have a cached rune count and they
+        // differ, the spans cannot be equal. O(1) when cached, skipped when uncached (0).
+        var cachedRuneLength = _encodedLength.RuneLength;
+        var otherCachedRuneLength = other._encodedLength.RuneLength;
+        if (cachedRuneLength != 0 && otherCachedRuneLength != 0 && cachedRuneLength != otherCachedRuneLength)
         {
-            // ASCII fast path: when both sides have an ASCII code unit,
-            // the rune value equals the byte value — skip full rune decoding.
-            if (AsciiHelper.TryReadAscii(a, encA, out var asciiA, out var sizeA) &&
-                AsciiHelper.TryReadAscii(b, encB, out var asciiB, out var sizeB))
-            {
-                if (asciiA != asciiB)
-                {
-                    return false;
-                }
-
-                a = a[sizeA..];
-                b = b[sizeB..];
-                continue;
-            }
-
-            Rune.TryDecodeFirst(a, encA, out var ra, out var ca);
-            Rune.TryDecodeFirst(b, encB, out var rb, out var cb);
-
-            if (ra != rb)
-            {
-                return false;
-            }
-
-            a = a[ca..];
-            b = b[cb..];
+            return false;
         }
 
-        return a.IsEmpty && b.IsEmpty;
+        if (Bytes.IsEmpty && other.Bytes.IsEmpty)
+        {
+            return true;
+        }
+
+        if (Bytes.IsEmpty || other.Bytes.IsEmpty)
+        {
+            return false;
+        }
+
+        return EqualsCrossEncoding(other);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    bool EqualsCrossEncoding(TextSpan other)
+    {
+        // Transcode `other` to match this encoding, then use SIMD SequenceEqual.
+        var maxOutputBytes = EstimateTranscodeSize(other.Bytes.Length, other.Encoding, Encoding);
+
+        byte[]? rented = null;
+        Span<byte> buffer = maxOutputBytes <= 512
+            ? stackalloc byte[maxOutputBytes]
+            : (rented = ArrayPool<byte>.Shared.Rent(maxOutputBytes));
+
+        try
+        {
+            var written = TranscodeToEncoding(other, buffer, Encoding);
+            return Bytes.SequenceEqual(buffer[..written]);
+        }
+        finally
+        {
+            if (rented is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rented);
+            }
+        }
     }
 
     /// <inheritdoc cref="Equals(TextSpan)"/>
@@ -103,48 +115,117 @@ public readonly ref partial struct TextSpan
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(TextSpan other)
     {
-        // UTF-8 byte ordering preserves Unicode scalar value ordering
+        // UTF-8 byte ordering preserves Unicode scalar value ordering.
         if (Encoding == other.Encoding && Encoding == TextEncoding.Utf8)
         {
             return Bytes.SequenceCompareTo(other.Bytes);
         }
 
-        var a = Bytes;
-        var b = other.Bytes;
-        var encA = Encoding;
-        var encB = other.Encoding;
+        // Same-encoding non-UTF-8: byte comparison may not equal rune ordering
+        // (UTF-16 surrogates, UTF-32 endianness), so we must normalize.
+        // Cross-encoding: likewise.
+        return CompareToCrossEncoding(other);
+    }
 
-        while (!a.IsEmpty && !b.IsEmpty)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int CompareToCrossEncoding(TextSpan other)
+    {
+        // Transcode both sides to UTF-8 where byte order = codepoint order,
+        // then use SIMD SequenceCompareTo.
+        if (Encoding == TextEncoding.Utf8)
         {
-            // ASCII fast path: byte value equals rune value for ASCII code units.
-            if (AsciiHelper.TryReadAscii(a, encA, out var asciiA, out var sizeA) &&
-                AsciiHelper.TryReadAscii(b, encB, out var asciiB, out var sizeB))
-            {
-                var cmp = asciiA.CompareTo(asciiB);
-                if (cmp != 0)
-                {
-                    return cmp;
-                }
-
-                a = a[sizeA..];
-                b = b[sizeB..];
-                continue;
-            }
-
-            Rune.TryDecodeFirst(a, encA, out var ra, out var ca);
-            Rune.TryDecodeFirst(b, encB, out var rb, out var cb);
-
-            var runeCmp = ra.CompareTo(rb);
-            if (runeCmp != 0)
-            {
-                return runeCmp;
-            }
-
-            a = a[ca..];
-            b = b[cb..];
+            return CompareUtf8WithTranscoded(Bytes, other);
         }
 
-        return a.Length.CompareTo(b.Length);
+        if (other.Encoding == TextEncoding.Utf8)
+        {
+            return -CompareUtf8WithTranscoded(other.Bytes, this);
+        }
+
+        // Neither is UTF-8 — transcode both.
+        return CompareBothTranscoded(this, other);
+    }
+
+    static int CompareUtf8WithTranscoded(ReadOnlySpan<byte> utf8Bytes, TextSpan toTranscode)
+    {
+        var maxBytes = EstimateTranscodeSize(toTranscode.Bytes.Length, toTranscode.Encoding, TextEncoding.Utf8);
+
+        byte[]? rented = null;
+        Span<byte> buffer = maxBytes <= 512
+            ? stackalloc byte[maxBytes]
+            : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
+
+        try
+        {
+            var written = toTranscode.EncodeToUtf8(buffer);
+            return utf8Bytes.SequenceCompareTo(buffer[..written]);
+        }
+        finally
+        {
+            if (rented is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rented);
+            }
+        }
+    }
+
+    static int CompareBothTranscoded(TextSpan a, TextSpan b)
+    {
+        var maxA = EstimateTranscodeSize(a.Bytes.Length, a.Encoding, TextEncoding.Utf8);
+        var maxB = EstimateTranscodeSize(b.Bytes.Length, b.Encoding, TextEncoding.Utf8);
+
+        byte[]? rentedA = null, rentedB = null;
+        Span<byte> bufA = maxA <= 256
+            ? stackalloc byte[maxA]
+            : (rentedA = ArrayPool<byte>.Shared.Rent(maxA));
+        Span<byte> bufB = maxB <= 256
+            ? stackalloc byte[maxB]
+            : (rentedB = ArrayPool<byte>.Shared.Rent(maxB));
+
+        try
+        {
+            var writtenA = a.EncodeToUtf8(bufA);
+            var writtenB = b.EncodeToUtf8(bufB);
+            ReadOnlySpan<byte> spanA = bufA[..writtenA];
+            return spanA.SequenceCompareTo(bufB[..writtenB]);
+        }
+        finally
+        {
+            if (rentedA is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedA);
+            }
+
+            if (rentedB is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentedB);
+            }
+        }
+    }
+
+    internal static int TranscodeToEncoding(TextSpan source, Span<byte> destination, TextEncoding targetEncoding)
+    {
+        return targetEncoding switch
+        {
+            TextEncoding.Utf8 => source.EncodeToUtf8(destination),
+            TextEncoding.Utf16 => source.EncodeToUtf16(MemoryMarshal.Cast<byte, char>(destination)) * 2,
+            TextEncoding.Utf32 => source.Transcode(destination, TextEncoding.Utf32, out _, out _),
+            _ => throw new InvalidEncodingException(targetEncoding)
+        };
+    }
+
+    internal static int EstimateTranscodeSize(int sourceBytesLength, TextEncoding source, TextEncoding target)
+    {
+        return (source, target) switch
+        {
+            (TextEncoding.Utf16, TextEncoding.Utf8) => sourceBytesLength / 2 * 3,
+            (TextEncoding.Utf8, TextEncoding.Utf16) => sourceBytesLength * 2,
+            (TextEncoding.Utf32, TextEncoding.Utf8) => sourceBytesLength,
+            (TextEncoding.Utf8, TextEncoding.Utf32) => sourceBytesLength * 4,
+            (TextEncoding.Utf32, TextEncoding.Utf16) => sourceBytesLength,
+            (TextEncoding.Utf16, TextEncoding.Utf32) => sourceBytesLength * 2,
+            _ => sourceBytesLength * 4,
+        };
     }
 
     /// <inheritdoc cref="Equals(TextSpan)"/>

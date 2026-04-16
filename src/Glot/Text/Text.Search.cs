@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Glot;
@@ -5,20 +6,24 @@ namespace Glot;
 public readonly partial struct Text
 {
     /// <summary>Returns <c>true</c> if this text contains the specified value, compared rune-by-rune across encodings.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Contains(Text value)
     {
+        if (_encoding == value._encoding)
+        {
+            return value.IsEmpty || Bytes.IndexOf(value.Bytes) >= 0;
+        }
+
         if (value.IsEmpty)
         {
             return true;
         }
 
-        if (Encoding == value.Encoding)
-        {
-            return RawBytes.IndexOf(value.RawBytes) >= 0;
-        }
-
-        return AsSpan().Contains(value.AsSpan());
+        return ContainsCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    bool ContainsCrossEncoding(Text value) => AsSpan().Contains(value.AsSpan());
 
     public bool Contains(string value)
     {
@@ -30,7 +35,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.IndexOf(valueBytes) >= 0;
+            return Bytes.IndexOf(valueBytes) >= 0;
         }
 
         return AsSpan().Contains(value.AsSpan());
@@ -45,7 +50,7 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            return RawBytes.IndexOf(value) >= 0;
+            return Bytes.IndexOf(value) >= 0;
         }
 
         return AsSpan().Contains(value, encoding);
@@ -61,7 +66,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.IndexOf(valueBytes) >= 0;
+            return Bytes.IndexOf(valueBytes) >= 0;
         }
 
         return AsSpan().Contains(value);
@@ -77,27 +82,31 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            return RawBytes.IndexOf(valueBytes) >= 0;
+            return Bytes.IndexOf(valueBytes) >= 0;
         }
 
         return AsSpan().Contains(value);
     }
 
     /// <summary>Returns <c>true</c> if this text begins with <paramref name="value"/>, compared rune-by-rune across encodings.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool StartsWith(Text value)
     {
+        if (_encoding == value._encoding)
+        {
+            return value.IsEmpty || Bytes.StartsWith(value.Bytes);
+        }
+
         if (value.IsEmpty)
         {
             return true;
         }
 
-        if (Encoding == value.Encoding)
-        {
-            return RawBytes.StartsWith(value.RawBytes);
-        }
-
-        return AsSpan().StartsWith(value.AsSpan());
+        return StartsWithCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    bool StartsWithCrossEncoding(Text value) => AsSpan().StartsWith(value.AsSpan());
 
     public bool StartsWith(string value)
     {
@@ -109,7 +118,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.StartsWith(valueBytes);
+            return Bytes.StartsWith(valueBytes);
         }
 
         return AsSpan().StartsWith(value.AsSpan());
@@ -124,7 +133,7 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            return RawBytes.StartsWith(value);
+            return Bytes.StartsWith(value);
         }
 
         return AsSpan().StartsWith(value, encoding);
@@ -140,7 +149,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.StartsWith(valueBytes);
+            return Bytes.StartsWith(valueBytes);
         }
 
         return AsSpan().StartsWith(value);
@@ -156,27 +165,31 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            return RawBytes.StartsWith(valueBytes);
+            return Bytes.StartsWith(valueBytes);
         }
 
         return AsSpan().StartsWith(value);
     }
 
     /// <summary>Returns <c>true</c> if this text ends with <paramref name="value"/>, compared rune-by-rune across encodings.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool EndsWith(Text value)
     {
+        if (_encoding == value._encoding)
+        {
+            return value.IsEmpty || Bytes.EndsWith(value.Bytes);
+        }
+
         if (value.IsEmpty)
         {
             return true;
         }
 
-        if (Encoding == value.Encoding)
-        {
-            return RawBytes.EndsWith(value.RawBytes);
-        }
-
-        return AsSpan().EndsWith(value.AsSpan());
+        return EndsWithCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    bool EndsWithCrossEncoding(Text value) => AsSpan().EndsWith(value.AsSpan());
 
     public bool EndsWith(string value)
     {
@@ -188,7 +201,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.EndsWith(valueBytes);
+            return Bytes.EndsWith(valueBytes);
         }
 
         return AsSpan().EndsWith(value.AsSpan());
@@ -203,7 +216,7 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            return RawBytes.EndsWith(value);
+            return Bytes.EndsWith(value);
         }
 
         return AsSpan().EndsWith(value, encoding);
@@ -219,7 +232,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.EndsWith(valueBytes);
+            return Bytes.EndsWith(valueBytes);
         }
 
         return AsSpan().EndsWith(value);
@@ -235,33 +248,43 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            return RawBytes.EndsWith(valueBytes);
+            return Bytes.EndsWith(valueBytes);
         }
 
         return AsSpan().EndsWith(value);
     }
 
     /// <summary>Returns the zero-based rune index of the first occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int RuneIndexOf(Text value)
     {
-        if (value.IsEmpty)
+        if (_encoding == value._encoding)
         {
-            return 0;
-        }
+            if (value.IsEmpty)
+            {
+                return 0;
+            }
 
-        if (Encoding == value.Encoding)
-        {
-            var bytePos = RawBytes.IndexOf(value.RawBytes);
+            var haystack = Bytes;
+            var bytePos = haystack.IndexOf(value.Bytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(haystack, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
-        return AsSpan().RuneIndexOf(value.AsSpan());
+        if (value.IsEmpty)
+        {
+            return 0;
+        }
+
+        return RuneIndexOfCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int RuneIndexOfCrossEncoding(Text value) => AsSpan().RuneIndexOf(value.AsSpan());
 
     public int RuneIndexOf(string value)
     {
@@ -273,13 +296,13 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            var bytePos = RawBytes.IndexOf(valueBytes);
+            var bytePos = Bytes.IndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().RuneIndexOf(value.AsSpan());
@@ -294,13 +317,13 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            var bytePos = RawBytes.IndexOf(value);
+            var bytePos = Bytes.IndexOf(value);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().RuneIndexOf(value, encoding);
@@ -316,13 +339,13 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            var bytePos = RawBytes.IndexOf(valueBytes);
+            var bytePos = Bytes.IndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().RuneIndexOf(value);
@@ -338,39 +361,49 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            var bytePos = RawBytes.IndexOf(valueBytes);
+            var bytePos = Bytes.IndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().RuneIndexOf(value);
     }
 
     /// <summary>Returns the zero-based rune index of the last occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int LastRuneIndexOf(Text value)
     {
-        if (value.IsEmpty)
+        if (_encoding == value._encoding)
         {
-            return RuneLength;
-        }
+            if (value.IsEmpty)
+            {
+                return RuneLength;
+            }
 
-        if (Encoding == value.Encoding)
-        {
-            var bytePos = RawBytes.LastIndexOf(value.RawBytes);
+            var haystack = Bytes;
+            var bytePos = haystack.LastIndexOf(value.Bytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(haystack, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
-        return AsSpan().LastRuneIndexOf(value.AsSpan());
+        if (value.IsEmpty)
+        {
+            return RuneLength;
+        }
+
+        return LastRuneIndexOfCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int LastRuneIndexOfCrossEncoding(Text value) => AsSpan().LastRuneIndexOf(value.AsSpan());
 
     public int LastRuneIndexOf(string value)
     {
@@ -382,13 +415,13 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            var bytePos = Bytes.LastIndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().LastRuneIndexOf(value.AsSpan());
@@ -403,13 +436,13 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            var bytePos = RawBytes.LastIndexOf(value);
+            var bytePos = Bytes.LastIndexOf(value);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().LastRuneIndexOf(value, encoding);
@@ -425,13 +458,13 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            var bytePos = Bytes.LastIndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().LastRuneIndexOf(value);
@@ -447,33 +480,37 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            var bytePos = RawBytes.LastIndexOf(valueBytes);
+            var bytePos = Bytes.LastIndexOf(valueBytes);
             if (bytePos < 0)
             {
                 return -1;
             }
 
-            return RuneCount.Count(RawBytes[..bytePos], Encoding);
+            return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
         }
 
         return AsSpan().LastRuneIndexOf(value);
     }
 
     /// <summary>Returns the zero-based byte offset of the first occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ByteIndexOf(Text value)
     {
+        if (_encoding == value._encoding)
+        {
+            return Bytes.IndexOf(value.Bytes);
+        }
+
         if (value.IsEmpty)
         {
             return 0;
         }
 
-        if (Encoding == value.Encoding)
-        {
-            return RawBytes.IndexOf(value.RawBytes);
-        }
-
-        return AsSpan().ByteIndexOf(value.AsSpan());
+        return ByteIndexOfCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int ByteIndexOfCrossEncoding(Text value) => AsSpan().ByteIndexOf(value.AsSpan());
 
     public int ByteIndexOf(string value)
     {
@@ -485,7 +522,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.IndexOf(valueBytes);
+            return Bytes.IndexOf(valueBytes);
         }
 
         return AsSpan().ByteIndexOf(value.AsSpan());
@@ -500,7 +537,7 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            return RawBytes.IndexOf(value);
+            return Bytes.IndexOf(value);
         }
 
         return AsSpan().ByteIndexOf(value, encoding);
@@ -516,7 +553,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.IndexOf(valueBytes);
+            return Bytes.IndexOf(valueBytes);
         }
 
         return AsSpan().ByteIndexOf(value);
@@ -532,27 +569,31 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            return RawBytes.IndexOf(valueBytes);
+            return Bytes.IndexOf(valueBytes);
         }
 
         return AsSpan().ByteIndexOf(value);
     }
 
     /// <summary>Returns the zero-based byte offset of the last occurrence of <paramref name="value"/>, or -1 if not found.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int LastByteIndexOf(Text value)
     {
+        if (_encoding == value._encoding)
+        {
+            return Bytes.LastIndexOf(value.Bytes);
+        }
+
         if (value.IsEmpty)
         {
             return ByteLength;
         }
 
-        if (Encoding == value.Encoding)
-        {
-            return RawBytes.LastIndexOf(value.RawBytes);
-        }
-
-        return AsSpan().LastByteIndexOf(value.AsSpan());
+        return LastByteIndexOfCrossEncoding(value);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int LastByteIndexOfCrossEncoding(Text value) => AsSpan().LastByteIndexOf(value.AsSpan());
 
     public int LastByteIndexOf(string value)
     {
@@ -564,7 +605,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.LastIndexOf(valueBytes);
+            return Bytes.LastIndexOf(valueBytes);
         }
 
         return AsSpan().LastByteIndexOf(value.AsSpan());
@@ -579,7 +620,7 @@ public readonly partial struct Text
 
         if (Encoding == encoding)
         {
-            return RawBytes.LastIndexOf(value);
+            return Bytes.LastIndexOf(value);
         }
 
         return AsSpan().LastByteIndexOf(value, encoding);
@@ -595,7 +636,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf16)
         {
-            return RawBytes.LastIndexOf(valueBytes);
+            return Bytes.LastIndexOf(valueBytes);
         }
 
         return AsSpan().LastByteIndexOf(value);
@@ -611,7 +652,7 @@ public readonly partial struct Text
 
         if (Encoding == TextEncoding.Utf32)
         {
-            return RawBytes.LastIndexOf(valueBytes);
+            return Bytes.LastIndexOf(valueBytes);
         }
 
         return AsSpan().LastByteIndexOf(value);
@@ -625,13 +666,25 @@ public readonly partial struct Text
         var original = AsSpan();
         var trimmed = original.TrimStart();
         var bytesRemoved = original.ByteLength - trimmed.ByteLength;
-        return new Text(_data, _start + bytesRemoved, trimmed.ByteLength, trimmed.Encoding, trimmed.RuneLength);
+        return new Text(
+            _data,
+            _start + bytesRemoved,
+            trimmed.ByteLength,
+            trimmed.Encoding,
+            trimmed.RuneLength,
+            _backingType);
     }
 
     public Text TrimEnd()
     {
         var trimmed = AsSpan().TrimEnd();
-        return new Text(_data, _start, trimmed.ByteLength, trimmed.Encoding, trimmed.RuneLength);
+        return new Text(
+            _data,
+            _start,
+            trimmed.ByteLength,
+            trimmed.Encoding,
+            trimmed.RuneLength,
+            _backingType);
     }
 
     /// <summary>Returns a non-copying sub-view starting at <paramref name="runeOffset"/>.</summary>
@@ -644,7 +697,13 @@ public readonly partial struct Text
 
         var span = AsSpan();
         var byteOffset = RuneIndex.ToByteOffset(span.Bytes, Encoding, runeOffset);
-        return new Text(_data, _start + byteOffset, ByteLength - byteOffset, Encoding, RuneLength - runeOffset);
+        return new Text(
+            _data,
+            _start + byteOffset,
+            ByteLength - byteOffset,
+            Encoding,
+            RuneLength - runeOffset,
+            _backingType);
     }
 
     public Text RuneSlice(int runeOffset, int runeCount)
@@ -662,7 +721,13 @@ public readonly partial struct Text
         var span = AsSpan();
         var byteOffset = RuneIndex.ToByteOffset(span.Bytes, Encoding, runeOffset);
         var byteCount = RuneIndex.ToByteOffset(span.Bytes[byteOffset..], Encoding, runeCount);
-        return new Text(_data, _start + byteOffset, byteCount, Encoding, runeCount);
+        return new Text(
+            _data,
+            _start + byteOffset,
+            byteCount,
+            Encoding,
+            runeCount,
+            _backingType);
     }
 
     public Text ByteSlice(int byteOffset)
@@ -673,7 +738,13 @@ public readonly partial struct Text
         }
 
         var sliced = AsSpan().ByteSlice(byteOffset);
-        return new Text(_data, _start + byteOffset, sliced.ByteLength, sliced.Encoding, sliced.RuneLength);
+        return new Text(
+            _data,
+            _start + byteOffset,
+            sliced.ByteLength,
+            sliced.Encoding,
+            sliced.RuneLength,
+            _backingType);
     }
 
     public Text ByteSlice(int byteOffset, int byteCount)
@@ -689,7 +760,13 @@ public readonly partial struct Text
         }
 
         var sliced = AsSpan().ByteSlice(byteOffset, byteCount);
-        return new Text(_data, _start + byteOffset, byteCount, sliced.Encoding, sliced.RuneLength);
+        return new Text(
+            _data,
+            _start + byteOffset,
+            byteCount,
+            sliced.Encoding,
+            sliced.RuneLength,
+            _backingType);
     }
 
     /// <summary>Splits this text by the given separator, yielding sub-spans via a zero-allocation enumerator.</summary>

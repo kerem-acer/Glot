@@ -1,6 +1,6 @@
+using System.Runtime.CompilerServices;
 #if NET6_0_OR_GREATER
 using System.Numerics;
-using System.Runtime.CompilerServices;
 #endif
 using System.Runtime.InteropServices;
 using static Glot.EncodingConstants;
@@ -12,6 +12,22 @@ namespace Glot;
 /// </summary>
 static class RuneCount
 {
+    /// <summary>
+    /// Returns the rune count in <paramref name="bytes"/>[..<paramref name="bytePos"/>].
+    /// When <paramref name="totalRuneLength"/> is positive, picks the shorter scan direction.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int CountPrefix(
+        ReadOnlySpan<byte> bytes, TextEncoding encoding, int bytePos, int totalRuneLength)
+    {
+        if (totalRuneLength > 0 && bytePos > (bytes.Length >> 1))
+        {
+            return totalRuneLength - Count(bytes[bytePos..], encoding);
+        }
+
+        return Count(bytes[..bytePos], encoding);
+    }
+
     public static int Count(ReadOnlySpan<byte> bytes, TextEncoding encoding)
     {
         return encoding switch

@@ -30,14 +30,16 @@ clean: ## Clean build outputs
 
 # --- Benchmarks ---
 
+FILTER = $(if $(F),--filter '*$(F)*',--filter '*')
+
 bench: ## make bench F=ContainsUtf8 P='N=256 Locale=Ascii'
-	$(BENCH_RUN) $(if $(F),--filter '*$(F)*') $(foreach p,$(P),--param:$(p)) $(ARGS)
+	$(BENCH_RUN) $(FILTER) $(foreach p,$(P),--param:$(p)) $(ARGS)
 
 quick: ## make quick F=ContainsUtf8 P='N=256 Locale=Ascii'
-	$(BENCH_RUN) $(if $(F),--filter '*$(F)*') $(foreach p,$(P),--param:$(p)) --quick $(ARGS)
+	$(BENCH_RUN) $(FILTER) $(foreach p,$(P),--param:$(p)) --quick $(ARGS)
 
 dry: ## make dry F=ContainsUtf8 P='N=256 Locale=Ascii'
-	$(BENCH_RUN) $(if $(F),--filter '*$(F)*') $(foreach p,$(P),--param:$(p)) --job dry $(ARGS)
+	$(BENCH_RUN) $(FILTER) $(foreach p,$(P),--param:$(p)) --job dry $(ARGS)
 
 list: ## make list F=ContainsUtf8
 	$(BENCH_RUN) --list flat $(if $(F),--filter '*$(F)*')

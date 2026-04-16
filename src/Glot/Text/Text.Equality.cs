@@ -6,9 +6,9 @@ public readonly partial struct Text
     public bool Equals(Text other)
     {
         // Same-encoding fast path: compare raw bytes directly, skip AsSpan() overhead.
-        if (Encoding == other.Encoding)
+        if (_encoding == other._encoding)
         {
-            return RawBytes.SequenceEqual(other.RawBytes);
+            return Bytes.SequenceEqual(other.Bytes);
         }
 
         return AsSpan().Equals(other.AsSpan());
@@ -43,7 +43,7 @@ public readonly partial struct Text
     /// <summary>Returns a hash code based on the raw byte content via XxHash3. O(n) — not cached.</summary>
     public override int GetHashCode()
     {
-        var bytes = RawBytes;
+        var bytes = Bytes;
         if (bytes.IsEmpty)
         {
             return 0;
@@ -56,9 +56,9 @@ public readonly partial struct Text
     /// <summary>Compares two texts lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(Text other)
     {
-        if (Encoding == other.Encoding)
+        if (_encoding == other._encoding)
         {
-            return RawBytes.SequenceCompareTo(other.RawBytes);
+            return Bytes.SequenceCompareTo(other.Bytes);
         }
 
         return AsSpan().CompareTo(other.AsSpan());

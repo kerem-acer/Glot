@@ -21,9 +21,11 @@ public sealed class TextJsonConverter : JsonConverter<Text>
             return default;
         }
 
-        if (!reader.HasValueSequence && !reader.ValueIsEscaped)
+        if (!reader.ValueIsEscaped)
         {
-            return Text.FromUtf8(reader.ValueSpan);
+            return reader.HasValueSequence
+                ? Text.FromUtf8(reader.ValueSequence)
+                : Text.FromUtf8(reader.ValueSpan);
         }
 
         long length = reader.HasValueSequence

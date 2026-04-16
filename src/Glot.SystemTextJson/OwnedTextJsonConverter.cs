@@ -22,17 +22,21 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
             return null;
         }
 
-        if (!reader.HasValueSequence && !reader.ValueIsEscaped)
+        if (!reader.ValueIsEscaped)
         {
-            return OwnedText.FromBytes(reader.ValueSpan, TextEncoding.Utf8);
+            return reader.HasValueSequence
+                ? OwnedText.FromUtf8(reader.ValueSequence)
+                : OwnedText.FromUtf8(reader.ValueSpan);
         }
 
-        long length = reader.HasValueSequence
-            ? reader.ValueSequence.Length
-            : reader.ValueSpan.Length;
-        var buffer = ArrayPool<byte>.Shared.Rent((int)length);
-        var written = reader.CopyString(buffer);
-        return OwnedText.Create(buffer, written, TextEncoding.Utf8);
+        {
+            long length = reader.HasValueSequence
+                ? reader.ValueSequence.Length
+                : reader.ValueSpan.Length;
+            var buffer = ArrayPool<byte>.Shared.Rent((int)length);
+            var written = reader.CopyString(buffer);
+            return OwnedText.Create(buffer, written, TextEncoding.Utf8);
+        }
     }
 
     /// <inheritdoc/>

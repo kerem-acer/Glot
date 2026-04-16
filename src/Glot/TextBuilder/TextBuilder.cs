@@ -48,7 +48,7 @@ public struct TextBuilder : IDisposable
     public int ByteLength { get; private set; }
 
     /// <summary>The number of runes written so far.</summary>
-    public int RuneLength { get; private set; }
+    public int RuneLength { get; internal set; }
 
     /// <summary>Returns <c>true</c> if no content has been written.</summary>
     public readonly bool IsEmpty => ByteLength == 0;
@@ -161,7 +161,8 @@ public struct TextBuilder : IDisposable
             0,
             ByteLength,
             Encoding,
-            RuneLength);
+            RuneLength,
+            BackingType.ByteArray);
     }
 
     /// <summary>
