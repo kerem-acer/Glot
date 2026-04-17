@@ -24,15 +24,11 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
 
         if (!reader.ValueIsEscaped)
         {
-            return reader.HasValueSequence
-                ? OwnedText.FromUtf8(reader.ValueSequence)
-                : OwnedText.FromUtf8(reader.ValueSpan);
+            return reader.HasValueSequence ? OwnedText.FromUtf8(reader.ValueSequence) : OwnedText.FromUtf8(reader.ValueSpan);
         }
 
         {
-            long length = reader.HasValueSequence
-                ? reader.ValueSequence.Length
-                : reader.ValueSpan.Length;
+            long length = reader.HasValueSequence ? reader.ValueSequence.Length : reader.ValueSpan.Length;
             var buffer = ArrayPool<byte>.Shared.Rent((int)length);
             var written = reader.CopyString(buffer);
             return OwnedText.Create(buffer, written, TextEncoding.Utf8);
@@ -54,9 +50,11 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
             case TextEncoding.Utf8:
                 writer.WriteStringValue(text.Bytes);
                 break;
+
             case TextEncoding.Utf16:
                 writer.WriteStringValue(text.Chars);
                 break;
+
             default:
                 WriteTranscoded(writer, text);
                 break;
@@ -67,9 +65,7 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
     {
         var maxBytes = text.RuneLength * 4;
         byte[]? rented = null;
-        var buffer = maxBytes <= StackAllocThreshold
-            ? stackalloc byte[StackAllocThreshold]
-            : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
+        var buffer = maxBytes <= StackAllocThreshold ? stackalloc byte[StackAllocThreshold] : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
         try
         {
             var written = text.EncodeToUtf8(buffer);

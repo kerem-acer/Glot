@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextSplitUtf16Benchmarks-20260416-212425</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.201
+  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                </th><th>Categories</th><th>N</th><th>Locale</th><th>Mean   </th><th>Error   </th><th>StdDev </th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>64</td><td>Ascii</td><td>75.79 ns</td><td>9.184 ns</td><td>0.503 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>64</td><td>Ascii</td><td>256.76 ns</td><td>18.243 ns</td><td>1.000 ns</td><td>3.39</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>64</td><td>Cjk</td><td>76.52 ns</td><td>9.723 ns</td><td>0.533 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>64</td><td>Cjk</td><td>260.79 ns</td><td>19.572 ns</td><td>1.073 ns</td><td>3.41</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>64</td><td>Mixed</td><td>73.21 ns</td><td>7.143 ns</td><td>0.392 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>64</td><td>Mixed</td><td>244.06 ns</td><td>124.957 ns</td><td>6.849 ns</td><td>3.33</td><td>0.08</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>4096</td><td>Ascii</td><td>1,622.18 ns</td><td>292.188 ns</td><td>16.016 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>4096</td><td>Ascii</td><td>16,028.04 ns</td><td>1,666.210 ns</td><td>91.331 ns</td><td>9.88</td><td>0.10</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>4096</td><td>Cjk</td><td>1,716.70 ns</td><td>1,153.132 ns</td><td>63.207 ns</td><td>1.00</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>4096</td><td>Cjk</td><td>16,026.06 ns</td><td>5,006.034 ns</td><td>274.398 ns</td><td>9.34</td><td>0.33</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>4096</td><td>Mixed</td><td>6,119.83 ns</td><td>826.712 ns</td><td>45.315 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>4096</td><td>Mixed</td><td>14,841.92 ns</td><td>3,990.248 ns</td><td>218.719 ns</td><td>2.43</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>65536</td><td>Ascii</td><td>87,559.65 ns</td><td>14,880.508 ns</td><td>815.651 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>65536</td><td>Ascii</td><td>256,357.29 ns</td><td>12,176.107 ns</td><td>667.414 ns</td><td>2.93</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>65536</td><td>Cjk</td><td>71,564.06 ns</td><td>58,510.955 ns</td><td>3,207.183 ns</td><td>1.00</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>65536</td><td>Cjk</td><td>257,210.69 ns</td><td>14,383.538 ns</td><td>788.410 ns</td><td>3.60</td><td>0.14</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>string.EnumerateRunes</td><td>EnumerateRunes</td><td>65536</td><td>Mixed</td><td>101,354.11 ns</td><td>16,585.148 ns</td><td>909.088 ns</td><td>1.00</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;Text.EnumerateRunes UTF-16&#39;</td><td>EnumerateRunes</td><td>65536</td><td>Mixed</td><td>237,417.40 ns</td><td>35,884.112 ns</td><td>1,966.929 ns</td><td>2.34</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>NA</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>64</td><td>Ascii</td><td>90.93 ns</td><td>21.323 ns</td><td>1.169 ns</td><td>1.00</td><td>0.02</td><td>0.0468</td><td>-</td><td>-</td><td>392 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>64</td><td>Ascii</td><td>737.61 ns</td><td>164.702 ns</td><td>9.028 ns</td><td>8.11</td><td>0.12</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>64</td><td>Cjk</td><td>139.42 ns</td><td>16.645 ns</td><td>0.912 ns</td><td>1.00</td><td>0.01</td><td>0.0801</td><td>-</td><td>-</td><td>672 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>64</td><td>Cjk</td><td>613.01 ns</td><td>32.172 ns</td><td>1.763 ns</td><td>4.40</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>64</td><td>Mixed</td><td>90.03 ns</td><td>12.984 ns</td><td>0.712 ns</td><td>1.00</td><td>0.01</td><td>0.0468</td><td>-</td><td>-</td><td>392 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>64</td><td>Mixed</td><td>619.81 ns</td><td>67.160 ns</td><td>3.681 ns</td><td>6.88</td><td>0.06</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>4096</td><td>Ascii</td><td>4,566.15 ns</td><td>762.497 ns</td><td>41.795 ns</td><td>1.00</td><td>0.01</td><td>2.6169</td><td>0.1907</td><td>-</td><td>21896 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>4096</td><td>Ascii</td><td>47,013.60 ns</td><td>13,971.509 ns</td><td>765.826 ns</td><td>10.30</td><td>0.17</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>4096</td><td>Cjk</td><td>9,995.91 ns</td><td>1,871.665 ns</td><td>102.592 ns</td><td>1.00</td><td>0.01</td><td>4.8981</td><td>0.6104</td><td>-</td><td>40992 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>4096</td><td>Cjk</td><td>39,630.84 ns</td><td>6,593.441 ns</td><td>361.409 ns</td><td>3.96</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>4096</td><td>Mixed</td><td>4,722.80 ns</td><td>316.031 ns</td><td>17.323 ns</td><td>1.00</td><td>0.00</td><td>2.6169</td><td>0.1907</td><td>-</td><td>21896 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>4096</td><td>Mixed</td><td>39,143.63 ns</td><td>4,316.552 ns</td><td>236.605 ns</td><td>8.29</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>65536</td><td>Ascii</td><td>74,790.96 ns</td><td>4,057.625 ns</td><td>222.412 ns</td><td>1.00</td><td>0.00</td><td>41.6260</td><td>20.7520</td><td>-</td><td>349560 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>65536</td><td>Ascii</td><td>733,485.70 ns</td><td>238,440.439 ns</td><td>13,069.725 ns</td><td>9.81</td><td>0.15</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>65536</td><td>Cjk</td><td>244,773.32 ns</td><td>38,656.517 ns</td><td>2,118.894 ns</td><td>1.00</td><td>0.01</td><td>83.0078</td><td>41.5039</td><td>41.5039</td><td>655434 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>65536</td><td>Cjk</td><td>636,552.26 ns</td><td>15,770.956 ns</td><td>864.459 ns</td><td>2.60</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;string.Split count&#39;</td><td>Split</td><td>65536</td><td>Mixed</td><td>73,232.62 ns</td><td>1,552.047 ns</td><td>85.073 ns</td><td>1.00</td><td>0.00</td><td>41.6260</td><td>20.7520</td><td>-</td><td>349560 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.Split UTF-16 count&#39;</td><td>Split</td><td>65536</td><td>Mixed</td><td>630,628.01 ns</td><td>69,697.297 ns</td><td>3,820.344 ns</td><td>8.61</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr></tbody></table>
+</body>
+</html>

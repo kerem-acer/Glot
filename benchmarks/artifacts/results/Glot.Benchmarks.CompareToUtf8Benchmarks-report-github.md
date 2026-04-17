@@ -10,179 +10,67 @@ Job=ShortRun  IterationCount=3  LaunchCount=1
 WarmupCount=3  
 
 ```
-| Method                         | N     | Locale | Mean            | Error           | StdDev        | Ratio  | RatioSD | Allocated | Alloc Ratio |
-|------------------------------- |------ |------- |----------------:|----------------:|--------------:|-------:|--------:|----------:|------------:|
-| **string.Compare**                 | **8**     | **Ascii**  |       **0.9986 ns** |       **0.1008 ns** |     **0.0055 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Ascii  |       2.0640 ns |       1.0087 ns |     0.0553 ns |   2.07 |    0.05 |         - |          NA |
-| U8String.CompareTo             | 8     | Ascii  |       2.0944 ns |       2.3874 ns |     0.1309 ns |   2.10 |    0.11 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 8     | Ascii  |       3.8271 ns |       0.4884 ns |     0.0268 ns |   3.83 |    0.03 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 8     | Ascii  |      16.1769 ns |       1.1461 ns |     0.0628 ns |  16.20 |    0.09 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 8     | Ascii  |      17.1979 ns |       0.7977 ns |     0.0437 ns |  17.22 |    0.09 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **8**     | **Latin**  |       **1.0717 ns** |       **0.1853 ns** |     **0.0102 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Latin  |       0.5507 ns |       0.8064 ns |     0.0442 ns |   0.51 |    0.04 |         - |          NA |
-| U8String.CompareTo             | 8     | Latin  |       0.5569 ns |       0.8003 ns |     0.0439 ns |   0.52 |    0.04 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 8     | Latin  |       1.9036 ns |       0.0485 ns |     0.0027 ns |   1.78 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 8     | Latin  |      26.1927 ns |       0.3407 ns |     0.0187 ns |  24.44 |    0.20 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 8     | Latin  |      22.5377 ns |       2.1378 ns |     0.1172 ns |  21.03 |    0.20 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **8**     | **Cjk**    |       **1.0635 ns** |       **0.6495 ns** |     **0.0356 ns** |   **1.00** |    **0.04** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Cjk    |       4.6488 ns |       3.7918 ns |     0.2078 ns |   4.37 |    0.21 |         - |          NA |
-| U8String.CompareTo             | 8     | Cjk    |       4.5916 ns |       0.1952 ns |     0.0107 ns |   4.32 |    0.12 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 8     | Cjk    |       6.6168 ns |       5.4379 ns |     0.2981 ns |   6.23 |    0.30 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 8     | Cjk    |      63.3953 ns |       8.9919 ns |     0.4929 ns |  59.66 |    1.74 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 8     | Cjk    |      48.8421 ns |       6.1086 ns |     0.3348 ns |  45.96 |    1.34 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **8**     | **Emoji**  |       **0.8326 ns** |       **0.6279 ns** |     **0.0344 ns** |   **1.00** |    **0.05** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Emoji  |       1.2924 ns |       0.6480 ns |     0.0355 ns |   1.55 |    0.07 |         - |          NA |
-| U8String.CompareTo             | 8     | Emoji  |       1.7197 ns |       1.2445 ns |     0.0682 ns |   2.07 |    0.10 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 8     | Emoji  |       2.6298 ns |       0.1112 ns |     0.0061 ns |   3.16 |    0.11 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 8     | Emoji  |      35.8659 ns |       2.4767 ns |     0.1358 ns |  43.13 |    1.51 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 8     | Emoji  |      26.3953 ns |       1.3826 ns |     0.0758 ns |  31.74 |    1.11 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **8**     | **Mixed**  |       **1.0546 ns** |       **0.2865 ns** |     **0.0157 ns** |   **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Mixed  |       2.2467 ns |       3.2106 ns |     0.1760 ns |   2.13 |    0.15 |         - |          NA |
-| U8String.CompareTo             | 8     | Mixed  |       2.0643 ns |       2.5918 ns |     0.1421 ns |   1.96 |    0.12 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 8     | Mixed  |       3.7382 ns |       2.6808 ns |     0.1469 ns |   3.55 |    0.13 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 8     | Mixed  |      16.1532 ns |       1.2408 ns |     0.0680 ns |  15.32 |    0.20 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 8     | Mixed  |      16.6962 ns |       0.6033 ns |     0.0331 ns |  15.83 |    0.20 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **64**    | **Ascii**  |       **6.5799 ns** |       **1.2008 ns** |     **0.0658 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 64    | Ascii  |       5.1322 ns |       0.7373 ns |     0.0404 ns |   0.78 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 64    | Ascii  |       5.8339 ns |       0.4963 ns |     0.0272 ns |   0.89 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 64    | Ascii  |       6.0777 ns |       0.4827 ns |     0.0265 ns |   0.92 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 64    | Ascii  |     100.8615 ns |       4.0822 ns |     0.2238 ns |  15.33 |    0.14 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 64    | Ascii  |     108.5408 ns |      15.3288 ns |     0.8402 ns |  16.50 |    0.18 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **64**    | **Latin**  |       **6.7006 ns** |       **1.1011 ns** |     **0.0604 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 64    | Latin  |       5.3539 ns |       0.9623 ns |     0.0527 ns |   0.80 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 64    | Latin  |       6.3308 ns |       1.2627 ns |     0.0692 ns |   0.94 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 64    | Latin  |       6.6648 ns |       0.6909 ns |     0.0379 ns |   0.99 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 64    | Latin  |     158.0871 ns |      18.2788 ns |     1.0019 ns |  23.59 |    0.22 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 64    | Latin  |     136.3194 ns |      21.2469 ns |     1.1646 ns |  20.35 |    0.22 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **64**    | **Cjk**    |       **6.5682 ns** |       **0.7017 ns** |     **0.0385 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 64    | Cjk    |       7.4385 ns |       1.3602 ns |     0.0746 ns |   1.13 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 64    | Cjk    |       9.5243 ns |       0.6574 ns |     0.0360 ns |   1.45 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 64    | Cjk    |       8.2691 ns |       0.6943 ns |     0.0381 ns |   1.26 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 64    | Cjk    |     466.9889 ns |      28.6940 ns |     1.5728 ns |  71.10 |    0.42 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 64    | Cjk    |     334.5667 ns |      38.3071 ns |     2.0997 ns |  50.94 |    0.38 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **64**    | **Emoji**  |       **5.0978 ns** |       **0.3485 ns** |     **0.0191 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 64    | Emoji  |       6.1275 ns |       3.0823 ns |     0.1689 ns |   1.20 |    0.03 |         - |          NA |
-| U8String.CompareTo             | 64    | Emoji  |       7.5899 ns |       1.4817 ns |     0.0812 ns |   1.49 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 64    | Emoji  |       7.1650 ns |       2.2525 ns |     0.1235 ns |   1.41 |    0.02 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 64    | Emoji  |     253.9095 ns |      14.8837 ns |     0.8158 ns |  49.81 |    0.21 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 64    | Emoji  |     180.3309 ns |       1.5349 ns |     0.0841 ns |  35.37 |    0.12 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **64**    | **Mixed**  |       **6.7649 ns** |       **0.5595 ns** |     **0.0307 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 64    | Mixed  |       5.8366 ns |       0.3882 ns |     0.0213 ns |   0.86 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 64    | Mixed  |       7.0085 ns |       5.2983 ns |     0.2904 ns |   1.04 |    0.04 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 64    | Mixed  |       6.9049 ns |       1.6885 ns |     0.0926 ns |   1.02 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 64    | Mixed  |     159.2680 ns |      10.1872 ns |     0.5584 ns |  23.54 |    0.12 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 64    | Mixed  |     138.5268 ns |      11.5536 ns |     0.6333 ns |  20.48 |    0.11 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **256**   | **Ascii**  |      **11.4523 ns** |       **2.6254 ns** |     **0.1439 ns** |   **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Ascii  |       8.3999 ns |       0.9881 ns |     0.0542 ns |   0.73 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 256   | Ascii  |      11.5783 ns |       0.3290 ns |     0.0180 ns |   1.01 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 256   | Ascii  |       9.6015 ns |       0.8032 ns |     0.0440 ns |   0.84 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 256   | Ascii  |     374.4463 ns |       3.8088 ns |     0.2088 ns |  32.70 |    0.36 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 256   | Ascii  |     403.5832 ns |      43.1712 ns |     2.3664 ns |  35.24 |    0.42 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **256**   | **Latin**  |      **11.2794 ns** |       **1.5065 ns** |     **0.0826 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Latin  |       9.6369 ns |       4.0834 ns |     0.2238 ns |   0.85 |    0.02 |         - |          NA |
-| U8String.CompareTo             | 256   | Latin  |      13.4453 ns |       3.6096 ns |     0.1979 ns |   1.19 |    0.02 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 256   | Latin  |      10.5318 ns |       1.5489 ns |     0.0849 ns |   0.93 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 256   | Latin  |     619.6322 ns |      46.8061 ns |     2.5656 ns |  54.94 |    0.40 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 256   | Latin  |     531.1525 ns |     115.4705 ns |     6.3293 ns |  47.09 |    0.57 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **256**   | **Cjk**    |      **11.4239 ns** |       **2.4780 ns** |     **0.1358 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Cjk    |      16.3760 ns |       0.3211 ns |     0.0176 ns |   1.43 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 256   | Cjk    |      26.7602 ns |       7.7837 ns |     0.4267 ns |   2.34 |    0.04 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 256   | Cjk    |      17.5557 ns |       3.8168 ns |     0.2092 ns |   1.54 |    0.02 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 256   | Cjk    |   1,868.3170 ns |     138.3226 ns |     7.5819 ns | 163.56 |    1.78 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 256   | Cjk    |   1,307.7466 ns |     106.4392 ns |     5.8343 ns | 114.48 |    1.26 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **256**   | **Emoji**  |      **10.7488 ns** |       **1.1489 ns** |     **0.0630 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Emoji  |      12.1199 ns |       2.8206 ns |     0.1546 ns |   1.13 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 256   | Emoji  |      18.8078 ns |       0.3158 ns |     0.0173 ns |   1.75 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 256   | Emoji  |      13.3359 ns |       2.8368 ns |     0.1555 ns |   1.24 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 256   | Emoji  |     987.0351 ns |      55.4304 ns |     3.0383 ns |  91.83 |    0.53 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 256   | Emoji  |     691.1298 ns |      20.6991 ns |     1.1346 ns |  64.30 |    0.34 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **256**   | **Mixed**  |      **11.2776 ns** |       **2.4921 ns** |     **0.1366 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Mixed  |       9.6128 ns |       0.3325 ns |     0.0182 ns |   0.85 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 256   | Mixed  |      13.6493 ns |       1.0940 ns |     0.0600 ns |   1.21 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 256   | Mixed  |      10.4627 ns |       1.0480 ns |     0.0574 ns |   0.93 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 256   | Mixed  |     647.9059 ns |      66.5106 ns |     3.6457 ns |  57.46 |    0.66 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 256   | Mixed  |     544.2127 ns |      23.2216 ns |     1.2729 ns |  48.26 |    0.51 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **4096**  | **Ascii**  |     **174.5014 ns** |      **27.4509 ns** |     **1.5047 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 4096  | Ascii  |      78.6623 ns |       1.6800 ns |     0.0921 ns |   0.45 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 4096  | Ascii  |      78.1556 ns |       6.0550 ns |     0.3319 ns |   0.45 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 4096  | Ascii  |      79.4521 ns |       0.9716 ns |     0.0533 ns |   0.46 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 4096  | Ascii  |   5,885.4092 ns |   1,091.5101 ns |    59.8294 ns |  33.73 |    0.39 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 4096  | Ascii  |   5,858.3671 ns |     301.0408 ns |    16.5011 ns |  33.57 |    0.26 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **4096**  | **Latin**  |     **172.7018 ns** |      **19.2465 ns** |     **1.0550 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 4096  | Latin  |      91.1883 ns |       3.1561 ns |     0.1730 ns |   0.53 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 4096  | Latin  |      93.7644 ns |      39.6701 ns |     2.1745 ns |   0.54 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 4096  | Latin  |      93.0985 ns |       6.0378 ns |     0.3310 ns |   0.54 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 4096  | Latin  |   9,637.1920 ns |   1,112.3368 ns |    60.9709 ns |  55.80 |    0.43 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 4096  | Latin  |   8,228.4020 ns |     445.8280 ns |    24.4373 ns |  47.65 |    0.28 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **4096**  | **Cjk**    |     **171.7329 ns** |       **5.8519 ns** |     **0.3208 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 4096  | Cjk    |     203.8445 ns |      67.3919 ns |     3.6940 ns |   1.19 |    0.02 |         - |          NA |
-| U8String.CompareTo             | 4096  | Cjk    |     203.0205 ns |      19.6381 ns |     1.0764 ns |   1.18 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 4096  | Cjk    |     205.3199 ns |      12.0356 ns |     0.6597 ns |   1.20 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 4096  | Cjk    |  29,521.4483 ns |   4,277.4363 ns |   234.4607 ns | 171.90 |    1.21 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 4096  | Cjk    |  21,262.4541 ns |   2,740.7130 ns |   150.2277 ns | 123.81 |    0.78 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **4096**  | **Emoji**  |     **171.6894 ns** |       **6.4524 ns** |     **0.3537 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 4096  | Emoji  |     140.4624 ns |       1.8365 ns |     0.1007 ns |   0.82 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 4096  | Emoji  |     139.6673 ns |      11.4221 ns |     0.6261 ns |   0.81 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 4096  | Emoji  |     142.2203 ns |      37.3753 ns |     2.0487 ns |   0.83 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 4096  | Emoji  |  15,825.4763 ns |   5,701.8951 ns |   312.5401 ns |  92.18 |    1.59 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 4096  | Emoji  |  10,988.4271 ns |     572.7919 ns |    31.3967 ns |  64.00 |    0.20 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **4096**  | **Mixed**  |     **173.9303 ns** |      **19.8031 ns** |     **1.0855 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 4096  | Mixed  |      97.7388 ns |      29.8768 ns |     1.6376 ns |   0.56 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 4096  | Mixed  |      98.7257 ns |      34.8161 ns |     1.9084 ns |   0.57 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 4096  | Mixed  |     100.7358 ns |       2.0044 ns |     0.1099 ns |   0.58 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 4096  | Mixed  |  10,172.7908 ns |   1,073.2740 ns |    58.8298 ns |  58.49 |    0.43 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 4096  | Mixed  |   8,711.4514 ns |   1,543.0195 ns |    84.5781 ns |  50.09 |    0.50 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **65536** | **Ascii**  |   **3,333.5245 ns** |     **169.4645 ns** |     **9.2889 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Ascii  |   1,024.3445 ns |     552.9494 ns |    30.3090 ns |   0.31 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 65536 | Ascii  |   1,047.6956 ns |     136.9202 ns |     7.5051 ns |   0.31 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Ascii  |   1,051.5378 ns |      35.7211 ns |     1.9580 ns |   0.32 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Ascii  |  93,568.5578 ns |   1,492.8410 ns |    81.8277 ns |  28.07 |    0.07 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Ascii  |  94,267.1509 ns |  11,205.9770 ns |   614.2374 ns |  28.28 |    0.17 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **65536** | **Latin**  |   **3,336.1304 ns** |      **91.8926 ns** |     **5.0369 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Latin  |   1,469.1209 ns |     112.2094 ns |     6.1506 ns |   0.44 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 65536 | Latin  |   1,453.4159 ns |      80.1636 ns |     4.3940 ns |   0.44 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Latin  |   1,482.1959 ns |      41.2238 ns |     2.2596 ns |   0.44 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Latin  | 155,489.0205 ns |  16,018.6849 ns |   878.0382 ns |  46.61 |    0.24 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Latin  | 131,277.1673 ns |   6,746.5300 ns |   369.8001 ns |  39.35 |    0.11 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **65536** | **Cjk**    |   **3,121.8972 ns** |     **365.0858 ns** |    **20.0116 ns** |   **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Cjk    |   3,302.7866 ns |     943.1656 ns |    51.6981 ns |   1.06 |    0.02 |         - |          NA |
-| U8String.CompareTo             | 65536 | Cjk    |   3,290.1581 ns |     287.9508 ns |    15.7836 ns |   1.05 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Cjk    |   3,285.9534 ns |     243.1022 ns |    13.3253 ns |   1.05 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Cjk    | 482,150.3636 ns |  17,825.5727 ns |   977.0798 ns | 154.45 |    0.90 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Cjk    | 330,836.3511 ns |  17,323.0037 ns |   949.5323 ns | 105.98 |    0.64 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **65536** | **Emoji**  |   **3,248.1392 ns** |     **731.5095 ns** |    **40.0965 ns** |   **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Emoji  |   2,302.9704 ns |     115.2142 ns |     6.3153 ns |   0.71 |    0.01 |         - |          NA |
-| U8String.CompareTo             | 65536 | Emoji  |   2,312.0125 ns |     268.3419 ns |    14.7087 ns |   0.71 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Emoji  |   2,317.6417 ns |     110.1097 ns |     6.0355 ns |   0.71 |    0.01 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Emoji  | 252,165.1748 ns |  19,725.8016 ns | 1,081.2378 ns |  77.64 |    0.87 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Emoji  | 178,125.5492 ns | 104,249.1009 ns | 5,714.2450 ns |  54.84 |    1.63 |         - |          NA |
-|                                |       |        |                 |                 |               |        |         |           |             |
-| **string.Compare**                 | **65536** | **Mixed**  |   **3,179.0597 ns** |      **79.2164 ns** |     **4.3421 ns** |   **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Mixed  |   1,580.4124 ns |     165.4677 ns |     9.0698 ns |   0.50 |    0.00 |         - |          NA |
-| U8String.CompareTo             | 65536 | Mixed  |   1,482.8584 ns |      47.8554 ns |     2.6231 ns |   0.47 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Mixed  |   1,593.9803 ns |     110.6215 ns |     6.0635 ns |   0.50 |    0.00 |         - |          NA |
-| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Mixed  | 161,998.6776 ns |  21,439.9839 ns | 1,175.1979 ns |  50.96 |    0.33 |         - |          NA |
-| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Mixed  | 135,641.2424 ns |  17,215.8553 ns |   943.6591 ns |  42.67 |    0.26 |         - |          NA |
+| Method                         | N     | Locale | Mean            | Error           | StdDev         | Median          | Ratio | RatioSD | Allocated | Alloc Ratio |
+|------------------------------- |------ |------- |----------------:|----------------:|---------------:|----------------:|------:|--------:|----------:|------------:|
+| **string.Compare**                 | **8**     | **Ascii**  |       **0.9780 ns** |       **0.6830 ns** |      **0.0374 ns** |       **0.9570 ns** |  **1.00** |    **0.05** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Ascii  |       2.5900 ns |       6.5427 ns |      0.3586 ns |       2.5173 ns |  2.65 |    0.33 |         - |          NA |
+| U8String.CompareTo             | 8     | Ascii  |       2.3733 ns |       7.6508 ns |      0.4194 ns |       2.1690 ns |  2.43 |    0.38 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 8     | Ascii  |       2.5854 ns |       0.5162 ns |      0.0283 ns |       2.5842 ns |  2.65 |    0.09 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 8     | Ascii  |       8.5898 ns |       1.4037 ns |      0.0769 ns |       8.5907 ns |  8.79 |    0.29 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 8     | Ascii  |      25.0450 ns |       8.0443 ns |      0.4409 ns |      25.2735 ns | 25.63 |    0.92 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **8**     | **Cjk**    |       **1.0145 ns** |       **0.1352 ns** |      **0.0074 ns** |       **1.0186 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Cjk    |       4.8916 ns |       1.3452 ns |      0.0737 ns |       4.9105 ns |  4.82 |    0.07 |         - |          NA |
+| U8String.CompareTo             | 8     | Cjk    |       4.9410 ns |       1.8597 ns |      0.1019 ns |       4.9068 ns |  4.87 |    0.09 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 8     | Cjk    |       5.4367 ns |       3.1244 ns |      0.1713 ns |       5.4564 ns |  5.36 |    0.15 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 8     | Cjk    |      15.5728 ns |       1.6252 ns |      0.0891 ns |      15.6030 ns | 15.35 |    0.12 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 8     | Cjk    |      31.1693 ns |       7.2565 ns |      0.3978 ns |      31.3185 ns | 30.72 |    0.39 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **8**     | **Mixed**  |       **1.0362 ns** |       **0.4151 ns** |      **0.0228 ns** |       **1.0298 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 8     | Mixed  |       2.4075 ns |       7.5128 ns |      0.4118 ns |       2.2613 ns |  2.32 |    0.35 |         - |          NA |
+| U8String.CompareTo             | 8     | Mixed  |       2.2152 ns |       1.8110 ns |      0.0993 ns |       2.2322 ns |  2.14 |    0.09 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 8     | Mixed  |       2.7704 ns |       0.8298 ns |      0.0455 ns |       2.7535 ns |  2.67 |    0.06 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 8     | Mixed  |       8.4744 ns |       0.4875 ns |      0.0267 ns |       8.4682 ns |  8.18 |    0.16 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 8     | Mixed  |      29.3393 ns |     127.5781 ns |      6.9930 ns |      25.3948 ns | 28.32 |    5.87 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **256**   | **Ascii**  |      **11.3626 ns** |       **0.6508 ns** |      **0.0357 ns** |      **11.3695 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Ascii  |       8.6190 ns |       0.6381 ns |      0.0350 ns |       8.6391 ns |  0.76 |    0.00 |         - |          NA |
+| U8String.CompareTo             | 256   | Ascii  |      11.6050 ns |      79.6476 ns |      4.3658 ns |       9.1874 ns |  1.02 |    0.33 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 256   | Ascii  |       9.6643 ns |       8.9668 ns |      0.4915 ns |       9.6134 ns |  0.85 |    0.04 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 256   | Ascii  |      25.5267 ns |       3.6033 ns |      0.1975 ns |      25.6049 ns |  2.25 |    0.02 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 256   | Ascii  |     623.0153 ns |     700.3492 ns |     38.3885 ns |     603.8154 ns | 54.83 |    2.93 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **256**   | **Cjk**    |      **12.0063 ns** |       **7.3167 ns** |      **0.4011 ns** |      **11.8386 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Cjk    |      16.9455 ns |       0.5611 ns |      0.0308 ns |      16.9596 ns |  1.41 |    0.04 |         - |          NA |
+| U8String.CompareTo             | 256   | Cjk    |      17.6317 ns |       9.2576 ns |      0.5074 ns |      17.3996 ns |  1.47 |    0.06 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 256   | Cjk    |      20.5515 ns |      53.7205 ns |      2.9446 ns |      20.9986 ns |  1.71 |    0.22 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 256   | Cjk    |     197.7249 ns |     947.2659 ns |     51.9228 ns |     167.7699 ns | 16.48 |    3.78 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 256   | Cjk    |     751.2492 ns |     338.2507 ns |     18.5407 ns |     753.1269 ns | 62.62 |    2.23 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **256**   | **Mixed**  |      **11.4897 ns** |       **0.5219 ns** |      **0.0286 ns** |      **11.4758 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 256   | Mixed  |      10.0001 ns |       3.6166 ns |      0.1982 ns |       9.9581 ns |  0.87 |    0.02 |         - |          NA |
+| U8String.CompareTo             | 256   | Mixed  |       9.7749 ns |       1.1239 ns |      0.0616 ns |       9.7992 ns |  0.85 |    0.00 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 256   | Mixed  |      12.2685 ns |      57.1236 ns |      3.1311 ns |      10.5718 ns |  1.07 |    0.24 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 256   | Mixed  |      98.2545 ns |       5.3784 ns |      0.2948 ns |      98.2497 ns |  8.55 |    0.03 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 256   | Mixed  |     636.5949 ns |      37.3187 ns |      2.0456 ns |     636.7217 ns | 55.41 |    0.19 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **65536** | **Ascii**  |   **3,407.7947 ns** |     **177.6294 ns** |      **9.7365 ns** |   **3,409.5440 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Ascii  |   1,070.3252 ns |     123.8948 ns |      6.7911 ns |   1,066.8205 ns |  0.31 |    0.00 |         - |          NA |
+| U8String.CompareTo             | 65536 | Ascii  |   1,300.3332 ns |   7,495.4136 ns |    410.8489 ns |   1,076.8367 ns |  0.38 |    0.10 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Ascii  |   1,070.2506 ns |     427.5518 ns |     23.4356 ns |   1,065.8828 ns |  0.31 |    0.01 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Ascii  |   2,883.7232 ns |     834.3347 ns |     45.7327 ns |   2,864.7449 ns |  0.85 |    0.01 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Ascii  | 149,310.1702 ns |  11,694.7524 ns |    641.0288 ns | 149,654.5510 ns | 43.81 |    0.20 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **65536** | **Cjk**    |   **3,161.1224 ns** |      **67.5735 ns** |      **3.7039 ns** |   **3,162.6409 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Cjk    |   3,320.3787 ns |     264.9545 ns |     14.5230 ns |   3,319.4242 ns |  1.05 |    0.00 |         - |          NA |
+| U8String.CompareTo             | 65536 | Cjk    |   3,335.9634 ns |     675.8666 ns |     37.0465 ns |   3,327.1926 ns |  1.06 |    0.01 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Cjk    |   3,327.7398 ns |      68.1924 ns |      3.7379 ns |   3,329.7380 ns |  1.05 |    0.00 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Cjk    |  38,600.3121 ns |   3,418.8493 ns |    187.3987 ns |  38,646.2097 ns | 12.21 |    0.05 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Cjk    | 186,883.6942 ns |  12,114.5782 ns |    664.0409 ns | 186,585.1035 ns | 59.12 |    0.19 |         - |          NA |
+|                                |       |        |                 |                 |                |                 |       |         |           |             |
+| **string.Compare**                 | **65536** | **Mixed**  |   **3,366.0430 ns** |   **2,069.0510 ns** |    **113.4117 ns** |   **3,408.4338 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;Span.SequenceCompareTo UTF-8&#39; | 65536 | Mixed  |   1,590.1961 ns |     458.4307 ns |     25.1281 ns |   1,592.6411 ns |  0.47 |    0.02 |         - |          NA |
+| U8String.CompareTo             | 65536 | Mixed  |   1,538.5687 ns |   1,548.5064 ns |     84.8789 ns |   1,491.6337 ns |  0.46 |    0.03 |         - |          NA |
+| &#39;Text.CompareTo UTF-8&#39;         | 65536 | Mixed  |   1,622.6036 ns |     394.5066 ns |     21.6242 ns |   1,616.2485 ns |  0.48 |    0.02 |         - |          NA |
+| &#39;Text.CompareTo UTF-16&#39;        | 65536 | Mixed  |  24,896.7764 ns | 112,306.9066 ns |  6,155.9205 ns |  21,427.2575 ns |  7.40 |    1.60 |         - |          NA |
+| &#39;Text.CompareTo UTF-32&#39;        | 65536 | Mixed  | 189,393.8259 ns | 999,402.5375 ns | 54,780.6256 ns | 159,815.4297 ns | 56.31 |   14.21 |         - |          NA |
