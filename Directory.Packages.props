@@ -5,19 +5,19 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="10.0.6" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polyfill" Version="10.3.0" />
     <PackageVersion Include="Shim.System.Text.Rune" Version="6.0.2" />
     <PackageVersion Include="StackExchange.Redis" Version="2.12.14" />
-    <PackageVersion Include="System.IO.Hashing" Version="10.0.5" />
+    <PackageVersion Include="System.IO.Hashing" Version="10.0.6" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.5" />
-    <PackageVersion Include="TUnit" Version="1.33.0" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.6" />
+    <PackageVersion Include="TUnit" Version="1.37.0" />
     <PackageVersion Include="U8String" Version="0.16.0-alpha" />
-    <PackageVersion Include="Verify.TUnit" Version="31.15.0" />
+    <PackageVersion Include="Verify.TUnit" Version="31.16.1" />
     <PackageVersion Include="VYaml" Version="1.2.0" />
   </ItemGroup>
 </Project>
