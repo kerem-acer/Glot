@@ -69,6 +69,16 @@ public sealed partial class LinkedTextUtf8
     }
 
     /// <summary>Creates a <see cref="LinkedTextUtf8"/> from memory segments.</summary>
+    /// <param name="segments">The UTF-8 memory segments to compose.</param>
+    /// <returns>A <see cref="LinkedTextUtf8"/> containing the provided segments, or <see cref="Empty"/> if all segments are empty.</returns>
+    /// <remarks>Does not copy byte data — stores references to the provided memory regions. Empty segments are skipped.</remarks>
+    /// <example>
+    /// <code>
+    /// ReadOnlyMemory&lt;byte&gt; seg1 = "hello"u8.ToArray();
+    /// ReadOnlyMemory&lt;byte&gt; seg2 = " world"u8.ToArray();
+    /// var linked = LinkedTextUtf8.Create(seg1, seg2);
+    /// </code>
+    /// </example>
     public static LinkedTextUtf8 Create(params ReadOnlySpan<ReadOnlyMemory<byte>> segments)
     {
         var hasContent = false;
@@ -87,11 +97,30 @@ public sealed partial class LinkedTextUtf8
     }
 
 #if NET8_0_OR_GREATER
-    /// <summary>Creates a <see cref="LinkedTextUtf8"/> from an interpolated string. Zero-alloc for literals and UTF-8 values.</summary>
+    /// <summary>Creates a <see cref="LinkedTextUtf8"/> from an interpolated string.</summary>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A <see cref="LinkedTextUtf8"/> containing the interpolated content, or <see cref="Empty"/> if the result is empty.</returns>
+    /// <remarks>String literals and UTF-8 values are stored as segments. Formatted values (int, double, etc.) are written into a pooled format buffer.</remarks>
+    /// <example>
+    /// <code>
+    /// int count = 42;
+    /// LinkedTextUtf8 linked = $"count: {count}";
+    /// </code>
+    /// </example>
     public static LinkedTextUtf8 Create(LinkedTextUtf8 handler) => handler.IsEmpty ? Empty : handler;
 #endif
 
-    /// <summary>Creates a <see cref="LinkedTextUtf8"/> from <see cref="Text"/> values. Transcodes if needed.</summary>
+    /// <summary>Creates a <see cref="LinkedTextUtf8"/> from <see cref="Text"/> values.</summary>
+    /// <param name="segments">The <see cref="Text"/> values to compose.</param>
+    /// <returns>A <see cref="LinkedTextUtf8"/> containing the provided values, or <see cref="Empty"/> if all values are empty.</returns>
+    /// <remarks>UTF-8 texts are referenced directly (no copy). Texts in other encodings are transcoded into a pooled format buffer.</remarks>
+    /// <example>
+    /// <code>
+    /// var linked = LinkedTextUtf8.Create(
+    ///     Text.FromUtf8("hello"u8),
+    ///     Text.From(" world")); // transcoded from UTF-16
+    /// </code>
+    /// </example>
     public static LinkedTextUtf8 Create(params ReadOnlySpan<Text> segments)
     {
         var hasContent = false;

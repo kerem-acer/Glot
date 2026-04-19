@@ -7,8 +7,11 @@ namespace Glot.VYaml;
 
 /// <summary>
 /// Formats <see cref="Text"/> as a YAML scalar string value.
-/// Zero-string on both read and write.
 /// </summary>
+/// <remarks>
+/// <para>On serialize, UTF-8 texts emit bytes directly. UTF-16 texts emit chars directly. Other encodings transcode through a pooled buffer.</para>
+/// <para>On deserialize, reads the YAML scalar as UTF-8 bytes directly into a <see cref="Text"/>.</para>
+/// </remarks>
 public sealed class TextYamlFormatter : IYamlFormatter<Text>
 {
 

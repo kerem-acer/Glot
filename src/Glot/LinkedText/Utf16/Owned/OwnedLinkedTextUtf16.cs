@@ -3,9 +3,12 @@ using Microsoft.Extensions.ObjectPool;
 namespace Glot;
 
 /// <summary>
-/// A disposable handle that returns the <see cref="LinkedTextUtf16"/> and all its
-/// rented resources to their pools on dispose. The wrapper itself is pooled.
+/// A disposable handle that returns the <see cref="LinkedTextUtf16"/> and its rented resources to their pools on dispose.
 /// </summary>
+/// <remarks>
+/// <para>Both the <see cref="LinkedTextUtf16"/> and its overflow segment array are rented from pools.
+/// This wrapper is itself pooled via <see cref="Microsoft.Extensions.ObjectPool.ObjectPool{T}"/>.</para>
+/// </remarks>
 public sealed partial class OwnedLinkedTextUtf16 : IDisposable
 {
     static readonly ObjectPool<OwnedLinkedTextUtf16> Pool =
@@ -21,6 +24,14 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     }
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from strings.</summary>
+    /// <param name="segments">The string values to compose.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf16"/> containing the provided strings.</returns>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedLinkedTextUtf16.Create("hello", " world");
+    /// var span = owned.AsSpan(); // valid until disposed
+    /// </code>
+    /// </example>
     public static OwnedLinkedTextUtf16 Create(params ReadOnlySpan<string> segments)
     {
         var linked = LinkedTextUtf16.Pool.Get();
@@ -29,6 +40,8 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     }
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from memory segments.</summary>
+    /// <param name="segments">The UTF-16 memory segments to compose.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf16"/> containing the provided segments.</returns>
     public static OwnedLinkedTextUtf16 Create(params ReadOnlySpan<ReadOnlyMemory<char>> segments)
     {
         var linked = LinkedTextUtf16.Pool.Get();
@@ -37,6 +50,8 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     }
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from <see cref="Text"/> values.</summary>
+    /// <param name="segments">The <see cref="Text"/> values to compose.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf16"/> containing the provided values.</returns>
     public static OwnedLinkedTextUtf16 Create(params ReadOnlySpan<Text> segments)
     {
         var linked = LinkedTextUtf16.Pool.Get();
@@ -45,11 +60,22 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     }
 
 #if NET6_0_OR_GREATER
-    /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from an interpolated string. Default: <see cref="OwnedTextHandling.Copy"/>.</summary>
+    /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from an interpolated string.</summary>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf16"/> containing the interpolated content.</returns>
+    /// <remarks>The handler rents a <see cref="LinkedTextUtf16"/> from the pool. <see cref="OwnedText"/> holes use <see cref="OwnedTextHandling.Copy"/> by default.</remarks>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedLinkedTextUtf16.Create($"count: {42}");
+    /// </code>
+    /// </example>
     public static OwnedLinkedTextUtf16 Create(LinkedTextUtf16InterpolatedStringHandler handler)
         => GetFromPool(handler.Take());
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf16"/> from an interpolated string with the specified <see cref="OwnedTextHandling"/> mode.</summary>
+    /// <param name="handling">Controls how <see cref="OwnedText"/> values are handled during interpolation.</param>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf16"/> containing the interpolated content.</returns>
     public static OwnedLinkedTextUtf16 Create(
         OwnedTextHandling handling,
         [System.Runtime.CompilerServices.InterpolatedStringHandlerArgument("handling")]
@@ -70,6 +96,7 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     public LinkedTextUtf16? Data { get; private set; }
 
     /// <summary>Returns a <see cref="LinkedTextUtf16Span"/> over the full content.</summary>
+    /// <returns>A <see cref="LinkedTextUtf16Span"/> spanning the entire linked text, or <c>default</c> if disposed.</returns>
     public LinkedTextUtf16Span AsSpan()
     {
         if (Data is null)
@@ -83,7 +110,8 @@ public sealed partial class OwnedLinkedTextUtf16 : IDisposable
     /// <summary>Finalizer — returns the linked text data if Dispose was not called.</summary>
     ~OwnedLinkedTextUtf16() => ReturnData();
 
-    /// <summary>Returns all rented resources to their pools, including the wrapper itself.</summary>
+    /// <summary>Releases all rented resources and returns this instance to the pool.</summary>
+    /// <remarks>Returns the <see cref="LinkedTextUtf16"/> (including its segment arrays and format buffers) to the pool, then returns this wrapper to the object pool.</remarks>
     public void Dispose()
     {
         if (Data is null)

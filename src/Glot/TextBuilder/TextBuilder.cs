@@ -11,11 +11,10 @@ namespace Glot;
 
 /// <summary>
 /// A mutable, pooled builder for constructing <see cref="Text"/> or <see cref="OwnedText"/> values.
-/// Accumulates encoded bytes in a target encoding. Appends from any encoding are transcoded automatically.
 /// </summary>
 /// <remarks>
-/// This is a value type. Use <c>using</c> to ensure the pooled buffer is returned.
-/// Do not copy — copies share the same buffer.
+/// <para>The internal buffer is rented from <see cref="System.Buffers.ArrayPool{T}"/>. Use <c>using</c>
+/// to ensure the buffer is returned. Do not copy this struct — copies share the same buffer.</para>
 /// </remarks>
 public struct TextBuilder : IDisposable
 {
@@ -23,7 +22,16 @@ public struct TextBuilder : IDisposable
 
     byte[] _buffer;
 
-    /// <summary>Creates a builder with the specified target encoding. Uses default initial capacity of 256 bytes.</summary>
+    /// <summary>Creates a builder with the specified target encoding.</summary>
+    /// <param name="encoding">The target encoding for the builder.</param>
+    /// <example>
+    /// <code>
+    /// using var builder = new TextBuilder(TextEncoding.Utf8);
+    /// builder.Append("hello ");
+    /// builder.Append(Text.FromUtf8("world"u8));
+    /// Text result = builder.ToText();
+    /// </code>
+    /// </example>
     public TextBuilder(TextEncoding encoding)
     {
         _buffer = ArrayPool<byte>.Shared.Rent(DefaultCapacity);
@@ -33,6 +41,8 @@ public struct TextBuilder : IDisposable
     }
 
     /// <summary>Creates a builder with the specified initial capacity and target encoding.</summary>
+    /// <param name="initialCapacity">The initial buffer capacity in bytes.</param>
+    /// <param name="encoding">The target encoding for the builder.</param>
     public TextBuilder(int initialCapacity, TextEncoding encoding = TextEncoding.Utf8)
     {
         _buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
@@ -56,9 +66,13 @@ public struct TextBuilder : IDisposable
     // Append — Text / TextSpan
 
     /// <summary>Appends the content of a <see cref="Text"/> value, transcoding if needed.</summary>
+    /// <param name="value">The text to append.</param>
+    /// <remarks>Transcodes automatically if the value's encoding differs from the builder's target encoding.</remarks>
     public void Append(Text value) => Append(value.AsSpan());
 
     /// <summary>Appends the content of a <see cref="TextSpan"/>, transcoding if needed.</summary>
+    /// <param name="value">The text span to append.</param>
+    /// <remarks>Transcodes automatically if the value's encoding differs from the builder's target encoding.</remarks>
     public void Append(TextSpan value)
     {
         if (value.IsEmpty)
@@ -96,7 +110,8 @@ public struct TextBuilder : IDisposable
 
     // Append — string / spans
 
-    /// <summary>Appends a string, transcoding from UTF-16 to the target encoding.</summary>
+    /// <summary>Appends a string.</summary>
+    /// <param name="value">The string to append.</param>
     public void Append(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -107,7 +122,9 @@ public struct TextBuilder : IDisposable
         Append(MemoryMarshal.AsBytes(value.AsUnsafeSpan()), TextEncoding.Utf16);
     }
 
-    /// <summary>Appends raw bytes in the specified encoding, transcoding if needed.</summary>
+    /// <summary>Appends raw bytes in the specified encoding.</summary>
+    /// <param name="value">The bytes to append.</param>
+    /// <param name="encoding">The encoding of the bytes.</param>
     public void Append(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
     {
         if (value.IsEmpty)
@@ -125,13 +142,15 @@ public struct TextBuilder : IDisposable
         Append(new TextSpan(value, encoding));
     }
 
-    /// <summary>Appends UTF-16 chars, transcoding to the target encoding.</summary>
+    /// <summary>Appends UTF-16 chars.</summary>
+    /// <param name="value">The characters to append.</param>
     public void Append(ReadOnlySpan<char> value)
         => Append(MemoryMarshal.AsBytes(value), TextEncoding.Utf16);
 
     // Append — single rune
 
     /// <summary>Appends a single Unicode rune in the target encoding.</summary>
+    /// <param name="rune">The rune to append.</param>
     public void AppendRune(Rune rune)
     {
         var byteCount = rune.GetByteCount(Encoding);
@@ -146,7 +165,9 @@ public struct TextBuilder : IDisposable
 
     // Output
 
-    /// <summary>Creates a <see cref="Text"/> by copying the current content to an exact-size array.</summary>
+    /// <summary>Creates a <see cref="Text"/> from the current content.</summary>
+    /// <returns>A <see cref="Text"/> containing the builder's content, or <see cref="Text.Empty"/> if empty.</returns>
+    /// <remarks>Allocates a new exact-size <c>byte[]</c> and copies the builder's content into it. The builder remains usable after this call.</remarks>
     public readonly Text ToText()
     {
         if (ByteLength == 0)
@@ -165,10 +186,9 @@ public struct TextBuilder : IDisposable
             BackingType.ByteArray);
     }
 
-    /// <summary>
-    /// Creates an <see cref="OwnedText"/> by transferring the current buffer.
-    /// The builder resets and rents a fresh buffer for continued use.
-    /// </summary>
+    /// <summary>Creates an <see cref="OwnedText"/> from the current content.</summary>
+    /// <returns>An <see cref="OwnedText"/> containing the builder's content, or <see cref="OwnedText.Empty"/> if empty.</returns>
+    /// <remarks>Transfers ownership of the current buffer to the <see cref="OwnedText"/>. The builder rents a fresh buffer and resets for continued use.</remarks>
     public OwnedText ToOwnedText()
     {
         if (ByteLength == 0)
@@ -188,11 +208,14 @@ public struct TextBuilder : IDisposable
         return result;
     }
 
-    /// <summary>Returns a <see cref="TextSpan"/> view of the current content. Valid until the next mutation.</summary>
+    /// <summary>Returns a <see cref="TextSpan"/> view of the current content.</summary>
+    /// <returns>A <see cref="TextSpan"/> over the builder's current bytes.</returns>
+    /// <remarks>The returned span references the builder's internal buffer. It is invalidated by any subsequent mutation (Append, AppendRune, Clear, Dispose).</remarks>
     public readonly TextSpan AsSpan()
         => new(_buffer.AsSpan(0, ByteLength), Encoding, RuneLength);
 
     /// <summary>Converts the current content to a string.</summary>
+    /// <returns>A string representation of the builder's current content.</returns>
     public override readonly string ToString() => AsSpan().ToString();
 
     // Lifecycle
@@ -204,7 +227,8 @@ public struct TextBuilder : IDisposable
         RuneLength = 0;
     }
 
-    /// <summary>Returns the pooled buffer to <see cref="ArrayPool{T}"/>.</summary>
+    /// <summary>Releases resources used by this builder.</summary>
+    /// <remarks>Returns the internal buffer to <see cref="System.Buffers.ArrayPool{T}"/>. The builder must not be used after disposal.</remarks>
     public void Dispose()
     {
         var buffer = _buffer;

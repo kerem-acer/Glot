@@ -2,10 +2,9 @@ namespace Glot;
 
 public readonly partial struct Text
 {
-    /// <summary>
-    /// Converts this text to a <see cref="string"/>.
-    /// Returns the original string reference when string-backed; allocates otherwise.
-    /// </summary>
+    /// <summary>Converts this text to a <see cref="string"/>.</summary>
+    /// <returns>A <see cref="string"/> representation of this text.</returns>
+    /// <remarks>Returns the original <see cref="string"/> reference when the text is string-backed and covers the full string. Allocates a new string otherwise.</remarks>
     public override string ToString()
     {
         if (_data is string s && _start == 0 && ByteLength == s.Length * 2)
@@ -25,14 +24,24 @@ public readonly partial struct Text
     public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
 
     /// <summary>Encodes this text as UTF-16 chars into <paramref name="destination"/>.</summary>
+    /// <param name="destination">The buffer to write UTF-16 chars into.</param>
     /// <returns>The number of chars written.</returns>
+    /// <remarks>When the text is already UTF-16, this is a direct copy. Other encodings are transcoded.</remarks>
     public int EncodeToUtf16(Span<char> destination) => AsSpan().EncodeToUtf16(destination);
 
     /// <summary>Encodes this text as UTF-8 bytes into <paramref name="destination"/>.</summary>
+    /// <param name="destination">The buffer to write UTF-8 bytes into.</param>
     /// <returns>The number of bytes written.</returns>
+    /// <remarks>When the text is already UTF-8, this is a direct copy. Other encodings are transcoded.</remarks>
     public int EncodeToUtf8(Span<byte> destination) => AsSpan().EncodeToUtf8(destination);
 
     /// <summary>Writes the text as UTF-16 chars to <paramref name="destination"/>.</summary>
+    /// <param name="destination">The buffer to write UTF-16 chars into.</param>
+    /// <param name="charsWritten">The number of chars written to <paramref name="destination"/>.</param>
+    /// <param name="format">The format string (unused).</param>
+    /// <param name="provider">The format provider (unused).</param>
+    /// <returns><c>true</c> if the text was written; <c>false</c> if the destination was too small.</returns>
+    /// <remarks>When the text is string- or char-array-backed, copies directly without transcoding.</remarks>
     public bool TryFormat(Span<char> destination,
         out int charsWritten,
         ReadOnlySpan<char> format = default,
@@ -81,7 +90,13 @@ public readonly partial struct Text
         }
     }
 
-    /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>. Direct copy when UTF-8 backed; transcodes rune-by-rune otherwise (zero-alloc).</summary>
+    /// <summary>Writes the text as UTF-8 bytes to <paramref name="utf8Destination"/>.</summary>
+    /// <param name="utf8Destination">The buffer to write UTF-8 bytes into.</param>
+    /// <param name="bytesWritten">The number of bytes written to <paramref name="utf8Destination"/>.</param>
+    /// <param name="format">The format string (unused).</param>
+    /// <param name="provider">The format provider (unused).</param>
+    /// <returns><c>true</c> if the text was written; <c>false</c> if the destination was too small.</returns>
+    /// <remarks>When the text is byte-array-backed (UTF-8), copies directly without transcoding.</remarks>
     public bool TryFormat(Span<byte> utf8Destination,
         out int bytesWritten,
         ReadOnlySpan<char> format = default,

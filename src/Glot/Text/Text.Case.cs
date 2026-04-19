@@ -13,6 +13,14 @@ namespace Glot;
 public readonly partial struct Text
 {
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to uppercase (invariant). Returns <c>this</c> if already uppercase.</summary>
+    /// <returns>A new <see cref="Text"/> with all runes converted to uppercase, or the original if no changes were needed.</returns>
+    /// <remarks>Returns <c>this</c> when no runes need changing (no allocation). Otherwise allocates a new backing array.</remarks>
+    /// <example>
+    /// <code>
+    /// var text = Text.From("hello");
+    /// Text upper = text.ToUpperInvariant(); // "HELLO"
+    /// </code>
+    /// </example>
     public Text ToUpperInvariant()
     {
         if (IsEmpty)
@@ -31,6 +39,8 @@ public readonly partial struct Text
     }
 
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to lowercase (invariant). Returns <c>this</c> if already lowercase.</summary>
+    /// <returns>A new <see cref="Text"/> with all runes converted to lowercase, or the original if no changes were needed.</returns>
+    /// <remarks>Returns <c>this</c> when no runes need changing (no allocation). Otherwise allocates a new backing array.</remarks>
     public Text ToLowerInvariant()
     {
         if (IsEmpty)
@@ -49,6 +59,8 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToUpperInvariant()"/> but returns a pooled <see cref="OwnedText"/>.</summary>
+    /// <returns>An <see cref="OwnedText"/> with all runes converted to uppercase.</returns>
+    /// <remarks>The caller must dispose the returned <see cref="OwnedText"/>. Uses pooled buffers from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public OwnedText ToUpperInvariantPooled()
     {
         if (IsEmpty)
@@ -67,6 +79,8 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToLowerInvariant()"/> but returns a pooled <see cref="OwnedText"/>.</summary>
+    /// <returns>An <see cref="OwnedText"/> with all runes converted to lowercase.</returns>
+    /// <remarks>The caller must dispose the returned <see cref="OwnedText"/>. Uses pooled buffers from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public OwnedText ToLowerInvariantPooled()
     {
         if (IsEmpty)
@@ -85,9 +99,13 @@ public readonly partial struct Text
     }
 
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to uppercase using the current culture.</summary>
+    /// <returns>A new <see cref="Text"/> with all runes converted to uppercase, or the original if no changes were needed.</returns>
     public Text ToUpper() => ToUpper(CultureInfo.CurrentCulture);
 
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to uppercase using the specified culture.</summary>
+    /// <param name="culture">The culture whose casing rules are used.</param>
+    /// <returns>A new <see cref="Text"/> with all runes converted to uppercase, or the original if no changes were needed.</returns>
+    /// <remarks>Returns <c>this</c> when no runes need changing. Otherwise allocates a new backing array with the culture-specific casing applied.</remarks>
     public Text ToUpper(CultureInfo culture)
     {
         if (IsEmpty)
@@ -99,9 +117,13 @@ public readonly partial struct Text
     }
 
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to lowercase using the current culture.</summary>
+    /// <returns>A new <see cref="Text"/> with all runes converted to lowercase, or the original if no changes were needed.</returns>
     public Text ToLower() => ToLower(CultureInfo.CurrentCulture);
 
     /// <summary>Returns a new <see cref="Text"/> with all runes converted to lowercase using the specified culture.</summary>
+    /// <param name="culture">The culture whose casing rules are used.</param>
+    /// <returns>A new <see cref="Text"/> with all runes converted to lowercase, or the original if no changes were needed.</returns>
+    /// <remarks>Returns <c>this</c> when no runes need changing. Otherwise allocates a new backing array with the culture-specific casing applied.</remarks>
     public Text ToLower(CultureInfo culture)
     {
         if (IsEmpty)
@@ -113,6 +135,9 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToUpper(CultureInfo)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
+    /// <param name="culture">The culture whose casing rules are used.</param>
+    /// <returns>An <see cref="OwnedText"/> with all runes converted to uppercase.</returns>
+    /// <remarks>The caller must dispose the returned <see cref="OwnedText"/>. Uses pooled buffers.</remarks>
     public OwnedText ToUpperPooled(CultureInfo culture)
     {
         if (IsEmpty)
@@ -124,6 +149,9 @@ public readonly partial struct Text
     }
 
     /// <summary>Like <see cref="ToLower(CultureInfo)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
+    /// <param name="culture">The culture whose casing rules are used.</param>
+    /// <returns>An <see cref="OwnedText"/> with all runes converted to lowercase.</returns>
+    /// <remarks>The caller must dispose the returned <see cref="OwnedText"/>. Uses pooled buffers.</remarks>
     public OwnedText ToLowerPooled(CultureInfo culture)
     {
         if (IsEmpty)

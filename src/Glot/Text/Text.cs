@@ -8,6 +8,13 @@ namespace Glot;
 /// <c>byte[]</c>, <c>char[]</c>, or <c>int[]</c>) as-is and delegates operations
 /// to <see cref="TextSpan"/> via <see cref="AsSpan"/>.
 /// </summary>
+/// <remarks>
+/// <para><see cref="Text"/> is a 24-byte readonly struct on x64. It wraps a managed reference
+/// (string, byte[], char[], or int[]) with offset and length — no copying on construction
+/// from array-backed sources.</para>
+/// <para>All operations that accept cross-encoding input (e.g. searching a UTF-8 text with a UTF-16 needle)
+/// transcode on the fly without allocating.</para>
+/// </remarks>
 public readonly partial struct Text :
     IEquatable<Text>,
     IComparable<Text>
@@ -56,7 +63,8 @@ public readonly partial struct Text :
     /// <summary>The Unicode encoding of the text.</summary>
     public TextEncoding Encoding => _encoding;
 
-    /// <summary>The number of Unicode runes (scalar values). O(1) when cached; SIMD O(n) when not.</summary>
+    /// <summary>The number of Unicode scalar values.</summary>
+    /// <remarks>Cached when the <see cref="Text"/> was created with rune counting enabled; otherwise computed on first access.</remarks>
     public int RuneLength
         => _runeLength != 0 ? _runeLength : RuneCount.Count(Bytes, Encoding);
 
@@ -184,15 +192,26 @@ public readonly partial struct Text :
     internal ReadOnlySpan<int> UnsafeIntArrayInts => MemoryMarshal.Cast<byte, int>(Bytes);
 #endif
 
-    /// <summary>Reinterprets the underlying bytes as <see cref="char"/> elements. Zero-copy cast.</summary>
+    /// <summary>Reinterprets the underlying bytes as <see cref="char"/> elements.</summary>
     public ReadOnlySpan<char> Chars => AsSpan().Chars;
 
-    /// <summary>Reinterprets the underlying bytes as <see cref="int"/> elements. Zero-copy cast.</summary>
+    /// <summary>Reinterprets the underlying bytes as <see cref="int"/> elements.</summary>
     public ReadOnlySpan<int> Ints => AsSpan().Ints;
 
-    /// <summary>Creates a stack-only <see cref="TextSpan"/> view over this text. O(1) — no rune recount.</summary>
+    /// <summary>Creates a stack-only <see cref="TextSpan"/> view over this text.</summary>
+    /// <returns>A <see cref="TextSpan"/> referencing the same backing data.</returns>
+    /// <example>
+    /// <code>
+    /// var text = Text.FromUtf8("hello"u8);
+    /// TextSpan span = text.AsSpan();
+    /// </code>
+    /// </example>
     public TextSpan AsSpan() => new(Bytes, Encoding, _runeLength);
 
+    /// <summary>Attempts to obtain a <see cref="ReadOnlyMemory{T}"/> over the backing UTF-8 bytes without copying.</summary>
+    /// <param name="memory">When this method returns <c>true</c>, contains the UTF-8 memory region; otherwise <c>default</c>.</param>
+    /// <returns><c>true</c> if the text is UTF-8 and array-backed; otherwise <c>false</c>.</returns>
+    /// <remarks>Succeeds only when the text is UTF-8 encoded and backed by a <c>byte[]</c>. String-backed UTF-8 text is not supported.</remarks>
     public bool TryGetUtf8Memory(out ReadOnlyMemory<byte> memory)
     {
         if (Encoding == TextEncoding.Utf8 && _data is byte[] bytes)
@@ -205,6 +224,10 @@ public readonly partial struct Text :
         return false;
     }
 
+    /// <summary>Attempts to obtain a <see cref="ReadOnlyMemory{T}"/> over the backing UTF-16 chars without copying.</summary>
+    /// <param name="memory">When this method returns <c>true</c>, contains the UTF-16 memory region; otherwise <c>default</c>.</param>
+    /// <returns><c>true</c> if the text is UTF-16 and string- or array-backed; otherwise <c>false</c>.</returns>
+    /// <remarks>Succeeds when the text is UTF-16 encoded and backed by a <see cref="string"/> or <c>char[]</c>.</remarks>
     public bool TryGetUtf16Memory(out ReadOnlyMemory<char> memory)
     {
         if (Encoding == TextEncoding.Utf16)
@@ -226,15 +249,20 @@ public readonly partial struct Text :
     }
 
     /// <summary>Returns a <see cref="ReadOnlyMemory{T}"/> over the backing UTF-8 bytes without copying.</summary>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> of the underlying UTF-8 bytes.</returns>
     /// <exception cref="InvalidOperationException">The text is not backed by UTF-8.</exception>
+    /// <remarks>This is a non-copying operation. The returned memory references the same backing array.</remarks>
     public ReadOnlyMemory<byte> AsUtf8Memory()
         => TryGetUtf8Memory(out var memory) ? memory : throw new InvalidOperationException($"Cannot obtain UTF-8 memory from {Encoding}-encoded text.");
 
     /// <summary>Returns a <see cref="ReadOnlyMemory{T}"/> over the backing UTF-16 chars without copying.</summary>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> of the underlying UTF-16 chars.</returns>
     /// <exception cref="InvalidOperationException">The text is not backed by UTF-16.</exception>
+    /// <remarks>This is a non-copying operation. The returned memory references the same backing array.</remarks>
     public ReadOnlyMemory<char> AsUtf16Memory()
         => TryGetUtf16Memory(out var memory) ? memory : throw new InvalidOperationException($"Cannot obtain UTF-16 memory from {Encoding}-encoded text.");
 
     /// <summary>An empty <see cref="Text"/> value.</summary>
+    /// <remarks>Equivalent to <c>default(Text)</c>. The encoding is <see cref="TextEncoding.Utf8"/> and all lengths are zero.</remarks>
     public static Text Empty => default;
 }

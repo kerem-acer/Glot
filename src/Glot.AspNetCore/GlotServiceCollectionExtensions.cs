@@ -12,6 +12,14 @@ public static class GlotServiceCollectionExtensions
     /// Registers <see cref="TextJsonConverter"/> and <see cref="OwnedTextJsonConverter"/>
     /// with the default HTTP JSON serializer options.
     /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance for chaining.</returns>
+    /// <remarks>Registers <see cref="Glot.SystemTextJson.TextJsonConverter"/> and <see cref="Glot.SystemTextJson.OwnedTextJsonConverter"/> with the default HTTP JSON options.</remarks>
+    /// <example>
+    /// <code>
+    /// builder.Services.AddGlot();
+    /// </code>
+    /// </example>
     public static IServiceCollection AddGlot(this IServiceCollection services)
     {
         services.ConfigureHttpJsonOptions(options =>

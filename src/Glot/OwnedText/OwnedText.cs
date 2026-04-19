@@ -4,13 +4,18 @@ using Microsoft.Extensions.ObjectPool;
 namespace Glot;
 
 /// <summary>
-/// A disposable text value that owns a pool-backed buffer.
-/// Returns the buffer to <see cref="ArrayPool{T}"/> and the wrapper to <see cref="ObjectPool{T}"/> on dispose.
+/// A disposable text value that owns a pooled buffer.
 /// Use <see cref="Text"/> to read the content; use <c>using</c> to manage lifetime.
 /// </summary>
+/// <remarks>
+/// <para>The backing buffer is rented from <see cref="System.Buffers.ArrayPool{T}"/> and the wrapper
+/// object is pooled via <see cref="Microsoft.Extensions.ObjectPool.ObjectPool{T}"/>.</para>
+/// <para>Read content through <see cref="Text"/>. The <see cref="Text"/> view is valid only while this
+/// instance has not been disposed.</para>
+/// </remarks>
 public sealed partial class OwnedText : IDisposable
 {
-    /// <summary>A shared empty <see cref="OwnedText"/> instance. Dispose is a no-op.</summary>
+    /// <summary>A shared empty <see cref="OwnedText"/> instance.</summary>
     public static readonly OwnedText Empty = new();
 
     static readonly ObjectPool<OwnedText> Pool =
@@ -35,10 +40,8 @@ public sealed partial class OwnedText : IDisposable
     /// <summary>Returns <c>true</c> if this value contains no text.</summary>
     public bool IsEmpty => _text.IsEmpty;
 
-    /// <summary>
-    /// Returns a <see cref="Glot.Text"/> view over the pooled buffer. O(1).
-    /// The returned value is valid only while this <see cref="OwnedText"/> has not been disposed.
-    /// </summary>
+    /// <summary>Returns a <see cref="Glot.Text"/> view over the pooled buffer.</summary>
+    /// <remarks>The returned <see cref="Glot.Text"/> references the pooled buffer. Do not use it after this <see cref="OwnedText"/> is disposed.</remarks>
     public Text Text => _text;
 
     internal void Initialize(object buffer,
@@ -77,7 +80,8 @@ public sealed partial class OwnedText : IDisposable
     /// <summary>Finalizer — returns the data buffer if Dispose was not called. Does not return the wrapper to the pool.</summary>
     ~OwnedText() => ReturnBuffer();
 
-    /// <summary>Returns the pooled buffer to the appropriate <see cref="ArrayPool{T}"/> and the wrapper to the object pool.</summary>
+    /// <summary>Releases the pooled buffer and returns this instance to the pool.</summary>
+    /// <remarks>Returns the backing array to <see cref="System.Buffers.ArrayPool{T}"/> and the wrapper to the object pool. Calling <see cref="Dispose"/> multiple times is safe.</remarks>
     public void Dispose()
     {
         if (this == Empty || IsDisposed)

@@ -1,11 +1,15 @@
 namespace Glot;
 
 /// <summary>
-/// A stack-only, zero-allocation view over encoded text bytes.
-/// Stores <see cref="ReadOnlySpan{T}"/> of bytes internally — <c>char[]</c> and <c>string</c>
-/// sources are normalized via <see cref="System.Runtime.InteropServices.MemoryMarshal.AsBytes{T}(ReadOnlySpan{T})"/>
-/// at zero cost. Cannot escape the stack.
+/// A stack-only view over encoded text bytes. Cannot escape the stack.
 /// </summary>
+/// <remarks>
+/// <para><see cref="TextSpan"/> normalizes all backing types (<see cref="string"/>, <c>char[]</c>, <c>int[]</c>)
+/// into a <see cref="ReadOnlySpan{T}"/> of bytes at construction time. This enables a single code path
+/// for all encodings.</para>
+/// <para>Because this is a <c>ref struct</c>, it cannot be stored on the heap, used in async methods,
+/// or captured in closures. Use <see cref="Text"/> for heap-safe scenarios.</para>
+/// </remarks>
 public readonly ref partial struct TextSpan
 #if NET6_0_OR_GREATER
     : ISpanFormattable
@@ -22,8 +26,10 @@ public readonly ref partial struct TextSpan
 
     /// <summary>
     /// Creates a <see cref="TextSpan"/> over the given bytes with the specified encoding.
-    /// Counts runes during construction (O(n), SIMD-accelerated).
     /// </summary>
+    /// <param name="bytes">The raw encoded bytes.</param>
+    /// <param name="encoding">The Unicode encoding of the bytes.</param>
+    /// <remarks>Counts runes during construction. Use <see cref="Text.AsSpan"/> to avoid recounting when the rune count is already known.</remarks>
     public TextSpan(ReadOnlySpan<byte> bytes, TextEncoding encoding)
     {
         Bytes = bytes;
@@ -56,7 +62,8 @@ public readonly ref partial struct TextSpan
     /// <summary>Returns <c>true</c> if this span contains no bytes.</summary>
     public bool IsEmpty => Bytes.IsEmpty;
 
-    /// <summary>The number of Unicode runes (scalar values) in this span. O(1) when cached; SIMD O(n) when not.</summary>
+    /// <summary>The number of Unicode scalar values in this span.</summary>
+    /// <remarks>Cached when constructed from a <see cref="Text"/> with a known rune count. Computed on first access otherwise.</remarks>
     public int RuneLength
     {
         get

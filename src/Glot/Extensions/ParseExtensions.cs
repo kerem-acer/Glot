@@ -15,6 +15,17 @@ public static class ParseExtensions
     extension<T>(T) where T : ISpanParsable<T>
     {
         /// <summary>Parses a <see cref="Text"/> value into <typeparamref name="T"/>.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="provider">An optional format provider.</param>
+        /// <returns>The parsed value.</returns>
+        /// <exception cref="FormatException">The text is not in a recognized format.</exception>
+        /// <remarks>When the text is UTF-16, parses directly from the char span. Other encodings transcode to a stack-allocated char buffer (heap-allocated for large texts).</remarks>
+        /// <example>
+        /// <code>
+        /// var text = Text.From("42");
+        /// int value = int.Parse(text);
+        /// </code>
+        /// </example>
         public static T Parse(Text text, IFormatProvider? provider = null)
         {
             if (text.Encoding == TextEncoding.Utf16)
@@ -41,10 +52,18 @@ public static class ParseExtensions
         }
 
         /// <summary>Tries to parse a <see cref="Text"/> value into <typeparamref name="T"/>.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="result">When successful, the parsed value.</param>
+        /// <returns><c>true</c> if parsing succeeded; otherwise, <c>false</c>.</returns>
+        /// <remarks>When the text is UTF-16, parses directly from the char span. Other encodings transcode to a temporary char buffer.</remarks>
         public static bool TryParse(Text text, [MaybeNullWhen(false)] out T result)
             => TryParse(text, null, out result);
 
         /// <summary>Tries to parse a <see cref="Text"/> value into <typeparamref name="T"/> with a format provider.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="provider">An optional format provider.</param>
+        /// <param name="result">When successful, the parsed value.</param>
+        /// <returns><c>true</c> if parsing succeeded; otherwise, <c>false</c>.</returns>
         public static bool TryParse(Text text, IFormatProvider? provider, [MaybeNullWhen(false)] out T result)
         {
             if (text.Encoding == TextEncoding.Utf16)
@@ -74,7 +93,18 @@ public static class ParseExtensions
 #if NET8_0_OR_GREATER
     extension<T>(T) where T : IUtf8SpanParsable<T>
     {
-        /// <summary>Parses a <see cref="Text"/> value via UTF-8. Zero-alloc for UTF-8 backed text.</summary>
+        /// <summary>Parses a <see cref="Text"/> value via UTF-8.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="provider">An optional format provider.</param>
+        /// <returns>The parsed value.</returns>
+        /// <exception cref="FormatException">The text is not in a recognized format.</exception>
+        /// <remarks>When the text is UTF-8, parses directly from the byte span with no allocation. Other encodings transcode to a temporary byte buffer.</remarks>
+        /// <example>
+        /// <code>
+        /// var text = Text.FromUtf8("3.14"u8);
+        /// double value = double.ParseUtf8(text);
+        /// </code>
+        /// </example>
         public static T ParseUtf8(Text text, IFormatProvider? provider = null)
         {
             if (text.Encoding == TextEncoding.Utf8)
@@ -101,10 +131,18 @@ public static class ParseExtensions
         }
 
         /// <summary>Tries to parse a <see cref="Text"/> value via UTF-8.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="result">When successful, the parsed value.</param>
+        /// <returns><c>true</c> if parsing succeeded; otherwise, <c>false</c>.</returns>
+        /// <remarks>When the text is UTF-8, parses directly from the byte span with no allocation. Other encodings transcode to a temporary buffer.</remarks>
         public static bool TryParseUtf8(Text text, [MaybeNullWhen(false)] out T result)
             => TryParseUtf8(text, null, out result);
 
         /// <summary>Tries to parse a <see cref="Text"/> value via UTF-8 with a format provider.</summary>
+        /// <param name="text">The text to parse.</param>
+        /// <param name="provider">An optional format provider.</param>
+        /// <param name="result">When successful, the parsed value.</param>
+        /// <returns><c>true</c> if parsing succeeded; otherwise, <c>false</c>.</returns>
         public static bool TryParseUtf8(Text text, IFormatProvider? provider, [MaybeNullWhen(false)] out T result)
         {
             if (text.Encoding == TextEncoding.Utf8)

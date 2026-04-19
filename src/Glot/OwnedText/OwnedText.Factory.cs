@@ -5,11 +5,25 @@ namespace Glot;
 
 public sealed partial class OwnedText
 {
-    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying bytes into a pooled buffer.</summary>
+    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying the bytes.</summary>
+    /// <param name="value">The UTF-8 bytes to copy.</param>
+    /// <param name="countRunes">Whether to count runes during construction.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies the bytes into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedText.FromUtf8("hello"u8);
+    /// Text text = owned.Text; // valid until disposed
+    /// </code>
+    /// </example>
     public static OwnedText FromUtf8(ReadOnlySpan<byte> value, bool countRunes = true)
         => FromBytes(value, TextEncoding.Utf8, countRunes);
 
-    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying a multi-segment sequence into a pooled buffer.</summary>
+    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> from a byte sequence.</summary>
+    /// <param name="value">The UTF-8 byte sequence to copy.</param>
+    /// <param name="countRunes">Whether to count runes during construction.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies all segments into a single buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public static OwnedText FromUtf8(ReadOnlySequence<byte> value, bool countRunes = true)
     {
         if (value.IsEmpty)
@@ -32,15 +46,27 @@ public sealed partial class OwnedText
         return owned;
     }
 
-    /// <summary>Creates a UTF-16 <see cref="OwnedText"/> by copying chars into a pooled byte buffer.</summary>
+    /// <summary>Creates a UTF-16 <see cref="OwnedText"/> by copying the chars.</summary>
+    /// <param name="value">The UTF-16 characters to copy.</param>
+    /// <param name="countRunes">Whether to count runes during construction.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies the chars (as bytes) into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public static OwnedText FromChars(ReadOnlySpan<char> value, bool countRunes = true)
         => FromBytes(MemoryMarshal.AsBytes(value), TextEncoding.Utf16, countRunes);
 
-    /// <summary>Creates a UTF-32 <see cref="OwnedText"/> by copying code points into a pooled byte buffer.</summary>
+    /// <summary>Creates a UTF-32 <see cref="OwnedText"/> by copying the code points.</summary>
+    /// <param name="value">The UTF-32 code points to copy.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies the code points (as bytes) into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public static OwnedText FromUtf32(ReadOnlySpan<int> value)
         => FromBytes(MemoryMarshal.AsBytes(value), TextEncoding.Utf32, countRunes: true);
 
-    /// <summary>Creates an <see cref="OwnedText"/> by copying raw bytes with the specified encoding into a pooled buffer.</summary>
+    /// <summary>Creates an <see cref="OwnedText"/> by copying raw bytes.</summary>
+    /// <param name="value">The bytes to copy.</param>
+    /// <param name="encoding">The encoding of the bytes.</param>
+    /// <param name="countRunes">Whether to count runes during construction.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies the bytes into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>.</remarks>
     public static OwnedText FromBytes(ReadOnlySpan<byte> value, TextEncoding encoding, bool countRunes = true)
     {
         if (value.IsEmpty)
@@ -57,10 +83,19 @@ public sealed partial class OwnedText
         return owned;
     }
 
-    /// <summary>
-    /// Takes ownership of an existing pooled <c>byte[]</c> buffer. Zero-copy.
-    /// The caller must not use the buffer after this call.
-    /// </summary>
+    /// <summary>Creates an <see cref="OwnedText"/> that takes ownership of a buffer.</summary>
+    /// <param name="buffer">The pooled byte array to take ownership of.</param>
+    /// <param name="byteLength">The number of valid bytes in the buffer.</param>
+    /// <param name="encoding">The encoding of the bytes.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data.</returns>
+    /// <remarks>Takes ownership of the buffer — the caller must not use or return it after this call. The buffer will be returned to <see cref="System.Buffers.ArrayPool{T}"/> when the <see cref="OwnedText"/> is disposed.</remarks>
+    /// <example>
+    /// <code>
+    /// var buffer = ArrayPool&lt;byte&gt;.Shared.Rent(1024);
+    /// // ... fill buffer ...
+    /// using var owned = OwnedText.Create(buffer, bytesWritten, TextEncoding.Utf8);
+    /// </code>
+    /// </example>
     public static OwnedText Create(byte[] buffer, int byteLength, TextEncoding encoding)
     {
         var runeLength = RuneCount.Count(buffer.AsSpan(0, byteLength), encoding);
@@ -80,10 +115,11 @@ public sealed partial class OwnedText
         return owned;
     }
 
-    /// <summary>
-    /// Takes ownership of an existing pooled <c>char[]</c> buffer as UTF-16. Zero-copy.
-    /// The caller must not use the buffer after this call.
-    /// </summary>
+    /// <summary>Creates an <see cref="OwnedText"/> that takes ownership of a UTF-16 buffer.</summary>
+    /// <param name="buffer">The pooled char array to take ownership of.</param>
+    /// <param name="charLength">The number of valid characters in the buffer.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data.</returns>
+    /// <remarks>Takes ownership of the buffer — the caller must not use or return it after this call.</remarks>
     public static OwnedText Create(char[] buffer, int charLength)
     {
         var bytes = MemoryMarshal.AsBytes(buffer.AsSpan(0, charLength));
@@ -93,10 +129,11 @@ public sealed partial class OwnedText
         return owned;
     }
 
-    /// <summary>
-    /// Takes ownership of an existing pooled <c>int[]</c> buffer as UTF-32. Zero-copy.
-    /// The caller must not use the buffer after this call.
-    /// </summary>
+    /// <summary>Creates an <see cref="OwnedText"/> that takes ownership of a UTF-32 buffer.</summary>
+    /// <param name="buffer">The pooled int array to take ownership of.</param>
+    /// <param name="intLength">The number of valid integers in the buffer.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data.</returns>
+    /// <remarks>Takes ownership of the buffer — the caller must not use or return it after this call.</remarks>
     public static OwnedText Create(int[] buffer, int intLength)
     {
         var bytes = MemoryMarshal.AsBytes(buffer.AsSpan(0, intLength));
@@ -107,11 +144,22 @@ public sealed partial class OwnedText
     }
 
 #if NET6_0_OR_GREATER
-    /// <summary>Creates a pooled <see cref="OwnedText"/> from an interpolated string. Caller must dispose.</summary>
+    /// <summary>Creates an <see cref="OwnedText"/> from an interpolated string.</summary>
+    /// <param name="handler">The interpolated string handler.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the interpolated content.</returns>
+    /// <remarks>Uses a pooled <see cref="TextBuilder"/> internally. The caller must dispose the result.</remarks>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedText.Create($"count: {items.Length}");
+    /// </code>
+    /// </example>
     public static OwnedText Create(TextInterpolatedStringHandler handler)
         => handler.ToOwnedText();
 
-    /// <summary>Creates a pooled <see cref="OwnedText"/> in the specified encoding from an interpolated string.</summary>
+    /// <summary>Creates an <see cref="OwnedText"/> in the specified encoding from an interpolated string.</summary>
+    /// <param name="encoding">The target encoding.</param>
+    /// <param name="handler">The interpolated string handler.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the interpolated content.</returns>
     public static OwnedText Create(
         TextEncoding encoding,
         [System.Runtime.CompilerServices.InterpolatedStringHandlerArgument("encoding")]

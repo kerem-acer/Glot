@@ -6,9 +6,11 @@ namespace Glot.SystemTextJson;
 
 /// <summary>
 /// Converts <see cref="Text"/> to and from a JSON string value.
-/// Zero-alloc for UTF-8 and UTF-16 encoded text on write.
-/// Zero-string on read — decodes JSON UTF-8 bytes directly.
 /// </summary>
+/// <remarks>
+/// <para>On read, decodes JSON UTF-8 bytes directly into a <see cref="Text"/> without creating an intermediate string.</para>
+/// <para>On write, UTF-8 and UTF-16 texts are written directly. Other encodings are transcoded through a stack- or pool-allocated buffer.</para>
+/// </remarks>
 public sealed class TextJsonConverter : JsonConverter<Text>
 {
     const int StackAllocThreshold = 512;

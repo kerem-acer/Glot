@@ -6,10 +6,14 @@ namespace Glot.AspNetCore;
 
 /// <summary>
 /// An <see cref="IResult"/> that writes <see cref="Text"/>, <see cref="LinkedTextUtf8"/>,
-/// or <see cref="LinkedTextUtf16"/> directly as UTF-8 bytes to the response body.
-/// Zero-copy when the content is already UTF-8 backed.
-/// Disposes any owned resources after the response is written — zero boxing.
+/// or <see cref="LinkedTextUtf16"/> as UTF-8 bytes to the response body.
 /// </summary>
+/// <remarks>
+/// <para>When the content is UTF-8 and array-backed, the backing memory is written directly to the response
+/// body without copying. Other encodings are transcoded through a pooled buffer.</para>
+/// <para>All owned resources (<see cref="OwnedText"/>, <see cref="OwnedLinkedTextUtf8"/>,
+/// <see cref="OwnedLinkedTextUtf16"/>) are disposed after the response is written.</para>
+/// </remarks>
 public sealed class Utf8TextResult : IResult
 {
     readonly Text _text;

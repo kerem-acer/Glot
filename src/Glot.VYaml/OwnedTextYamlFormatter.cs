@@ -7,9 +7,11 @@ namespace Glot.VYaml;
 
 /// <summary>
 /// Formats <see cref="OwnedText"/> as a YAML scalar string value.
-/// Zero-string on both read and write.
 /// The caller is responsible for disposing deserialized <see cref="OwnedText"/> values.
 /// </summary>
+/// <remarks>
+/// <para>On deserialize, reads the YAML scalar as UTF-8 bytes into a pooled buffer. The caller must dispose deserialized <see cref="OwnedText"/> values.</para>
+/// </remarks>
 public sealed class OwnedTextYamlFormatter : IYamlFormatter<OwnedText>
 {
 

@@ -7,10 +7,17 @@ namespace Glot;
 
 public readonly partial struct Text
 {
-    /// <summary>
-    /// Writes this text as UTF-8 bytes to <paramref name="destination"/>.
-    /// Zero-copy when UTF-8 backed; transcodes through a pooled buffer otherwise.
-    /// </summary>
+    /// <summary>Writes this text as UTF-8 bytes to <paramref name="destination"/>.</summary>
+    /// <param name="destination">The stream to write to.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    /// <remarks>When the text is UTF-8 and array-backed, writes the backing memory directly without copying. Other encodings transcode through a pooled buffer.</remarks>
+    /// <example>
+    /// <code>
+    /// var text = Text.FromUtf8("hello"u8);
+    /// await text.CopyToAsync(response.Body);
+    /// </code>
+    /// </example>
     public async Task CopyToAsync(Stream destination, CancellationToken cancellationToken = default)
     {
         if (IsEmpty)
@@ -48,10 +55,13 @@ public readonly partial struct Text
         }
     }
 
-    /// <summary>
-    /// Reads exactly <paramref name="length"/> bytes and creates a <see cref="Text"/> with the specified encoding.
-    /// One allocation for the <c>byte[]</c>; the <see cref="Text"/> wraps it zero-copy.
-    /// </summary>
+    /// <summary>Reads exactly <paramref name="length"/> bytes from the stream and creates a <see cref="Text"/>.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="encoding">The encoding of the bytes in the stream.</param>
+    /// <param name="length">The number of bytes to read.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A <see cref="Text"/> created from the bytes read, or <c>default</c> if zero bytes were read.</returns>
+    /// <remarks>Allocates a single <c>byte[]</c> of the specified length. The resulting <see cref="Text"/> wraps it directly.</remarks>
     public static async Task<Text> FromBytesAsync(
         Stream stream, TextEncoding encoding, int length, CancellationToken cancellationToken = default)
     {
@@ -71,11 +81,12 @@ public readonly partial struct Text
         return FromBytes(new ArraySegment<byte>(buffer, 0, totalRead), encoding);
     }
 
-    /// <summary>
-    /// Reads the stream to the end and creates a <see cref="Text"/> with the specified encoding.
-    /// Uses pooled buffers during reading; one final allocation for the exact-size <c>byte[]</c>.
-    /// Prefer the length overload when the size is known.
-    /// </summary>
+    /// <summary>Reads the stream to the end and creates a <see cref="Text"/>.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="encoding">The encoding of the bytes in the stream.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A <see cref="Text"/> created from the bytes read, or <c>default</c> if the stream was empty.</returns>
+    /// <remarks>For seekable streams, reads using the remaining length. For non-seekable streams, reads in pooled 4 KB chunks and copies into an exact-size array at the end.</remarks>
     public static async Task<Text> FromBytesAsync(
         Stream stream, TextEncoding encoding, CancellationToken cancellationToken = default)
     {
@@ -103,26 +114,57 @@ public readonly partial struct Text
     }
 
     /// <summary>Creates a UTF-8 <see cref="Text"/> from a stream with known length.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="length">The number of bytes to read.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-8 <see cref="Text"/> created from the bytes read.</returns>
+    /// <example>
+    /// <code>
+    /// Text text = await Text.FromUtf8Async(stream, (int)stream.Length);
+    /// </code>
+    /// </example>
     public static Task<Text> FromUtf8Async(Stream stream, int length, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf8, length, cancellationToken);
 
     /// <summary>Creates a UTF-8 <see cref="Text"/> by reading the stream to the end.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-8 <see cref="Text"/> created from the bytes read.</returns>
+    /// <example>
+    /// <code>
+    /// Text text = await Text.FromUtf8Async(stream);
+    /// </code>
+    /// </example>
     public static Task<Text> FromUtf8Async(Stream stream, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf8, cancellationToken);
 
     /// <summary>Creates a UTF-16 <see cref="Text"/> from a stream with known byte length.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="byteLength">The number of bytes to read.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-16 <see cref="Text"/> created from the bytes read.</returns>
     public static Task<Text> FromUtf16Async(Stream stream, int byteLength, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf16, byteLength, cancellationToken);
 
     /// <summary>Creates a UTF-16 <see cref="Text"/> by reading the stream to the end.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-16 <see cref="Text"/> created from the bytes read.</returns>
     public static Task<Text> FromUtf16Async(Stream stream, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf16, cancellationToken);
 
     /// <summary>Creates a UTF-32 <see cref="Text"/> from a stream with known byte length.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="byteLength">The number of bytes to read.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-32 <see cref="Text"/> created from the bytes read.</returns>
     public static Task<Text> FromUtf32Async(Stream stream, int byteLength, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf32, byteLength, cancellationToken);
 
     /// <summary>Creates a UTF-32 <see cref="Text"/> by reading the stream to the end.</summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>A UTF-32 <see cref="Text"/> created from the bytes read.</returns>
     public static Task<Text> FromUtf32Async(Stream stream, CancellationToken cancellationToken = default)
         => FromBytesAsync(stream, TextEncoding.Utf32, cancellationToken);
 

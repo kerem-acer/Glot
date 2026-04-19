@@ -4,15 +4,17 @@ using System.Runtime.CompilerServices;
 namespace Glot;
 
 /// <summary>
-/// A stack-allocated interpolated string handler that builds a <see cref="LinkedTextUtf16"/>
-/// from pooled resources. Used via <see cref="OwnedLinkedTextUtf16.Create(LinkedTextUtf16InterpolatedStringHandler)"/>.
+/// An interpolation handler that builds a <see cref="LinkedTextUtf16"/> from pooled resources.
 /// </summary>
+/// <remarks>Rents a <see cref="LinkedTextUtf16"/> from the pool. String literals become memory segments. Formatted values use a shared format buffer.</remarks>
 [InterpolatedStringHandler]
 public struct LinkedTextUtf16InterpolatedStringHandler : IDisposable
 {
     LinkedTextUtf16? _data;
 
-    /// <summary>Handler constructor. Rents from pool. Default: <see cref="OwnedTextHandling.Copy"/>.</summary>
+    /// <summary>Creates a handler for building UTF-16 linked text.</summary>
+    /// <param name="literalLength">The total length of all literal string segments in the interpolated string.</param>
+    /// <param name="formattedCount">The number of formatted holes in the interpolated string.</param>
     public LinkedTextUtf16InterpolatedStringHandler(int literalLength, int formattedCount)
     {
         _data = LinkedTextUtf16.Pool.Get();
@@ -20,7 +22,10 @@ public struct LinkedTextUtf16InterpolatedStringHandler : IDisposable
         _data.EnsureCapacity(formattedCount + 1);
     }
 
-    /// <summary>Handler constructor with explicit <see cref="OwnedTextHandling"/> control.</summary>
+    /// <summary>Creates a handler with the specified <see cref="OwnedTextHandling"/> mode.</summary>
+    /// <param name="literalLength">The total length of all literal string segments in the interpolated string.</param>
+    /// <param name="formattedCount">The number of formatted holes in the interpolated string.</param>
+    /// <param name="handling">Controls how <see cref="OwnedText"/> values are handled during interpolation.</param>
     public LinkedTextUtf16InterpolatedStringHandler(int literalLength, int formattedCount, OwnedTextHandling handling)
     {
         _data = LinkedTextUtf16.Pool.Get();
@@ -36,7 +41,7 @@ public struct LinkedTextUtf16InterpolatedStringHandler : IDisposable
         return data;
     }
 
-    /// <summary>Returns the pooled <see cref="LinkedTextUtf16"/> if not already taken.</summary>
+    /// <summary>Releases pooled resources if not already consumed.</summary>
     public void Dispose()
     {
         if (_data is null)
@@ -50,27 +55,36 @@ public struct LinkedTextUtf16InterpolatedStringHandler : IDisposable
     }
 
     /// <summary>Appends a literal string segment.</summary>
+    /// <param name="value">The literal string to append.</param>
     public readonly void AppendLiteral(string value) => _data!.AppendLiteral(value);
 
     /// <summary>Appends a string value.</summary>
+    /// <param name="value">The string to append.</param>
     public readonly void AppendFormatted(string? value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends a <see cref="ReadOnlyMemory{T}"/> segment.</summary>
+    /// <param name="value">The UTF-16 memory to append.</param>
     public readonly void AppendFormatted(ReadOnlyMemory<char> value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends a <see cref="Text"/> value.</summary>
+    /// <param name="value">The <see cref="Text"/> to append.</param>
     public readonly void AppendFormatted(Text value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends an <see cref="OwnedText"/> value.</summary>
+    /// <param name="value">The <see cref="OwnedText"/> to append.</param>
     public readonly void AppendFormatted(OwnedText? value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends a <see cref="TextSpan"/> value.</summary>
+    /// <param name="value">The <see cref="TextSpan"/> to append.</param>
     public readonly void AppendFormatted(TextSpan value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends any formattable value.</summary>
+    /// <param name="value">The value to format and append.</param>
     public readonly void AppendFormatted<T>(T value) => _data!.AppendFormatted(value);
 
     /// <summary>Appends a formattable value with format specifier.</summary>
+    /// <param name="value">The value to format and append.</param>
+    /// <param name="format">The format specifier.</param>
     public readonly void AppendFormatted<T>(T value, string? format) => _data!.AppendFormatted(value, format);
 }
 #endif

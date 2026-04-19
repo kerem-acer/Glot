@@ -3,10 +3,9 @@ using System.Diagnostics;
 namespace Glot;
 
 /// <summary>
-/// A non-owning, zero-allocation view into a <see cref="LinkedTextUtf16"/>.
-/// Represents a contiguous range of characters that may span multiple segments.
-/// Slicing produces a new struct with adjusted boundaries — no allocation.
+/// A read-only view into a <see cref="LinkedTextUtf16"/> that may span multiple segments.
 /// </summary>
+/// <remarks>This is a value type that references the parent <see cref="LinkedTextUtf16"/>'s segment data. It does not own or copy any data.</remarks>
 public readonly partial struct LinkedTextUtf16Span
 {
     readonly LinkedTextUtf16? _data;
@@ -43,11 +42,11 @@ public readonly partial struct LinkedTextUtf16Span
     /// <summary>Returns <c>true</c> if this span has no content.</summary>
     public bool IsEmpty => Length == 0;
 
-    /// <summary>Gets the char at the specified index. O(n) — walks segments from the start.</summary>
-    /// <remarks>
-    /// For sequential access, use <see cref="EnumerateSegments"/> instead of a for-loop
-    /// with this indexer, which would be O(n²) over the full span.
-    /// </remarks>
+    /// <summary>Gets the char at the specified index.</summary>
+    /// <param name="index">The zero-based character position within this span.</param>
+    /// <returns>The character at the specified position.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is negative or greater than or equal to <see cref="Length"/>.</exception>
+    /// <remarks>Walks segments from the start to find the target character. For sequential access, prefer <see cref="EnumerateSegments"/>.</remarks>
     public char this[int index]
     {
         get

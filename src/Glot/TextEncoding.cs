@@ -3,14 +3,18 @@ namespace Glot;
 /// <summary>
 /// Specifies the Unicode encoding used to represent text.
 /// </summary>
+/// <remarks>
+/// <see cref="Text"/> operations accept cross-encoding inputs and transcode on the fly.
+/// The encoding determines the internal byte layout and affects byte-level indexing and slicing.
+/// </remarks>
 public enum TextEncoding : byte
 {
-    /// <summary>Variable-width encoding (1–4 bytes per rune). The dominant encoding for the web, JSON, and files.</summary>
+    /// <summary>Variable-width encoding using 1–4 bytes per scalar value.</summary>
     Utf8,
 
-    /// <summary>Variable-width encoding (2 or 4 bytes per rune). The native encoding of .NET <see cref="string"/> and <see cref="char"/>.</summary>
+    /// <summary>Variable-width encoding using 2 or 4 bytes per scalar value.</summary>
     Utf16,
 
-    /// <summary>Fixed-width encoding (4 bytes per rune). Each element maps 1:1 to a Unicode scalar value.</summary>
+    /// <summary>Fixed-width encoding using 4 bytes per scalar value.</summary>
     Utf32,
 }

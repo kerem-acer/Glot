@@ -7,9 +7,12 @@ namespace Glot;
 
 /// <summary>
 /// An immutable text value composed of non-contiguous UTF-16 segments.
-/// Holds <see cref="ReadOnlyMemory{T}"/> references to the original data
-/// without copying character data.
 /// </summary>
+/// <remarks>
+/// <para>Each segment is a <see cref="ReadOnlyMemory{T}"/> reference to existing data — no character data
+/// is copied during construction from string or memory segments. Cross-encoding <see cref="Text"/> values
+/// are transcoded into a pooled format buffer.</para>
+/// </remarks>
 #if NET6_0_OR_GREATER
 [InterpolatedStringHandler]
 #endif
@@ -106,10 +109,14 @@ public sealed partial class LinkedTextUtf16
         AddFormattedSegment(written);
     }
 
-    /// <summary>Returns a zero-allocation enumerator over all segments.</summary>
+    /// <summary>Returns an enumerator over all segments.</summary>
+    /// <returns>A <see cref="LinkedTextUtf16Span.SegmentEnumerator"/> that iterates over each segment.</returns>
+    /// <remarks>Does not allocate. The enumerator is a struct that walks the segment array.</remarks>
     public LinkedTextUtf16Span.SegmentEnumerator EnumerateSegments() => AsSpan().EnumerateSegments();
 
     /// <summary>Creates a <see cref="LinkedTextUtf16Span"/> covering all content.</summary>
+    /// <returns>A <see cref="LinkedTextUtf16Span"/> spanning the entire linked text.</returns>
+    /// <remarks>Does not allocate. Returns a struct view over the same segment data.</remarks>
     public LinkedTextUtf16Span AsSpan()
     {
         if (SegmentCount == 0)

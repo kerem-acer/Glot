@@ -3,9 +3,12 @@ using Microsoft.Extensions.ObjectPool;
 namespace Glot;
 
 /// <summary>
-/// A disposable handle that returns the <see cref="LinkedTextUtf8"/> and all its
-/// rented resources to their pools on dispose. The wrapper itself is pooled.
+/// A disposable handle that returns the <see cref="LinkedTextUtf8"/> and its rented resources to their pools on dispose.
 /// </summary>
+/// <remarks>
+/// <para>Both the <see cref="LinkedTextUtf8"/> and its overflow segment array are rented from pools.
+/// This wrapper is itself pooled via <see cref="Microsoft.Extensions.ObjectPool.ObjectPool{T}"/>.</para>
+/// </remarks>
 public sealed partial class OwnedLinkedTextUtf8 : IDisposable
 {
     static readonly ObjectPool<OwnedLinkedTextUtf8> Pool =
@@ -21,6 +24,14 @@ public sealed partial class OwnedLinkedTextUtf8 : IDisposable
     }
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf8"/> from memory segments.</summary>
+    /// <param name="segments">The UTF-8 memory segments to compose.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf8"/> containing the provided segments.</returns>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedLinkedTextUtf8.Create("hello"u8.ToArray().AsMemory());
+    /// var span = owned.AsSpan(); // valid until disposed
+    /// </code>
+    /// </example>
     public static OwnedLinkedTextUtf8 Create(params ReadOnlySpan<ReadOnlyMemory<byte>> segments)
     {
         var linked = LinkedTextUtf8.Pool.Get();
@@ -29,6 +40,8 @@ public sealed partial class OwnedLinkedTextUtf8 : IDisposable
     }
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf8"/> from <see cref="Text"/> values.</summary>
+    /// <param name="segments">The <see cref="Text"/> values to compose.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf8"/> containing the provided values.</returns>
     public static OwnedLinkedTextUtf8 Create(params ReadOnlySpan<Text> segments)
     {
         var linked = LinkedTextUtf8.Pool.Get();
@@ -37,11 +50,22 @@ public sealed partial class OwnedLinkedTextUtf8 : IDisposable
     }
 
 #if NET8_0_OR_GREATER
-    /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf8"/> from an interpolated string. Default: <see cref="OwnedTextHandling.Copy"/>.</summary>
+    /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf8"/> from an interpolated string.</summary>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf8"/> containing the interpolated content.</returns>
+    /// <remarks>The handler rents a <see cref="LinkedTextUtf8"/> from the pool. <see cref="OwnedText"/> holes use <see cref="OwnedTextHandling.Copy"/> by default.</remarks>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedLinkedTextUtf8.Create($"count: {42}");
+    /// </code>
+    /// </example>
     public static OwnedLinkedTextUtf8 Create(LinkedTextUtf8InterpolatedStringHandler handler)
         => GetFromPool(handler.Take());
 
     /// <summary>Creates a pooled <see cref="OwnedLinkedTextUtf8"/> from an interpolated string with the specified <see cref="OwnedTextHandling"/> mode.</summary>
+    /// <param name="handling">Controls how <see cref="OwnedText"/> values are handled during interpolation.</param>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A pooled <see cref="OwnedLinkedTextUtf8"/> containing the interpolated content.</returns>
     public static OwnedLinkedTextUtf8 Create(
         OwnedTextHandling handling,
         [System.Runtime.CompilerServices.InterpolatedStringHandlerArgument("handling")]
@@ -62,6 +86,7 @@ public sealed partial class OwnedLinkedTextUtf8 : IDisposable
     public LinkedTextUtf8? Data { get; private set; }
 
     /// <summary>Returns a <see cref="LinkedTextUtf8Span"/> over the full content.</summary>
+    /// <returns>A <see cref="LinkedTextUtf8Span"/> spanning the entire linked text, or <c>default</c> if disposed.</returns>
     public LinkedTextUtf8Span AsSpan()
     {
         if (Data is null)
@@ -75,7 +100,8 @@ public sealed partial class OwnedLinkedTextUtf8 : IDisposable
     /// <summary>Finalizer — returns the linked text data if Dispose was not called.</summary>
     ~OwnedLinkedTextUtf8() => ReturnData();
 
-    /// <summary>Returns all rented resources to their pools, including the wrapper itself.</summary>
+    /// <summary>Releases all rented resources and returns this instance to the pool.</summary>
+    /// <remarks>Returns the <see cref="LinkedTextUtf8"/> (including its segment arrays and format buffers) to the pool, then returns this wrapper to the object pool.</remarks>
     public void Dispose()
     {
         if (Data is null)

@@ -127,11 +127,28 @@ public sealed partial class LinkedTextUtf16
     }
 
 #if NET6_0_OR_GREATER
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from an interpolated string. Zero-alloc for literals and string values.</summary>
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from an interpolated string.</summary>
+    /// <param name="handler">The interpolated string handler that provides the content.</param>
+    /// <returns>A <see cref="LinkedTextUtf16"/> containing the interpolated content, or <see cref="Empty"/> if the result is empty.</returns>
+    /// <remarks>String literals and string values are stored as segments. Formatted values are written into a pooled format buffer.</remarks>
+    /// <example>
+    /// <code>
+    /// string name = "world";
+    /// LinkedTextUtf16 linked = $"hello {name}!";
+    /// </code>
+    /// </example>
     public static LinkedTextUtf16 Create(LinkedTextUtf16 handler) => handler.IsEmpty ? Empty : handler;
 #endif
 
     /// <summary>Creates a <see cref="LinkedTextUtf16"/> from strings.</summary>
+    /// <param name="segments">The string values to compose.</param>
+    /// <returns>A <see cref="LinkedTextUtf16"/> containing the provided strings, or <see cref="Empty"/> if all strings are empty.</returns>
+    /// <remarks>Does not copy string data — stores <see cref="ReadOnlyMemory{T}"/> references via <c>string.AsMemory()</c>. Null or empty strings are skipped.</remarks>
+    /// <example>
+    /// <code>
+    /// var linked = LinkedTextUtf16.Create("hello", " ", "world");
+    /// </code>
+    /// </example>
     public static LinkedTextUtf16 Create(params ReadOnlySpan<string> segments)
     {
         foreach (var t in segments)
@@ -146,6 +163,8 @@ public sealed partial class LinkedTextUtf16
     }
 
     /// <summary>Creates a <see cref="LinkedTextUtf16"/> from memory segments.</summary>
+    /// <param name="segments">The UTF-16 memory segments to compose.</param>
+    /// <returns>A <see cref="LinkedTextUtf16"/> containing the provided segments, or <see cref="Empty"/> if all segments are empty.</returns>
     public static LinkedTextUtf16 Create(params ReadOnlySpan<ReadOnlyMemory<char>> segments)
     {
         foreach (var t in segments)
@@ -159,7 +178,10 @@ public sealed partial class LinkedTextUtf16
         return Empty;
     }
 
-    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from <see cref="Text"/> values. Transcodes if needed.</summary>
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from <see cref="Text"/> values.</summary>
+    /// <param name="segments">The <see cref="Text"/> values to compose.</param>
+    /// <returns>A <see cref="LinkedTextUtf16"/> containing the provided values, or <see cref="Empty"/> if all values are empty.</returns>
+    /// <remarks>UTF-16 texts are referenced directly (no copy). Texts in other encodings are transcoded into a pooled format buffer.</remarks>
     public static LinkedTextUtf16 Create(params ReadOnlySpan<Text> segments)
     {
         var hasContent = false;

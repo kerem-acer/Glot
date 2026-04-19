@@ -5,6 +5,15 @@ namespace Glot;
 public readonly partial struct Text
 {
     /// <summary>Concatenates two <see cref="Text"/> values.</summary>
+    /// <param name="a">The first text.</param>
+    /// <param name="b">The second text.</param>
+    /// <returns>A new <see cref="Text"/> containing the concatenation of <paramref name="a"/> and <paramref name="b"/>.</returns>
+    /// <remarks>Allocates a new <c>byte[]</c> to hold the combined content. When both texts share the same encoding, the bytes are copied directly. Otherwise, a <see cref="TextBuilder"/> transcodes on the fly.</remarks>
+    /// <example>
+    /// <code>
+    /// var greeting = Text.Concat(Text.From("hello"), Text.From(" world"));
+    /// </code>
+    /// </example>
     public static Text Concat(Text a, Text b)
     {
         if (a.IsEmpty)
@@ -46,12 +55,22 @@ public readonly partial struct Text
     /// <summary>
     /// Concatenates <see cref="Text"/> values into a new <see cref="Text"/>.
     /// The result uses the encoding of the first non-empty value (or UTF-8 if all are empty).
-    /// Use the overload with an explicit encoding parameter to control the output encoding.
     /// </summary>
+    /// <param name="values">The values to concatenate.</param>
+    /// <returns>A new <see cref="Text"/> containing the concatenation of <paramref name="values"/>.</returns>
+    /// <remarks>The result uses the encoding of the first non-empty value. Allocates a single <c>byte[]</c> when all values share the same encoding.</remarks>
+    /// <example>
+    /// <code>
+    /// Text result = Text.Concat(text1, text2, text3);
+    /// </code>
+    /// </example>
     public static Text Concat(params ReadOnlySpan<Text> values)
         => Concat(values, ResolveEncoding(values));
 
     /// <summary>Concatenates <see cref="Text"/> values into a new <see cref="Text"/> with the specified target encoding.</summary>
+    /// <param name="values">The values to concatenate.</param>
+    /// <param name="encoding">The target encoding for the result.</param>
+    /// <returns>A new <see cref="Text"/> containing the concatenation of <paramref name="values"/> in the specified <paramref name="encoding"/>.</returns>
     public static Text Concat(ReadOnlySpan<Text> values, TextEncoding encoding)
     {
         if (values.IsEmpty)
@@ -92,12 +111,17 @@ public readonly partial struct Text
     /// <summary>
     /// Like <see cref="Concat(ReadOnlySpan{Text})"/> but returns a pooled <see cref="OwnedText"/>.
     /// The result uses the encoding of the first non-empty value (or UTF-8 if all are empty).
-    /// Use the overload with an explicit encoding parameter to control the output encoding.
     /// </summary>
+    /// <param name="values">The values to concatenate.</param>
+    /// <returns>A pooled <see cref="OwnedText"/> containing the concatenation, or <c>null</c> if all values are empty.</returns>
+    /// <remarks>Returns a pooled <see cref="OwnedText"/> backed by an <see cref="System.Buffers.ArrayPool{T}"/> buffer. The caller must dispose the result. Returns <c>null</c> when all values are empty.</remarks>
     public static OwnedText? ConcatPooled(params ReadOnlySpan<Text> values)
         => ConcatPooled(values, ResolveEncoding(values));
 
     /// <summary>Like <see cref="Concat(ReadOnlySpan{Text}, TextEncoding)"/> but returns a pooled <see cref="OwnedText"/>.</summary>
+    /// <param name="values">The values to concatenate.</param>
+    /// <param name="encoding">The target encoding for the result.</param>
+    /// <returns>A pooled <see cref="OwnedText"/> containing the concatenation, or <c>null</c> if all values are empty.</returns>
     public static OwnedText? ConcatPooled(ReadOnlySpan<Text> values, TextEncoding encoding)
     {
         if (values.IsEmpty)
@@ -203,5 +227,13 @@ public readonly partial struct Text
     }
 
     /// <summary>Concatenates this text with another.</summary>
+    /// <param name="left">The first text.</param>
+    /// <param name="right">The second text.</param>
+    /// <returns>A new <see cref="Text"/> containing the concatenation of <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <example>
+    /// <code>
+    /// Text result = text1 + text2;
+    /// </code>
+    /// </example>
     public static Text operator +(Text left, Text right) => Concat(left, right);
 }

@@ -12,9 +12,18 @@ public static class JsonSerializerGlotExtensions
     {
         /// <summary>
         /// Serializes <paramref name="value"/> as UTF-8 JSON into a pooled <see cref="OwnedText"/>.
-        /// Uses thread-local cached writer and buffer — zero allocations on the hot path.
-        /// Caller must dispose the returned value to return the buffer to the pool.
+        /// The caller must dispose the returned value.
         /// </summary>
+        /// <param name="value">The value to serialize.</param>
+        /// <param name="options">The serializer options, or <c>null</c> to use defaults.</param>
+        /// <returns>An <see cref="OwnedText"/> containing the UTF-8 JSON representation.</returns>
+        /// <remarks>Uses a thread-local cached writer and buffer to avoid allocation on the serialization path. The caller must dispose the returned <see cref="OwnedText"/>.</remarks>
+        /// <example>
+        /// <code>
+        /// using var json = JsonSerializer.SerializeToUtf8OwnedText(new { Name = "test" });
+        /// return GlotResults.Json(json);
+        /// </code>
+        /// </example>
         public static OwnedText SerializeToUtf8OwnedText<T>(T value, JsonSerializerOptions? options = null)
         {
             var writer = WriterCache.Rent(options, out var bufferWriter);
@@ -32,9 +41,16 @@ public static class JsonSerializerGlotExtensions
 
         /// <summary>
         /// Serializes <paramref name="value"/> as UTF-8 JSON into a <see cref="Text"/>.
-        /// One allocation for the exact-size <c>byte[]</c>; equivalent to
-        /// <c>Text.FromUtf8(JsonSerializer.SerializeToUtf8Bytes(value, options))</c> but avoids the internal copy.
         /// </summary>
+        /// <param name="value">The value to serialize.</param>
+        /// <param name="options">The serializer options, or <c>null</c> to use defaults.</param>
+        /// <returns>A <see cref="Text"/> containing the UTF-8 JSON representation.</returns>
+        /// <remarks>Allocates a single exact-size <c>byte[]</c> for the result.</remarks>
+        /// <example>
+        /// <code>
+        /// Text json = JsonSerializer.SerializeToUtf8Text(data);
+        /// </code>
+        /// </example>
         public static Text SerializeToUtf8Text<T>(T value, JsonSerializerOptions? options = null)
             => Text.FromUtf8(JsonSerializer.SerializeToUtf8Bytes(value, options));
     }
