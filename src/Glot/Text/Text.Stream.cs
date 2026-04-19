@@ -29,7 +29,9 @@ public readonly partial struct Text
             return;
         }
 
-        var maxBytes = RuneLength * 4;
+        // UTF-8 path returned early via TryGetUtf8Memory above.
+        // UTF-16: each 2-byte code unit → max 3 UTF-8 bytes. UTF-32: each 4-byte rune → max 4 UTF-8 bytes.
+        var maxBytes = Encoding == TextEncoding.Utf16 ? ByteLength / 2 * 3 : ByteLength;
         var buffer = ArrayPool<byte>.Shared.Rent(maxBytes);
         try
         {

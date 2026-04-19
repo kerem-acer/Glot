@@ -49,6 +49,27 @@ public readonly ref partial struct TextSpan
                 return true;
             }
 
+            // Same-encoding fast path: use SIMD byte-level IndexOf to locate the separator
+            // without per-rune decode. Well-formed input means any separator byte match is
+            // on a valid rune boundary (separators in the same encoding as the input).
+            if (_encoding == _separatorEncoding)
+            {
+                var idx = _remaining.IndexOf(_separatorBytes);
+                if (idx < 0)
+                {
+                    _currentBytes = _remaining;
+                    _currentRuneCount = RuneCount.Count(_remaining, _encoding);
+                    _remaining = default;
+                    _done = true;
+                    return true;
+                }
+
+                _currentBytes = _remaining[..idx];
+                _currentRuneCount = RuneCount.Count(_currentBytes, _encoding);
+                _remaining = _remaining[(idx + _separatorBytes.Length)..];
+                return true;
+            }
+
             var scan = _remaining;
             var byteOffset = 0;
             var runeCount = 0;

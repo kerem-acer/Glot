@@ -5,7 +5,7 @@ namespace Glot;
 
 public sealed partial class LinkedTextUtf16
 {
-    const int InlineCapacity = 8;
+    const int InlineCapacity = 4;
 
     [InlineArray(InlineCapacity)]
     struct InlineSegmentBuffer

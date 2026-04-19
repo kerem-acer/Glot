@@ -173,7 +173,7 @@ public struct TextInterpolatedStringHandler : IDisposable
         return result;
     }
 
-    internal OwnedText? ToOwnedText()
+    internal OwnedText ToOwnedText()
     {
         var result = _builder.ToOwnedText();
         _builder.Dispose();

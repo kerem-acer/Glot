@@ -25,13 +25,13 @@ public partial class OwnedTextTests
     }
 
     [Test]
-    public async Task FromUtf8_Empty_ReturnsNull()
+    public async Task FromUtf8_Empty_ReturnsSingletonEmpty()
     {
         // Act
         var owned = OwnedText.FromUtf8([]);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
     }
 
     // Factory — FromChars
@@ -47,13 +47,13 @@ public partial class OwnedTextTests
     }
 
     [Test]
-    public async Task FromChars_Empty_ReturnsNull()
+    public async Task FromChars_Empty_ReturnsSingletonEmpty()
     {
         // Act
         var owned = OwnedText.FromChars([]);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
     }
 
     // Factory — FromUtf32
@@ -72,13 +72,13 @@ public partial class OwnedTextTests
     }
 
     [Test]
-    public async Task FromUtf32_Empty_ReturnsNull()
+    public async Task FromUtf32_Empty_ReturnsSingletonEmpty()
     {
         // Act
         var owned = OwnedText.FromUtf32([]);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
     }
 
     // Factory — FromBytes

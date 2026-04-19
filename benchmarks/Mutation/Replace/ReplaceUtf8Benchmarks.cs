@@ -12,7 +12,7 @@ public class ReplaceUtf8Benchmarks
     [ScriptParams]
     public Script Locale;
 
-    EncodedSet _source, _marker, _replacement;
+    EncodedSet _source, _marker, _replacement, _missingMarker;
 
     [GlobalSetup]
     public void Setup()
@@ -34,6 +34,7 @@ public class ReplaceUtf8Benchmarks
         _source = EncodedSet.From(sb.ToString());
         _marker = EncodedSet.From(markerStr);
         _replacement = EncodedSet.From(replacementStr);
+        _missingMarker = EncodedSet.From(TestData.MissingNeedle(Locale));
     }
 
     [Benchmark(Baseline = true, Description = "string.Replace")]
@@ -50,4 +51,16 @@ public class ReplaceUtf8Benchmarks
     {
         using var result = _source.Utf8.ReplacePooled(_marker.Utf8, _replacement.Utf8);
     }
+
+    [Benchmark(Description = "string.Replace miss")]
+    public string StringReplaceMiss() => _source.Str.Replace(_missingMarker.Str, _replacement.Str);
+
+    [Benchmark(Description = "Text.Replace UTF-8 miss")]
+    public Text TextReplaceMiss() => _source.Utf8.Replace(_missingMarker.Utf8, _replacement.Utf8);
+
+    [Benchmark(Description = "Text.Replace UTF-16 marker")]
+    public Text TextReplaceCrossUtf16() => _source.Utf8.Replace(_marker.Utf16, _replacement.Utf16);
+
+    [Benchmark(Description = "Text.Replace UTF-32 marker")]
+    public Text TextReplaceCrossUtf32() => _source.Utf8.Replace(_marker.Utf32, _replacement.Utf32);
 }

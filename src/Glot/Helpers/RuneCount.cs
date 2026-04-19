@@ -1,7 +1,5 @@
-using System.Runtime.CompilerServices;
-#if NET6_0_OR_GREATER
 using System.Numerics;
-#endif
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static Glot.EncodingConstants;
 
@@ -18,8 +16,24 @@ static class RuneCount
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int CountPrefix(
-        ReadOnlySpan<byte> bytes, TextEncoding encoding, int bytePos, int totalRuneLength)
+        ReadOnlySpan<byte> bytes,
+        TextEncoding encoding,
+        int bytePos,
+        int totalRuneLength)
     {
+        // UTF-32: every rune is exactly 4 bytes; byte offset divides cleanly to rune index.
+        if (encoding == TextEncoding.Utf32)
+        {
+            return bytePos >> 2;
+        }
+
+        // Ascii-only UTF-8: rune count equals byte length, so rune index equals byte offset.
+        // Detected via the invariant that Text populates `totalRuneLength` at construction.
+        if (encoding == TextEncoding.Utf8 && totalRuneLength > 0 && totalRuneLength == bytes.Length)
+        {
+            return bytePos;
+        }
+
         if (totalRuneLength > 0 && bytePos > (bytes.Length >> 1))
         {
             return totalRuneLength - Count(bytes[bytePos..], encoding);
@@ -45,7 +59,6 @@ static class RuneCount
         var offset = 0;
         var length = bytes.Length;
 
-#if NET6_0_OR_GREATER
         // SIMD path using Vector<T> — auto-selects widest hardware vector (128/256/512).
         // Reinterpret bytes as signed: continuation bytes (10xxxxxx) map to signed [-128, -65].
         // All rune-start bytes (ASCII + lead bytes) are >= -64 signed.
@@ -62,7 +75,7 @@ static class RuneCount
 
                 for (var i = 0; i < batchEnd; i++)
                 {
-                    var vecBytes = new Vector<byte>(bytes[offset..]);
+                    var vecBytes = bytes.LoadVector(offset);
                     var vec = Unsafe.As<Vector<byte>, Vector<sbyte>>(ref vecBytes);
                     var mask = Vector.GreaterThanOrEqual(vec, threshold);
                     var maskBytes = Unsafe.As<Vector<sbyte>, Vector<byte>>(ref mask);
@@ -73,9 +86,8 @@ static class RuneCount
                 count += accumulated.HorizontalSum();
             }
         }
-#endif
 
-        // Scalar tail (handles remaining bytes, or all bytes on netstandard)
+        // Scalar tail
         for (var i = offset; i < length; i++)
         {
             if ((bytes[i] & Utf8LeadByteMask) != Utf8ContinuationMarker)
@@ -93,7 +105,6 @@ static class RuneCount
         var offset = 0;
         var length = chars.Length;
 
-#if NET6_0_OR_GREATER
         // SIMD path using Vector<T> — auto-selects widest hardware vector.
         // Count low surrogates and subtract from total chars to get rune count.
         // Low surrogates: (char & SurrogateMask) == LowSurrogateMarker.
@@ -101,6 +112,7 @@ static class RuneCount
         // ushort lanes overflow at MaxUshortLaneBatch — flush periodically (~1M chars, practically never).
         if (Vector.IsHardwareAccelerated && length >= Vector<ushort>.Count)
         {
+            var ushorts = MemoryMarshal.Cast<char, ushort>(chars);
             var mask = new Vector<ushort>(Utf16SurrogateMask);
             var marker = new Vector<ushort>(Utf16LowSurrogateMarker);
             var vectorSize = Vector<ushort>.Count;
@@ -112,17 +124,16 @@ static class RuneCount
 
                 for (var i = 0; i < batchEnd; i++)
                 {
-                    var vec = new Vector<ushort>(MemoryMarshal.Cast<char, ushort>(chars[offset..]));
+                    var vec = ushorts.LoadVector(offset);
                     var masked = Vector.BitwiseAnd(vec, mask);
                     var isSurrogate = Vector.Equals(masked, marker);
                     surrogates = Vector.Subtract(surrogates, isSurrogate);
                     offset += vectorSize;
                 }
 
-                count += batchEnd * vectorSize - surrogates.HorizontalSum();
+                count += (batchEnd * vectorSize) - surrogates.HorizontalSum();
             }
         }
-#endif
 
         // Scalar tail
         for (var i = offset; i < length; i++)

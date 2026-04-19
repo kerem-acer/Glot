@@ -97,22 +97,13 @@ public sealed partial class LinkedTextUtf16
             return;
         }
 
-        // Transcode UTF-8/UTF-32 to UTF-16 into format buffer
+        // Transcode UTF-8/UTF-32 to UTF-16 into format buffer (SIMD for UTF-8)
         var maxChars = span.Encoding == TextEncoding.Utf32
             ? span.Bytes.Length / 4 * 2
             : span.Bytes.Length;
         EnsureFormatBuffer(maxChars);
-        var start = _formatPosition;
-
-        foreach (var rune in span.EnumerateRunes())
-        {
-            var written = rune.EncodeToUtf16(_formatBuffer.AsSpan(_formatPosition));
-            _formatPosition += written;
-        }
-
-        var totalChars = _formatPosition - start;
-        var memory = new ReadOnlyMemory<char>(_formatBuffer, start, totalChars);
-        AddSegment(memory);
+        var written = span.EncodeToUtf16(_formatBuffer.AsSpan(_formatPosition));
+        AddFormattedSegment(written);
     }
 
     /// <summary>Returns a zero-allocation enumerator over all segments.</summary>

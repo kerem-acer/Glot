@@ -126,6 +126,11 @@ public sealed partial class LinkedTextUtf16
         Length = totalLength;
     }
 
+#if NET6_0_OR_GREATER
+    /// <summary>Creates a <see cref="LinkedTextUtf16"/> from an interpolated string. Zero-alloc for literals and string values.</summary>
+    public static LinkedTextUtf16 Create(LinkedTextUtf16 handler) => handler.IsEmpty ? Empty : handler;
+#endif
+
     /// <summary>Creates a <see cref="LinkedTextUtf16"/> from strings.</summary>
     public static LinkedTextUtf16 Create(params ReadOnlySpan<string> segments)
     {

@@ -741,13 +741,13 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task ReplacePooled_EmptyText_ReturnsNull()
+    public async Task ReplacePooled_EmptyText_ReturnsEmpty()
     {
         // Act
         var result = Text.Empty.ReplacePooled(Text.From("x"), Text.From("y"));
 
         // Assert
-        await Assert.That(result).IsNull();
+        await Assert.That(result).IsSameReferenceAs(OwnedText.Empty);
     }
 
     [Test]
@@ -781,13 +781,13 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task ReplacePooled_StringEmptyText_ReturnsNull()
+    public async Task ReplacePooled_StringEmptyText_ReturnsEmpty()
     {
         // Act
         var result = Text.Empty.ReplacePooled("x", "y");
 
         // Assert
-        await Assert.That(result).IsNull();
+        await Assert.That(result).IsSameReferenceAs(OwnedText.Empty);
     }
 
     // Mutation validation — Insert

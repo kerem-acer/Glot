@@ -1,7 +1,5 @@
-#if NET6_0_OR_GREATER
 using System.Numerics;
 using System.Runtime.CompilerServices;
-#endif
 using System.Runtime.InteropServices;
 using static Glot.EncodingConstants;
 
@@ -35,7 +33,6 @@ static class RuneIndex
         var offset = 0;
         var runesRemaining = runeOffset;
 
-#if NET6_0_OR_GREATER
         // SIMD path: count rune starts per vector, skip full vectors when possible.
         if (Vector.IsHardwareAccelerated && bytes.Length >= Vector<byte>.Count)
         {
@@ -44,7 +41,7 @@ static class RuneIndex
 
             while (offset + vectorSize <= bytes.Length && runesRemaining >= vectorSize)
             {
-                var vecBytes = new Vector<byte>(bytes[offset..]);
+                var vecBytes = bytes.LoadVector(offset);
                 var vec = Unsafe.As<Vector<byte>, Vector<sbyte>>(ref vecBytes);
                 var mask = Vector.GreaterThanOrEqual(vec, threshold);
                 var maskBytes = Unsafe.As<Vector<sbyte>, Vector<byte>>(ref mask);
@@ -62,7 +59,6 @@ static class RuneIndex
                 }
             }
         }
-#endif
 
         // Scalar tail: skip runesRemaining rune starts, return byte offset of the next one.
         while (offset < bytes.Length)
@@ -89,17 +85,17 @@ static class RuneIndex
         var charOffset = 0;
         var runesRemaining = runeOffset;
 
-#if NET6_0_OR_GREATER
         // SIMD path: count non-surrogates per vector, skip full vectors when possible.
         if (Vector.IsHardwareAccelerated && chars.Length >= Vector<ushort>.Count)
         {
+            var ushorts = MemoryMarshal.Cast<char, ushort>(chars);
             var mask = new Vector<ushort>(Utf16SurrogateMask);
             var marker = new Vector<ushort>(Utf16LowSurrogateMarker);
             var vectorSize = Vector<ushort>.Count;
 
             while (charOffset + vectorSize <= chars.Length && runesRemaining >= vectorSize)
             {
-                var vec = new Vector<ushort>(MemoryMarshal.Cast<char, ushort>(chars[charOffset..]));
+                var vec = ushorts.LoadVector(charOffset);
                 var masked = Vector.BitwiseAnd(vec, mask);
                 var isSurrogate = Vector.Equals(masked, marker);
                 // isSurrogate lanes are 0xFFFF or 0x0000, so sum is always a multiple of ushort.MaxValue.
@@ -117,7 +113,6 @@ static class RuneIndex
                 }
             }
         }
-#endif
 
         // Scalar tail: skip runesRemaining rune starts, return byte offset of the next one.
         while (charOffset < chars.Length)

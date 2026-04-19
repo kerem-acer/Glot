@@ -1,10 +1,27 @@
-#if NET6_0_OR_GREATER
 using System.Numerics;
+using System.Runtime.CompilerServices;
+#if !NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 namespace Glot;
 
 static class VectorExtensions
 {
+    extension<T>(ReadOnlySpan<T> span) where T : struct
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vector<T> LoadVector(int offset)
+        {
+#if NET6_0_OR_GREATER
+            return new Vector<T>(span[offset..]);
+#else
+            return Unsafe.ReadUnaligned<Vector<T>>(
+                ref Unsafe.As<T, byte>(ref Unsafe.Add(ref MemoryMarshal.GetReference(span), offset)));
+#endif
+        }
+    }
+
     extension(Vector<byte> vec)
     {
         public int HorizontalSum()
@@ -42,4 +59,3 @@ static class VectorExtensions
         }
     }
 }
-#endif

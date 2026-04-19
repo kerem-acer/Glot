@@ -163,7 +163,7 @@ public class OwnedTextJsonConverterTests
     }
 
     [Test]
-    public async Task Deserialize_EmptyString_ReturnsNull()
+    public async Task Deserialize_EmptyString_ReturnsEmpty()
     {
         // Arrange
         const string json = "\"\"";
@@ -172,7 +172,7 @@ public class OwnedTextJsonConverterTests
         var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned!.IsEmpty).IsTrue();
     }
 
     [Test]

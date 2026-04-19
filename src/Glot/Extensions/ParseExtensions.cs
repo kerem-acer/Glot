@@ -10,9 +10,7 @@ namespace Glot;
 /// </summary>
 public static class ParseExtensions
 {
-#pragma warning disable IDE0051 // used inside extension blocks
     const int StackAllocThreshold = 256;
-#pragma warning restore IDE0051
 
     extension<T>(T) where T : ISpanParsable<T>
     {

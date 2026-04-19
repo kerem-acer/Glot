@@ -42,8 +42,9 @@ public readonly ref partial struct TextSpan
     {
         if (Encoding == TextEncoding.Utf8)
         {
-            Bytes.CopyTo(destination);
-            return Bytes.Length;
+            var bytes = Bytes;
+            bytes.CopyTo(destination);
+            return bytes.Length;
         }
 
         // Bulk path: UTF-16→UTF-8 via BCL (SIMD on .NET 6+).

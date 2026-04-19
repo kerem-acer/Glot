@@ -21,6 +21,8 @@
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="System.Memory" />
+    <PackageReference Include="System.Numerics.Vectors" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
     <PackageReference Include="Shim.System.Text.Rune" />
     <PackageReference Include="Microsoft.Bcl.HashCode" />
   </ItemGroup>

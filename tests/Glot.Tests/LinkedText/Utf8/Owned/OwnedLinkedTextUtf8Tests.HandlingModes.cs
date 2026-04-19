@@ -61,8 +61,8 @@ public partial class OwnedLinkedTextUtf8Tests
         // Arrange
         var owned = OwnedText.FromUtf8("borrowed"u8)!;
 
-        // Act -- Borrow mode: references the buffer, no copy
-        using var linked = OwnedLinkedTextUtf8.Create(OwnedTextHandling.Borrow, $"{owned.Text}");
+        // Act -- Borrow mode: passes OwnedText directly, calls AppendFormatted(OwnedText) via Borrow path
+        using var linked = OwnedLinkedTextUtf8.Create(OwnedTextHandling.Borrow, $"{owned}");
         var content = linked.AsSpan().ToString();
 
         // Assert -- OwnedText still usable, no detach

@@ -12,6 +12,8 @@
     <PackageVersion Include="StackExchange.Redis" Version="2.12.14" />
     <PackageVersion Include="System.IO.Hashing" Version="10.0.5" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
+    <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageVersion Include="System.Text.Json" Version="10.0.5" />
     <PackageVersion Include="TUnit" Version="1.33.0" />
     <PackageVersion Include="U8String" Version="0.16.0-alpha" />

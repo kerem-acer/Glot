@@ -44,7 +44,10 @@ public sealed partial class LinkedTextUtf8
                 continue;
             }
 
-            var seg = new Segment { Memory = t };
+            var seg = new Segment
+            {
+                Memory = t
+            };
 
 #if NET8_0_OR_GREATER
             if (segIndex < InlineCapacity)
@@ -82,6 +85,11 @@ public sealed partial class LinkedTextUtf8
 
         return hasContent ? new LinkedTextUtf8(segments) : Empty;
     }
+
+#if NET8_0_OR_GREATER
+    /// <summary>Creates a <see cref="LinkedTextUtf8"/> from an interpolated string. Zero-alloc for literals and UTF-8 values.</summary>
+    public static LinkedTextUtf8 Create(LinkedTextUtf8 handler) => handler.IsEmpty ? Empty : handler;
+#endif
 
     /// <summary>Creates a <see cref="LinkedTextUtf8"/> from <see cref="Text"/> values. Transcodes if needed.</summary>
     public static LinkedTextUtf8 Create(params ReadOnlySpan<Text> segments)
@@ -135,7 +143,10 @@ public sealed partial class LinkedTextUtf8
                 continue;
             }
 
-            var seg = new Segment { Memory = t };
+            var seg = new Segment
+            {
+                Memory = t
+            };
 
 #if NET8_0_OR_GREATER
             if (SegmentCount < InlineCapacity)
@@ -160,7 +171,11 @@ public sealed partial class LinkedTextUtf8
 
     void AddSegment(ReadOnlyMemory<byte> memory, byte[]? pooledBuffer = null)
     {
-        var seg = new Segment { Memory = memory, PooledBuffer = pooledBuffer };
+        var seg = new Segment
+        {
+            Memory = memory,
+            PooledBuffer = pooledBuffer
+        };
 
 #if NET8_0_OR_GREATER
         if (SegmentCount < InlineCapacity)

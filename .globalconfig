@@ -277,6 +277,8 @@ dotnet_diagnostic.IDE0260.severity = warning
 dotnet_diagnostic.IDE0065.severity = warning
 dotnet_diagnostic.IDE0004.severity = warning
 dotnet_diagnostic.IDE0038.severity = warning
+dotnet_diagnostic.IDE0032.severity = none
+dotnet_diagnostic.IDE0051.severity = none # False positive on consts used inside C# 14 extension blocks
 
 # BannedApiAnalyzers (RS)
 dotnet_diagnostic.RS0030.severity = error

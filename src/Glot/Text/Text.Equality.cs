@@ -1,3 +1,6 @@
+using System.IO.Hashing;
+using System.Runtime.InteropServices;
+
 namespace Glot;
 
 public readonly partial struct Text
@@ -22,20 +25,46 @@ public readonly partial struct Text
             return false;
         }
 
-        return AsSpan().Equals(other.AsSpan());
+        if (_encoding == TextEncoding.Utf16)
+        {
+            return Bytes.SequenceEqual(MemoryMarshal.AsBytes(other.AsUnsafeSpan()));
+        }
+
+        return AsSpan().Equals(other.AsUnsafeSpan());
     }
 
     /// <inheritdoc cref="Equals(Text)"/>
     public bool Equals(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
-        => AsSpan().Equals(value, encoding);
+    {
+        if (_encoding == encoding)
+        {
+            return Bytes.SequenceEqual(value);
+        }
+
+        return AsSpan().Equals(value, encoding);
+    }
 
     /// <inheritdoc cref="Equals(Text)"/>
     public bool Equals(ReadOnlySpan<char> value)
-        => AsSpan().Equals(value);
+    {
+        if (_encoding == TextEncoding.Utf16)
+        {
+            return Bytes.SequenceEqual(MemoryMarshal.AsBytes(value));
+        }
+
+        return AsSpan().Equals(value);
+    }
 
     /// <inheritdoc cref="Equals(Text)"/>
     public bool Equals(ReadOnlySpan<int> value)
-        => AsSpan().Equals(value);
+    {
+        if (_encoding == TextEncoding.Utf32)
+        {
+            return Bytes.SequenceEqual(MemoryMarshal.AsBytes(value));
+        }
+
+        return AsSpan().Equals(value);
+    }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Text other && Equals(other);
@@ -49,7 +78,7 @@ public readonly partial struct Text
             return 0;
         }
 
-        var hash = System.IO.Hashing.XxHash3.HashToUInt64(bytes, (long)Encoding);
+        var hash = XxHash3.HashToUInt64(bytes, (long)Encoding);
         return (int)hash ^ (int)(hash >> 32);
     }
 

@@ -43,7 +43,11 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
+        return RuneCount.CountPrefix(
+            Bytes,
+            Encoding,
+            bytePos,
+            _encodedLength.RuneLength);
     }
 
     public int RuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -69,7 +73,11 @@ public readonly ref partial struct TextSpan
             return -1;
         }
 
-        return RuneCount.CountPrefix(Bytes, Encoding, bytePos, _encodedLength.RuneLength);
+        return RuneCount.CountPrefix(
+            Bytes,
+            Encoding,
+            bytePos,
+            _encodedLength.RuneLength);
     }
 
     public int LastRuneIndexOf(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -120,7 +128,12 @@ public readonly ref partial struct TextSpan
             return Bytes.StartsWith(value.Bytes);
         }
 
-        return RunePrefix.TryMatch(Bytes, Encoding, value.Bytes, value.Encoding, out _);
+        return RunePrefix.TryMatch(
+            Bytes,
+            Encoding,
+            value.Bytes,
+            value.Encoding,
+            out _);
     }
 
     public bool StartsWith(ReadOnlySpan<byte> value, TextEncoding encoding = TextEncoding.Utf8)
@@ -222,15 +235,23 @@ public readonly ref partial struct TextSpan
 
     int IndexOfCrossEncoding(TextSpan value)
     {
-        // ASCII fast path: when the haystack is UTF-8 and the needle is all-ASCII,
-        // narrow the needle directly to single-byte form and use SIMD IndexOf.
-        if (Encoding == TextEncoding.Utf8)
+        // ASCII fast path: when the needle is all-ASCII, convert it directly into the
+        // haystack encoding (no BCL transcoder call) and use SIMD IndexOf.
+        Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit * 4];
+        if (value.TryConvertAscii(Encoding, narrowBuf, out var convertedByteLen))
         {
-            Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit];
-            if (TryNarrowAsciiToUtf8(value, narrowBuf, out var narrowLen))
+            var converted = narrowBuf[..convertedByteLen];
+            return Encoding switch
             {
-                return Bytes.IndexOf(narrowBuf[..narrowLen]);
-            }
+                TextEncoding.Utf8 => Bytes.IndexOf(converted),
+                TextEncoding.Utf16 => ByteIndexFromElementIndex(
+                    Chars.IndexOf(MemoryMarshal.Cast<byte, char>(converted)),
+                    2),
+                TextEncoding.Utf32 => ByteIndexFromElementIndex(
+                    Ints.IndexOf(MemoryMarshal.Cast<byte, int>(converted)),
+                    4),
+                _ => -1
+            };
         }
 
         var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
@@ -253,14 +274,14 @@ public readonly ref partial struct TextSpan
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf16 => FindForward(
-                MemoryMarshal.Cast<byte, char>(Bytes),
+                Chars,
                 MemoryMarshal.Cast<byte, char>(pattern),
                 2,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf32 => FindForward(
-                MemoryMarshal.Cast<byte, int>(Bytes),
+                Ints,
                 MemoryMarshal.Cast<byte, int>(pattern),
                 4,
                 value,
@@ -272,15 +293,22 @@ public readonly ref partial struct TextSpan
 
     int LastIndexOfCrossEncoding(TextSpan value)
     {
-        // ASCII fast path: when the haystack is UTF-8 and the needle is all-ASCII,
-        // narrow the needle directly to single-byte form and use SIMD LastIndexOf.
-        if (Encoding == TextEncoding.Utf8)
+        // ASCII fast path: convert the Ascii-only needle into the haystack encoding and use SIMD LastIndexOf.
+        Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit * 4];
+        if (value.TryConvertAscii(Encoding, narrowBuf, out var convertedByteLen))
         {
-            Span<byte> narrowBuf = stackalloc byte[AsciiNarrowLimit];
-            if (TryNarrowAsciiToUtf8(value, narrowBuf, out var narrowLen))
+            var converted = narrowBuf[..convertedByteLen];
+            return Encoding switch
             {
-                return Bytes.LastIndexOf(narrowBuf[..narrowLen]);
-            }
+                TextEncoding.Utf8 => Bytes.LastIndexOf(converted),
+                TextEncoding.Utf16 => ByteIndexFromElementIndex(
+                    Chars.LastIndexOf(MemoryMarshal.Cast<byte, char>(converted)),
+                    2),
+                TextEncoding.Utf32 => ByteIndexFromElementIndex(
+                    Ints.LastIndexOf(MemoryMarshal.Cast<byte, int>(converted)),
+                    4),
+                _ => -1
+            };
         }
 
         var patternBufLen = Math.Min(CrossEncodingPatternLimit, Math.Max(value.Bytes.Length, 4));
@@ -303,14 +331,14 @@ public readonly ref partial struct TextSpan
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf16 => FindBackward(
-                MemoryMarshal.Cast<byte, char>(Bytes),
+                Chars,
                 MemoryMarshal.Cast<byte, char>(pattern),
                 2,
                 value,
                 fullyEncoded,
                 valuePrefixByteLen),
             TextEncoding.Utf32 => FindBackward(
-                MemoryMarshal.Cast<byte, int>(Bytes),
+                Ints,
                 MemoryMarshal.Cast<byte, int>(pattern),
                 4,
                 value,
@@ -346,7 +374,7 @@ public readonly ref partial struct TextSpan
             var byteOffset = offset * elementSize;
 
             if (fullyEncoded ||
-                VerifyRuneSuffix(byteOffset + pattern.Length * elementSize, value, valuePrefixByteLen))
+                VerifyRuneSuffix(byteOffset + (pattern.Length * elementSize), value, valuePrefixByteLen))
             {
                 return byteOffset;
             }
@@ -379,7 +407,7 @@ public readonly ref partial struct TextSpan
             var byteOffset = pos * elementSize;
 
             if (fullyEncoded ||
-                VerifyRuneSuffix(byteOffset + pattern.Length * elementSize, value, valuePrefixByteLen))
+                VerifyRuneSuffix(byteOffset + (pattern.Length * elementSize), value, valuePrefixByteLen))
             {
                 return byteOffset;
             }
@@ -408,63 +436,7 @@ public readonly ref partial struct TextSpan
             out _);
     }
 
-    // Try to narrow a UTF-16 or UTF-32 pattern to UTF-8 bytes when every codepoint is ASCII.
-    // Returns false when the pattern is non-ASCII, too large, or already UTF-8.
-    static bool TryNarrowAsciiToUtf8(TextSpan value, Span<byte> utf8, out int length)
-    {
-        switch (value.Encoding)
-        {
-            case TextEncoding.Utf16:
-            {
-                var chars = MemoryMarshal.Cast<byte, char>(value.Bytes);
-                if (chars.Length > utf8.Length)
-                {
-                    length = 0;
-                    return false;
-                }
 
-                for (var i = 0; i < chars.Length; i++)
-                {
-                    if (chars[i] > 0x7F)
-                    {
-                        length = 0;
-                        return false;
-                    }
-
-                    utf8[i] = (byte)chars[i];
-                }
-
-                length = chars.Length;
-                return true;
-            }
-
-            case TextEncoding.Utf32:
-            {
-                var ints = MemoryMarshal.Cast<byte, int>(value.Bytes);
-                if (ints.Length > utf8.Length)
-                {
-                    length = 0;
-                    return false;
-                }
-
-                for (var i = 0; i < ints.Length; i++)
-                {
-                    if ((uint)ints[i] > 0x7F)
-                    {
-                        length = 0;
-                        return false;
-                    }
-
-                    utf8[i] = (byte)ints[i];
-                }
-
-                length = ints.Length;
-                return true;
-            }
-
-            default:
-                length = 0;
-                return false;
-        }
-    }
+    static int ByteIndexFromElementIndex(int elementIndex, int elementSize)
+        => elementIndex < 0 ? -1 : elementIndex * elementSize;
 }

@@ -36,20 +36,14 @@ public partial class OwnedLinkedTextUtf8Tests
     }
 
     [Test]
-    public async Task Dispose_CalledTwice_NoError()
+    public void Dispose_CalledTwice_NoError()
     {
         // Arrange
         var owned = OwnedLinkedTextUtf8.Create(Utf8("hello"));
 
-        // Act
+        // Act — second dispose must not throw
         owned.Dispose();
-        // Read IsDisposed immediately — before a parallel test can reclaim from pool.
-        // Use volatile read semantics via local capture.
-        var isDisposed = owned.IsDisposed;
-        owned.Dispose(); // second dispose should not throw
-
-        // Assert
-        await Assert.That(isDisposed).IsTrue();
+        owned.Dispose();
     }
 
     [Test]

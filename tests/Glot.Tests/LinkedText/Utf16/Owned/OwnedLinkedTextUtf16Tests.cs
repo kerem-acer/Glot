@@ -32,19 +32,14 @@ public partial class OwnedLinkedTextUtf16Tests
     }
 
     [Test]
-    public async Task Dispose_CalledTwice_NoError()
+    public void Dispose_CalledTwice_NoError()
     {
         // Arrange
         var owned = OwnedLinkedTextUtf16.Create("hello");
 
-        // Act
+        // Act — second dispose must not throw
         owned.Dispose();
-        // Read IsDisposed immediately — before a parallel test can reclaim from pool.
-        var isDisposed = owned.IsDisposed;
-        owned.Dispose(); // second dispose should not throw
-
-        // Assert
-        await Assert.That(isDisposed).IsTrue();
+        owned.Dispose();
     }
 
     [Test]

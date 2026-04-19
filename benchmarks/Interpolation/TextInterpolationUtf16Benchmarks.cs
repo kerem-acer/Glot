@@ -45,7 +45,7 @@ public class TextInterpolationUtf16Benchmarks
     }
 
     [BenchmarkCategory("2 parts"), Benchmark(Description = "LinkedTextUtf16 $\"...\"")]
-    public LinkedTextUtf16 LinkedUtf16Create2() => LinkedTextUtf16.Create($"{_p1.Utf16}{_p2.Utf16}");
+    public LinkedTextUtf16 LinkedUtf16Create2() => $"{_p1.Utf16}{_p2.Utf16}";
 
     [BenchmarkCategory("2 parts"), Benchmark(Description = "OwnedLinkedTextUtf16 $\"...\"")]
     public void OwnedLinkedUtf16Create2()
@@ -68,7 +68,7 @@ public class TextInterpolationUtf16Benchmarks
     }
 
     [BenchmarkCategory("4 parts"), Benchmark(Description = "LinkedTextUtf16 $\"...\"")]
-    public LinkedTextUtf16 LinkedUtf16Create4() => LinkedTextUtf16.Create($"{_p1.Utf16}{_p2.Utf16}{_p3.Utf16}{_p4.Utf16}");
+    public LinkedTextUtf16 LinkedUtf16Create4() => $"{_p1.Utf16}{_p2.Utf16}{_p3.Utf16}{_p4.Utf16}";
 
     [BenchmarkCategory("4 parts"), Benchmark(Description = "OwnedLinkedTextUtf16 $\"...\"")]
     public void OwnedLinkedUtf16Create4()
@@ -91,7 +91,7 @@ public class TextInterpolationUtf16Benchmarks
     }
 
     [BenchmarkCategory("8 parts"), Benchmark(Description = "LinkedTextUtf16 $\"...\"")]
-    public LinkedTextUtf16 LinkedUtf16Create8() => LinkedTextUtf16.Create($"{_p1.Utf16}{_p2.Utf16}{_p3.Utf16}{_p4.Utf16}{_p5.Utf16}{_p6.Utf16}{_p7.Utf16}{_p8.Utf16}");
+    public LinkedTextUtf16 LinkedUtf16Create8() => $"{_p1.Utf16}{_p2.Utf16}{_p3.Utf16}{_p4.Utf16}{_p5.Utf16}{_p6.Utf16}{_p7.Utf16}{_p8.Utf16}";
 
     [BenchmarkCategory("8 parts"), Benchmark(Description = "OwnedLinkedTextUtf16 $\"...\"")]
     public void OwnedLinkedUtf16Create8()

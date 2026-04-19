@@ -197,7 +197,7 @@ public partial class TextBuilderTests
     }
 
     [Test]
-    public async Task ToOwnedText_Empty_ReturnsNull()
+    public async Task ToOwnedText_Empty_ReturnsSingletonEmpty()
     {
         // Arrange
         using var builder = new TextBuilder(TextEncoding.Utf8);
@@ -206,7 +206,7 @@ public partial class TextBuilderTests
         var owned = builder.ToOwnedText();
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
     }
 
     [Test]

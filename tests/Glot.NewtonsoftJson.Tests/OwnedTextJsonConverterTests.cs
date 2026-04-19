@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Glot.NewtonsoftJson.Tests;
 
-public class OwnedTextJsonConverterTests
+public partial class OwnedTextJsonConverterTests
 {
     readonly JsonSerializerSettings _settings = new()
     {
@@ -79,7 +79,7 @@ public class OwnedTextJsonConverterTests
     }
 
     [Test]
-    public async Task Deserialize_EmptyString_ReturnsNull()
+    public async Task Deserialize_EmptyString_ReturnsEmpty()
     {
         // Arrange
         const string json = "\"\"";
@@ -88,7 +88,7 @@ public class OwnedTextJsonConverterTests
         var owned = JsonConvert.DeserializeObject<OwnedText>(json, _settings);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned!.IsEmpty).IsTrue();
     }
 
     [Test]

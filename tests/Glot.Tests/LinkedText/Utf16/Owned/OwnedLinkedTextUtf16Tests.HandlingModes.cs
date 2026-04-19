@@ -39,13 +39,30 @@ public partial class OwnedLinkedTextUtf16Tests
     }
 
     [Test]
+    public async Task Create_TakeOwnership_Utf8OwnedText_TranscodesAndReturnsBuffer()
+    {
+        // Arrange -- create UTF-8 backed OwnedText
+        var utf8Owned = OwnedText.FromUtf8("transcoded"u8)!;
+
+        // Act -- TakeOwnership with encoding mismatch: transcodes into format buffer, returns detached buffer
+        using var linked = OwnedLinkedTextUtf16.Create(OwnedTextHandling.TakeOwnership, $"{utf8Owned}");
+        var content = linked.AsSpan().ToString();
+
+        // Assert -- content is transcoded correctly, OwnedText is emptied
+        await Assert.That(content).IsEqualTo("transcoded");
+        await Assert.That(utf8Owned.IsEmpty).IsTrue();
+
+        utf8Owned.Dispose();
+    }
+
+    [Test]
     public async Task Create_Borrow_ReferencesBuffer()
     {
         // Arrange
         var owned = OwnedText.FromChars("borrowed".AsSpan())!;
 
-        // Act -- Borrow mode: references the buffer, no copy
-        using var linked = OwnedLinkedTextUtf16.Create(OwnedTextHandling.Borrow, $"{owned.Text}");
+        // Act -- Borrow mode: passes OwnedText directly, calls AppendFormatted(Text) via Borrow path
+        using var linked = OwnedLinkedTextUtf16.Create(OwnedTextHandling.Borrow, $"{owned}");
         var content = linked.AsSpan().ToString();
 
         // Assert -- OwnedText still usable, no detach

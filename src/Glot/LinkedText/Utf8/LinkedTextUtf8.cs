@@ -62,7 +62,10 @@ public sealed partial class LinkedTextUtf8
             return;
         }
 
-        var newSize = Math.Max(required, _formatBuffer is null ? 256 : (int)Math.Min((long)_formatBuffer.Length * 2, int.MaxValue));
+        var newSize = Math.Max(
+            required,
+            _formatBuffer is null ? 256 : (int)Math.Min((long)_formatBuffer.Length * 2, int.MaxValue));
+
         var newBuffer = ArrayPool<byte>.Shared.Rent(newSize);
 
         if (_formatBuffer is not null)
@@ -97,22 +100,11 @@ public sealed partial class LinkedTextUtf8
             return;
         }
 
-        // Transcode UTF-16/UTF-32 to UTF-8 into format buffer
-        var maxBytes = span.Encoding == TextEncoding.Utf16
-            ? span.Bytes.Length / 2 * 3  // worst case: each UTF-16 code unit -> 3 UTF-8 bytes
-            : span.Bytes.Length;          // UTF-32: each 4-byte scalar -> at most 4 UTF-8 bytes
+        // Transcode UTF-16/UTF-32 to UTF-8 into format buffer (SIMD for UTF-16)
+        var maxBytes = span.Encoding == TextEncoding.Utf16 ? span.Bytes.Length / 2 * 3 : span.Bytes.Length;
         EnsureFormatBuffer(maxBytes);
-        var start = _formatPosition;
-
-        foreach (var rune in span.EnumerateRunes())
-        {
-            var written = rune.EncodeToUtf8(_formatBuffer.AsSpan(_formatPosition));
-            _formatPosition += written;
-        }
-
-        var totalBytes = _formatPosition - start;
-        var memory = new ReadOnlyMemory<byte>(_formatBuffer, start, totalBytes);
-        AddSegment(memory);
+        var written = span.EncodeToUtf8(_formatBuffer.AsSpan(_formatPosition));
+        AddFormattedSegment(written);
     }
 
     /// <summary>Returns a zero-allocation enumerator over all segments.</summary>

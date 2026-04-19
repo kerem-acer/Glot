@@ -113,7 +113,7 @@ public class OwnedTextYamlFormatterTests
     }
 
     [Test]
-    public async Task Deserialize_EmptyString_ReturnsNull()
+    public async Task Deserialize_EmptyString_ReturnsEmpty()
     {
         // Arrange
         const string yaml = "''";
@@ -123,7 +123,7 @@ public class OwnedTextYamlFormatterTests
         var owned = YamlSerializer.Deserialize<OwnedText>(bytes, _options);
 
         // Assert
-        await Assert.That(owned).IsNull();
+        await Assert.That(owned!.IsEmpty).IsTrue();
     }
 
     [Test]

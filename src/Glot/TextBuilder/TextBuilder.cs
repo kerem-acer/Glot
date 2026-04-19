@@ -104,7 +104,7 @@ public struct TextBuilder : IDisposable
             return;
         }
 
-        Append(MemoryMarshal.AsBytes(value.AsSpan()), TextEncoding.Utf16);
+        Append(MemoryMarshal.AsBytes(value.AsUnsafeSpan()), TextEncoding.Utf16);
     }
 
     /// <summary>Appends raw bytes in the specified encoding, transcoding if needed.</summary>
@@ -169,11 +169,11 @@ public struct TextBuilder : IDisposable
     /// Creates an <see cref="OwnedText"/> by transferring the current buffer.
     /// The builder resets and rents a fresh buffer for continued use.
     /// </summary>
-    public OwnedText? ToOwnedText()
+    public OwnedText ToOwnedText()
     {
         if (ByteLength == 0)
         {
-            return null;
+            return OwnedText.Empty;
         }
 
         var result = OwnedText.Create(

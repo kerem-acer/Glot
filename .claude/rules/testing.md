@@ -72,6 +72,7 @@ Verify is **not** in `Directory.Build.props` — add packages per test project a
 
 - 95%+ recommended, 100% aspired
 - Generated code excluded via `coverage.settings.xml` (`.g.cs` files + `[ExcludeFromCodeCoverage]`)
+- **Dead code rule:** if code is not truly reachable by any user, remove it from production instead of writing a test for it. Only test code that users (or the library itself) can actually reach.
 
 ### Commands
 

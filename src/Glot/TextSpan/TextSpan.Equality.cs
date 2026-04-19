@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -7,6 +8,10 @@ namespace Glot;
 
 public readonly ref partial struct TextSpan
 {
+    // Size of the stackalloc buffer used for streaming cross-encoding compare/equals.
+    // Sized to balance per-iteration overhead vs short-circuit granularity on large inputs.
+    const int CrossEncodingChunkBytes = 512;
+
     /// <summary>Returns <c>true</c> if this span and <paramref name="other"/> contain the same rune sequence, regardless of encoding.</summary>
     public bool Equals(TextSpan other)
     {
@@ -44,26 +49,38 @@ public readonly ref partial struct TextSpan
     [MethodImpl(MethodImplOptions.NoInlining)]
     bool EqualsCrossEncoding(TextSpan other)
     {
-        // Transcode `other` to match this encoding, then use SIMD SequenceEqual.
-        var maxOutputBytes = EstimateTranscodeSize(other.Bytes.Length, other.Encoding, Encoding);
+        // Streaming compare: transcode `other` into a fixed-size chunk of this encoding,
+        // compare that chunk to the equivalent slice of `Bytes`, and short-circuit on the
+        // first byte mismatch.
+        Span<byte> chunk = stackalloc byte[CrossEncodingChunkBytes];
 
-        byte[]? rented = null;
-        Span<byte> buffer = maxOutputBytes <= 512
-            ? stackalloc byte[maxOutputBytes]
-            : (rented = ArrayPool<byte>.Shared.Rent(maxOutputBytes));
+        var thisBytes = Bytes;
+        var thisOffset = 0;
+        var otherRemaining = other.Bytes;
+        var otherEncoding = other.Encoding;
 
-        try
+        while (!otherRemaining.IsEmpty)
         {
-            var written = TranscodeToEncoding(other, buffer, Encoding);
-            return Bytes.SequenceEqual(buffer[..written]);
-        }
-        finally
-        {
-            if (rented is not null)
+            var chunkSource = new TextSpan(otherRemaining, otherEncoding, 0);
+            var written = chunkSource.Transcode(chunk, Encoding, out _, out var consumed);
+
+            if (written == 0)
             {
-                ArrayPool<byte>.Shared.Return(rented);
+                // No forward progress — malformed or impossible transcode.
+                return false;
             }
+
+            if (thisOffset + written > thisBytes.Length
+                || !thisBytes.Slice(thisOffset, written).SequenceEqual(chunk[..written]))
+            {
+                return false;
+            }
+
+            thisOffset += written;
+            otherRemaining = otherRemaining[consumed..];
         }
+
+        return thisOffset == thisBytes.Length;
     }
 
     /// <inheritdoc cref="Equals(TextSpan)"/>
@@ -91,25 +108,44 @@ public readonly ref partial struct TextSpan
             return 0;
         }
 
-        var hash = new HashCode();
-        var remaining = bytes;
-
-        while (!remaining.IsEmpty)
+        // UTF-32: each 4-byte int is a rune value — hash directly.
+        if (encoding == TextEncoding.Utf32)
         {
-            // ASCII fast path: ASCII byte value equals rune value, skip full decode.
-            if (AsciiHelper.TryReadAscii(remaining, encoding, out var ascii, out var size))
-            {
-                hash.Add((int)ascii);
-                remaining = remaining[size..];
-                continue;
-            }
-
-            Rune.TryDecodeFirst(remaining, encoding, out var rune, out var consumed);
-            hash.Add(rune.Value);
-            remaining = remaining[consumed..];
+            var hash = XxHash3.HashToUInt64(bytes);
+            return (int)hash ^ (int)(hash >> 32);
         }
 
-        return hash.ToHashCode();
+        // UTF-8/UTF-16: decode runes to int values, then XxHash3 the buffer.
+        var maxRunes = encoding == TextEncoding.Utf8 ? bytes.Length : bytes.Length / 2;
+
+        int[]? rented = null;
+        Span<int> runes = maxRunes <= 256
+            ? stackalloc int[maxRunes]
+            : (rented = ArrayPool<int>.Shared.Rent(maxRunes));
+
+        try
+        {
+            var count = 0;
+            var remaining = bytes;
+
+            while (!remaining.IsEmpty)
+            {
+                Rune.TryDecodeFirst(remaining, encoding, out var rune, out var consumed);
+                runes[count++] = rune.Value;
+                remaining = remaining[consumed..];
+            }
+
+            var runeBytes = MemoryMarshal.AsBytes(runes[..count]);
+            var hash = XxHash3.HashToUInt64(runeBytes);
+            return (int)hash ^ (int)(hash >> 32);
+        }
+        finally
+        {
+            if (rented is not null)
+            {
+                ArrayPool<int>.Shared.Return(rented);
+            }
+        }
     }
 
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
@@ -148,31 +184,50 @@ public readonly ref partial struct TextSpan
 
     static int CompareUtf8WithTranscoded(ReadOnlySpan<byte> utf8Bytes, TextSpan toTranscode)
     {
-        var maxBytes = EstimateTranscodeSize(toTranscode.Bytes.Length, toTranscode.Encoding, TextEncoding.Utf8);
+        // Streaming compare: transcode a chunk at a time and short-circuit on the first
+        // non-zero SequenceCompareTo. UTF-8 byte order preserves Unicode scalar order, so
+        // any byte-level difference reflects the correct rune ordering.
+        Span<byte> chunk = stackalloc byte[CrossEncodingChunkBytes];
 
-        byte[]? rented = null;
-        Span<byte> buffer = maxBytes <= 512
-            ? stackalloc byte[maxBytes]
-            : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
+        var otherRemaining = toTranscode.Bytes;
+        var otherEncoding = toTranscode.Encoding;
+        var utf8Offset = 0;
 
-        try
+        while (!otherRemaining.IsEmpty)
         {
-            var written = toTranscode.EncodeToUtf8(buffer);
-            return utf8Bytes.SequenceCompareTo(buffer[..written]);
-        }
-        finally
-        {
-            if (rented is not null)
+            var chunkSource = new TextSpan(otherRemaining, otherEncoding, 0);
+            var written = chunkSource.Transcode(chunk, TextEncoding.Utf8, out _, out var consumed);
+
+            if (written == 0)
             {
-                ArrayPool<byte>.Shared.Return(rented);
+                break;
             }
+
+            var utf8Remaining = utf8Bytes.Length - utf8Offset;
+            var compareLen = Math.Min(written, utf8Remaining);
+            var cmp = utf8Bytes.Slice(utf8Offset, compareLen).SequenceCompareTo(chunk[..compareLen]);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            if (written > utf8Remaining)
+            {
+                // utf8Bytes exhausted but transcoded chunk has more — toTranscode is longer.
+                return -1;
+            }
+
+            utf8Offset += written;
+            otherRemaining = otherRemaining[consumed..];
         }
+
+        return utf8Bytes.Length - utf8Offset;
     }
 
     static int CompareBothTranscoded(TextSpan a, TextSpan b)
     {
-        var maxA = EstimateTranscodeSize(a.Bytes.Length, a.Encoding, TextEncoding.Utf8);
-        var maxB = EstimateTranscodeSize(b.Bytes.Length, b.Encoding, TextEncoding.Utf8);
+        var maxA = TranscodeSize.Estimate(a.Bytes.Length, a.Encoding, TextEncoding.Utf8);
+        var maxB = TranscodeSize.Estimate(b.Bytes.Length, b.Encoding, TextEncoding.Utf8);
 
         byte[]? rentedA = null, rentedB = null;
         Span<byte> bufA = maxA <= 256
@@ -211,20 +266,6 @@ public readonly ref partial struct TextSpan
             TextEncoding.Utf16 => source.EncodeToUtf16(MemoryMarshal.Cast<byte, char>(destination)) * 2,
             TextEncoding.Utf32 => source.Transcode(destination, TextEncoding.Utf32, out _, out _),
             _ => throw new InvalidEncodingException(targetEncoding)
-        };
-    }
-
-    internal static int EstimateTranscodeSize(int sourceBytesLength, TextEncoding source, TextEncoding target)
-    {
-        return (source, target) switch
-        {
-            (TextEncoding.Utf16, TextEncoding.Utf8) => sourceBytesLength / 2 * 3,
-            (TextEncoding.Utf8, TextEncoding.Utf16) => sourceBytesLength * 2,
-            (TextEncoding.Utf32, TextEncoding.Utf8) => sourceBytesLength,
-            (TextEncoding.Utf8, TextEncoding.Utf32) => sourceBytesLength * 4,
-            (TextEncoding.Utf32, TextEncoding.Utf16) => sourceBytesLength,
-            (TextEncoding.Utf16, TextEncoding.Utf32) => sourceBytesLength * 2,
-            _ => sourceBytesLength * 4,
         };
     }
 
