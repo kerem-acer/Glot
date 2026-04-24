@@ -1,13 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
+    <RootNamespace>Glot.AspNetCore</RootNamespace>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>Glot.AspNetCore</PackageId>
+    <Title>Glot — ASP.NET Core integration</Title>
+    <Description>ASP.NET Core integration for Glot. Adds IResult helpers and DI extensions for returning Text/OwnedText from minimal API endpoints without transcoding through System.String.</Description>
+    <PackageTags>text;utf8;aspnetcore;minimal-api;iresult;glot</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <InternalsVisibleTo Include="Glot.AspNetCore.Tests" />
   </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="../Glot/Glot.csproj" />

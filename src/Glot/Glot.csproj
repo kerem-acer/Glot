@@ -1,10 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net8.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <RootNamespace>Glot</RootNamespace>
     <!-- Match ObjectPool version to the target ASP.NET shared framework to avoid MSB3277 -->
     <AspNetCoreObjectPoolVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.11</AspNetCoreObjectPoolVersion>
-    <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.6</AspNetCoreObjectPoolVersion>
+    <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.7</AspNetCoreObjectPoolVersion>
     <PolyPublic>true</PolyPublic>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>Glot</PackageId>
+    <Title>Glot — unified text type for .NET</Title>
+    <Description>A text type for .NET that stores UTF-8, UTF-16, or UTF-32 data behind a single API. Work with Text, not bytes or chars — search, slice, and mutate without transcoding. Ships Text, TextSpan, OwnedText, TextBuilder, and typed Utf8Text/Utf16Text/Utf32Text views. Encoding-independent equality, ArrayPool-backed mutation variants, zero-alloc slicing, and Rune enumeration.</Description>
+    <PackageTags>text;utf8;utf16;utf32;string;span;zero-allocation;performance;unicode;rune</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

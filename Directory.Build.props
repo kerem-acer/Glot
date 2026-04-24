@@ -9,15 +9,40 @@
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>$(NoWarn);IDE0060</NoWarn>
+        <NoWarn>$(NoWarn);IDE0060;CS1591</NoWarn>
+
+        <Version>0.1.0</Version>
+        <Authors>kerem-acer</Authors>
+        <Copyright>Copyright (c) 2026 kerem-acer</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/kerem-acer/Glot</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/kerem-acer/Glot</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(CI)' == 'true' Or '$(TF_BUILD)' == 'true'">
+    <PropertyGroup Condition="'$(CI)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true' Or '$(TF_BUILD)' == 'true'">
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests')) Or $(MSBuildProjectName.EndsWith('Benchmarks')) Or $(MSBuildProjectName.StartsWith('Glot.Examples'))">
         <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
         <NoWarn>$(NoWarn);CA1707;CA2012;MA0042;S6966;S2068;S5445;EPC29;IDE0370</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(IsPackable)' != 'false'">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Visible="false" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(IsPackable)' != 'false' And $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 </Project>

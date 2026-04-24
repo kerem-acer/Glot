@@ -1,6 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net8.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <RootNamespace>Glot.SystemTextJson</RootNamespace>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>Glot.SystemTextJson</PackageId>
+    <Title>Glot — System.Text.Json converters</Title>
+    <Description>System.Text.Json converters for Glot's Text and OwnedText types. Reads UTF-8 JSON bytes directly into Text without allocating an intermediate string; writes UTF-8/UTF-16 backed text without transcoding.</Description>
+    <PackageTags>text;utf8;json;systemtextjson;serialization;glot</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

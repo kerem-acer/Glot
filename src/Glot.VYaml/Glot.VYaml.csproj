@@ -1,6 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net8.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <RootNamespace>Glot.VYaml</RootNamespace>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>Glot.VYaml</PackageId>
+    <Title>Glot — VYaml formatters</Title>
+    <Description>VYaml formatters for Glot's Text and OwnedText types. Reads/writes YAML scalars directly against Text's native encoding.</Description>
+    <PackageTags>text;utf8;yaml;vyaml;serialization;glot</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
