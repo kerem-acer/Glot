@@ -405,7 +405,28 @@ public struct LinkedTextUtf8.Owned : IDisposable
 
 ## Benchmarks
 
-Performance is measured with [BenchmarkDotNet](https://benchmarkdotnet.org/) across search, equality, mutation, creation, concatenation, interpolation, split, and serialization operations. Each benchmark compares `Text` against `string`, raw `Span<byte>`, and `U8String` baselines.
+Performance is measured with [BenchmarkDotNet](https://benchmarkdotnet.org/) across search, equality, mutation, creation, concatenation, interpolation, split, and serialization operations. Each benchmark compares `Text` against `string`, raw `Span<byte>`, and `U8String` baselines across four locales (Ascii, Cjk, Emoji, Mixed).
+
+### Assessment
+
+`Text` carries a fixed-size header (bytes + encoding + rune length) and dispatches through an encoding tag, so it costs slightly more than the native type on the hot path but lets you mix encodings without transcoding until you actually need to. Hardware reference below: Apple M4 Max, .NET 10.0.6, Arm64.
+
+**Where `Text` wins:**
+- **Same-encoding `Equals` / `CompareTo`.** Parity with `string.Equals` on UTF-16 (~1.00×); faster than `string.Equals` on UTF-8 (~0.4–0.7×) because equal-length byte compare beats char-by-char.
+- **Same-encoding `Split`.** UTF-16 `Split` + segment count runs ~0.4–0.6× `string.Split` after the lazy rune-length change; UTF-16 `EnumerateRunes` on Emoji / Mixed is ~0.37× `string.EnumerateRunes`.
+- **UTF-16 `ToUpper/ToLower` on mixed-case text.** ~0.9× `string.ToUpperInvariant` via BCL SIMD delegation.
+- **Cross-encoding operations allocate zero bytes.** `Equals` / `CompareTo` / `EndsWith` between differently-encoded inputs stream through paired stackalloc buffers — no `ArrayPool`, no heap.
+- **Large `Replace` with pooled output.** `ReplacePooled` returns an `OwnedText` backed by a rented buffer; at 64K it's ~0.3–0.5× `string.Replace` (zero allocations vs a fresh string).
+
+**Where `Text` pays a tax:**
+- **Small same-encoding `Contains` / `IndexOf`.** UTF-8 `Text.Contains` is ~1.1–1.7× `string.Contains` and ~1.1–1.4× raw `Span<byte>.IndexOf` / `U8String.Contains`. The absolute overhead is 1–2 ns — the type check and encoding dispatch don't disappear. For tight inner loops over known-encoding data, raw spans are still faster.
+- **Cross-encoding search.** `Text.Contains` with a UTF-16 or UTF-32 needle against a UTF-8 haystack is ~4–15× the native same-encoding call — transcoding isn't free. Prefer same-encoding needles in hot paths.
+- **`TextBuilder`.** ~1.3–3.5× `StringBuilder` for small part counts (2–16 parts at 1-byte each). Gap narrows on UTF-8 backing; cross-encoding append (UTF-8→UTF-16) is the worst case. Not yet optimized.
+- **String interpolation (`$"..."`).** 3–15× `string` interpolation on UTF-16 backing — the interpolated handler transcodes per hole. Rework pending; if you interpolate in hot paths today, build a `Text` via `Concat` or `TextBuilder` instead.
+- **UTF-8 `ToUpperInvariant`.** Still rune-by-rune; no SIMD path. ~3–4× `string.ToUpperInvariant` on Cjk (where no runes actually change case, so the bottleneck is the full-length scan, not the conversion).
+- **`ToUpper` on Cjk regardless of backing.** No rune changes case, but the library still scans to confirm — ~3.9× `string.ToUpperInvariant`. A range-probe fast path is on the list.
+
+### Running
 
 ```bash
 make quick F=ContainsUtf8                       # short run, one class
@@ -414,7 +435,7 @@ make bench                                      # full run, all benchmarks
 make dry F=ContainsUtf8 P='N=256 Locale=Ascii'  # filtered params
 ```
 
-Results are in [`benchmarks/artifacts/results/`](benchmarks/artifacts/results/). See [`benchmarks/README.md`](benchmarks/README.md) for details.
+Raw reports: [`benchmarks/artifacts/results/`](benchmarks/artifacts/results/). In-progress optimization tracker: [`benchmarks/artifacts/results/PERF_FIX_PLAN.md`](benchmarks/artifacts/results/PERF_FIX_PLAN.md). See [`benchmarks/README.md`](benchmarks/README.md) for authoring rules.
 
 ## Target frameworks
 
