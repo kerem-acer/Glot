@@ -171,15 +171,25 @@ public readonly partial struct Text
             bytes,
             out var prefixRuneCount);
 
-        return firstChangeOffset < 0 ?
-            this :
-            CaseCore(
-                upper: true,
-                culture,
-                bytes,
-                firstChangeOffset,
-                prefixRuneCount,
-                FinishAsText);
+        if (firstChangeOffset < 0)
+        {
+            return this;
+        }
+
+#if !NETSTANDARD2_0
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return CaseVectorizedUtf16(upper: true, culture, bytes);
+        }
+#endif
+
+        return CaseCore(
+            upper: true,
+            culture,
+            bytes,
+            firstChangeOffset,
+            prefixRuneCount,
+            FinishAsText);
     }
 
     Text ToLowerCore(CultureInfo culture)
@@ -191,15 +201,25 @@ public readonly partial struct Text
             bytes,
             out var prefixRuneCount);
 
-        return firstChangeOffset < 0 ?
-            this :
-            CaseCore(
-                upper: false,
-                culture,
-                bytes,
-                firstChangeOffset,
-                prefixRuneCount,
-                FinishAsText);
+        if (firstChangeOffset < 0)
+        {
+            return this;
+        }
+
+#if !NETSTANDARD2_0
+        if (Encoding == TextEncoding.Utf16)
+        {
+            return CaseVectorizedUtf16(upper: false, culture, bytes);
+        }
+#endif
+
+        return CaseCore(
+            upper: false,
+            culture,
+            bytes,
+            firstChangeOffset,
+            prefixRuneCount,
+            FinishAsText);
     }
 
     OwnedText ToUpperPooledCore(CultureInfo culture)
@@ -241,6 +261,34 @@ public readonly partial struct Text
                 prefixRuneCount,
                 FinishAsOwnedText);
     }
+
+#if !NETSTANDARD2_0
+    // UTF-16 backing only. Delegates the full case conversion to the BCL's vectorized
+    // MemoryExtensions.ToUpper / ToLower, which uses ICU tables under the hood.
+    // Caller must have already confirmed at least one rune changes case (firstChangeOffset >= 0).
+    Text CaseVectorizedUtf16(bool upper, CultureInfo culture, ReadOnlySpan<byte> sourceBytes)
+    {
+        var srcChars = MemoryMarshal.Cast<byte, char>(sourceBytes);
+        var dstArray = new char[srcChars.Length];
+        Span<char> dst = dstArray;
+
+        var written = upper
+            ? MemoryExtensions.ToUpper(srcChars, dst, culture)
+            : MemoryExtensions.ToLower(srcChars, dst, culture);
+
+        // BCL returns -1 only when destination is too small; sizes match, so this is
+        // the number of chars written and must equal srcChars.Length.
+        _ = written;
+
+        return new Text(
+            dstArray,
+            0,
+            dstArray.Length * 2,
+            TextEncoding.Utf16,
+            _runeLength,
+            BackingType.CharArray);
+    }
+#endif
 
     // Shared helpers
 

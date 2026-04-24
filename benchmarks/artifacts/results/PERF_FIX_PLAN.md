@@ -12,7 +12,7 @@
 |---|---|---|---|---|---|
 | P0 | Rune-count short-circuits | 2 | ~1 day | Drop `RuneIndexOf`/`LastRuneIndexOf` Ascii hits to near-parity with peer | **✅ Shipped 2026-04-24** |
 | P1 | Cross-encoding Compare/Equals/EndsWith streaming | 3 | ~1 day | Eliminate 6–20 B alloc leak on cross-encoding Compare/Equals; cut EndsWith cross-encoding ~3× | **✅ Shipped 2026-04-24** |
-| P2 | Mutation/Split specialization, Case vectorization, Replace fast-path | 6 | ~1–2 weeks | Drop Split 10–16× → 1.5×; ToUpper 3.8× → 1.2× | Pending |
+| P2 | Mutation/Split specialization, Case vectorization, Replace fast-path | 2 of 6 shipped | ~1 day | Drop Split 10–16× → 0.4×; ToUpper Mixed 3.6× → 0.91× | **✅ Partial 2026-04-25** (2 shipped, 4 deferred) |
 | P3 | Builder batching, Interpolation handler rework | 2 | ~2 weeks | Drop Builder/Interp 5.7–13× → 2–4× | Pending |
 | P4 | Validate TextCreationStringUtf8 dry-run | 1 | < 1 hour | Confirm/dismiss the 5.54× signal | Pending |
 
@@ -99,122 +99,50 @@ Three code changes in `src/Glot/TextSpan/` + test coverage:
 
 ---
 
-## P2 — Specialization and fast paths (Effort: M, ~1–2 weeks)
+## P2 — Specialization and fast paths (✅ Partial 2026-04-25 — 2 shipped, 4 deferred)
 
-Six independent fixes. Can be worked in parallel or in any order.
+### Shipped
 
-### P2.1 — Split rune-enumerator specialization
+**P2.1 — Split enumerator + RuneEnumerator specialization.** Two code changes in `src/Glot/TextSpan/`:
+- `TextSpan.RuneEnumerator.cs` — inlined per-encoding switch in `MoveNext`: UTF-8 calls `Rune.DecodeFromUtf8` directly, UTF-16 uses `MemoryMarshal.Cast<byte,char>` + `Rune.DecodeFromUtf16` (no more stackalloc-char copy), UTF-32 uses `MemoryMarshal.Read<int>` direct decode.
+- `TextSpan.SplitEnumerator.cs` — `Current` returns a segment with `runeLength = 0` (lazy sentinel); removed the `RuneCount.Count` calls from `MoveNext`. Consumers pay only if they read `.RuneLength`.
 
-**Fixes:**
-- `TextSplitUtf16Benchmarks` — `EnumerateRunes` 10× `string.EnumerateRunes` at 4K Ascii
-- `TextSplitUtf8Benchmarks` — `RuneCount.Count` called on every yielded segment (16× at N=64)
+Measured wins at N=4096:
 
-**Root causes:**
-- `RuneEnumerator.MoveNext` calls generic `Rune.TryDecodeFirst(_remaining, _encoding, ...)` every iteration — 4 branches + surrogate check for UTF-16
-- `SplitEnumerator.MoveNext` calls `RuneCount.Count` on every yielded segment even when the consumer never reads `.RuneCount`
+| Row | Before | After |
+|---|---|---|
+| `TextSplit UTF-16 Split count` (Ascii) | ~10× `string.Split` | **0.55×** |
+| `TextSplit UTF-16 Split count` (Cjk) | — | **0.42×** |
+| `TextSplit UTF-16 Split count` (Mixed) | — | **0.57×** |
+| `TextSplit UTF-16 EnumerateRunes` (Emoji) | — | **0.38×** string |
+| `TextSplit UTF-16 EnumerateRunes` (Mixed) | — | **0.37×** string |
+| `TextSplit UTF-16 EnumerateRunes` (Ascii/Cjk BMP) | ~10× string | 8.86× |
 
-**Locations:**
-- `src/Glot/TextSpan/TextSpan.RuneEnumerator.cs:28` (`MoveNext`)
-- `src/Glot/TextSpan/TextSpan.SplitEnumerator.cs:46, 61, 68` (per-segment `RuneCount.Count` calls)
+Ascii/Cjk-BMP `EnumerateRunes` only moderately improved because `string.EnumerateRunes` is heavily JIT-inlined for plain BMP input — matching it requires `string`-level intrinsics. `Text` wins everywhere except that case.
 
-**Changes:**
-1. **Specialize `RuneEnumerator` per encoding.** UTF-16: read `char` directly, branch on surrogate inline. UTF-8: check high-bit and decode inline. UTF-32: `MemoryMarshal.Cast<byte,int>(remaining)[0]`. Dispatch via an encoding field; JIT de-virtualizes on type.
-2. **Lazy rune-count on `SplitEnumerator` segments.** Construct yielded `TextSpan` with `runeCount = 0` (sentinel for "not computed"); compute on first `.RuneCount` access and cache. For the common split-then-iterate-bytes workflow, never pay the count cost.
+**Note on cross-encoding Split** (e.g. UTF-8 haystack + `string` separator): still slow because `RunePrefix.TryMatch` scans rune-by-rune. Fixing requires transcoding the separator into haystack encoding inside `Split()`, but the transcoded buffer's lifetime conflicts with `SplitEnumerator`'s `ref struct` lifetime (the buffer must outlive the returned enumerator). Deferred.
 
-**Expected impact:**
-- UTF-16 `EnumerateRunes` 4K Ascii: 10× → ~2×
-- UTF-8 `Split` 64 Ascii: 16× → ~1.5×
-- UTF-8 `Split` 4K Ascii: 10× → ~1.2×
+**P2.2 — ToUpper vectorization (UTF-16 only).** `src/Glot/Text/Text.Case.cs` — added `CaseVectorizedUtf16` which delegates the full UTF-16 case conversion to `MemoryExtensions.ToUpper/ToLower(src, dst, culture)` (BCL SIMD). `ToUpperCore` and `ToLowerCore` now short-circuit to this helper when backing encoding is UTF-16 and at least one rune needs changing.
 
-**Verification:** re-run `TextSplit*Benchmarks`. Ensure `tests/Glot.Tests/TextSpan/RuneEnumerator*` and `SplitEnumerator*` still pass.
+Measured wins at N=65536 UTF-16:
 
-**Risk:** medium. Changing `runeCount` to a lazy sentinel touches public `TextSpan` construction semantics — audit all callers.
+| Row | Before | After |
+|---|---|---|
+| `Text.ToUpperInvariant UTF-16` (Mixed) | ~3.59× string | **0.91×** (beats string) |
+| `Text.ToUpperInvariant UTF-16` (Emoji) | — | **1.22×** |
+| `Text.ToUpperInvariant UTF-16` (Ascii) | 0.06× | 0.79× (ASCII fast path unchanged) |
+| `Text.ToUpperInvariant UTF-16` (Cjk) | 3.88× | 3.94× (unchanged; bottleneck is `FindFirstCaseChange` scan, not conversion) |
 
----
+Cjk stays slow because its runes have no case changes, so the scan runs to completion and returns `this`. Optimizing `FindFirstCaseChange` to use a range-contains probe before the rune-by-rune scan is a separate fix.
 
-### P2.2 — ToUpper vectorization
+**ToUpper UTF-8 deferred.** The UTF-8 backing path needs transcode→UTF-16→cased→transcode-back-to-UTF-8, with non-trivial buffer management. Benefit unclear; Cjk-dominated benchmarks wouldn't improve anyway. Revisit with fresh numbers.
 
-**Fixes:**
-- `ToUpperUtf16Benchmarks` — 3.88× `string.ToUpperInvariant` at 65K Cjk
-- `ToUpperUtf8Benchmarks` — 3.74× at 65K Cjk
+### Deferred (4 fixes)
 
-**Root cause:** `ToUpperCore` in `Text.Case.cs:165` loops rune-by-rune via `Rune.ToUpperInvariant`. `string.ToUpperInvariant` uses `MemoryExtensions.ToUpperInvariant(Span,Span)` which is vectorized via ICU tables.
-
-**Location:** `src/Glot/Text/Text.Case.cs:165` (`ToUpperCore` → `CaseCore`)
-
-**Changes:**
-1. **UTF-16 backing:** after the ASCII fast-path bails on `firstChangeOffset`, delegate the non-ASCII suffix to `MemoryExtensions.ToUpperInvariant(srcChars, destChars)` on a `MemoryMarshal.Cast<byte,char>` view.
-2. **UTF-8 backing:** transcode the non-ASCII remainder to UTF-16 chars into a pooled buffer, call `MemoryExtensions.ToUpperInvariant(srcChars, destChars, CultureInfo.InvariantCulture)`, transcode back. Sounds expensive but the vectorized BCL path dominates.
-
-**Expected impact:**
-- UTF-16 65K Cjk: 3.88× → ~1.2×
-- UTF-8 65K Cjk: 3.74× → ~1.5×
-- Ascii fast-path untouched (stays at 0.06×)
-
-**Verification:** re-run `ToUpper*Benchmarks`. Ensure `tests/Glot.Tests/Text/Case*` passes on Cjk/Emoji/Mixed inputs.
-
-**Risk:** low. The BCL API is the same one `string` uses; identical semantics guaranteed.
-
----
-
-### P2.3 — Replace small-input shortcut
-
-**Fix:** `ReplaceUtf16Benchmarks` — 1.5–1.8× `string.Replace` at small N.
-
-**Root cause:** below ~256 bytes, the rune-aware `Replace` machinery (RuneLength tracking, cross-encoding dispatch) doesn't earn its keep.
-
-**Location:** `src/Glot/Text/Text.Replace.cs` main `Replace(Text marker, Text replacement)` entry point.
-
-**Change:** add a guard at entry:
-```csharp
-if (same-encoding && haystack.ByteLength + replacement.ByteLength <= 128)
-{
-    Span<byte> scratch = stackalloc byte[128];
-    // IndexOf + byte-splice; skip RuneLength recomputation
-}
-```
-
-**Expected impact:** 64 Ascii 1.8× → ~1.1×. 4K/65K rows untouched (they already win on the main path).
-
-**Verification:** re-run `ReplaceUtf16Benchmarks`. Ensure result text matches the standard path byte-for-byte on a fuzzed test corpus.
-
-**Risk:** low if guarded on `same-encoding + size`. Ensure the stackalloc budget accounts for worst-case replacement expansion.
-
----
-
-### P2.4 — Factory char-span single-pass
-
-**Fix:** `TextCreationCharSpanUtf16Benchmarks` — `Text.FromChars(span)` 1.8× `new string(span)` at N=256 Ascii (44.75 ns).
-
-**Root cause:** memcpy then separate rune-count scan; two passes over the data.
-
-**Location:** `src/Glot/Text/Text.Factory.cs` `FromChars(ReadOnlySpan<char>)`.
-
-**Change:** combine alloc + memcpy + rune-count into one pass. Count surrogates inline during copy.
-
-**Expected impact:** 44.75 ns → ~30 ns at 256 Ascii.
-
-**Verification:** re-run `TextCreationCharSpanUtf16Benchmarks`; add/check test on a char span with surrogate pairs.
-
-**Risk:** low.
-
----
-
-### P2.5 — LastRuneIndexOf UTF-16→UTF-8 Emoji specialization
-
-**Fix:** `LastRuneIndexOfUtf8Benchmarks` — UTF-16 cross with Emoji needle 1.7× the UTF-32 cross equivalent (72 ns).
-
-**Root cause:** surrogate-pair UTF-16→UTF-8 transcode inside `LastIndexOfCrossEncoding` goes through the generic `Transcode` dispatch.
-
-**Location:** `src/Glot/TextSpan/TextSpan.Search.cs:294` (`LastIndexOfCrossEncoding`).
-
-**Change:** tight char-loop for ≤4-byte-UTF-8 needles (BMP + astral): decode surrogate pair → encode UTF-8 inline, skip the generic `Transcode` dispatch overhead.
-
-**Expected impact:** 72 ns Emoji cross → ~40 ns (parity with UTF-32 cross).
-
-**Verification:** re-run `LastRuneIndexOfUtf8Benchmarks`.
-
-**Risk:** low (well-defined codepath).
+- **P2.3 Replace small-input stackalloc shortcut** — current `ReplaceCore` path uses `TextBuilder` which rents 256 B via `ArrayPool` and tracks rune length. Plan was a same-encoding ≤128 B stackalloc splice. Deferred because the structural win is modest and implementing it without regressing the general path is non-trivial; should be measured first.
+- **P2.4 FromChars single-pass alloc+count** — current `value.ToArray()` + `RuneCount.Count` runs two SIMD passes over the char data. A combined pass could save one read of cached memory but is unlikely to beat two tight BCL SIMD primitives. Needs fresh measurement to justify.
+- **P2.5 LastRuneIndexOf UTF-16→UTF-8 Emoji specialization** — the plan's 1.7× ratio vs UTF-32-cross may have shifted after P0/P1/P2.1/P2.2. Needs fresh benchmark numbers.
+- **`FindFirstCaseChange` range probe** (new sub-fix surfaced during P2.2) — for Cjk/Emoji input where no casing changes exist, we scan the full text. A quick `IndexOfAnyInRange` probe for ASCII letters + known casing tables could short-circuit the scan. Would unlock ToUpper Cjk wins.
 
 ---
 

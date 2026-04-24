@@ -15,7 +15,6 @@ public readonly ref partial struct TextSpan
         readonly ReadOnlySpan<byte> _separatorBytes;
         readonly TextEncoding _separatorEncoding;
         ReadOnlySpan<byte> _currentBytes;
-        int _currentRuneCount;
         bool _done;
 
         internal SplitEnumerator(TextSpan text, TextSpan separator)
@@ -25,12 +24,11 @@ public readonly ref partial struct TextSpan
             _separatorBytes = separator.Bytes;
             _separatorEncoding = separator.Encoding;
             _currentBytes = default;
-            _currentRuneCount = 0;
             _done = false;
         }
 
-        /// <summary>Gets the current segment.</summary>
-        public readonly TextSpan Current => new(_currentBytes, _encoding, _currentRuneCount);
+        /// <summary>Gets the current segment. Rune length is computed lazily on first access.</summary>
+        public readonly TextSpan Current => new(_currentBytes, _encoding, 0);
 
         /// <summary>Advances to the next segment. Returns <c>false</c> when no segments remain.</summary>
         public bool MoveNext()
@@ -43,7 +41,6 @@ public readonly ref partial struct TextSpan
             if (_separatorBytes.IsEmpty)
             {
                 _currentBytes = _remaining;
-                _currentRuneCount = RuneCount.Count(_remaining, _encoding);
                 _remaining = default;
                 _done = true;
                 return true;
@@ -58,21 +55,18 @@ public readonly ref partial struct TextSpan
                 if (idx < 0)
                 {
                     _currentBytes = _remaining;
-                    _currentRuneCount = RuneCount.Count(_remaining, _encoding);
                     _remaining = default;
                     _done = true;
                     return true;
                 }
 
                 _currentBytes = _remaining[..idx];
-                _currentRuneCount = RuneCount.Count(_currentBytes, _encoding);
                 _remaining = _remaining[(idx + _separatorBytes.Length)..];
                 return true;
             }
 
             var scan = _remaining;
             var byteOffset = 0;
-            var runeCount = 0;
 
             while (!scan.IsEmpty)
             {
@@ -82,19 +76,16 @@ public readonly ref partial struct TextSpan
                         out var sepLen))
                 {
                     _currentBytes = _remaining[..byteOffset];
-                    _currentRuneCount = runeCount;
                     _remaining = scan[sepLen..];
                     return true;
                 }
 
                 Rune.TryDecodeFirst(scan, _encoding, out _, out var consumed);
-                runeCount++;
                 byteOffset += consumed;
                 scan = scan[consumed..];
             }
 
             _currentBytes = _remaining;
-            _currentRuneCount = runeCount;
             _remaining = default;
             _done = true;
             return true;
