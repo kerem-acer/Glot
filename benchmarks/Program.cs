@@ -1,23 +1,28 @@
 using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 
 var config = DefaultConfig.Instance
-    .AddExporter(MarkdownExporter.GitHub)
     .WithArtifactsPath("benchmarks/artifacts");
 var bdnArgs = new List<string>();
 
 foreach (var arg in args)
 {
-    if (arg == "--quick")
+    if (arg == "--no-overhead")
     {
-        config = config.AddJob(Job.ShortRun);
+        config = config.AddJob(Job.Default
+            .WithEvaluateOverhead(false)
+            .AsMutator());
+    }
+    else if (arg == "--loose")
+    {
+        config = config.AddJob(Job.Default
+            .WithMaxRelativeError(0.1)
+            .AsMutator());
     }
     else if (arg.StartsWith("--param:", StringComparison.Ordinal))
     {
-        // --param:N=256 or --param:Locale=Ascii or --param:N=256,4096
         var kv = arg["--param:".Length..];
         var eqIdx = kv.IndexOf('=');
         if (eqIdx > 0)

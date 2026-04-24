@@ -150,4 +150,18 @@ static class TestData
     /// Returns a marker+replacement pair that's safe for the given script (no surrogate splitting).
     /// </summary>
     public static (string Marker, string Replacement) MarkerPair(Script script) => MarkerPairs[script];
+
+    /// <summary>
+    /// Returns the UTF-32 code points (runes) of <paramref name="value"/> as an int[].
+    /// </summary>
+    public static int[] ToCodePoints(string value)
+    {
+        var runes = new List<int>(value.Length);
+        foreach (var rune in value.EnumerateRunes())
+        {
+            runes.Add(rune.Value);
+        }
+
+        return runes.ToArray();
+    }
 }

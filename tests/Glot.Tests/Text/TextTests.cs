@@ -281,6 +281,23 @@ public partial class TextTests
         await Assert.That(result).IsLessThan(0);
     }
 
+
+    [Test]
+    public async Task CompareTo_Utf32_SameEncoding_OrdersByRune()
+    {
+        // Arrange — two UTF-32 texts; ensure same-encoding path returns rune-order result.
+        int[] abc = [0x41, 0x42, 0x43];   // "ABC"
+        int[] abd = [0x41, 0x42, 0x44];   // "ABD"
+        var a = Text.FromUtf32(abc);
+        var b = Text.FromUtf32(abd);
+
+        // Act
+        var result = a.CompareTo(b);
+
+        // Assert
+        await Assert.That(result).IsLessThan(0);
+    }
+
     // Search
 
     [Test]

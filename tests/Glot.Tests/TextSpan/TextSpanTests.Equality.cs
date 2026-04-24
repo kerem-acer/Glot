@@ -362,4 +362,116 @@ public partial class TextSpanTests
         // Assert
         await Assert.That(result).IsLessThan(0);
     }
+
+    // CompareTo cross-encoding — both-non-UTF-8 streaming path (CompareBothTranscoded)
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_SameContent_ReturnsZero()
+    {
+        // Arrange — same content, both non-UTF-8: hits CompareBothTranscoded streaming.
+        var utf16 = new TextSpan(TestHelpers.Encode("Hello", TextEncoding.Utf16), TextEncoding.Utf16);
+        var utf32 = new TextSpan(TestHelpers.Encode("Hello", TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = utf16.CompareTo(utf32);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(0);
+    }
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_DifferentContent_ReturnsSignedByRune()
+    {
+        // Arrange — "apple" < "apply" by the fifth rune.
+        var utf16Apple = new TextSpan(TestHelpers.Encode("apple", TextEncoding.Utf16), TextEncoding.Utf16);
+        var utf32Apply = new TextSpan(TestHelpers.Encode("apply", TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = utf16Apple.CompareTo(utf32Apply);
+
+        // Assert — 'e' (0x65) < 'y' (0x79) → negative.
+        await Assert.That(result).IsLessThan(0);
+    }
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_DifferentLength_PrefixMatch_ReturnsSign()
+    {
+        // Arrange — shared prefix, one longer.
+        var shortSide = new TextSpan(TestHelpers.Encode("Hi", TextEncoding.Utf16), TextEncoding.Utf16);
+        var longSide = new TextSpan(TestHelpers.Encode("Hi there", TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var shortVsLong = shortSide.CompareTo(longSide);
+        var longVsShort = longSide.CompareTo(shortSide);
+
+        // Assert
+        await Assert.That(shortVsLong).IsLessThan(0);
+        await Assert.That(longVsShort).IsGreaterThan(0);
+    }
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_SurrogatePair_OrdersByRune()
+    {
+        // Arrange — U+10000 (supplementary, surrogate pair in UTF-16) vs U+E000 (BMP).
+        // Byte-level UTF-16 LE would say U+10000 (D8 00 ...) < U+E000 (E0 00);
+        // rune-level says U+10000 > U+E000. The streaming path transcodes to UTF-8
+        // where byte order preserves scalar order.
+        var supplementary = new TextSpan(TestHelpers.Encode("𐀀", TextEncoding.Utf16), TextEncoding.Utf16);
+        var bmp = new TextSpan(TestHelpers.Encode("", TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = supplementary.CompareTo(bmp);
+
+        // Assert — U+10000 (65536) > U+E000 (57344).
+        await Assert.That(result).IsGreaterThan(0);
+    }
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_MultiChunk_SharedPrefix_ReturnsZero()
+    {
+        // Arrange — content larger than one 512-byte UTF-8 chunk, same on both sides.
+        // Forces the streaming loop to process multiple chunks from each side.
+        var text = new string('A', 2000);
+        var utf16 = new TextSpan(TestHelpers.Encode(text, TextEncoding.Utf16), TextEncoding.Utf16);
+        var utf32 = new TextSpan(TestHelpers.Encode(text, TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = utf16.CompareTo(utf32);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(0);
+    }
+
+    [Test]
+    public async Task CompareTo_Utf16Vs_Utf32_MultiChunk_MidStreamDiff_ReturnsSign()
+    {
+        // Arrange — 2000 identical chars then diverge at position 1500.
+        var a = new string('A', 1500) + "X" + new string('A', 499);
+        var b = new string('A', 1500) + "Y" + new string('A', 499);
+        var utf16 = new TextSpan(TestHelpers.Encode(a, TextEncoding.Utf16), TextEncoding.Utf16);
+        var utf32 = new TextSpan(TestHelpers.Encode(b, TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = utf16.CompareTo(utf32);
+
+        // Assert — 'X' (0x58) < 'Y' (0x59) → negative.
+        await Assert.That(result).IsLessThan(0);
+    }
+
+    // Equals cross-encoding — same rune count different content (length short-circuit doesn't fire)
+
+    [Test]
+    public async Task Equals_Utf16Vs_Utf32_SameRuneCount_DifferentContent_ReturnsFalse()
+    {
+        // Arrange — both 5 runes but different content. Length short-circuit doesn't apply;
+        // streaming EqualsCrossEncoding must walk and detect the mismatch.
+        var utf16 = new TextSpan(TestHelpers.Encode("apple", TextEncoding.Utf16), TextEncoding.Utf16);
+        var utf32 = new TextSpan(TestHelpers.Encode("apply", TextEncoding.Utf32), TextEncoding.Utf32);
+
+        // Act
+        var result = utf16.Equals(utf32);
+
+        // Assert
+        await Assert.That(result).IsFalse();
+    }
 }

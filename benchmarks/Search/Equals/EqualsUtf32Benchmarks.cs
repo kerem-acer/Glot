@@ -28,13 +28,13 @@ public class EqualsUtf32Benchmarks
     public bool SpanSequenceEqual() => _a.RawBytes.AsSpan().SequenceEqual(_b.RawBytes);
 
     [Benchmark(Description = "Text.Equals UTF-8")]
-    public bool TextEquals_Utf8() => _a.Utf8.Equals(_b.Utf8);
+    public bool TextEquals_Utf8() => _a.Utf32.Equals(_b.Utf8);
 
     [Benchmark(Description = "Text.Equals UTF-16")]
-    public bool TextEquals_Utf16() => _a.Utf8.Equals(_b.Utf16);
+    public bool TextEquals_Utf16() => _a.Utf32.Equals(_b.Utf16);
 
     [Benchmark(Description = "Text.Equals UTF-32")]
-    public bool TextEquals_Utf32() => _a.Utf8.Equals(_b.Utf32);
+    public bool TextEquals_Utf32() => _a.Utf32.Equals(_b.Utf32);
 
     [Benchmark(Description = "string.Equals different")]
     public bool StringEquals_Diff() => _a.Str.Equals(_diff.Str, StringComparison.Ordinal);
@@ -43,11 +43,11 @@ public class EqualsUtf32Benchmarks
     public bool SpanSequenceEqual_Diff() => _a.RawBytes.AsSpan().SequenceEqual(_diff.RawBytes);
 
     [Benchmark(Description = "Text.Equals UTF-8 different")]
-    public bool TextEquals_Utf8_Diff() => _a.Utf8.Equals(_diff.Utf8);
+    public bool TextEquals_Utf8_Diff() => _a.Utf32.Equals(_diff.Utf8);
 
     [Benchmark(Description = "Text.Equals UTF-16 different")]
-    public bool TextEquals_Utf16_Diff() => _a.Utf8.Equals(_diff.Utf16);
+    public bool TextEquals_Utf16_Diff() => _a.Utf32.Equals(_diff.Utf16);
 
     [Benchmark(Description = "Text.Equals UTF-32 different")]
-    public bool TextEquals_Utf32_Diff() => _a.Utf8.Equals(_diff.Utf32);
+    public bool TextEquals_Utf32_Diff() => _a.Utf32.Equals(_diff.Utf32);
 }

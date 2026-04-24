@@ -15,7 +15,6 @@ public class TextBuilderUtf8Benchmarks
     [ScriptParams]
     public Script Locale;
 
-    EncodedSet[] _parts = null!;
     string[] _strings = null!;
     Text[] _textsUtf8 = null!;
     Text[] _textsUtf16 = null!;
@@ -26,7 +25,6 @@ public class TextBuilderUtf8Benchmarks
     {
         var full = TestData.Generate(PartSize * Parts, Locale);
 
-        _parts = new EncodedSet[Parts];
         _strings = new string[Parts];
         _textsUtf8 = new Text[Parts];
         _textsUtf16 = new Text[Parts];
@@ -34,7 +32,6 @@ public class TextBuilderUtf8Benchmarks
         for (var i = 0; i < Parts; i++)
         {
             var p = EncodedSet.From(full[(i * PartSize)..((i + 1) * PartSize)]);
-            _parts[i] = p;
             _strings[i] = p.Str;
             _textsUtf8[i] = p.Utf8;
             _textsUtf16[i] = p.Utf16;
@@ -42,8 +39,8 @@ public class TextBuilderUtf8Benchmarks
         }
     }
 
-    [Benchmark(Baseline = true, Description = "StringBuilder -> ToString")]
-    public string StringBuilder_ToString()
+    [Benchmark(Baseline = true, Description = "StringBuilder -> UTF-8 bytes")]
+    public byte[] StringBuilder_ToUtf8Bytes()
     {
         var sb = new StringBuilder();
         foreach (var part in _strings)
@@ -51,7 +48,7 @@ public class TextBuilderUtf8Benchmarks
             sb.Append(part);
         }
 
-        return sb.ToString();
+        return Encoding.UTF8.GetBytes(sb.ToString());
     }
 
     [Benchmark(Description = "TextBuilder UTF-8 -> ToText")]
@@ -92,8 +89,8 @@ public class TextBuilderUtf8Benchmarks
         }
     }
 
-    [Benchmark(Description = "TextBuilder UTF-16→UTF-8")]
-    public Text TextBuilder_CrossUtf16()
+    [Benchmark(Description = "TextBuilder UTF-16→UTF-8 -> ToText")]
+    public Text TextBuilder_CrossUtf16_ToText()
     {
         var builder = new TextBuilder(TextEncoding.Utf8);
         try
@@ -111,8 +108,27 @@ public class TextBuilderUtf8Benchmarks
         }
     }
 
-    [Benchmark(Description = "TextBuilder UTF-32→UTF-8")]
-    public Text TextBuilder_CrossUtf32()
+    [Benchmark(Description = "TextBuilder UTF-16→UTF-8 -> ToOwnedText")]
+    public void TextBuilder_CrossUtf16_ToOwnedText()
+    {
+        var builder = new TextBuilder(TextEncoding.Utf8);
+        try
+        {
+            foreach (var part in _textsUtf16)
+            {
+                builder.Append(part);
+            }
+
+            using var owned = builder.ToOwnedText();
+        }
+        finally
+        {
+            builder.Dispose();
+        }
+    }
+
+    [Benchmark(Description = "TextBuilder UTF-32→UTF-8 -> ToText")]
+    public Text TextBuilder_CrossUtf32_ToText()
     {
         var builder = new TextBuilder(TextEncoding.Utf8);
         try
@@ -123,6 +139,25 @@ public class TextBuilderUtf8Benchmarks
             }
 
             return builder.ToText();
+        }
+        finally
+        {
+            builder.Dispose();
+        }
+    }
+
+    [Benchmark(Description = "TextBuilder UTF-32→UTF-8 -> ToOwnedText")]
+    public void TextBuilder_CrossUtf32_ToOwnedText()
+    {
+        var builder = new TextBuilder(TextEncoding.Utf8);
+        try
+        {
+            foreach (var part in _textsUtf32)
+            {
+                builder.Append(part);
+            }
+
+            using var owned = builder.ToOwnedText();
         }
         finally
         {

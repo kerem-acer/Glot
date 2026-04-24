@@ -151,16 +151,67 @@ public readonly ref partial struct TextSpan
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(TextSpan other)
     {
-        // UTF-8 byte ordering preserves Unicode scalar value ordering.
-        if (Encoding == other.Encoding && Encoding == TextEncoding.Utf8)
+        if (Encoding == other.Encoding)
         {
-            return Bytes.SequenceCompareTo(other.Bytes);
+            // UTF-8 byte order preserves Unicode scalar order.
+            if (Encoding == TextEncoding.Utf8)
+            {
+                return Bytes.SequenceCompareTo(other.Bytes);
+            }
+
+            // UTF-32 stored in native-endian ints: each int is a Unicode scalar, so
+            // int-by-int compare is rune-ordered. Byte compare is NOT rune-ordered
+            // because bytes within an int don't carry scalar sign.
+            if (Encoding == TextEncoding.Utf32)
+            {
+                return CompareUtf32(Bytes, other.Bytes);
+            }
+
+            // UTF-16: byte order breaks at surrogate boundaries. Walk rune-by-rune.
+            return CompareSameEncodingByRune(other);
         }
 
-        // Same-encoding non-UTF-8: byte comparison may not equal rune ordering
-        // (UTF-16 surrogates, UTF-32 endianness), so we must normalize.
-        // Cross-encoding: likewise.
         return CompareToCrossEncoding(other);
+    }
+
+    static int CompareUtf32(ReadOnlySpan<byte> a, ReadOnlySpan<byte> b)
+    {
+        var aInts = MemoryMarshal.Cast<byte, int>(a);
+        var bInts = MemoryMarshal.Cast<byte, int>(b);
+        var shared = Math.Min(aInts.Length, bInts.Length);
+        for (var i = 0; i < shared; i++)
+        {
+            if (aInts[i] != bInts[i])
+            {
+                return aInts[i].CompareTo(bInts[i]);
+            }
+        }
+
+        return aInts.Length.CompareTo(bInts.Length);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    int CompareSameEncodingByRune(TextSpan other)
+    {
+        // Same-encoding UTF-16: decode runes and compare by scalar value.
+        var aRem = Bytes;
+        var bRem = other.Bytes;
+        var enc = Encoding;
+
+        while (!aRem.IsEmpty && !bRem.IsEmpty)
+        {
+            Rune.TryDecodeFirst(aRem, enc, out var ar, out var ac);
+            Rune.TryDecodeFirst(bRem, enc, out var br, out var bc);
+            if (ar.Value != br.Value)
+            {
+                return ar.Value.CompareTo(br.Value);
+            }
+
+            aRem = aRem[ac..];
+            bRem = bRem[bc..];
+        }
+
+        return aRem.IsEmpty ? (bRem.IsEmpty ? 0 : -1) : 1;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -226,36 +277,84 @@ public readonly ref partial struct TextSpan
 
     static int CompareBothTranscoded(TextSpan a, TextSpan b)
     {
-        var maxA = TranscodeSize.Estimate(a.Bytes.Length, a.Encoding, TextEncoding.Utf8);
-        var maxB = TranscodeSize.Estimate(b.Bytes.Length, b.Encoding, TextEncoding.Utf8);
+        // Streaming compare for both-non-UTF-8: transcode each side into its own
+        // stackalloc UTF-8 chunk, SequenceCompareTo the shared prefix, short-circuit
+        // on the first non-zero compare, advance by the consumed prefix and refill.
+        // UTF-8 byte order preserves Unicode scalar order, so byte-level differences
+        // reflect correct rune ordering.
+        Span<byte> chunkA = stackalloc byte[CrossEncodingChunkBytes];
+        Span<byte> chunkB = stackalloc byte[CrossEncodingChunkBytes];
 
-        byte[]? rentedA = null, rentedB = null;
-        Span<byte> bufA = maxA <= 256
-            ? stackalloc byte[maxA]
-            : (rentedA = ArrayPool<byte>.Shared.Rent(maxA));
-        Span<byte> bufB = maxB <= 256
-            ? stackalloc byte[maxB]
-            : (rentedB = ArrayPool<byte>.Shared.Rent(maxB));
+        var aRem = a.Bytes;
+        var bRem = b.Bytes;
+        var aEnc = a.Encoding;
+        var bEnc = b.Encoding;
+        scoped ReadOnlySpan<byte> aBuf = default;
+        scoped ReadOnlySpan<byte> bBuf = default;
 
-        try
+        while (true)
         {
-            var writtenA = a.EncodeToUtf8(bufA);
-            var writtenB = b.EncodeToUtf8(bufB);
-            ReadOnlySpan<byte> spanA = bufA[..writtenA];
-            return spanA.SequenceCompareTo(bufB[..writtenB]);
-        }
-        finally
-        {
-            if (rentedA is not null)
+            if (aBuf.IsEmpty)
             {
-                ArrayPool<byte>.Shared.Return(rentedA);
+                if (aRem.IsEmpty)
+                {
+                    break;
+                }
+
+                var src = new TextSpan(aRem, aEnc, 0);
+                var written = src.Transcode(chunkA, TextEncoding.Utf8, out _, out var consumed);
+                if (written == 0)
+                {
+                    break;
+                }
+
+                aBuf = chunkA[..written];
+                aRem = aRem[consumed..];
             }
 
-            if (rentedB is not null)
+            if (bBuf.IsEmpty)
             {
-                ArrayPool<byte>.Shared.Return(rentedB);
+                if (bRem.IsEmpty)
+                {
+                    break;
+                }
+
+                var src = new TextSpan(bRem, bEnc, 0);
+                var written = src.Transcode(chunkB, TextEncoding.Utf8, out _, out var consumed);
+                if (written == 0)
+                {
+                    break;
+                }
+
+                bBuf = chunkB[..written];
+                bRem = bRem[consumed..];
             }
+
+            var shared = Math.Min(aBuf.Length, bBuf.Length);
+            var cmp = aBuf[..shared].SequenceCompareTo(bBuf[..shared]);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            aBuf = aBuf[shared..];
+            bBuf = bBuf[shared..];
         }
+
+        // Loop exited with one or both sides exhausted: whichever still has bytes is greater.
+        var aHasMore = !aBuf.IsEmpty || !aRem.IsEmpty;
+        var bHasMore = !bBuf.IsEmpty || !bRem.IsEmpty;
+        if (aHasMore && !bHasMore)
+        {
+            return 1;
+        }
+
+        if (!aHasMore && bHasMore)
+        {
+            return -1;
+        }
+
+        return 0;
     }
 
     internal static int TranscodeToEncoding(TextSpan source, Span<byte> destination, TextEncoding targetEncoding)

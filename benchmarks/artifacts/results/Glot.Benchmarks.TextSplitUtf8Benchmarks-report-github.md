@@ -2,93 +2,119 @@
 
 BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
 Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
-.NET SDK 10.0.201
-  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
-  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
 
-Job=ShortRun  IterationCount=3  LaunchCount=1  
-WarmupCount=3  
+EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
 
 ```
-| Method                      | Categories     | N     | Locale | Mean          | Error          | StdDev        | Ratio | RatioSD | Allocated | Alloc Ratio |
-|---------------------------- |--------------- |------ |------- |--------------:|---------------:|--------------:|------:|--------:|----------:|------------:|
-| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Ascii**  |      **80.27 ns** |      **16.153 ns** |      **0.885 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Ascii  |      33.95 ns |      14.156 ns |      0.776 ns |  0.42 |    0.01 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 64    | Ascii  |      17.23 ns |       0.395 ns |      0.022 ns |  0.21 |    0.00 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Ascii  |     146.49 ns |       8.423 ns |      0.462 ns |  1.83 |    0.02 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Cjk**    |      **86.93 ns** |      **39.020 ns** |      **2.139 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Cjk    |      60.44 ns |       1.804 ns |      0.099 ns |  0.70 |    0.01 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 64    | Cjk    |      28.60 ns |      35.800 ns |      1.962 ns |  0.33 |    0.02 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Cjk    |     195.97 ns |      28.541 ns |      1.564 ns |  2.26 |    0.05 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Mixed**  |      **75.43 ns** |      **18.151 ns** |      **0.995 ns** |  **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Mixed  |      46.68 ns |      12.764 ns |      0.700 ns |  0.62 |    0.01 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 64    | Mixed  |      17.77 ns |       0.591 ns |      0.032 ns |  0.24 |    0.00 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Mixed  |     157.16 ns |       8.884 ns |      0.487 ns |  2.08 |    0.02 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Ascii**  |   **1,685.73 ns** |     **880.178 ns** |     **48.246 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Ascii  |   2,256.83 ns |      68.859 ns |      3.774 ns |  1.34 |    0.03 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 4096  | Ascii  |   1,249.38 ns |     168.489 ns |      9.235 ns |  0.74 |    0.02 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Ascii  |   9,056.58 ns |   1,293.775 ns |     70.916 ns |  5.38 |    0.14 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Cjk**    |   **1,713.57 ns** |   **1,465.829 ns** |     **80.347 ns** |  **1.00** |    **0.06** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Cjk    |   4,825.73 ns |     463.774 ns |     25.421 ns |  2.82 |    0.12 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 4096  | Cjk    |   1,457.49 ns |     317.735 ns |     17.416 ns |  0.85 |    0.04 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Cjk    |  11,333.45 ns |   8,943.686 ns |    490.234 ns |  6.62 |    0.37 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Mixed**  |   **6,103.34 ns** |     **156.722 ns** |      **8.590 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Mixed  |   2,912.67 ns |     111.355 ns |      6.104 ns |  0.48 |    0.00 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 4096  | Mixed  |   1,191.22 ns |     277.078 ns |     15.188 ns |  0.20 |    0.00 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Mixed  |   9,539.95 ns |     492.836 ns |     27.014 ns |  1.56 |    0.00 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Ascii**  |  **75,656.07 ns** |  **69,516.192 ns** |  **3,810.417 ns** |  **1.00** |    **0.06** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Ascii  |  38,172.38 ns |   1,421.966 ns |     77.943 ns |  0.51 |    0.02 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 65536 | Ascii  |  19,648.02 ns |   1,358.024 ns |     74.438 ns |  0.26 |    0.01 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Ascii  | 146,961.27 ns |  78,693.049 ns |  4,313.432 ns |  1.95 |    0.10 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Cjk**    |  **72,335.21 ns** | **250,754.887 ns** | **13,744.722 ns** |  **1.03** |    **0.25** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Cjk    |  62,823.14 ns |     865.418 ns |     47.436 ns |  0.89 |    0.16 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 65536 | Cjk    |  25,411.45 ns |  14,114.750 ns |    773.677 ns |  0.36 |    0.07 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Cjk    | 168,609.67 ns |   9,982.465 ns |    547.173 ns |  2.39 |    0.43 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Mixed**  |  **98,854.49 ns** |  **17,231.787 ns** |    **944.532 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Mixed  |  49,123.95 ns |  27,509.755 ns |  1,507.903 ns |  0.50 |    0.01 |         - |          NA |
-| U8String.Runes              | EnumerateRunes | 65536 | Mixed  |  19,134.86 ns |   4,333.678 ns |    237.544 ns |  0.19 |    0.00 |         - |          NA |
-| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Mixed  | 152,766.83 ns |  22,860.360 ns |  1,253.053 ns |  1.55 |    0.02 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Ascii**  |      **36.36 ns** |       **2.453 ns** |      **0.134 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 64    | Ascii  |      32.06 ns |       1.126 ns |      0.062 ns |  0.88 |    0.00 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Ascii  |     523.66 ns |      35.542 ns |      1.948 ns | 14.40 |    0.07 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Cjk**    |     **105.89 ns** |      **39.891 ns** |      **2.187 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 64    | Cjk    |      91.35 ns |      11.541 ns |      0.633 ns |  0.86 |    0.02 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Cjk    |     525.01 ns |      52.111 ns |      2.856 ns |  4.96 |    0.09 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Mixed**  |      **37.17 ns** |       **5.117 ns** |      **0.280 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 64    | Mixed  |      32.91 ns |       0.872 ns |      0.048 ns |  0.89 |    0.01 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Mixed  |     477.72 ns |      92.801 ns |      5.087 ns | 12.85 |    0.15 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Ascii**  |   **1,837.32 ns** |   **1,000.060 ns** |     **54.817 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 4096  | Ascii  |   2,434.45 ns |   2,635.015 ns |    144.434 ns |  1.33 |    0.08 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Ascii  |  33,122.42 ns |   2,954.474 ns |    161.945 ns | 18.04 |    0.47 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Cjk**    |   **5,704.51 ns** |   **9,371.090 ns** |    **513.661 ns** |  **1.01** |    **0.11** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 4096  | Cjk    |   4,613.72 ns |   3,760.990 ns |    206.153 ns |  0.81 |    0.07 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Cjk    |  31,784.46 ns |   1,113.779 ns |     61.050 ns |  5.60 |    0.42 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Mixed**  |   **2,176.64 ns** |   **2,747.191 ns** |    **150.583 ns** |  **1.00** |    **0.09** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 4096  | Mixed  |   2,174.76 ns |   3,186.491 ns |    174.662 ns |  1.00 |    0.09 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Mixed  |  32,158.64 ns |  15,205.200 ns |    833.448 ns | 14.82 |    0.98 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Ascii**  |  **37,306.16 ns** |  **55,088.710 ns** |  **3,019.598 ns** |  **1.00** |    **0.10** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 65536 | Ascii  |  33,954.87 ns |  72,831.822 ns |  3,992.158 ns |  0.91 |    0.11 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Ascii  | 527,869.25 ns |  10,009.890 ns |    548.676 ns | 14.21 |    1.04 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Cjk**    |  **83,504.02 ns** |  **17,959.569 ns** |    **984.425 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 65536 | Cjk    |  75,720.95 ns | 113,035.955 ns |  6,195.882 ns |  0.91 |    0.06 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Cjk    | 525,518.28 ns |  60,480.112 ns |  3,315.119 ns |  6.29 |    0.07 |         - |          NA |
-|                             |                |       |        |               |                |               |       |         |           |             |
-| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Mixed**  |  **28,071.69 ns** |   **2,244.025 ns** |    **123.003 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;U8String.Split count&#39;      | Split          | 65536 | Mixed  |  26,781.99 ns |  15,304.456 ns |    838.889 ns |  0.95 |    0.03 |         - |          NA |
-| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Mixed  | 491,997.30 ns |  52,141.481 ns |  2,858.051 ns | 17.53 |    0.11 |         - |          NA |
+| Method                      | Categories     | N     | Locale | Mean          | Error        | StdDev       | Ratio | RatioSD | Allocated | Alloc Ratio |
+|---------------------------- |--------------- |------ |------- |--------------:|-------------:|-------------:|------:|--------:|----------:|------------:|
+| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Ascii**  |      **87.37 ns** |     **3.057 ns** |     **2.859 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Ascii  |      52.75 ns |     0.326 ns |     0.272 ns |  0.60 |    0.02 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 64    | Ascii  |      19.00 ns |     0.210 ns |     0.196 ns |  0.22 |    0.01 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Ascii  |     158.88 ns |     5.226 ns |     4.632 ns |  1.82 |    0.08 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Cjk**    |      **86.23 ns** |     **2.781 ns** |     **2.601 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Cjk    |      74.38 ns |     0.700 ns |     0.585 ns |  0.86 |    0.03 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 64    | Cjk    |      32.54 ns |     0.457 ns |     0.381 ns |  0.38 |    0.01 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Cjk    |     188.04 ns |     4.161 ns |     3.892 ns |  2.18 |    0.08 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Emoji**  |      **87.88 ns** |     **3.338 ns** |     **3.123 ns** |  **1.00** |    **0.05** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Emoji  |      52.75 ns |     0.421 ns |     0.373 ns |  0.60 |    0.02 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 64    | Emoji  |      23.64 ns |     0.482 ns |     0.451 ns |  0.27 |    0.01 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Emoji  |     134.85 ns |     2.372 ns |     2.219 ns |  1.54 |    0.06 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **64**    | **Mixed**  |      **95.26 ns** |     **2.657 ns** |     **2.485 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 64    | Mixed  |      67.83 ns |     0.912 ns |     0.853 ns |  0.71 |    0.02 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 64    | Mixed  |      29.57 ns |     1.042 ns |     0.975 ns |  0.31 |    0.01 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 64    | Mixed  |     165.75 ns |     3.920 ns |     3.475 ns |  1.74 |    0.06 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Ascii**  |   **4,300.37 ns** |   **478.511 ns** |   **716.213 ns** |  **1.03** |    **0.24** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Ascii  |   3,040.48 ns |    41.111 ns |    38.455 ns |  0.73 |    0.12 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 4096  | Ascii  |   1,252.90 ns |    16.284 ns |    15.232 ns |  0.30 |    0.05 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Ascii  |   9,487.79 ns |   182.716 ns |   170.913 ns |  2.27 |    0.39 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Cjk**    |   **4,406.57 ns** |   **429.508 ns** |   **629.567 ns** |  **1.02** |    **0.21** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Cjk    |   4,345.23 ns |    33.083 ns |    27.626 ns |  1.01 |    0.15 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 4096  | Cjk    |   2,001.71 ns |    30.994 ns |    28.992 ns |  0.46 |    0.07 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Cjk    |  11,315.13 ns |   301.729 ns |   267.475 ns |  2.62 |    0.41 |       1 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Emoji**  |   **5,717.44 ns** |    **46.234 ns** |    **36.097 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Emoji  |   3,242.88 ns |    37.272 ns |    34.864 ns |  0.57 |    0.01 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 4096  | Emoji  |   1,339.66 ns |    23.502 ns |    20.834 ns |  0.23 |    0.00 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Emoji  |   7,924.50 ns |   122.634 ns |   114.712 ns |  1.39 |    0.02 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **4096**  | **Mixed**  |   **6,582.44 ns** |   **145.848 ns** |   **136.426 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 4096  | Mixed  |   4,002.07 ns |    61.246 ns |    57.290 ns |  0.61 |    0.01 |         - |          NA |
+| U8String.Runes              | EnumerateRunes | 4096  | Mixed  |   1,612.34 ns |    46.234 ns |    40.986 ns |  0.25 |    0.01 |         - |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 4096  | Mixed  |   9,823.06 ns |   262.571 ns |   245.610 ns |  1.49 |    0.05 |       1 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Ascii**  |  **55,315.02 ns** | **5,456.194 ns** | **6,064.545 ns** |  **1.01** |    **0.16** |       **3 B** |        **1.00** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Ascii  |  48,654.76 ns |   744.847 ns |   696.730 ns |  0.89 |    0.10 |       3 B |        1.00 |
+| U8String.Runes              | EnumerateRunes | 65536 | Ascii  |  19,921.20 ns |   207.848 ns |   184.252 ns |  0.36 |    0.04 |       1 B |        0.33 |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Ascii  | 150,424.12 ns | 2,620.246 ns | 2,322.780 ns |  2.75 |    0.31 |       8 B |        2.67 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Cjk**    |  **61,960.23 ns** | **6,412.784 ns** | **9,399.777 ns** |  **1.02** |    **0.21** |         **-** |          **NA** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Cjk    |  69,439.21 ns |   219.373 ns |   183.186 ns |  1.15 |    0.17 |       4 B |          NA |
+| U8String.Runes              | EnumerateRunes | 65536 | Cjk    |  31,571.46 ns |   162.171 ns |   135.420 ns |  0.52 |    0.08 |       2 B |          NA |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Cjk    | 178,430.33 ns | 1,907.894 ns | 1,489.558 ns |  2.94 |    0.43 |      10 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Emoji**  |  **92,792.47 ns** | **1,793.836 ns** | **1,677.955 ns** |  **1.00** |    **0.02** |       **4 B** |        **1.00** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Emoji  |  51,706.49 ns |   360.543 ns |   281.488 ns |  0.56 |    0.01 |       3 B |        0.75 |
+| U8String.Runes              | EnumerateRunes | 65536 | Emoji  |  21,576.16 ns |   723.633 ns |   641.481 ns |  0.23 |    0.01 |       1 B |        0.25 |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Emoji  | 127,456.94 ns | 2,559.189 ns | 2,393.867 ns |  1.37 |    0.03 |         - |        0.00 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **string.EnumerateRunes**       | **EnumerateRunes** | **65536** | **Mixed**  | **104,054.20 ns** | **1,147.845 ns** |   **958.503 ns** |  **1.00** |    **0.01** |       **6 B** |        **1.00** |
+| &#39;Span.DecodeFromUtf8 count&#39; | EnumerateRunes | 65536 | Mixed  |  64,005.53 ns |   751.656 ns |   627.667 ns |  0.62 |    0.01 |       3 B |        0.50 |
+| U8String.Runes              | EnumerateRunes | 65536 | Mixed  |  25,474.94 ns |   761.136 ns |   711.967 ns |  0.24 |    0.01 |       1 B |        0.17 |
+| &#39;Text.EnumerateRunes UTF-8&#39; | EnumerateRunes | 65536 | Mixed  | 156,252.88 ns | 3,494.225 ns | 3,097.539 ns |  1.50 |    0.03 |       8 B |        1.33 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Ascii**  |      **34.40 ns** |     **0.250 ns** |     **0.208 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 64    | Ascii  |      32.75 ns |     0.356 ns |     0.298 ns |  0.95 |    0.01 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Ascii  |     560.99 ns |     8.732 ns |     8.168 ns | 16.31 |    0.25 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Cjk**    |     **107.95 ns** |     **2.371 ns** |     **1.980 ns** |  **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 64    | Cjk    |      93.21 ns |     1.619 ns |     1.435 ns |  0.86 |    0.02 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Cjk    |     526.31 ns |     7.105 ns |     6.299 ns |  4.88 |    0.10 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Emoji**  |      **58.27 ns** |     **1.432 ns** |     **1.339 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 64    | Emoji  |      55.41 ns |     1.933 ns |     1.808 ns |  0.95 |    0.04 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Emoji  |     365.43 ns |     3.626 ns |     3.392 ns |  6.27 |    0.15 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **64**    | **Mixed**  |      **35.24 ns** |     **0.272 ns** |     **0.212 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 64    | Mixed  |      34.07 ns |     0.539 ns |     0.504 ns |  0.97 |    0.01 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 64    | Mixed  |     505.95 ns |     9.608 ns |     8.987 ns | 14.36 |    0.26 |         - |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Ascii**  |   **3,347.52 ns** |   **306.523 ns** |   **286.721 ns** |  **1.01** |    **0.12** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 4096  | Ascii  |   2,005.01 ns |   195.049 ns |   208.700 ns |  0.60 |    0.08 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Ascii  |  35,079.32 ns |   342.657 ns |   320.522 ns | 10.56 |    0.98 |       2 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Cjk**    |   **7,979.80 ns** |   **264.137 ns** |   **247.074 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 4096  | Cjk    |   4,724.78 ns |   468.266 ns |   459.900 ns |  0.59 |    0.06 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Cjk    |  32,986.71 ns |   372.713 ns |   348.636 ns |  4.14 |    0.13 |       1 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Emoji**  |   **5,732.66 ns** |   **118.860 ns** |   **111.181 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 4096  | Emoji  |   2,147.28 ns |    89.731 ns |    83.934 ns |  0.37 |    0.02 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Emoji  |  22,872.49 ns |   129.893 ns |   108.466 ns |  3.99 |    0.08 |       1 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **4096**  | **Mixed**  |   **3,495.28 ns** |   **279.815 ns** |   **261.739 ns** |  **1.01** |    **0.11** |         **-** |          **NA** |
+| &#39;U8String.Split count&#39;      | Split          | 4096  | Mixed  |   2,153.10 ns |   204.959 ns |   210.477 ns |  0.62 |    0.08 |         - |          NA |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 4096  | Mixed  |  31,494.86 ns |   388.420 ns |   363.329 ns |  9.06 |    0.71 |       2 B |          NA |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Ascii**  |  **43,593.16 ns** | **4,298.268 ns** | **4,020.602 ns** |  **1.01** |    **0.13** |       **2 B** |        **1.00** |
+| &#39;U8String.Split count&#39;      | Split          | 65536 | Ascii  |  24,284.17 ns |   768.878 ns |   719.209 ns |  0.56 |    0.05 |       1 B |        0.50 |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Ascii  | 560,268.71 ns | 6,501.350 ns | 6,081.367 ns | 12.96 |    1.20 |      29 B |       14.50 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Cjk**    |  **85,308.67 ns** | **5,112.387 ns** | **4,269.074 ns** |  **1.00** |    **0.07** |       **4 B** |        **1.00** |
+| &#39;U8String.Split count&#39;      | Split          | 65536 | Cjk    |  60,761.27 ns | 3,597.315 ns | 3,188.926 ns |  0.71 |    0.05 |       3 B |        0.75 |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Cjk    | 531,854.62 ns | 6,123.189 ns | 5,727.634 ns |  6.25 |    0.33 |      28 B |        7.00 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Emoji**  |  **58,784.39 ns** | **5,668.699 ns** | **6,300.744 ns** |  **1.01** |    **0.15** |       **3 B** |        **1.00** |
+| &#39;U8String.Split count&#39;      | Split          | 65536 | Emoji  |  35,279.87 ns | 1,692.162 ns | 1,413.032 ns |  0.61 |    0.07 |       1 B |        0.33 |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Emoji  | 365,356.89 ns | 3,896.226 ns | 3,644.533 ns |  6.28 |    0.66 |      19 B |        6.33 |
+|                             |                |       |        |               |              |              |       |         |           |             |
+| **&#39;Span.IndexOf UTF-8&#39;**        | **Split**          | **65536** | **Mixed**  |  **44,103.71 ns** | **3,725.072 ns** | **3,484.435 ns** |  **1.01** |    **0.11** |       **2 B** |        **1.00** |
+| &#39;U8String.Split count&#39;      | Split          | 65536 | Mixed  |  21,596.24 ns |   413.414 ns |   386.708 ns |  0.49 |    0.04 |       1 B |        0.50 |
+| &#39;Text.Split UTF-8 count&#39;    | Split          | 65536 | Mixed  | 504,518.46 ns | 5,494.731 ns | 5,139.775 ns | 11.51 |    0.93 |      25 B |       12.50 |

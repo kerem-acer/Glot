@@ -1,0 +1,144 @@
+```
+
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
+
+EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
+
+```
+| Method                               | N     | Locale | Mean           | Error         | StdDev        | Ratio | RatioSD | Gen0   | Gen1   | Gen2   | Allocated | Alloc Ratio |
+|------------------------------------- |------ |------- |---------------:|--------------:|--------------:|------:|--------:|-------:|-------:|-------:|----------:|------------:|
+| **Encoding.GetString(span)**             | **8**     | **Ascii**  |       **8.853 ns** |     **0.1894 ns** |     **0.1679 ns** |  **1.00** |    **0.03** | **0.0047** |      **-** |      **-** |      **40 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 8     | Ascii  |       7.263 ns |     0.1056 ns |     0.0988 ns |  0.82 |    0.02 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 8     | Ascii  |       5.288 ns |     0.0662 ns |     0.0619 ns |  0.60 |    0.01 | 0.0038 |      - |      - |      32 B |        0.80 |
+| Text.FromBytes(span)                 | 8     | Ascii  |       7.310 ns |     0.1444 ns |     0.1280 ns |  0.83 |    0.02 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 8     | Ascii  |       5.282 ns |     0.0627 ns |     0.0556 ns |  0.60 |    0.01 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;new U8String(span)&#39;                 | 8     | Ascii  |       6.764 ns |     0.0874 ns |     0.0774 ns |  0.76 |    0.02 | 0.0048 |      - |      - |      40 B |        1.00 |
+| OwnedText.FromUtf8(span)             | 8     | Ascii  |      16.113 ns |     1.4108 ns |     1.3196 ns |  1.82 |    0.15 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 8     | Ascii  |      11.369 ns |     0.1347 ns |     0.1194 ns |  1.28 |    0.03 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 8     | Ascii  |      15.604 ns |     0.8881 ns |     0.8307 ns |  1.76 |    0.10 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 8     | Ascii  |      11.535 ns |     0.2077 ns |     0.1943 ns |  1.30 |    0.03 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **8**     | **Cjk**    |      **23.103 ns** |     **0.5083 ns** |     **0.4755 ns** |  **1.00** |    **0.03** | **0.0046** |      **-** |      **-** |      **40 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 8     | Cjk    |      11.150 ns |     0.2127 ns |     0.1885 ns |  0.48 |    0.01 | 0.0057 |      - |      - |      48 B |        1.20 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 8     | Cjk    |       5.530 ns |     0.1109 ns |     0.0926 ns |  0.24 |    0.01 | 0.0057 |      - |      - |      48 B |        1.20 |
+| Text.FromBytes(span)                 | 8     | Cjk    |      11.105 ns |     0.2386 ns |     0.2116 ns |  0.48 |    0.01 | 0.0057 |      - |      - |      48 B |        1.20 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 8     | Cjk    |       5.486 ns |     0.0868 ns |     0.0812 ns |  0.24 |    0.01 | 0.0057 |      - |      - |      48 B |        1.20 |
+| &#39;new U8String(span)&#39;                 | 8     | Cjk    |      12.606 ns |     0.1895 ns |     0.1772 ns |  0.55 |    0.01 | 0.0066 |      - |      - |      56 B |        1.40 |
+| OwnedText.FromUtf8(span)             | 8     | Cjk    |      17.166 ns |     0.5836 ns |     0.5174 ns |  0.74 |    0.03 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 8     | Cjk    |      10.993 ns |     0.1106 ns |     0.0981 ns |  0.48 |    0.01 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 8     | Cjk    |      16.861 ns |     0.3026 ns |     0.2527 ns |  0.73 |    0.02 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 8     | Cjk    |      11.186 ns |     0.1279 ns |     0.1134 ns |  0.48 |    0.01 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **8**     | **Emoji**  |      **23.717 ns** |     **0.3616 ns** |     **0.3205 ns** |  **1.00** |    **0.02** | **0.0047** |      **-** |      **-** |      **40 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 8     | Emoji  |       7.712 ns |     0.1335 ns |     0.1249 ns |  0.33 |    0.01 | 0.0048 |      - |      - |      40 B |        1.00 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 8     | Emoji  |       5.510 ns |     0.0276 ns |     0.0215 ns |  0.23 |    0.00 | 0.0048 |      - |      - |      40 B |        1.00 |
+| Text.FromBytes(span)                 | 8     | Emoji  |       7.728 ns |     0.1215 ns |     0.0948 ns |  0.33 |    0.01 | 0.0048 |      - |      - |      40 B |        1.00 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 8     | Emoji  |       5.558 ns |     0.1003 ns |     0.0889 ns |  0.23 |    0.00 | 0.0048 |      - |      - |      40 B |        1.00 |
+| &#39;new U8String(span)&#39;                 | 8     | Emoji  |      14.294 ns |     0.2408 ns |     0.2252 ns |  0.60 |    0.01 | 0.0057 |      - |      - |      48 B |        1.20 |
+| OwnedText.FromUtf8(span)             | 8     | Emoji  |      13.626 ns |     0.1465 ns |     0.1370 ns |  0.57 |    0.01 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 8     | Emoji  |      11.454 ns |     0.1934 ns |     0.1714 ns |  0.48 |    0.01 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 8     | Emoji  |      13.621 ns |     0.1738 ns |     0.1625 ns |  0.57 |    0.01 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 8     | Emoji  |      11.459 ns |     0.2333 ns |     0.2182 ns |  0.48 |    0.01 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **8**     | **Mixed**  |       **8.834 ns** |     **0.2389 ns** |     **0.2118 ns** |  **1.00** |    **0.03** | **0.0047** |      **-** |      **-** |      **40 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 8     | Mixed  |       7.261 ns |     0.1059 ns |     0.0990 ns |  0.82 |    0.02 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 8     | Mixed  |       5.307 ns |     0.0691 ns |     0.0613 ns |  0.60 |    0.02 | 0.0038 |      - |      - |      32 B |        0.80 |
+| Text.FromBytes(span)                 | 8     | Mixed  |       7.243 ns |     0.0967 ns |     0.0905 ns |  0.82 |    0.02 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 8     | Mixed  |       5.283 ns |     0.0601 ns |     0.0502 ns |  0.60 |    0.01 | 0.0038 |      - |      - |      32 B |        0.80 |
+| &#39;new U8String(span)&#39;                 | 8     | Mixed  |       6.723 ns |     0.0806 ns |     0.0754 ns |  0.76 |    0.02 | 0.0048 |      - |      - |      40 B |        1.00 |
+| OwnedText.FromUtf8(span)             | 8     | Mixed  |      17.065 ns |     1.2397 ns |     1.1596 ns |  1.93 |    0.13 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 8     | Mixed  |      11.502 ns |     0.1133 ns |     0.1060 ns |  1.30 |    0.03 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 8     | Mixed  |      15.484 ns |     0.6797 ns |     0.6026 ns |  1.75 |    0.08 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 8     | Mixed  |      11.560 ns |     0.2306 ns |     0.1926 ns |  1.31 |    0.04 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **256**   | **Ascii**  |      **31.345 ns** |     **0.7580 ns** |     **0.7090 ns** |  **1.00** |    **0.03** | **0.0640** |      **-** |      **-** |     **536 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 256   | Ascii  |      26.486 ns |     0.1964 ns |     0.1640 ns |  0.85 |    0.02 | 0.0334 |      - |      - |     280 B |        0.52 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 256   | Ascii  |      15.402 ns |     0.1882 ns |     0.1571 ns |  0.49 |    0.01 | 0.0334 |      - |      - |     280 B |        0.52 |
+| Text.FromBytes(span)                 | 256   | Ascii  |      26.769 ns |     0.3322 ns |     0.3107 ns |  0.85 |    0.02 | 0.0334 |      - |      - |     280 B |        0.52 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 256   | Ascii  |      15.480 ns |     0.2007 ns |     0.1779 ns |  0.49 |    0.01 | 0.0335 |      - |      - |     280 B |        0.52 |
+| &#39;new U8String(span)&#39;                 | 256   | Ascii  |      21.962 ns |     0.2644 ns |     0.2344 ns |  0.70 |    0.02 | 0.0343 |      - |      - |     288 B |        0.54 |
+| OwnedText.FromUtf8(span)             | 256   | Ascii  |      23.068 ns |     0.2782 ns |     0.2602 ns |  0.74 |    0.02 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 256   | Ascii  |      12.663 ns |     0.0764 ns |     0.0638 ns |  0.40 |    0.01 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 256   | Ascii  |      22.404 ns |     0.2208 ns |     0.2065 ns |  0.72 |    0.02 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 256   | Ascii  |      12.987 ns |     0.1515 ns |     0.1417 ns |  0.41 |    0.01 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **256**   | **Cjk**    |     **359.911 ns** |    **10.7287 ns** |     **9.5107 ns** |  **1.00** |    **0.04** | **0.0628** |      **-** |      **-** |     **536 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 256   | Cjk    |      62.067 ns |     0.7528 ns |     0.7042 ns |  0.17 |    0.00 | 0.0944 |      - |      - |     792 B |        1.48 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 256   | Cjk    |      33.951 ns |     0.5465 ns |     0.4845 ns |  0.09 |    0.00 | 0.0945 | 0.0002 |      - |     792 B |        1.48 |
+| Text.FromBytes(span)                 | 256   | Cjk    |      61.473 ns |     0.5189 ns |     0.4600 ns |  0.17 |    0.00 | 0.0947 |      - |      - |     792 B |        1.48 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 256   | Cjk    |      34.163 ns |     0.7696 ns |     0.6426 ns |  0.09 |    0.00 | 0.0946 | 0.0002 |      - |     792 B |        1.48 |
+| &#39;new U8String(span)&#39;                 | 256   | Cjk    |     148.282 ns |     0.8463 ns |     0.6608 ns |  0.41 |    0.01 | 0.0950 |      - |      - |     800 B |        1.49 |
+| OwnedText.FromUtf8(span)             | 256   | Cjk    |      44.157 ns |     0.3992 ns |     0.3734 ns |  0.12 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 256   | Cjk    |      17.459 ns |     0.1441 ns |     0.1203 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 256   | Cjk    |      44.053 ns |     0.2656 ns |     0.2485 ns |  0.12 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 256   | Cjk    |      17.180 ns |     0.0723 ns |     0.0604 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **256**   | **Emoji**  |     **458.603 ns** |     **8.6500 ns** |     **7.6680 ns** |  **1.00** |    **0.02** | **0.0639** |      **-** |      **-** |     **536 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 256   | Emoji  |      43.578 ns |     0.2523 ns |     0.2107 ns |  0.10 |    0.00 | 0.0639 |      - |      - |     536 B |        1.00 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 256   | Emoji  |      25.418 ns |     0.2714 ns |     0.2119 ns |  0.06 |    0.00 | 0.0640 |      - |      - |     536 B |        1.00 |
+| Text.FromBytes(span)                 | 256   | Emoji  |      43.543 ns |     0.2334 ns |     0.1949 ns |  0.09 |    0.00 | 0.0640 |      - |      - |     536 B |        1.00 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 256   | Emoji  |      25.555 ns |     0.4469 ns |     0.4181 ns |  0.06 |    0.00 | 0.0641 |      - |      - |     536 B |        1.00 |
+| &#39;new U8String(span)&#39;                 | 256   | Emoji  |     232.355 ns |     1.3467 ns |     1.0514 ns |  0.51 |    0.01 | 0.0635 |      - |      - |     544 B |        1.01 |
+| OwnedText.FromUtf8(span)             | 256   | Emoji  |      33.464 ns |     0.2271 ns |     0.1896 ns |  0.07 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 256   | Emoji  |      15.929 ns |     0.1538 ns |     0.1364 ns |  0.03 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 256   | Emoji  |      33.577 ns |     0.2654 ns |     0.2352 ns |  0.07 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 256   | Emoji  |      15.594 ns |     0.1304 ns |     0.1018 ns |  0.03 |    0.00 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **256**   | **Mixed**  |     **314.460 ns** |     **4.6655 ns** |     **3.8959 ns** |  **1.00** |    **0.02** | **0.0621** |      **-** |      **-** |     **536 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 256   | Mixed  |      35.440 ns |     0.5224 ns |     0.4631 ns |  0.11 |    0.00 | 0.0429 |      - |      - |     360 B |        0.67 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 256   | Mixed  |      18.537 ns |     0.3495 ns |     0.3098 ns |  0.06 |    0.00 | 0.0430 |      - |      - |     360 B |        0.67 |
+| Text.FromBytes(span)                 | 256   | Mixed  |      35.269 ns |     0.5941 ns |     0.5266 ns |  0.11 |    0.00 | 0.0430 |      - |      - |     360 B |        0.67 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 256   | Mixed  |      18.273 ns |     0.2440 ns |     0.2038 ns |  0.06 |    0.00 | 0.0430 |      - |      - |     360 B |        0.67 |
+| &#39;new U8String(span)&#39;                 | 256   | Mixed  |     200.918 ns |     2.7494 ns |     2.2959 ns |  0.64 |    0.01 | 0.0427 |      - |      - |     360 B |        0.67 |
+| OwnedText.FromUtf8(span)             | 256   | Mixed  |      29.425 ns |     0.2911 ns |     0.2581 ns |  0.09 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 256   | Mixed  |      14.316 ns |     0.0487 ns |     0.0380 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 256   | Mixed  |      29.072 ns |     0.2918 ns |     0.2729 ns |  0.09 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 256   | Mixed  |      14.657 ns |     0.1303 ns |     0.1155 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **65536** | **Ascii**  |  **46,085.901 ns** |   **727.6050 ns** |   **607.5831 ns** |  **1.00** |    **0.02** | **0.4789** | **0.4789** | **0.4789** |  **131102 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 65536 | Ascii  |   4,212.799 ns |    68.1790 ns |    56.9325 ns |  0.09 |    0.00 | 7.8090 | 1.5394 |      - |   65560 B |        0.50 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 65536 | Ascii  |   1,741.451 ns |    48.2381 ns |    42.7618 ns |  0.04 |    0.00 | 7.8083 | 1.5617 |      - |   65560 B |        0.50 |
+| Text.FromBytes(span)                 | 65536 | Ascii  |   4,121.307 ns |    73.1433 ns |    68.4183 ns |  0.09 |    0.00 | 7.7850 | 1.5405 |      - |   65560 B |        0.50 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 65536 | Ascii  |   1,713.507 ns |    34.5191 ns |    32.2892 ns |  0.04 |    0.00 | 7.8097 | 1.5552 |      - |   65560 B |        0.50 |
+| &#39;new U8String(span)&#39;                 | 65536 | Ascii  |   2,868.448 ns |    45.8297 ns |    42.8691 ns |  0.06 |    0.00 | 7.7930 | 1.5586 |      - |   65568 B |        0.50 |
+| OwnedText.FromUtf8(span)             | 65536 | Ascii  |   3,018.488 ns |    36.8729 ns |    34.4909 ns |  0.07 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 65536 | Ascii  |     664.102 ns |    42.8559 ns |    40.0874 ns |  0.01 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 65536 | Ascii  |   3,049.294 ns |    33.5529 ns |    31.3854 ns |  0.07 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 65536 | Ascii  |     650.933 ns |    28.4149 ns |    25.1890 ns |  0.01 |    0.00 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **65536** | **Cjk**    |  **90,559.568 ns** | **1,601.3492 ns** | **1,497.9031 ns** |  **1.00** |    **0.02** |      **-** |      **-** |      **-** |  **131101 B** |       **1.000** |
+| Text.FromUtf8(span)                  | 65536 | Cjk    |  69,223.600 ns | 1,193.7008 ns | 1,116.5885 ns |  0.76 |    0.02 | 0.7184 | 0.7184 | 0.7184 |  196641 B |       1.500 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 65536 | Cjk    |  68,633.387 ns | 2,584.6624 ns | 2,291.2359 ns |  0.76 |    0.03 | 0.7862 | 0.7862 | 0.7862 |  196641 B |       1.500 |
+| Text.FromBytes(span)                 | 65536 | Cjk    |  81,879.915 ns | 2,005.6589 ns | 1,777.9644 ns |  0.90 |    0.02 | 0.8503 | 0.8503 | 0.8503 |  196642 B |       1.500 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 65536 | Cjk    |  59,313.312 ns | 2,072.9848 ns | 1,837.6470 ns |  0.66 |    0.02 | 0.6510 | 0.6510 | 0.6510 |  196639 B |       1.500 |
+| &#39;new U8String(span)&#39;                 | 65536 | Cjk    |  74,396.351 ns | 1,193.9764 ns | 1,058.4290 ns |  0.82 |    0.02 | 0.4664 | 0.4664 | 0.4664 |  196647 B |       1.500 |
+| OwnedText.FromUtf8(span)             | 65536 | Cjk    |   9,905.671 ns |    72.3845 ns |    60.4443 ns |  0.11 |    0.00 |      - |      - |      - |       1 B |       0.000 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 65536 | Cjk    |   2,640.636 ns |   148.2967 ns |   138.7168 ns |  0.03 |    0.00 |      - |      - |      - |         - |       0.000 |
+| OwnedText.FromBytes(span)            | 65536 | Cjk    |   9,991.335 ns |   150.2950 ns |   133.2326 ns |  0.11 |    0.00 |      - |      - |      - |       1 B |       0.000 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 65536 | Cjk    |   2,422.941 ns |    92.2716 ns |    77.0510 ns |  0.03 |    0.00 |      - |      - |      - |         - |       0.000 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **65536** | **Emoji**  | **120,183.313 ns** | **1,800.1398 ns** | **1,683.8519 ns** |  **1.00** |    **0.02** |      **-** |      **-** |      **-** |  **131103 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 65536 | Emoji  |  51,566.699 ns |   308.2008 ns |   240.6229 ns |  0.43 |    0.01 | 0.5388 | 0.5388 | 0.5388 |  131102 B |        1.00 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 65536 | Emoji  |  37,953.665 ns |   435.7676 ns |   340.2187 ns |  0.32 |    0.01 | 0.4209 | 0.4209 | 0.4209 |  131101 B |        1.00 |
+| Text.FromBytes(span)                 | 65536 | Emoji  |  28,937.704 ns |   955.1558 ns |   846.7208 ns |  0.24 |    0.01 | 0.3943 | 0.3943 | 0.3943 |  131092 B |        1.00 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 65536 | Emoji  |  46,765.923 ns | 1,496.3366 ns | 1,399.6741 ns |  0.39 |    0.01 | 0.5342 | 0.5342 | 0.5342 |  131102 B |        1.00 |
+| &#39;new U8String(span)&#39;                 | 65536 | Emoji  |  87,261.999 ns | 1,782.2634 ns | 1,488.2707 ns |  0.73 |    0.02 | 0.3882 | 0.3882 | 0.3882 |  131109 B |        1.00 |
+| OwnedText.FromUtf8(span)             | 65536 | Emoji  |   6,341.058 ns |    73.2381 ns |    68.5070 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 65536 | Emoji  |   1,278.891 ns |    23.8543 ns |    22.3133 ns |  0.01 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 65536 | Emoji  |   6,356.780 ns |    67.8730 ns |    63.4885 ns |  0.05 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 65536 | Emoji  |   1,277.068 ns |    18.4744 ns |    16.3770 ns |  0.01 |    0.00 |      - |      - |      - |         - |        0.00 |
+|                                      |       |        |                |               |               |       |         |        |        |        |           |             |
+| **Encoding.GetString(span)**             | **65536** | **Mixed**  | **125,952.226 ns** | **1,373.2050 ns** | **1,072.1082 ns** | **1.000** |    **0.01** | **0.5482** | **0.5482** | **0.5482** |  **131105 B** |        **1.00** |
+| Text.FromUtf8(span)                  | 65536 | Mixed  |  32,458.583 ns |   830.6684 ns |   736.3659 ns | 0.258 |    0.01 | 0.3316 | 0.3316 | 0.3316 |   85516 B |        0.65 |
+| &#39;Text.FromUtf8(span) no-count&#39;       | 65536 | Mixed  |  31,727.502 ns |   515.8368 ns |   457.2759 ns | 0.252 |    0.00 | 0.3687 | 0.3687 | 0.3687 |   85516 B |        0.65 |
+| Text.FromBytes(span)                 | 65536 | Mixed  |  31,692.867 ns |   643.2262 ns |   570.2033 ns | 0.252 |    0.00 | 0.3213 | 0.3213 | 0.3213 |   85515 B |        0.65 |
+| &#39;Text.FromBytes(span) no-count&#39;      | 65536 | Mixed  |  30,325.714 ns |   773.1836 ns |   685.4071 ns | 0.241 |    0.01 | 0.3425 | 0.3425 | 0.3425 |   85516 B |        0.65 |
+| &#39;new U8String(span)&#39;                 | 65536 | Mixed  |  77,635.738 ns | 1,613.7160 ns | 1,430.5172 ns | 0.616 |    0.01 | 0.3472 | 0.3472 | 0.3472 |   85518 B |        0.65 |
+| OwnedText.FromUtf8(span)             | 65536 | Mixed  |   4,003.848 ns |    25.1609 ns |    19.6439 ns | 0.032 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromUtf8(span) no-count&#39;  | 65536 | Mixed  |     822.726 ns |    26.8756 ns |    23.8245 ns | 0.007 |    0.00 |      - |      - |      - |         - |        0.00 |
+| OwnedText.FromBytes(span)            | 65536 | Mixed  |   4,033.922 ns |    34.6947 ns |    30.7559 ns | 0.032 |    0.00 |      - |      - |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(span) no-count&#39; | 65536 | Mixed  |     878.973 ns |    14.2151 ns |    12.6013 ns | 0.007 |    0.00 |      - |      - |      - |         - |        0.00 |

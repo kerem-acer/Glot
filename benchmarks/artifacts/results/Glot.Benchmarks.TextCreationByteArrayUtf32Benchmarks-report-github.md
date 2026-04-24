@@ -1,0 +1,84 @@
+```
+
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
+
+EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
+
+```
+| Method                                 | N     | Locale | Mean           | Error         | StdDev        | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|--------------------------------------- |------ |------- |---------------:|--------------:|--------------:|------:|--------:|-------:|----------:|------------:|
+| **Encoding.UTF32.GetString**               | **8**     | **Ascii**  |      **50.179 ns** |     **0.5303 ns** |     **0.4428 ns** |  **1.00** |    **0.01** | **0.0218** |     **184 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 8     | Ascii  |       1.507 ns |     0.0207 ns |     0.0194 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 8     | Ascii  |       1.508 ns |     0.0228 ns |     0.0214 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 8     | Ascii  |      11.326 ns |     0.1350 ns |     0.1127 ns |  0.23 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 8     | Ascii  |      11.040 ns |     0.1480 ns |     0.1384 ns |  0.22 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **8**     | **Cjk**    |      **50.560 ns** |     **0.7347 ns** |     **0.6513 ns** |  **1.00** |    **0.02** | **0.0217** |     **184 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 8     | Cjk    |       1.509 ns |     0.0201 ns |     0.0188 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 8     | Cjk    |       1.499 ns |     0.0167 ns |     0.0148 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 8     | Cjk    |      11.380 ns |     0.1694 ns |     0.1585 ns |  0.23 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 8     | Cjk    |      11.091 ns |     0.1174 ns |     0.1098 ns |  0.22 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **8**     | **Emoji**  |      **42.189 ns** |     **0.5268 ns** |     **0.4670 ns** |  **1.00** |    **0.02** | **0.0217** |     **184 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 8     | Emoji  |       1.510 ns |     0.0272 ns |     0.0227 ns |  0.04 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 8     | Emoji  |       1.558 ns |     0.0416 ns |     0.0369 ns |  0.04 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 8     | Emoji  |      12.069 ns |     0.1711 ns |     0.1601 ns |  0.29 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 8     | Emoji  |      11.642 ns |     0.1590 ns |     0.1487 ns |  0.28 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **8**     | **Mixed**  |      **50.706 ns** |     **0.8969 ns** |     **0.8389 ns** |  **1.00** |    **0.02** | **0.0217** |     **184 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 8     | Mixed  |       1.517 ns |     0.0311 ns |     0.0275 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 8     | Mixed  |       1.508 ns |     0.0218 ns |     0.0204 ns |  0.03 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 8     | Mixed  |      11.308 ns |     0.1544 ns |     0.1444 ns |  0.22 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 8     | Mixed  |      11.100 ns |     0.1184 ns |     0.1107 ns |  0.22 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **256**   | **Ascii**  |   **1,222.832 ns** |    **14.7362 ns** |    **13.7843 ns** | **1.000** |    **0.02** | **0.0803** |     **680 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 256   | Ascii  |       1.506 ns |     0.0186 ns |     0.0165 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 256   | Ascii  |       1.508 ns |     0.0236 ns |     0.0209 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 256   | Ascii  |      19.526 ns |     0.1649 ns |     0.1377 ns | 0.016 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 256   | Ascii  |      19.941 ns |     0.1708 ns |     0.1598 ns | 0.016 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **256**   | **Cjk**    |   **1,221.466 ns** |    **15.4648 ns** |    **13.7092 ns** | **1.000** |    **0.02** | **0.0805** |     **680 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 256   | Cjk    |       1.511 ns |     0.0251 ns |     0.0235 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 256   | Cjk    |       1.510 ns |     0.0141 ns |     0.0125 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 256   | Cjk    |      19.548 ns |     0.1214 ns |     0.1013 ns | 0.016 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 256   | Cjk    |      19.570 ns |     0.2514 ns |     0.2352 ns | 0.016 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **256**   | **Emoji**  |     **801.814 ns** |     **6.1740 ns** |     **5.1556 ns** | **1.000** |    **0.01** | **0.0795** |     **680 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 256   | Emoji  |       1.525 ns |     0.0322 ns |     0.0301 ns | 0.002 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 256   | Emoji  |       1.520 ns |     0.0338 ns |     0.0316 ns | 0.002 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 256   | Emoji  |      15.626 ns |     0.1471 ns |     0.1376 ns | 0.019 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 256   | Emoji  |      15.980 ns |     0.2269 ns |     0.2011 ns | 0.020 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **256**   | **Mixed**  |   **1,223.054 ns** |    **13.1132 ns** |    **10.9501 ns** | **1.000** |    **0.01** | **0.0806** |     **680 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 256   | Mixed  |       1.524 ns |     0.0229 ns |     0.0214 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 256   | Mixed  |       1.526 ns |     0.0254 ns |     0.0238 ns | 0.001 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 256   | Mixed  |      18.935 ns |     0.1578 ns |     0.1399 ns | 0.015 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 256   | Mixed  |      19.154 ns |     0.1776 ns |     0.1574 ns | 0.016 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **65536** | **Ascii**  | **312,855.609 ns** | **2,747.0447 ns** | **2,293.9067 ns** | **1.000** |    **0.01** |      **-** |  **131257 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 65536 | Ascii  |       1.525 ns |     0.0194 ns |     0.0172 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 65536 | Ascii  |       1.519 ns |     0.0232 ns |     0.0217 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 65536 | Ascii  |   3,263.899 ns |   124.7798 ns |   110.6140 ns | 0.010 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 65536 | Ascii  |   3,183.590 ns |    93.3690 ns |    82.7692 ns | 0.010 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **65536** | **Cjk**    | **314,987.106 ns** | **4,312.2069 ns** | **4,033.6410 ns** | **1.000** |    **0.02** |      **-** |  **131257 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 65536 | Cjk    |       1.521 ns |     0.0258 ns |     0.0241 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 65536 | Cjk    |       1.518 ns |     0.0216 ns |     0.0202 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 65536 | Cjk    |   3,193.766 ns |    79.9012 ns |    66.7211 ns | 0.010 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 65536 | Cjk    |   3,275.746 ns |   107.5988 ns |   100.6480 ns | 0.010 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **65536** | **Emoji**  | **197,886.762 ns** | **3,634.4683 ns** | **3,399.6839 ns** | **1.000** |    **0.02** |      **-** |  **131250 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 65536 | Emoji  |       1.541 ns |     0.0333 ns |     0.0295 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 65536 | Emoji  |       1.561 ns |     0.0417 ns |     0.0390 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 65536 | Emoji  |   1,260.071 ns |    22.3846 ns |    20.9385 ns | 0.006 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 65536 | Emoji  |   1,263.997 ns |    25.4119 ns |    23.7703 ns | 0.006 |    0.00 |      - |         - |        0.00 |
+|                                        |       |        |                |               |               |       |         |        |           |             |
+| **Encoding.UTF32.GetString**               | **65536** | **Mixed**  | **313,344.431 ns** | **2,478.9077 ns** | **2,070.0002 ns** | **1.000** |    **0.01** |      **-** |  **131255 B** |        **1.00** |
+| &#39;Text.FromBytes(byte[])&#39;               | 65536 | Mixed  |       1.524 ns |     0.0308 ns |     0.0288 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;Text.FromBytes(byte[]) no-count&#39;      | 65536 | Mixed  |       1.582 ns |     0.0518 ns |     0.0484 ns | 0.000 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[])&#39;          | 65536 | Mixed  |   3,154.277 ns |   110.9358 ns |    98.3417 ns | 0.010 |    0.00 |      - |         - |        0.00 |
+| &#39;OwnedText.FromBytes(byte[]) no-count&#39; | 65536 | Mixed  |   3,105.278 ns |   156.2916 ns |   138.5484 ns | 0.010 |    0.00 |      - |         - |        0.00 |

@@ -1113,6 +1113,40 @@ public partial class TextSpanTests
     }
 
     [Test]
+    public async Task EndsWith_CrossEncodingSameLengthDifferentContent_ReturnsFalse()
+    {
+        // Arrange — both tails are the same byte length after transcode but differ.
+        // Exercises the fast-path: needle-transcode must not produce a false positive
+        // via some non-suffix byte alignment.
+        var span = new TextSpan("hello world"u8, TextEncoding.Utf8);
+        var value = new TextSpan(TestHelpers.Encode("xorld", TextEncoding.Utf16), TextEncoding.Utf16);
+
+        // Act
+        var result = span.EndsWith(value);
+
+        // Assert
+        await Assert.That(result).IsFalse();
+    }
+
+    [Test]
+    public async Task EndsWith_CrossEncodingOversizeNeedle_UsesRuneByRuneFallback()
+    {
+        // Arrange — needle over the 512-byte transcode budget forces the fallback path
+        // (rune-by-rune from the end). ~150 Cjk runes in UTF-16 → ~450 UTF-8 bytes after
+        // transcode fits; use more to exceed budget.
+        var suffix = new string('中', 200);    // 200 Cjk runes (U+4E2D)
+        var haystack = "prefix " + suffix;
+        var span = new TextSpan(TestHelpers.Encode(haystack, TextEncoding.Utf8), TextEncoding.Utf8);
+        var value = new TextSpan(TestHelpers.Encode(suffix, TextEncoding.Utf16), TextEncoding.Utf16);
+
+        // Act
+        var result = span.EndsWith(value);
+
+        // Assert
+        await Assert.That(result).IsTrue();
+    }
+
+    [Test]
     public async Task IndexOf_CrossEncodingFalsePrefix_ReturnsCorrectIndex()
     {
         // Arrange — transcoded prefix "c" matches at position 2, full verify confirms "café"

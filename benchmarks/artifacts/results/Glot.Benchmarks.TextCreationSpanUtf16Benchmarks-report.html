@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextCreationSpanUtf16Benchmarks-20260422-083350</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                        </th><th>N</th><th>Locale</th><th>Mean   </th><th>Error  </th><th>StdDev </th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>&#39;new string(chars)&#39;</td><td>8</td><td>Ascii</td><td>6.252 ns</td><td>0.0814 ns</td><td>0.0762 ns</td><td>1.00</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>8</td><td>Ascii</td><td>7.726 ns</td><td>0.0694 ns</td><td>0.0615 ns</td><td>1.24</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>8</td><td>Ascii</td><td>5.626 ns</td><td>0.0951 ns</td><td>0.0890 ns</td><td>0.90</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>8</td><td>Ascii</td><td>14.284 ns</td><td>0.2098 ns</td><td>0.1963 ns</td><td>2.29</td><td>0.04</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>8</td><td>Ascii</td><td>12.258 ns</td><td>0.3088 ns</td><td>0.2889 ns</td><td>1.96</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>8</td><td>Cjk</td><td>6.262 ns</td><td>0.0960 ns</td><td>0.0898 ns</td><td>1.00</td><td>0.02</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>8</td><td>Cjk</td><td>7.743 ns</td><td>0.1092 ns</td><td>0.1022 ns</td><td>1.24</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>8</td><td>Cjk</td><td>5.629 ns</td><td>0.0876 ns</td><td>0.0819 ns</td><td>0.90</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>8</td><td>Cjk</td><td>14.206 ns</td><td>0.1815 ns</td><td>0.1697 ns</td><td>2.27</td><td>0.04</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>8</td><td>Cjk</td><td>12.261 ns</td><td>0.3821 ns</td><td>0.3574 ns</td><td>1.96</td><td>0.06</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>8</td><td>Emoji</td><td>6.222 ns</td><td>0.0425 ns</td><td>0.0355 ns</td><td>1.00</td><td>0.01</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>8</td><td>Emoji</td><td>7.743 ns</td><td>0.0724 ns</td><td>0.0641 ns</td><td>1.24</td><td>0.01</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>8</td><td>Emoji</td><td>5.629 ns</td><td>0.0877 ns</td><td>0.0820 ns</td><td>0.90</td><td>0.01</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>8</td><td>Emoji</td><td>14.289 ns</td><td>0.1679 ns</td><td>0.1571 ns</td><td>2.30</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>8</td><td>Emoji</td><td>12.269 ns</td><td>0.2613 ns</td><td>0.2444 ns</td><td>1.97</td><td>0.04</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>8</td><td>Mixed</td><td>6.246 ns</td><td>0.0833 ns</td><td>0.0739 ns</td><td>1.00</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>8</td><td>Mixed</td><td>7.752 ns</td><td>0.1003 ns</td><td>0.0889 ns</td><td>1.24</td><td>0.02</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>8</td><td>Mixed</td><td>5.596 ns</td><td>0.0779 ns</td><td>0.0728 ns</td><td>0.90</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>8</td><td>Mixed</td><td>14.198 ns</td><td>0.1625 ns</td><td>0.1520 ns</td><td>2.27</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>8</td><td>Mixed</td><td>12.101 ns</td><td>0.2845 ns</td><td>0.2661 ns</td><td>1.94</td><td>0.05</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>256</td><td>Ascii</td><td>24.337 ns</td><td>0.4457 ns</td><td>0.4169 ns</td><td>1.00</td><td>0.02</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>256</td><td>Ascii</td><td>44.535 ns</td><td>0.2290 ns</td><td>0.1788 ns</td><td>1.83</td><td>0.03</td><td>0.0639</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>256</td><td>Ascii</td><td>25.493 ns</td><td>0.5114 ns</td><td>0.4270 ns</td><td>1.05</td><td>0.02</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>256</td><td>Ascii</td><td>35.146 ns</td><td>0.3637 ns</td><td>0.3224 ns</td><td>1.44</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>256</td><td>Ascii</td><td>15.889 ns</td><td>0.1690 ns</td><td>0.1581 ns</td><td>0.65</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>256</td><td>Cjk</td><td>24.158 ns</td><td>0.1696 ns</td><td>0.1324 ns</td><td>1.00</td><td>0.01</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>256</td><td>Cjk</td><td>44.692 ns</td><td>0.2990 ns</td><td>0.2496 ns</td><td>1.85</td><td>0.01</td><td>0.0639</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>256</td><td>Cjk</td><td>25.996 ns</td><td>0.7093 ns</td><td>0.5923 ns</td><td>1.08</td><td>0.02</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>256</td><td>Cjk</td><td>35.532 ns</td><td>0.3357 ns</td><td>0.3140 ns</td><td>1.47</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>256</td><td>Cjk</td><td>21.630 ns</td><td>0.2406 ns</td><td>0.2250 ns</td><td>0.90</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>256</td><td>Emoji</td><td>24.472 ns</td><td>0.4656 ns</td><td>0.4355 ns</td><td>1.00</td><td>0.02</td><td>0.0641</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>256</td><td>Emoji</td><td>45.512 ns</td><td>0.5174 ns</td><td>0.4586 ns</td><td>1.86</td><td>0.04</td><td>0.0638</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>256</td><td>Emoji</td><td>25.678 ns</td><td>0.5349 ns</td><td>0.5004 ns</td><td>1.05</td><td>0.03</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>256</td><td>Emoji</td><td>35.310 ns</td><td>0.3546 ns</td><td>0.3317 ns</td><td>1.44</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>256</td><td>Emoji</td><td>15.615 ns</td><td>0.0925 ns</td><td>0.0772 ns</td><td>0.64</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>256</td><td>Mixed</td><td>24.572 ns</td><td>0.3601 ns</td><td>0.3192 ns</td><td>1.00</td><td>0.02</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>256</td><td>Mixed</td><td>44.231 ns</td><td>0.3322 ns</td><td>0.2774 ns</td><td>1.80</td><td>0.02</td><td>0.0648</td><td>-</td><td>-</td><td>544 B</td><td>1.01</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>256</td><td>Mixed</td><td>25.877 ns</td><td>0.4474 ns</td><td>0.4185 ns</td><td>1.05</td><td>0.02</td><td>0.0649</td><td>-</td><td>-</td><td>544 B</td><td>1.01</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>256</td><td>Mixed</td><td>36.063 ns</td><td>0.2853 ns</td><td>0.2529 ns</td><td>1.47</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>256</td><td>Mixed</td><td>15.630 ns</td><td>0.1965 ns</td><td>0.1742 ns</td><td>0.64</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>65536</td><td>Ascii</td><td>41,876.926 ns</td><td>1,239.6365 ns</td><td>1,035.1526 ns</td><td>1.00</td><td>0.03</td><td>0.4296</td><td>0.4296</td><td>0.4296</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>65536</td><td>Ascii</td><td>55,871.940 ns</td><td>933.4642 ns</td><td>827.4917 ns</td><td>1.33</td><td>0.04</td><td>0.5708</td><td>0.5708</td><td>0.5708</td><td>131102 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>65536</td><td>Ascii</td><td>38,119.265 ns</td><td>626.7234 ns</td><td>555.5739 ns</td><td>0.91</td><td>0.02</td><td>0.4252</td><td>0.4252</td><td>0.4252</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>65536</td><td>Ascii</td><td>5,921.261 ns</td><td>59.4891 ns</td><td>55.6462 ns</td><td>0.14</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>65536</td><td>Ascii</td><td>1,267.560 ns</td><td>26.5496 ns</td><td>24.8345 ns</td><td>0.03</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>65536</td><td>Cjk</td><td>43,954.046 ns</td><td>1,150.8458 ns</td><td>1,020.1948 ns</td><td>1.00</td><td>0.03</td><td>0.4613</td><td>0.4613</td><td>0.4613</td><td>131102 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>65536</td><td>Cjk</td><td>33,250.190 ns</td><td>1,369.3114 ns</td><td>1,280.8547 ns</td><td>0.76</td><td>0.03</td><td>0.3613</td><td>0.3613</td><td>0.3613</td><td>131093 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>65536</td><td>Cjk</td><td>31,339.255 ns</td><td>674.3744 ns</td><td>630.8102 ns</td><td>0.71</td><td>0.02</td><td>0.3602</td><td>0.3602</td><td>0.3602</td><td>131093 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>65536</td><td>Cjk</td><td>5,916.446 ns</td><td>37.5249 ns</td><td>31.3350 ns</td><td>0.13</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>65536</td><td>Cjk</td><td>1,385.490 ns</td><td>12.9129 ns</td><td>11.4470 ns</td><td>0.03</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>65536</td><td>Emoji</td><td>44,549.220 ns</td><td>925.8164 ns</td><td>866.0092 ns</td><td>1.00</td><td>0.03</td><td>0.4753</td><td>0.4753</td><td>0.4753</td><td>131102 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>65536</td><td>Emoji</td><td>33,620.407 ns</td><td>730.7217 ns</td><td>610.1857 ns</td><td>0.75</td><td>0.02</td><td>0.3613</td><td>0.3613</td><td>0.3613</td><td>131093 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>65536</td><td>Emoji</td><td>30,872.737 ns</td><td>782.3102 ns</td><td>693.4976 ns</td><td>0.69</td><td>0.02</td><td>0.3561</td><td>0.3561</td><td>0.3561</td><td>131093 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>65536</td><td>Emoji</td><td>5,939.760 ns</td><td>48.2325 ns</td><td>42.7569 ns</td><td>0.13</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>65536</td><td>Emoji</td><td>1,376.327 ns</td><td>33.4322 ns</td><td>31.2725 ns</td><td>0.03</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(chars)&#39;</td><td>65536</td><td>Mixed</td><td>43,094.711 ns</td><td>1,583.4541 ns</td><td>1,403.6908 ns</td><td>1.00</td><td>0.04</td><td>0.4448</td><td>0.4448</td><td>0.4448</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>Text.FromBytes(span)</td><td>65536</td><td>Mixed</td><td>19,861.447 ns</td><td>682.8932 ns</td><td>605.3671 ns</td><td>0.46</td><td>0.02</td><td>0.2637</td><td>0.2637</td><td>0.2637</td><td>131085 B</td><td>1.00</td>
+</tr><tr><td>&#39;Text.FromBytes(span) no-count&#39;</td><td>65536</td><td>Mixed</td><td>18,919.547 ns</td><td>380.2347 ns</td><td>355.6717 ns</td><td>0.44</td><td>0.02</td><td>0.2185</td><td>0.2185</td><td>0.2185</td><td>131087 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromBytes(span)</td><td>65536</td><td>Mixed</td><td>6,176.122 ns</td><td>35.3881 ns</td><td>29.5507 ns</td><td>0.14</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromBytes(span) no-count&#39;</td><td>65536</td><td>Mixed</td><td>1,291.037 ns</td><td>20.8677 ns</td><td>18.4987 ns</td><td>0.03</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr></tbody></table>
+</body>
+</html>

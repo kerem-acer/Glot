@@ -46,6 +46,25 @@ public sealed partial class OwnedText
         return owned;
     }
 
+    /// <summary>Creates a UTF-8 <see cref="OwnedText"/> from ASCII bytes.</summary>
+    /// <param name="value">The ASCII bytes to copy.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>Copies the bytes into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>. Skips rune counting — the rune count equals the byte count for ASCII.</remarks>
+    public static OwnedText FromAscii(ReadOnlySpan<byte> value)
+    {
+        if (value.IsEmpty)
+        {
+            return Empty;
+        }
+
+        var buffer = ArrayPool<byte>.Shared.Rent(value.Length);
+        value.CopyTo(buffer);
+
+        var owned = GetFromPool();
+        owned.Initialize(buffer, value.Length, TextEncoding.Utf8, value.Length, BackingType.ByteArray);
+        return owned;
+    }
+
     /// <summary>Creates a UTF-16 <see cref="OwnedText"/> by copying the chars.</summary>
     /// <param name="value">The UTF-16 characters to copy.</param>
     /// <param name="countRunes">Whether to count runes during construction.</param>

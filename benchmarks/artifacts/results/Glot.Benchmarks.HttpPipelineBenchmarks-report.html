@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>Glot.Benchmarks.HttpPipelineBenchmarks-20260416-123424</title>
+<title>Glot.Benchmarks.HttpPipelineBenchmarks-20260421-180141</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -15,44 +15,52 @@
 <pre><code>
 BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
 Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
-.NET SDK 10.0.201
-  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
-  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
 </code></pre>
-<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
-WarmupCount=3  
+<pre><code>EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
 </code></pre>
 
 <table>
-<thead><tr><th>Method          </th><th>N</th><th>Locale</th><th>Mean    </th><th>Error  </th><th>StdDev</th><th>Median  </th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+<thead><tr><th>Method          </th><th>N</th><th>Locale</th><th>Mean    </th><th>Error </th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
 </tr>
-</thead><tbody><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Ascii</td><td>376.0 ns</td><td>70.60 ns</td><td>3.87 ns</td><td>373.9 ns</td><td>1.00</td><td>0.01</td><td>0.1631</td><td>-</td><td>-</td><td>1368 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Ascii</td><td>469.0 ns</td><td>49.38 ns</td><td>2.71 ns</td><td>468.4 ns</td><td>1.25</td><td>0.01</td><td>0.0982</td><td>-</td><td>-</td><td>824 B</td><td>0.60</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Ascii</td><td>375.2 ns</td><td>33.23 ns</td><td>1.82 ns</td><td>374.5 ns</td><td>1.00</td><td>0.01</td><td>0.0677</td><td>-</td><td>-</td><td>568 B</td><td>0.42</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,144.4 ns</td><td>375.07 ns</td><td>20.56 ns</td><td>2,145.5 ns</td><td>1.00</td><td>0.01</td><td>0.2594</td><td>-</td><td>-</td><td>2248 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,335.7 ns</td><td>1,014.07 ns</td><td>55.58 ns</td><td>2,365.1 ns</td><td>1.09</td><td>0.02</td><td>0.2174</td><td>-</td><td>-</td><td>1832 B</td><td>0.81</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,233.1 ns</td><td>365.50 ns</td><td>20.03 ns</td><td>2,226.7 ns</td><td>1.04</td><td>0.01</td><td>0.0992</td><td>-</td><td>-</td><td>856 B</td><td>0.38</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,203.3 ns</td><td>632.35 ns</td><td>34.66 ns</td><td>1,201.7 ns</td><td>1.00</td><td>0.04</td><td>0.1831</td><td>-</td><td>-</td><td>1568 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,306.0 ns</td><td>146.03 ns</td><td>8.00 ns</td><td>1,310.5 ns</td><td>1.09</td><td>0.03</td><td>0.1221</td><td>-</td><td>-</td><td>1080 B</td><td>0.69</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,306.0 ns</td><td>592.83 ns</td><td>32.49 ns</td><td>1,291.7 ns</td><td>1.09</td><td>0.04</td><td>0.0744</td><td>-</td><td>-</td><td>624 B</td><td>0.40</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Ascii</td><td>3,866.2 ns</td><td>2,495.77 ns</td><td>136.80 ns</td><td>3,890.3 ns</td><td>1.00</td><td>0.04</td><td>5.9509</td><td>0.3662</td><td>-</td><td>49944 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Ascii</td><td>3,038.0 ns</td><td>20,134.73 ns</td><td>1,103.65 ns</td><td>2,412.6 ns</td><td>0.79</td><td>0.25</td><td>2.2621</td><td>0.0763</td><td>-</td><td>18936 B</td><td>0.38</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Ascii</td><td>2,393.6 ns</td><td>702.27 ns</td><td>38.49 ns</td><td>2,374.2 ns</td><td>0.62</td><td>0.02</td><td>1.1482</td><td>0.0381</td><td>-</td><td>9624 B</td><td>0.19</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Cjk</td><td>116,611.5 ns</td><td>530,173.60 ns</td><td>29,060.60 ns</td><td>100,885.4 ns</td><td>1.04</td><td>0.30</td><td>11.5967</td><td>0.8545</td><td>-</td><td>98264 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Cjk</td><td>103,525.4 ns</td><td>173,553.68 ns</td><td>9,513.06 ns</td><td>98,600.5 ns</td><td>0.92</td><td>0.19</td><td>9.5215</td><td>0.8545</td><td>-</td><td>79864 B</td><td>0.81</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Cjk</td><td>113,212.2 ns</td><td>466,791.05 ns</td><td>25,586.39 ns</td><td>99,383.0 ns</td><td>1.01</td><td>0.28</td><td>3.1738</td><td>0.2441</td><td>-</td><td>27032 B</td><td>0.28</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Mixed</td><td>44,338.7 ns</td><td>11,942.50 ns</td><td>654.61 ns</td><td>44,324.4 ns</td><td>1.00</td><td>0.02</td><td>7.0801</td><td>0.2441</td><td>-</td><td>61120 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Mixed</td><td>46,925.6 ns</td><td>18,681.13 ns</td><td>1,023.98 ns</td><td>46,861.5 ns</td><td>1.06</td><td>0.02</td><td>3.9063</td><td>0.1221</td><td>-</td><td>33176 B</td><td>0.54</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Mixed</td><td>45,835.6 ns</td><td>2,112.61 ns</td><td>115.80 ns</td><td>45,864.0 ns</td><td>1.03</td><td>0.01</td><td>1.4648</td><td>-</td><td>-</td><td>12688 B</td><td>0.21</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Ascii</td><td>86,512.8 ns</td><td>55,783.09 ns</td><td>3,057.66 ns</td><td>85,277.9 ns</td><td>1.00</td><td>0.04</td><td>128.9063</td><td>117.4316</td><td>114.5020</td><td>792676 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Ascii</td><td>44,689.3 ns</td><td>36,040.13 ns</td><td>1,975.48 ns</td><td>43,824.7 ns</td><td>0.52</td><td>0.03</td><td>64.6362</td><td>62.4390</td><td>62.4390</td><td>295926 B</td><td>0.37</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Ascii</td><td>37,118.9 ns</td><td>2,389.63 ns</td><td>130.98 ns</td><td>37,174.8 ns</td><td>0.43</td><td>0.01</td><td>35.8887</td><td>33.9355</td><td>33.9355</td><td>148138 B</td><td>0.19</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,568,425.4 ns</td><td>280,279.50 ns</td><td>15,363.07 ns</td><td>1,565,660.3 ns</td><td>1.00</td><td>0.01</td><td>183.5938</td><td>164.0625</td><td>160.1563</td><td>1565750 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,553,230.2 ns</td><td>97,204.13 ns</td><td>5,328.09 ns</td><td>1,555,120.4 ns</td><td>0.99</td><td>0.01</td><td>138.6719</td><td>134.7656</td><td>134.7656</td><td>1271139 B</td><td>0.81</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,564,527.5 ns</td><td>148,397.00 ns</td><td>8,134.14 ns</td><td>1,567,076.2 ns</td><td>1.00</td><td>0.01</td><td>15.6250</td><td>15.6250</td><td>15.6250</td><td>426471 B</td><td>0.27</td>
-</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Mixed</td><td>727,256.8 ns</td><td>127,702.92 ns</td><td>6,999.83 ns</td><td>725,996.3 ns</td><td>1.00</td><td>0.01</td><td>207.0313</td><td>195.3125</td><td>193.3594</td><td>972049 B</td><td>1.00</td>
-</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Mixed</td><td>713,694.9 ns</td><td>16,608.81 ns</td><td>910.38 ns</td><td>713,636.5 ns</td><td>0.98</td><td>0.01</td><td>117.1875</td><td>114.2578</td><td>114.2578</td><td>524316 B</td><td>0.54</td>
-</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Mixed</td><td>728,962.0 ns</td><td>294,154.49 ns</td><td>16,123.60 ns</td><td>720,771.6 ns</td><td>1.00</td><td>0.02</td><td>39.0625</td><td>36.1328</td><td>36.1328</td><td>197184 B</td><td>0.20</td>
+</thead><tbody><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Ascii</td><td>385.6 ns</td><td>3.02 ns</td><td>2.52 ns</td><td>1.00</td><td>0.01</td><td>0.1613</td><td>0.1613</td><td>-</td><td>1368 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Ascii</td><td>493.9 ns</td><td>5.12 ns</td><td>4.54 ns</td><td>1.28</td><td>0.01</td><td>0.0984</td><td>0.0984</td><td>-</td><td>824 B</td><td>0.60</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Ascii</td><td>403.2 ns</td><td>4.01 ns</td><td>3.55 ns</td><td>1.05</td><td>0.01</td><td>0.0671</td><td>0.0671</td><td>-</td><td>568 B</td><td>0.42</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,184.5 ns</td><td>11.60 ns</td><td>9.05 ns</td><td>1.00</td><td>0.01</td><td>0.2608</td><td>0.2608</td><td>-</td><td>2248 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,326.9 ns</td><td>31.54 ns</td><td>29.50 ns</td><td>1.07</td><td>0.01</td><td>0.2057</td><td>0.2057</td><td>-</td><td>1832 B</td><td>0.81</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Cjk</td><td>2,276.0 ns</td><td>27.61 ns</td><td>24.47 ns</td><td>1.04</td><td>0.01</td><td>0.0907</td><td>0.0907</td><td>-</td><td>856 B</td><td>0.38</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Emoji</td><td>2,287.8 ns</td><td>44.66 ns</td><td>41.77 ns</td><td>1.00</td><td>0.02</td><td>0.2570</td><td>0.2570</td><td>-</td><td>2192 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Emoji</td><td>2,307.1 ns</td><td>22.27 ns</td><td>18.60 ns</td><td>1.01</td><td>0.02</td><td>0.2021</td><td>0.2021</td><td>-</td><td>1736 B</td><td>0.79</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Emoji</td><td>2,257.2 ns</td><td>30.49 ns</td><td>28.52 ns</td><td>0.99</td><td>0.02</td><td>0.0744</td><td>0.0744</td><td>-</td><td>720 B</td><td>0.33</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,228.2 ns</td><td>15.67 ns</td><td>13.08 ns</td><td>1.00</td><td>0.01</td><td>0.1806</td><td>0.1806</td><td>-</td><td>1568 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,398.4 ns</td><td>29.52 ns</td><td>27.62 ns</td><td>1.14</td><td>0.02</td><td>0.1285</td><td>0.1285</td><td>-</td><td>1080 B</td><td>0.69</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>64</td><td>Mixed</td><td>1,346.1 ns</td><td>22.11 ns</td><td>19.60 ns</td><td>1.10</td><td>0.02</td><td>0.0710</td><td>0.0710</td><td>-</td><td>624 B</td><td>0.40</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Ascii</td><td>4,097.6 ns</td><td>66.41 ns</td><td>55.45 ns</td><td>1.00</td><td>0.02</td><td>5.9524</td><td>5.9524</td><td>-</td><td>49944 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Ascii</td><td>2,635.2 ns</td><td>65.63 ns</td><td>58.18 ns</td><td>0.64</td><td>0.02</td><td>2.2531</td><td>2.2531</td><td>-</td><td>18936 B</td><td>0.38</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Ascii</td><td>2,533.4 ns</td><td>40.75 ns</td><td>38.11 ns</td><td>0.62</td><td>0.01</td><td>1.1379</td><td>1.1379</td><td>-</td><td>9624 B</td><td>0.19</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Cjk</td><td>102,117.3 ns</td><td>898.53 ns</td><td>750.32 ns</td><td>1.00</td><td>0.01</td><td>11.5489</td><td>11.5489</td><td>-</td><td>98269 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Cjk</td><td>101,263.7 ns</td><td>1,413.54 ns</td><td>1,322.22 ns</td><td>0.99</td><td>0.01</td><td>9.3085</td><td>9.3085</td><td>-</td><td>79869 B</td><td>0.81</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Cjk</td><td>100,224.8 ns</td><td>1,207.97 ns</td><td>1,070.83 ns</td><td>0.98</td><td>0.01</td><td>2.6596</td><td>2.6596</td><td>-</td><td>27037 B</td><td>0.28</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Emoji</td><td>105,575.5 ns</td><td>1,561.42 ns</td><td>1,460.55 ns</td><td>1.00</td><td>0.02</td><td>10.8696</td><td>10.8696</td><td>-</td><td>96533 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Emoji</td><td>96,185.1 ns</td><td>941.02 ns</td><td>785.80 ns</td><td>0.91</td><td>0.01</td><td>8.2908</td><td>8.2908</td><td>-</td><td>72213 B</td><td>0.75</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Emoji</td><td>95,693.0 ns</td><td>995.19 ns</td><td>831.03 ns</td><td>0.91</td><td>0.01</td><td>1.8939</td><td>1.8939</td><td>-</td><td>18509 B</td><td>0.19</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>4096</td><td>Mixed</td><td>48,712.7 ns</td><td>893.74 ns</td><td>836.01 ns</td><td>1.00</td><td>0.02</td><td>7.0153</td><td>7.0153</td><td>-</td><td>61122 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>4096</td><td>Mixed</td><td>48,369.3 ns</td><td>449.38 ns</td><td>375.25 ns</td><td>0.99</td><td>0.02</td><td>3.8462</td><td>3.8462</td><td>-</td><td>33178 B</td><td>0.54</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>4096</td><td>Mixed</td><td>47,558.8 ns</td><td>510.72 ns</td><td>426.48 ns</td><td>0.98</td><td>0.02</td><td>1.2626</td><td>1.2626</td><td>-</td><td>12690 B</td><td>0.21</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Ascii</td><td>299,006.0 ns</td><td>7,662.17 ns</td><td>7,167.20 ns</td><td>1.00</td><td>0.03</td><td>16.4474</td><td>16.4474</td><td>3.2895</td><td>792388 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Ascii</td><td>132,561.5 ns</td><td>2,812.10 ns</td><td>2,630.44 ns</td><td>0.44</td><td>0.01</td><td>3.2552</td><td>3.2552</td><td>1.3021</td><td>295430 B</td><td>0.37</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Ascii</td><td>73,494.2 ns</td><td>1,321.80 ns</td><td>1,236.42 ns</td><td>0.25</td><td>0.01</td><td>2.4606</td><td>2.4606</td><td>0.4921</td><td>147871 B</td><td>0.19</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,627,215.5 ns</td><td>21,004.43 ns</td><td>17,539.65 ns</td><td>1.00</td><td>0.01</td><td>20.8333</td><td>20.8333</td><td>-</td><td>1565220 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,647,870.6 ns</td><td>22,086.87 ns</td><td>19,579.43 ns</td><td>1.01</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>1270340 B</td><td>0.81</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Cjk</td><td>1,581,111.3 ns</td><td>19,243.63 ns</td><td>18,000.50 ns</td><td>0.97</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>426468 B</td><td>0.27</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Emoji</td><td>1,666,811.4 ns</td><td>11,929.08 ns</td><td>9,961.32 ns</td><td>1.00</td><td>0.01</td><td>10.4167</td><td>10.4167</td><td>-</td><td>1537372 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Emoji</td><td>1,553,184.9 ns</td><td>19,029.74 ns</td><td>15,890.69 ns</td><td>0.93</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>1147484 B</td><td>0.75</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Emoji</td><td>1,510,635.0 ns</td><td>9,737.83 ns</td><td>8,131.53 ns</td><td>0.91</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>289930 B</td><td>0.19</td>
+</tr><tr><td>&#39;String pipeline&#39;</td><td>65536</td><td>Mixed</td><td>784,841.2 ns</td><td>14,381.97 ns</td><td>13,452.91 ns</td><td>1.00</td><td>0.02</td><td>10.4167</td><td>10.4167</td><td>-</td><td>971261 B</td><td>1.00</td>
+</tr><tr><td>&#39;Glot pipeline&#39;</td><td>65536</td><td>Mixed</td><td>770,759.8 ns</td><td>12,576.02 ns</td><td>11,763.62 ns</td><td>0.98</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>523318 B</td><td>0.54</td>
+</tr><tr><td>&#39;Glot pooled pipeline&#39;</td><td>65536</td><td>Mixed</td><td>750,728.2 ns</td><td>11,684.55 ns</td><td>10,929.74 ns</td><td>0.96</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>196891 B</td><td>0.20</td>
 </tr></tbody></table>
 </body>
 </html>

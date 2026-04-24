@@ -400,14 +400,15 @@ public readonly partial struct Text
                         break;
                     }
 
-                    if (!bytes.ContainsAnyInRange((byte)'a', (byte)'z'))
+                    var dst = new byte[bytes.Length];
+                    Ascii.ToUpper(bytes, dst, out _);
+
+                    if (bytes.SequenceEqual(dst))
                     {
                         result = this;
                         return true;
                     }
 
-                    var dst = new byte[bytes.Length];
-                    Ascii.ToUpper(bytes, dst, out _);
                     result = new Text(
                         dst,
                         0,
@@ -427,14 +428,15 @@ public readonly partial struct Text
                         break;
                     }
 
-                    if (!chars.ContainsAnyInRange('a', 'z'))
+                    var dst = new char[chars.Length];
+                    Ascii.ToUpper(chars, dst, out _);
+
+                    if (chars.SequenceEqual(dst))
                     {
                         result = this;
                         return true;
                     }
 
-                    var dst = new char[chars.Length];
-                    Ascii.ToUpper(chars, dst, out _);
                     result = new Text(
                         dst,
                         0,
@@ -497,14 +499,15 @@ public readonly partial struct Text
                         break;
                     }
 
-                    if (!bytes.ContainsAnyInRange((byte)'A', (byte)'Z'))
+                    var dst = new byte[bytes.Length];
+                    Ascii.ToLower(bytes, dst, out _);
+
+                    if (bytes.SequenceEqual(dst))
                     {
                         result = this;
                         return true;
                     }
 
-                    var dst = new byte[bytes.Length];
-                    Ascii.ToLower(bytes, dst, out _);
                     result = new Text(
                         dst,
                         0,
@@ -524,14 +527,15 @@ public readonly partial struct Text
                         break;
                     }
 
-                    if (!chars.ContainsAnyInRange('A', 'Z'))
+                    var dst = new char[chars.Length];
+                    Ascii.ToLower(chars, dst, out _);
+
+                    if (chars.SequenceEqual(dst))
                     {
                         result = this;
                         return true;
                     }
 
-                    var dst = new char[chars.Length];
-                    Ascii.ToLower(chars, dst, out _);
                     result = new Text(
                         dst,
                         0,
@@ -589,19 +593,21 @@ public readonly partial struct Text
         {
             case TextEncoding.Utf8:
                 {
-                    if (!Ascii.IsValid(bytes))
+                    var buffer = ArrayPool<byte>.Shared.Rent(bytes.Length);
+                    var span = buffer.AsSpan(0, bytes.Length);
+                    if (Ascii.ToUpper(bytes, span, out _) != OperationStatus.Done)
                     {
+                        ArrayPool<byte>.Shared.Return(buffer);
                         break;
                     }
 
-                    if (!bytes.ContainsAnyInRange((byte)'a', (byte)'z'))
+                    if (bytes.SequenceEqual(span))
                     {
+                        ArrayPool<byte>.Shared.Return(buffer);
                         result = OwnedText.FromBytes(bytes, TextEncoding.Utf8, countRunes: false);
                         return true;
                     }
 
-                    var buffer = ArrayPool<byte>.Shared.Rent(bytes.Length);
-                    Ascii.ToUpper(bytes, buffer.AsSpan(0, bytes.Length), out _);
                     result = OwnedText.Create(
                         buffer,
                         bytes.Length,
@@ -614,19 +620,21 @@ public readonly partial struct Text
             case TextEncoding.Utf16:
                 {
                     var chars = MemoryMarshal.Cast<byte, char>(bytes);
-                    if (!Ascii.IsValid(chars))
+                    var buffer = ArrayPool<char>.Shared.Rent(chars.Length);
+                    var span = buffer.AsSpan(0, chars.Length);
+                    if (Ascii.ToUpper(chars, span, out _) != OperationStatus.Done)
                     {
+                        ArrayPool<char>.Shared.Return(buffer);
                         break;
                     }
 
-                    if (!chars.ContainsAnyInRange('a', 'z'))
+                    if (chars.SequenceEqual(span))
                     {
+                        ArrayPool<char>.Shared.Return(buffer);
                         result = OwnedText.FromBytes(bytes, TextEncoding.Utf16, countRunes: false);
                         return true;
                     }
 
-                    var buffer = ArrayPool<char>.Shared.Rent(chars.Length);
-                    Ascii.ToUpper(chars, buffer.AsSpan(0, chars.Length), out _);
                     result = OwnedText.Create(buffer, chars.Length);
                     return true;
                 }
@@ -670,19 +678,21 @@ public readonly partial struct Text
         {
             case TextEncoding.Utf8:
                 {
-                    if (!Ascii.IsValid(bytes))
+                    var buffer = ArrayPool<byte>.Shared.Rent(bytes.Length);
+                    var span = buffer.AsSpan(0, bytes.Length);
+                    if (Ascii.ToLower(bytes, span, out _) != OperationStatus.Done)
                     {
+                        ArrayPool<byte>.Shared.Return(buffer);
                         break;
                     }
 
-                    if (!bytes.ContainsAnyInRange((byte)'A', (byte)'Z'))
+                    if (bytes.SequenceEqual(span))
                     {
+                        ArrayPool<byte>.Shared.Return(buffer);
                         result = OwnedText.FromBytes(bytes, TextEncoding.Utf8, countRunes: false);
                         return true;
                     }
 
-                    var buffer = ArrayPool<byte>.Shared.Rent(bytes.Length);
-                    Ascii.ToLower(bytes, buffer.AsSpan(0, bytes.Length), out _);
                     result = OwnedText.Create(
                         buffer,
                         bytes.Length,
@@ -695,19 +705,21 @@ public readonly partial struct Text
             case TextEncoding.Utf16:
                 {
                     var chars = MemoryMarshal.Cast<byte, char>(bytes);
-                    if (!Ascii.IsValid(chars))
+                    var buffer = ArrayPool<char>.Shared.Rent(chars.Length);
+                    var span = buffer.AsSpan(0, chars.Length);
+                    if (Ascii.ToLower(chars, span, out _) != OperationStatus.Done)
                     {
+                        ArrayPool<char>.Shared.Return(buffer);
                         break;
                     }
 
-                    if (!chars.ContainsAnyInRange('A', 'Z'))
+                    if (chars.SequenceEqual(span))
                     {
+                        ArrayPool<char>.Shared.Return(buffer);
                         result = OwnedText.FromBytes(bytes, TextEncoding.Utf16, countRunes: false);
                         return true;
                     }
 
-                    var buffer = ArrayPool<char>.Shared.Rent(chars.Length);
-                    Ascii.ToLower(chars, buffer.AsSpan(0, chars.Length), out _);
                     result = OwnedText.Create(buffer, chars.Length);
                     return true;
                 }

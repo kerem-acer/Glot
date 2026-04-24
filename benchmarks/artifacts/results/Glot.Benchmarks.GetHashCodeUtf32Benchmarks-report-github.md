@@ -2,48 +2,59 @@
 
 BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
 Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
-.NET SDK 10.0.201
-  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
-  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
 
-Job=ShortRun  IterationCount=3  LaunchCount=1  
-WarmupCount=3  
+EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
 
 ```
-| Method                    | N     | Locale | Mean          | Error          | StdDev        | Median        | Ratio | RatioSD | Allocated | Alloc Ratio |
-|-------------------------- |------ |------- |--------------:|---------------:|--------------:|--------------:|------:|--------:|----------:|------------:|
-| **string.GetHashCode**        | **8**     | **Ascii**  |      **2.113 ns** |      **0.8757 ns** |     **0.0480 ns** |      **2.123 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Ascii  |      1.306 ns |      1.1244 ns |     0.0616 ns |      1.297 ns |  0.62 |    0.03 |         - |          NA |
-| Text.GetHashCode          | 8     | Ascii  |      1.483 ns |      0.2084 ns |     0.0114 ns |      1.481 ns |  0.70 |    0.01 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **8**     | **Cjk**    |      **2.250 ns** |      **7.3993 ns** |     **0.4056 ns** |      **2.056 ns** |  **1.02** |    **0.22** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Cjk    |      3.302 ns |      4.2185 ns |     0.2312 ns |      3.399 ns |  1.50 |    0.23 |         - |          NA |
-| Text.GetHashCode          | 8     | Cjk    |      1.803 ns |      4.6455 ns |     0.2546 ns |      1.877 ns |  0.82 |    0.15 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **8**     | **Mixed**  |      **2.076 ns** |      **1.9415 ns** |     **0.1064 ns** |      **2.023 ns** |  **1.00** |    **0.06** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Mixed  |      1.306 ns |      2.5752 ns |     0.1412 ns |      1.237 ns |  0.63 |    0.06 |         - |          NA |
-| Text.GetHashCode          | 8     | Mixed  |      1.725 ns |      3.3277 ns |     0.1824 ns |      1.760 ns |  0.83 |    0.08 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **256**   | **Ascii**  |    **185.678 ns** |  **1,245.8717 ns** |    **68.2904 ns** |    **152.955 ns** |  **1.08** |    **0.46** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Ascii  |     20.886 ns |     14.4701 ns |     0.7932 ns |     20.525 ns |  0.12 |    0.03 |         - |          NA |
-| Text.GetHashCode          | 256   | Ascii  |     42.041 ns |    273.8473 ns |    15.0105 ns |     33.957 ns |  0.24 |    0.10 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **256**   | **Cjk**    |    **139.241 ns** |      **9.6418 ns** |     **0.5285 ns** |    **139.337 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Cjk    |     65.515 ns |     17.3539 ns |     0.9512 ns |     65.753 ns |  0.47 |    0.01 |         - |          NA |
-| Text.GetHashCode          | 256   | Cjk    |     32.578 ns |      1.5276 ns |     0.0837 ns |     32.623 ns |  0.23 |    0.00 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **256**   | **Mixed**  |    **157.727 ns** |    **215.5458 ns** |    **11.8148 ns** |    **164.504 ns** |  **1.00** |    **0.09** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Mixed  |     37.521 ns |    252.7679 ns |    13.8551 ns |     29.590 ns |  0.24 |    0.08 |         - |          NA |
-| Text.GetHashCode          | 256   | Mixed  |     32.768 ns |      1.9130 ns |     0.1049 ns |     32.787 ns |  0.21 |    0.01 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **65536** | **Ascii**  | **38,739.993 ns** | **21,143.0328 ns** | **1,158.9210 ns** | **38,386.009 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Ascii  |  5,156.453 ns |    152.7080 ns |     8.3704 ns |  5,156.303 ns |  0.13 |    0.00 |         - |          NA |
-| Text.GetHashCode          | 65536 | Ascii  |  7,393.297 ns |  1,513.9989 ns |    82.9874 ns |  7,378.611 ns |  0.19 |    0.01 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **65536** | **Cjk**    | **37,843.246 ns** |    **683.5893 ns** |    **37.4698 ns** | **37,834.788 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Cjk    | 15,482.557 ns |  1,976.8652 ns |   108.3587 ns | 15,528.271 ns |  0.41 |    0.00 |         - |          NA |
-| Text.GetHashCode          | 65536 | Cjk    |  8,439.529 ns | 32,435.5352 ns | 1,777.9011 ns |  7,451.856 ns |  0.22 |    0.04 |         - |          NA |
-|                           |       |        |               |                |               |               |       |         |           |             |
-| **string.GetHashCode**        | **65536** | **Mixed**  | **42,458.433 ns** | **60,932.0645 ns** | **3,339.8921 ns** | **41,035.484 ns** |  **1.00** |    **0.09** |         **-** |          **NA** |
-| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Mixed  |  8,016.675 ns | 36,080.6007 ns | 1,977.6995 ns |  6,932.371 ns |  0.19 |    0.04 |         - |          NA |
-| Text.GetHashCode          | 65536 | Mixed  |  7,223.031 ns |  4,003.3400 ns |   219.4366 ns |  7,116.776 ns |  0.17 |    0.01 |         - |          NA |
+| Method                    | N     | Locale | Mean          | Error         | StdDev        | Ratio | RatioSD | Allocated | Alloc Ratio |
+|-------------------------- |------ |------- |--------------:|--------------:|--------------:|------:|--------:|----------:|------------:|
+| **string.GetHashCode**        | **8**     | **Ascii**  |      **3.310 ns** |     **0.0392 ns** |     **0.0347 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Ascii  |      2.414 ns |     0.0240 ns |     0.0225 ns |  0.73 |    0.01 |         - |          NA |
+| Text.GetHashCode          | 8     | Ascii  |      2.781 ns |     0.0239 ns |     0.0224 ns |  0.84 |    0.01 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **8**     | **Cjk**    |      **3.340 ns** |     **0.0584 ns** |     **0.0547 ns** |  **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Cjk    |      4.458 ns |     0.0448 ns |     0.0419 ns |  1.33 |    0.02 |         - |          NA |
+| Text.GetHashCode          | 8     | Cjk    |      2.823 ns |     0.0388 ns |     0.0363 ns |  0.85 |    0.02 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **8**     | **Emoji**  |      **3.250 ns** |     **0.0101 ns** |     **0.0089 ns** |  **1.00** |    **0.00** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Emoji  |      3.540 ns |     0.0139 ns |     0.0130 ns |  1.09 |    0.00 |         - |          NA |
+| Text.GetHashCode          | 8     | Emoji  |      1.841 ns |     0.0215 ns |     0.0201 ns |  0.57 |    0.01 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **8**     | **Mixed**  |      **3.391 ns** |     **0.0220 ns** |     **0.0205 ns** |  **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 8     | Mixed  |      2.455 ns |     0.0259 ns |     0.0230 ns |  0.72 |    0.01 |         - |          NA |
+| Text.GetHashCode          | 8     | Mixed  |      2.831 ns |     0.0225 ns |     0.0210 ns |  0.83 |    0.01 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **256**   | **Ascii**  |    **153.375 ns** |     **3.3550 ns** |     **3.1383 ns** |  **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Ascii  |     22.309 ns |     0.2471 ns |     0.2311 ns |  0.15 |    0.00 |         - |          NA |
+| Text.GetHashCode          | 256   | Ascii  |     35.479 ns |     0.2877 ns |     0.2403 ns |  0.23 |    0.00 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **256**   | **Cjk**    |    **146.931 ns** |     **2.0401 ns** |     **1.9083 ns** |  **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Cjk    |     64.799 ns |     0.4844 ns |     0.4531 ns |  0.44 |    0.01 |         - |          NA |
+| Text.GetHashCode          | 256   | Cjk    |     35.235 ns |     0.2674 ns |     0.2501 ns |  0.24 |    0.00 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **256**   | **Emoji**  |    **152.150 ns** |     **4.2372 ns** |     **3.9635 ns** |  **1.00** |    **0.04** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Emoji  |     42.976 ns |     0.5948 ns |     0.5564 ns |  0.28 |    0.01 |         - |          NA |
+| Text.GetHashCode          | 256   | Emoji  |     27.148 ns |     0.3959 ns |     0.3703 ns |  0.18 |    0.01 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **256**   | **Mixed**  |    **145.873 ns** |     **5.5696 ns** |     **5.2098 ns** |  **1.00** |    **0.05** |         **-** |          **NA** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 256   | Mixed  |     31.826 ns |     0.1621 ns |     0.1265 ns |  0.22 |    0.01 |         - |          NA |
+| Text.GetHashCode          | 256   | Mixed  |     35.200 ns |     0.2910 ns |     0.2722 ns |  0.24 |    0.01 |         - |          NA |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **65536** | **Ascii**  | **40,034.377 ns** |   **901.8661 ns** |   **799.4808 ns** |  **1.00** |    **0.03** |       **2 B** |        **1.00** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Ascii  |  5,345.686 ns |    15.4495 ns |    12.9011 ns |  0.13 |    0.00 |         - |        0.00 |
+| Text.GetHashCode          | 65536 | Ascii  |  7,702.810 ns |    84.8748 ns |    75.2393 ns |  0.19 |    0.00 |         - |        0.00 |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **65536** | **Cjk**    | **41,137.663 ns** |   **921.3660 ns** |   **861.8464 ns** |  **1.00** |    **0.03** |       **2 B** |        **1.00** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Cjk    | 16,331.687 ns |   211.8428 ns |   198.1579 ns |  0.40 |    0.01 |       1 B |        0.50 |
+| Text.GetHashCode          | 65536 | Cjk    |  7,586.033 ns |    66.1610 ns |    55.2474 ns |  0.18 |    0.00 |         - |        0.00 |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **65536** | **Emoji**  | **41,108.203 ns** | **1,227.0445 ns** | **1,087.7430 ns** |  **1.00** |    **0.04** |       **2 B** |        **1.00** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Emoji  | 10,957.546 ns |   139.8877 ns |   130.8510 ns |  0.27 |    0.01 |       1 B |        0.50 |
+| Text.GetHashCode          | 65536 | Emoji  |  3,798.338 ns |    51.4997 ns |    48.1729 ns |  0.09 |    0.00 |         - |        0.00 |
+|                           |       |        |               |               |               |       |         |           |             |
+| **string.GetHashCode**        | **65536** | **Mixed**  | **40,855.809 ns** |   **563.1196 ns** |   **526.7424 ns** |  **1.00** |    **0.02** |       **2 B** |        **1.00** |
+| &#39;HashCode.AddBytes UTF-8&#39; | 65536 | Mixed  |  7,050.632 ns |    82.8965 ns |    77.5414 ns |  0.17 |    0.00 |         - |        0.00 |
+| Text.GetHashCode          | 65536 | Mixed  |  7,317.570 ns |   112.6797 ns |   105.4007 ns |  0.18 |    0.00 |         - |        0.00 |

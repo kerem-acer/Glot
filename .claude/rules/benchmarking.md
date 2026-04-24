@@ -46,8 +46,24 @@ benchmarks/
     TextBuilderUtf8Benchmarks.cs
     ...
   Creation/
-    TextCreationUtf8Benchmarks.cs
-    ...
+    ByteArray/
+      TextCreationByteArrayUtf8Benchmarks.cs
+      TextCreationByteArrayUtf16Benchmarks.cs
+      TextCreationByteArrayUtf32Benchmarks.cs
+    Span/
+      ...
+    ImmutableArray/
+      TextCreationImmutableArrayUtf8Benchmarks.cs
+    String/
+      ...
+    CharArray/
+      ...
+    CharSpan/
+      ...
+    IntArray/
+      ...
+    IntSpan/
+      ...
   Interpolation/
     TextInterpolationUtf8Benchmarks.cs
     ...
@@ -198,13 +214,17 @@ public void TextReplacePooled()
 # Build
 dotnet build benchmarks/Glot.Benchmarks.csproj -c Release
 
-# Quick run (short iterations, for validation)
+# Short run (reduced warmup/iteration counts, for validation)
 dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
-  --filter '*ContainsUtf8*' --quick
+  --filter '*ContainsUtf8*' --job short
 
 # Dry run (1 iteration, fastest — just verifies benchmarks run)
 dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
   --filter '*ContainsUtf8*' --job dry
+
+# In-process run (skip per-benchmark child process; weaker isolation, much faster startup)
+dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \
+  --filter '*ContainsUtf8*' --in-process
 
 # Filter by parameter (use actual param names from the class)
 dotnet run --project benchmarks/Glot.Benchmarks.csproj -c Release -- \

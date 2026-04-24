@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextCreationImmutableArrayUtf8Benchmarks-20260422-081235</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                            </th><th>N</th><th>Locale</th><th>Mean    </th><th>Error  </th><th>StdDev </th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>Encoding.GetString</td><td>8</td><td>Ascii</td><td>8.664 ns</td><td>0.1081 ns</td><td>0.0958 ns</td><td>1.00</td><td>0.02</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>8</td><td>Ascii</td><td>3.988 ns</td><td>0.0794 ns</td><td>0.0704 ns</td><td>0.46</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>8</td><td>Ascii</td><td>1.514 ns</td><td>0.0186 ns</td><td>0.0174 ns</td><td>0.17</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>8</td><td>Ascii</td><td>3.524 ns</td><td>0.0633 ns</td><td>0.0592 ns</td><td>0.41</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>8</td><td>Cjk</td><td>17.991 ns</td><td>0.3402 ns</td><td>0.3182 ns</td><td>1.00</td><td>0.02</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>8</td><td>Cjk</td><td>7.222 ns</td><td>0.1673 ns</td><td>0.1565 ns</td><td>0.40</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>8</td><td>Cjk</td><td>1.516 ns</td><td>0.0220 ns</td><td>0.0205 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>8</td><td>Cjk</td><td>8.796 ns</td><td>0.1374 ns</td><td>0.1147 ns</td><td>0.49</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>8</td><td>Emoji</td><td>17.256 ns</td><td>0.4323 ns</td><td>0.3832 ns</td><td>1.00</td><td>0.03</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>8</td><td>Emoji</td><td>4.007 ns</td><td>0.0356 ns</td><td>0.0333 ns</td><td>0.23</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>8</td><td>Emoji</td><td>1.512 ns</td><td>0.0236 ns</td><td>0.0209 ns</td><td>0.09</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>8</td><td>Emoji</td><td>10.052 ns</td><td>0.1341 ns</td><td>0.1255 ns</td><td>0.58</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>8</td><td>Mixed</td><td>8.616 ns</td><td>0.1303 ns</td><td>0.1218 ns</td><td>1.00</td><td>0.02</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>8</td><td>Mixed</td><td>4.030 ns</td><td>0.0991 ns</td><td>0.0927 ns</td><td>0.47</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>8</td><td>Mixed</td><td>1.519 ns</td><td>0.0142 ns</td><td>0.0133 ns</td><td>0.18</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>8</td><td>Mixed</td><td>3.540 ns</td><td>0.0712 ns</td><td>0.0666 ns</td><td>0.41</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>256</td><td>Ascii</td><td>32.459 ns</td><td>0.5815 ns</td><td>0.5439 ns</td><td>1.00</td><td>0.02</td><td>0.0639</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>256</td><td>Ascii</td><td>12.289 ns</td><td>0.0693 ns</td><td>0.0578 ns</td><td>0.38</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>256</td><td>Ascii</td><td>1.509 ns</td><td>0.0129 ns</td><td>0.0107 ns</td><td>0.05</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>256</td><td>Ascii</td><td>7.512 ns</td><td>0.0876 ns</td><td>0.0820 ns</td><td>0.23</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>256</td><td>Cjk</td><td>350.504 ns</td><td>4.5202 ns</td><td>3.7745 ns</td><td>1.000</td><td>0.01</td><td>0.0630</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>256</td><td>Cjk</td><td>30.579 ns</td><td>0.6388 ns</td><td>0.5975 ns</td><td>0.087</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>256</td><td>Cjk</td><td>1.503 ns</td><td>0.0120 ns</td><td>0.0106 ns</td><td>0.004</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>256</td><td>Cjk</td><td>123.419 ns</td><td>1.6026 ns</td><td>1.4991 ns</td><td>0.352</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>256</td><td>Emoji</td><td>465.514 ns</td><td>10.4458 ns</td><td>9.7711 ns</td><td>1.000</td><td>0.03</td><td>0.0620</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>256</td><td>Emoji</td><td>20.290 ns</td><td>0.0983 ns</td><td>0.0821 ns</td><td>0.044</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>256</td><td>Emoji</td><td>1.500 ns</td><td>0.0117 ns</td><td>0.0098 ns</td><td>0.003</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>256</td><td>Emoji</td><td>196.652 ns</td><td>1.8456 ns</td><td>1.4410 ns</td><td>0.423</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>256</td><td>Mixed</td><td>317.124 ns</td><td>5.6722 ns</td><td>5.0283 ns</td><td>1.000</td><td>0.02</td><td>0.0622</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>256</td><td>Mixed</td><td>18.133 ns</td><td>0.1578 ns</td><td>0.1476 ns</td><td>0.057</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>256</td><td>Mixed</td><td>1.546 ns</td><td>0.0274 ns</td><td>0.0243 ns</td><td>0.005</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>256</td><td>Mixed</td><td>180.443 ns</td><td>1.8095 ns</td><td>1.5110 ns</td><td>0.569</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>65536</td><td>Ascii</td><td>44,638.996 ns</td><td>906.0264 ns</td><td>803.1688 ns</td><td>1.000</td><td>0.02</td><td>0.4562</td><td>0.4562</td><td>0.4562</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>65536</td><td>Ascii</td><td>2,550.756 ns</td><td>14.9870 ns</td><td>12.5148 ns</td><td>0.057</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>65536</td><td>Ascii</td><td>1.516 ns</td><td>0.0272 ns</td><td>0.0254 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>65536</td><td>Ascii</td><td>1,246.923 ns</td><td>10.3049 ns</td><td>9.1350 ns</td><td>0.028</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Encoding.GetString</td><td>65536</td><td>Cjk</td><td>90,103.005 ns</td><td>1,687.8399 ns</td><td>1,578.8064 ns</td><td>1.000</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>131101 B</td><td>1.000</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>65536</td><td>Cjk</td><td>7,650.582 ns</td><td>52.6176 ns</td><td>49.2186 ns</td><td>0.085</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>65536</td><td>Cjk</td><td>1.503 ns</td><td>0.0177 ns</td><td>0.0166 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>65536</td><td>Cjk</td><td>27,515.713 ns</td><td>127.9830 ns</td><td>99.9207 ns</td><td>0.305</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>1 B</td><td>0.000</td>
+</tr><tr><td>Encoding.GetString</td><td>65536</td><td>Emoji</td><td>118,961.461 ns</td><td>2,115.3191 ns</td><td>1,978.6708 ns</td><td>1.000</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>131102 B</td><td>1.000</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>65536</td><td>Emoji</td><td>5,095.207 ns</td><td>42.6040 ns</td><td>39.8518 ns</td><td>0.043</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>65536</td><td>Emoji</td><td>1.510 ns</td><td>0.0163 ns</td><td>0.0152 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>65536</td><td>Emoji</td><td>47,901.773 ns</td><td>558.5811 ns</td><td>466.4405 ns</td><td>0.403</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>3 B</td><td>0.000</td>
+</tr><tr><td>Encoding.GetString</td><td>65536</td><td>Mixed</td><td>128,350.193 ns</td><td>1,889.2589 ns</td><td>1,767.2139 ns</td><td>1.000</td><td>0.02</td><td>0.5734</td><td>0.5734</td><td>0.5734</td><td>131105 B</td><td>1.000</td>
+</tr><tr><td>Text.FromUtf8(ImmutableArray)</td><td>65536</td><td>Mixed</td><td>3,327.575 ns</td><td>30.9951 ns</td><td>27.4764 ns</td><td>0.026</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;Text.FromUtf8(ImmutableArray) no-count&#39;</td><td>65536</td><td>Mixed</td><td>1.549 ns</td><td>0.0316 ns</td><td>0.0280 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.000</td>
+</tr><tr><td>&#39;new U8String(ImmutableArray)&#39;</td><td>65536</td><td>Mixed</td><td>44,726.308 ns</td><td>1,243.3993 ns</td><td>1,102.2411 ns</td><td>0.349</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>2 B</td><td>0.000</td>
+</tr></tbody></table>
+</body>
+</html>

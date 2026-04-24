@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Glot.Benchmarks.TextCreationStringUtf16Benchmarks-20260422-091749</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
+Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>EvaluateOverhead=False  MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  
+IterationTime=150ms  MaxIterationCount=30  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                        </th><th>N</th><th>Locale</th><th>Mean    </th><th>Error  </th><th>StdDev </th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>&#39;new string(source)&#39;</td><td>8</td><td>Ascii</td><td>6.453 ns</td><td>0.0548 ns</td><td>0.0486 ns</td><td>1.00</td><td>0.01</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>8</td><td>Ascii</td><td>4.009 ns</td><td>0.0191 ns</td><td>0.0170 ns</td><td>0.62</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>8</td><td>Ascii</td><td>1.983 ns</td><td>0.0247 ns</td><td>0.0231 ns</td><td>0.31</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>8</td><td>Ascii</td><td>1.987 ns</td><td>0.0273 ns</td><td>0.0255 ns</td><td>0.31</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>8</td><td>Ascii</td><td>7.837 ns</td><td>0.0661 ns</td><td>0.0618 ns</td><td>1.21</td><td>0.01</td><td>0.0047</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>8</td><td>Ascii</td><td>13.540 ns</td><td>0.1476 ns</td><td>0.1309 ns</td><td>2.10</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>8</td><td>Ascii</td><td>11.617 ns</td><td>0.1181 ns</td><td>0.1047 ns</td><td>1.80</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>8</td><td>Cjk</td><td>6.519 ns</td><td>0.1050 ns</td><td>0.0931 ns</td><td>1.00</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>8</td><td>Cjk</td><td>4.008 ns</td><td>0.0202 ns</td><td>0.0179 ns</td><td>0.61</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>8</td><td>Cjk</td><td>1.982 ns</td><td>0.0218 ns</td><td>0.0204 ns</td><td>0.30</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>8</td><td>Cjk</td><td>1.982 ns</td><td>0.0266 ns</td><td>0.0249 ns</td><td>0.30</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>8</td><td>Cjk</td><td>16.268 ns</td><td>0.2821 ns</td><td>0.2638 ns</td><td>2.50</td><td>0.05</td><td>0.0066</td><td>-</td><td>-</td><td>56 B</td><td>1.40</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>8</td><td>Cjk</td><td>13.599 ns</td><td>0.1263 ns</td><td>0.1181 ns</td><td>2.09</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>8</td><td>Cjk</td><td>11.589 ns</td><td>0.1540 ns</td><td>0.1440 ns</td><td>1.78</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>8</td><td>Emoji</td><td>6.465 ns</td><td>0.0777 ns</td><td>0.0727 ns</td><td>1.00</td><td>0.02</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>8</td><td>Emoji</td><td>3.984 ns</td><td>0.0146 ns</td><td>0.0122 ns</td><td>0.62</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>8</td><td>Emoji</td><td>1.971 ns</td><td>0.0141 ns</td><td>0.0118 ns</td><td>0.30</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>8</td><td>Emoji</td><td>1.977 ns</td><td>0.0300 ns</td><td>0.0266 ns</td><td>0.31</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>8</td><td>Emoji</td><td>23.105 ns</td><td>0.5661 ns</td><td>0.5019 ns</td><td>3.57</td><td>0.08</td><td>0.0057</td><td>-</td><td>-</td><td>48 B</td><td>1.20</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>8</td><td>Emoji</td><td>13.585 ns</td><td>0.1675 ns</td><td>0.1566 ns</td><td>2.10</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>8</td><td>Emoji</td><td>11.538 ns</td><td>0.1586 ns</td><td>0.1483 ns</td><td>1.79</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>8</td><td>Mixed</td><td>6.475 ns</td><td>0.0577 ns</td><td>0.0482 ns</td><td>1.00</td><td>0.01</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>8</td><td>Mixed</td><td>4.014 ns</td><td>0.0389 ns</td><td>0.0364 ns</td><td>0.62</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>8</td><td>Mixed</td><td>1.969 ns</td><td>0.0141 ns</td><td>0.0125 ns</td><td>0.30</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>8</td><td>Mixed</td><td>1.969 ns</td><td>0.0179 ns</td><td>0.0159 ns</td><td>0.30</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>8</td><td>Mixed</td><td>7.804 ns</td><td>0.0385 ns</td><td>0.0322 ns</td><td>1.21</td><td>0.01</td><td>0.0048</td><td>-</td><td>-</td><td>40 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>8</td><td>Mixed</td><td>13.559 ns</td><td>0.0927 ns</td><td>0.0821 ns</td><td>2.09</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>8</td><td>Mixed</td><td>11.538 ns</td><td>0.1788 ns</td><td>0.1672 ns</td><td>1.78</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>256</td><td>Ascii</td><td>24.134 ns</td><td>0.3515 ns</td><td>0.3116 ns</td><td>1.00</td><td>0.02</td><td>0.0641</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>256</td><td>Ascii</td><td>21.309 ns</td><td>0.1255 ns</td><td>0.1174 ns</td><td>0.88</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>256</td><td>Ascii</td><td>1.976 ns</td><td>0.0255 ns</td><td>0.0239 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>256</td><td>Ascii</td><td>1.968 ns</td><td>0.0198 ns</td><td>0.0176 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>256</td><td>Ascii</td><td>24.930 ns</td><td>0.4898 ns</td><td>0.4342 ns</td><td>1.03</td><td>0.02</td><td>0.0343</td><td>-</td><td>-</td><td>288 B</td><td>0.54</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>256</td><td>Ascii</td><td>36.064 ns</td><td>0.3380 ns</td><td>0.3162 ns</td><td>1.49</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>256</td><td>Ascii</td><td>17.030 ns</td><td>0.1132 ns</td><td>0.1003 ns</td><td>0.71</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>256</td><td>Cjk</td><td>24.829 ns</td><td>0.7763 ns</td><td>0.7261 ns</td><td>1.00</td><td>0.04</td><td>0.0639</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>256</td><td>Cjk</td><td>21.375 ns</td><td>0.2093 ns</td><td>0.1958 ns</td><td>0.86</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>256</td><td>Cjk</td><td>1.979 ns</td><td>0.0371 ns</td><td>0.0347 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>256</td><td>Cjk</td><td>1.986 ns</td><td>0.0277 ns</td><td>0.0259 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>256</td><td>Cjk</td><td>246.512 ns</td><td>5.2689 ns</td><td>4.9286 ns</td><td>9.94</td><td>0.34</td><td>0.0954</td><td>-</td><td>-</td><td>800 B</td><td>1.49</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>256</td><td>Cjk</td><td>35.499 ns</td><td>0.3924 ns</td><td>0.3671 ns</td><td>1.43</td><td>0.04</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>256</td><td>Cjk</td><td>17.057 ns</td><td>0.1933 ns</td><td>0.1808 ns</td><td>0.69</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>256</td><td>Emoji</td><td>24.077 ns</td><td>0.2009 ns</td><td>0.1678 ns</td><td>1.00</td><td>0.01</td><td>0.0640</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>256</td><td>Emoji</td><td>21.368 ns</td><td>0.1626 ns</td><td>0.1442 ns</td><td>0.89</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>256</td><td>Emoji</td><td>1.982 ns</td><td>0.0359 ns</td><td>0.0336 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>256</td><td>Emoji</td><td>1.979 ns</td><td>0.0310 ns</td><td>0.0275 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>256</td><td>Emoji</td><td>450.746 ns</td><td>11.6274 ns</td><td>10.8763 ns</td><td>18.72</td><td>0.46</td><td>0.0640</td><td>-</td><td>-</td><td>544 B</td><td>1.01</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>256</td><td>Emoji</td><td>35.407 ns</td><td>0.3874 ns</td><td>0.3434 ns</td><td>1.47</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>256</td><td>Emoji</td><td>17.413 ns</td><td>0.2140 ns</td><td>0.2001 ns</td><td>0.72</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>256</td><td>Mixed</td><td>24.171 ns</td><td>0.3907 ns</td><td>0.3655 ns</td><td>1.00</td><td>0.02</td><td>0.0641</td><td>-</td><td>-</td><td>536 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>256</td><td>Mixed</td><td>21.301 ns</td><td>0.1049 ns</td><td>0.0930 ns</td><td>0.88</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>256</td><td>Mixed</td><td>1.976 ns</td><td>0.0180 ns</td><td>0.0159 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>256</td><td>Mixed</td><td>1.970 ns</td><td>0.0267 ns</td><td>0.0236 ns</td><td>0.08</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>256</td><td>Mixed</td><td>210.875 ns</td><td>2.8751 ns</td><td>2.4009 ns</td><td>8.73</td><td>0.16</td><td>0.0421</td><td>-</td><td>-</td><td>360 B</td><td>0.67</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>256</td><td>Mixed</td><td>35.282 ns</td><td>0.4262 ns</td><td>0.3986 ns</td><td>1.46</td><td>0.03</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>256</td><td>Mixed</td><td>16.749 ns</td><td>0.1350 ns</td><td>0.1263 ns</td><td>0.69</td><td>0.01</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>65536</td><td>Ascii</td><td>42,733.253 ns</td><td>886.6805 ns</td><td>829.4015 ns</td><td>1.000</td><td>0.03</td><td>0.4433</td><td>0.4433</td><td>0.4433</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>65536</td><td>Ascii</td><td>4,723.012 ns</td><td>45.0716 ns</td><td>42.1600 ns</td><td>0.111</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>65536</td><td>Ascii</td><td>1.977 ns</td><td>0.0373 ns</td><td>0.0349 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>65536</td><td>Ascii</td><td>1.980 ns</td><td>0.0321 ns</td><td>0.0300 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>65536</td><td>Ascii</td><td>3,689.384 ns</td><td>45.8071 ns</td><td>40.6068 ns</td><td>0.086</td><td>0.00</td><td>7.7880</td><td>1.5429</td><td>-</td><td>65568 B</td><td>0.50</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>65536</td><td>Ascii</td><td>5,946.959 ns</td><td>33.0022 ns</td><td>27.5584 ns</td><td>0.139</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>65536</td><td>Ascii</td><td>1,319.093 ns</td><td>13.7722 ns</td><td>10.7524 ns</td><td>0.031</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>65536</td><td>Cjk</td><td>42,452.096 ns</td><td>853.8646 ns</td><td>798.7055 ns</td><td>1.000</td><td>0.03</td><td>0.4386</td><td>0.4386</td><td>0.4386</td><td>131101 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>65536</td><td>Cjk</td><td>4,717.794 ns</td><td>23.8113 ns</td><td>19.8835 ns</td><td>0.111</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>65536</td><td>Cjk</td><td>1.993 ns</td><td>0.0394 ns</td><td>0.0349 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>65536</td><td>Cjk</td><td>1.972 ns</td><td>0.0173 ns</td><td>0.0135 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>65536</td><td>Cjk</td><td>99,229.894 ns</td><td>2,745.9440 ns</td><td>2,292.9876 ns</td><td>2.338</td><td>0.07</td><td>0.4371</td><td>0.4371</td><td>0.4371</td><td>196647 B</td><td>1.50</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>65536</td><td>Cjk</td><td>5,996.565 ns</td><td>66.9293 ns</td><td>62.6057 ns</td><td>0.141</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>65536</td><td>Cjk</td><td>1,353.178 ns</td><td>13.3875 ns</td><td>12.5226 ns</td><td>0.032</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>65536</td><td>Emoji</td><td>51,477.514 ns</td><td>829.5772 ns</td><td>735.3986 ns</td><td>1.000</td><td>0.02</td><td>0.5631</td><td>0.5631</td><td>0.5631</td><td>131103 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>65536</td><td>Emoji</td><td>4,763.803 ns</td><td>35.6288 ns</td><td>33.3272 ns</td><td>0.093</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>65536</td><td>Emoji</td><td>2.021 ns</td><td>0.0551 ns</td><td>0.0515 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>65536</td><td>Emoji</td><td>1.986 ns</td><td>0.0335 ns</td><td>0.0313 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>65536</td><td>Emoji</td><td>117,187.680 ns</td><td>1,604.8445 ns</td><td>1,501.1726 ns</td><td>2.277</td><td>0.04</td><td>-</td><td>-</td><td>-</td><td>131110 B</td><td>1.00</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>65536</td><td>Emoji</td><td>5,989.127 ns</td><td>60.2404 ns</td><td>56.3489 ns</td><td>0.116</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>65536</td><td>Emoji</td><td>1,344.301 ns</td><td>26.5421 ns</td><td>23.5289 ns</td><td>0.026</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new string(source)&#39;</td><td>65536</td><td>Mixed</td><td>45,109.162 ns</td><td>985.2837 ns</td><td>921.6350 ns</td><td>1.000</td><td>0.03</td><td>0.4771</td><td>0.4771</td><td>0.4771</td><td>131102 B</td><td>1.00</td>
+</tr><tr><td>Text.From(string)</td><td>65536</td><td>Mixed</td><td>4,742.366 ns</td><td>48.1969 ns</td><td>45.0835 ns</td><td>0.105</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;Text.From(string) no-count&#39;</td><td>65536</td><td>Mixed</td><td>1.993 ns</td><td>0.0236 ns</td><td>0.0221 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>Text.FromAscii(string)</td><td>65536</td><td>Mixed</td><td>1.989 ns</td><td>0.0168 ns</td><td>0.0131 ns</td><td>0.000</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;new U8String(string)&#39;</td><td>65536</td><td>Mixed</td><td>80,124.930 ns</td><td>1,854.7270 ns</td><td>1,734.9128 ns</td><td>1.777</td><td>0.05</td><td>0.3472</td><td>0.3472</td><td>0.3472</td><td>85517 B</td><td>0.65</td>
+</tr><tr><td>OwnedText.FromChars(span)</td><td>65536</td><td>Mixed</td><td>5,991.162 ns</td><td>60.6873 ns</td><td>56.7669 ns</td><td>0.133</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;OwnedText.FromChars(span) no-count&#39;</td><td>65536</td><td>Mixed</td><td>1,417.443 ns</td><td>33.6928 ns</td><td>31.5163 ns</td><td>0.031</td><td>0.00</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr></tbody></table>
+</body>
+</html>

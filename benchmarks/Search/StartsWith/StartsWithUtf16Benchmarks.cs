@@ -28,13 +28,13 @@ public class StartsWithUtf16Benchmarks
     public bool SpanStartsWith() => Haystack.RawBytes.AsSpan().StartsWith(Needle.RawBytes);
 
     [Benchmark(Description = "Text.StartsWith UTF-8")]
-    public bool TextStartsWith_Utf8() => Haystack.Utf8.StartsWith(Needle.Utf8);
+    public bool TextStartsWith_Utf8() => Haystack.Utf16.StartsWith(Needle.Utf8);
 
     [Benchmark(Description = "Text.StartsWith UTF-16")]
-    public bool TextStartsWith_Utf16() => Haystack.Utf8.StartsWith(Needle.Utf16);
+    public bool TextStartsWith_Utf16() => Haystack.Utf16.StartsWith(Needle.Utf16);
 
     [Benchmark(Description = "Text.StartsWith UTF-32")]
-    public bool TextStartsWith_Utf32() => Haystack.Utf8.StartsWith(Needle.Utf32);
+    public bool TextStartsWith_Utf32() => Haystack.Utf16.StartsWith(Needle.Utf32);
 
     [Benchmark(Description = "string.StartsWith miss")]
     public bool StringStartsWith_Miss() => Haystack.Str.StartsWith(MissingNeedle.Str, StringComparison.Ordinal);
@@ -43,11 +43,11 @@ public class StartsWithUtf16Benchmarks
     public bool SpanStartsWith_Miss() => Haystack.RawBytes.AsSpan().StartsWith(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.StartsWith UTF-8 miss")]
-    public bool TextStartsWith_Utf8_Miss() => Haystack.Utf8.StartsWith(MissingNeedle.Utf8);
+    public bool TextStartsWith_Utf8_Miss() => Haystack.Utf16.StartsWith(MissingNeedle.Utf8);
 
     [Benchmark(Description = "Text.StartsWith UTF-16 miss")]
-    public bool TextStartsWith_Utf16_Miss() => Haystack.Utf8.StartsWith(MissingNeedle.Utf16);
+    public bool TextStartsWith_Utf16_Miss() => Haystack.Utf16.StartsWith(MissingNeedle.Utf16);
 
     [Benchmark(Description = "Text.StartsWith UTF-32 miss")]
-    public bool TextStartsWith_Utf32_Miss() => Haystack.Utf8.StartsWith(MissingNeedle.Utf32);
+    public bool TextStartsWith_Utf32_Miss() => Haystack.Utf16.StartsWith(MissingNeedle.Utf32);
 }

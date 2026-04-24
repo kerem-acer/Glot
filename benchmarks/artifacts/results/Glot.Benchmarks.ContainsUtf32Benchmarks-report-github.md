@@ -2,111 +2,143 @@
 
 BenchmarkDotNet v0.15.8, macOS Tahoe 26.0.1 (25A362) [Darwin 25.0.0]
 Apple M4 Max, 1 CPU, 16 logical and 16 physical cores
-.NET SDK 10.0.201
-  [Host]   : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
-  ShortRun : .NET 10.0.5 (10.0.5, 10.0.526.15411), Arm64 RyuJIT armv8.0-a
+.NET SDK 10.0.202
+  [Host] : .NET 10.0.6 (10.0.6, 10.0.626.17701), Arm64 RyuJIT armv8.0-a
 
-Job=ShortRun  IterationCount=3  LaunchCount=1  
-WarmupCount=3  
+MaxRelativeError=0.1  Toolchain=InProcessEmitToolchain  IterationTime=150ms  
+MaxIterationCount=30  
 
 ```
-| Method                      | N     | Locale | Mean         | Error          | StdDev        | Median       | Ratio    | RatioSD | Allocated | Alloc Ratio |
-|---------------------------- |------ |------- |-------------:|---------------:|--------------:|-------------:|---------:|--------:|----------:|------------:|
-| **string.Contains**             | **64**    | **Ascii**  |     **2.690 ns** |      **0.7103 ns** |     **0.0389 ns** |     **2.677 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 64    | Ascii  |     2.684 ns |     17.3019 ns |     0.9484 ns |     2.138 ns |     1.00 |    0.31 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 64    | Ascii  |     2.940 ns |      0.0707 ns |     0.0039 ns |     2.937 ns |     1.09 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 64    | Ascii  |     8.485 ns |      1.8927 ns |     0.1037 ns |     8.477 ns |     3.15 |    0.05 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 64    | Ascii  |     8.428 ns |      0.7312 ns |     0.0401 ns |     8.409 ns |     3.13 |    0.04 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 64    | Ascii  |     4.575 ns |      1.3595 ns |     0.0745 ns |     4.537 ns |     1.70 |    0.03 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Ascii  |     2.404 ns |      0.0579 ns |     0.0032 ns |     2.403 ns |     0.89 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Ascii  |     4.303 ns |     32.1850 ns |     1.7642 ns |     3.286 ns |     1.60 |    0.57 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 64    | Ascii  |     9.156 ns |     37.1644 ns |     2.0371 ns |     7.990 ns |     3.40 |    0.66 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 64    | Ascii  |     8.087 ns |      0.6266 ns |     0.0343 ns |     8.074 ns |     3.01 |    0.04 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **64**    | **Cjk**    |     **1.979 ns** |      **0.5128 ns** |     **0.0281 ns** |     **1.964 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 64    | Cjk    |     1.732 ns |      0.1839 ns |     0.0101 ns |     1.728 ns |     0.88 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 64    | Cjk    |     2.789 ns |      0.0376 ns |     0.0021 ns |     2.788 ns |     1.41 |    0.02 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 64    | Cjk    |    23.596 ns |      0.2994 ns |     0.0164 ns |    23.602 ns |    11.93 |    0.15 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 64    | Cjk    |    19.025 ns |      1.3938 ns |     0.0764 ns |    19.026 ns |     9.62 |    0.12 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 64    | Cjk    |     5.004 ns |     15.7651 ns |     0.8641 ns |     4.520 ns |     2.53 |    0.38 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Cjk    |     5.624 ns |     13.3609 ns |     0.7324 ns |     5.205 ns |     2.84 |    0.32 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Cjk    |     6.525 ns |      3.3710 ns |     0.1848 ns |     6.570 ns |     3.30 |    0.09 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 64    | Cjk    |    14.735 ns |      1.5836 ns |     0.0868 ns |    14.688 ns |     7.45 |    0.10 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 64    | Cjk    |    23.252 ns |    111.2452 ns |     6.0977 ns |    19.770 ns |    11.75 |    2.67 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **64**    | **Mixed**  |     **2.719 ns** |     **13.8360 ns** |     **0.7584 ns** |     **2.293 ns** |     **1.05** |    **0.34** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 64    | Mixed  |     2.093 ns |      0.6609 ns |     0.0362 ns |     2.075 ns |     0.81 |    0.17 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 64    | Mixed  |     2.941 ns |      0.8368 ns |     0.0459 ns |     2.937 ns |     1.13 |    0.24 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 64    | Mixed  |     8.821 ns |      0.2567 ns |     0.0141 ns |     8.817 ns |     3.40 |    0.71 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 64    | Mixed  |    10.657 ns |     56.1808 ns |     3.0795 ns |     8.880 ns |     4.10 |    1.35 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 64    | Mixed  |     4.770 ns |      6.2792 ns |     0.3442 ns |     4.595 ns |     1.84 |    0.40 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Mixed  |     3.009 ns |      0.4562 ns |     0.0250 ns |     3.016 ns |     1.16 |    0.24 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Mixed  |     4.497 ns |     30.0283 ns |     1.6460 ns |     3.552 ns |     1.73 |    0.67 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 64    | Mixed  |    12.918 ns |     11.9312 ns |     0.6540 ns |    12.697 ns |     4.97 |    1.06 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 64    | Mixed  |    18.022 ns |      2.5753 ns |     0.1412 ns |    17.946 ns |     6.94 |    1.44 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **4096**  | **Ascii**  |     **2.713 ns** |      **0.6790 ns** |     **0.0372 ns** |     **2.703 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 4096  | Ascii  |     2.613 ns |     14.0871 ns |     0.7722 ns |     2.186 ns |     0.96 |    0.25 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 4096  | Ascii  |     3.298 ns |      8.8673 ns |     0.4860 ns |     3.062 ns |     1.22 |    0.16 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 4096  | Ascii  |     8.448 ns |      0.3078 ns |     0.0169 ns |     8.440 ns |     3.11 |    0.04 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 4096  | Ascii  |     8.411 ns |      0.0788 ns |     0.0043 ns |     8.410 ns |     3.10 |    0.04 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 4096  | Ascii  |   256.479 ns |     14.2979 ns |     0.7837 ns |   256.175 ns |    94.54 |    1.15 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Ascii  |    99.866 ns |    151.6905 ns |     8.3147 ns |    95.955 ns |    36.81 |    2.69 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Ascii  |    95.288 ns |     11.9881 ns |     0.6571 ns |    95.196 ns |    35.12 |    0.47 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Ascii  |   102.136 ns |      7.4958 ns |     0.4109 ns |   102.130 ns |    37.65 |    0.46 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Ascii  |   104.102 ns |      3.4507 ns |     0.1891 ns |   104.020 ns |    38.37 |    0.46 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **4096**  | **Cjk**    |     **1.991 ns** |      **0.1319 ns** |     **0.0072 ns** |     **1.987 ns** |     **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 4096  | Cjk    |     1.727 ns |      0.0245 ns |     0.0013 ns |     1.727 ns |     0.87 |    0.00 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 4096  | Cjk    |     2.746 ns |      0.1219 ns |     0.0067 ns |     2.746 ns |     1.38 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 4096  | Cjk    |    25.291 ns |     51.5643 ns |     2.8264 ns |    23.680 ns |    12.70 |    1.23 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 4096  | Cjk    |    19.021 ns |      1.4382 ns |     0.0788 ns |    18.990 ns |     9.56 |    0.05 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 4096  | Cjk    |   323.019 ns |  2,008.2439 ns |   110.0786 ns |   259.950 ns |   162.26 |   47.89 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Cjk    |   336.423 ns |  1,794.6768 ns |    98.3723 ns |   284.317 ns |   169.00 |   42.80 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Cjk    |   272.541 ns |     39.7010 ns |     2.1761 ns |   271.515 ns |   136.91 |    1.04 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Cjk    |   295.883 ns |     29.3445 ns |     1.6085 ns |   295.143 ns |   148.63 |    0.84 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Cjk    |   298.628 ns |     24.7555 ns |     1.3569 ns |   298.232 ns |   150.01 |    0.76 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **4096**  | **Mixed**  |     **2.269 ns** |      **0.0580 ns** |     **0.0032 ns** |     **2.270 ns** |     **1.00** |    **0.00** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 4096  | Mixed  |     2.074 ns |      0.0789 ns |     0.0043 ns |     2.072 ns |     0.91 |    0.00 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 4096  | Mixed  |     2.881 ns |      0.2700 ns |     0.0148 ns |     2.881 ns |     1.27 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 4096  | Mixed  |     9.544 ns |     21.3973 ns |     1.1729 ns |     8.874 ns |     4.21 |    0.45 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 4096  | Mixed  |     8.864 ns |      0.3679 ns |     0.0202 ns |     8.853 ns |     3.91 |    0.01 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 4096  | Mixed  |   256.538 ns |     13.7910 ns |     0.7559 ns |   256.181 ns |   113.08 |    0.32 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Mixed  |   125.203 ns |     22.5195 ns |     1.2344 ns |   125.553 ns |    55.19 |    0.48 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Mixed  |   125.634 ns |     27.3772 ns |     1.5006 ns |   124.787 ns |    55.38 |    0.58 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Mixed  |   159.543 ns |    328.9948 ns |    18.0333 ns |   168.073 ns |    70.32 |    6.88 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Mixed  |   174.120 ns |  1,175.3991 ns |    64.4276 ns |   137.063 ns |    76.75 |   24.59 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **65536** | **Ascii**  |     **2.828 ns** |      **5.8127 ns** |     **0.3186 ns** |     **2.683 ns** |     **1.01** |    **0.14** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 65536 | Ascii  |     2.229 ns |      2.1199 ns |     0.1162 ns |     2.166 ns |     0.79 |    0.08 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 65536 | Ascii  |     2.975 ns |      0.0806 ns |     0.0044 ns |     2.976 ns |     1.06 |    0.10 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 65536 | Ascii  |     8.509 ns |      0.0571 ns |     0.0031 ns |     8.511 ns |     3.03 |    0.28 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 65536 | Ascii  |     8.513 ns |      0.0696 ns |     0.0038 ns |     8.512 ns |     3.03 |    0.28 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 65536 | Ascii  | 4,006.603 ns |    739.0031 ns |    40.5073 ns | 3,987.253 ns | 1,428.24 |  132.05 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Ascii  | 1,435.615 ns |    176.9763 ns |     9.7007 ns | 1,432.943 ns |   511.76 |   47.20 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Ascii  | 1,406.199 ns |     20.7510 ns |     1.1374 ns | 1,406.665 ns |   501.27 |   46.14 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Ascii  | 1,409.769 ns |    203.0579 ns |    11.1303 ns | 1,404.273 ns |   502.54 |   46.38 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Ascii  | 1,476.134 ns |    253.7612 ns |    13.9095 ns | 1,468.427 ns |   526.20 |   48.62 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **65536** | **Cjk**    |     **1.981 ns** |      **0.2542 ns** |     **0.0139 ns** |     **1.975 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 65536 | Cjk    |     1.761 ns |      0.5001 ns |     0.0274 ns |     1.745 ns |     0.89 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 65536 | Cjk    |     2.762 ns |      0.1844 ns |     0.0101 ns |     2.756 ns |     1.39 |    0.01 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 65536 | Cjk    |    23.436 ns |      1.5260 ns |     0.0836 ns |    23.457 ns |    11.83 |    0.08 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 65536 | Cjk    |    19.065 ns |      0.3718 ns |     0.0204 ns |    19.064 ns |     9.62 |    0.06 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 65536 | Cjk    | 4,276.365 ns |  5,513.0532 ns |   302.1890 ns | 4,349.628 ns | 2,158.65 |  132.75 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Cjk    | 5,332.138 ns | 30,847.3949 ns | 1,690.8498 ns | 4,371.270 ns | 2,691.59 |  739.36 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Cjk    | 4,262.810 ns |    190.1119 ns |    10.4207 ns | 4,260.146 ns | 2,151.81 |   13.83 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Cjk    | 4,362.059 ns |  1,362.3279 ns |    74.6738 ns | 4,343.899 ns | 2,201.91 |   35.27 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Cjk    | 5,265.179 ns | 28,613.3620 ns | 1,568.3949 ns | 4,410.832 ns | 2,657.79 |  685.84 |         - |          NA |
-|                             |       |        |              |                |               |              |          |         |           |             |
-| **string.Contains**             | **65536** | **Mixed**  |     **2.694 ns** |     **13.6038 ns** |     **0.7457 ns** |     **2.263 ns** |     **1.05** |    **0.33** |         **-** |          **NA** |
-| &#39;Span.Contains UTF-8&#39;       | 65536 | Mixed  |     2.094 ns |      0.0662 ns |     0.0036 ns |     2.094 ns |     0.81 |    0.17 |         - |          NA |
-| &#39;Text.Contains UTF-8&#39;       | 65536 | Mixed  |     2.986 ns |      0.9836 ns |     0.0539 ns |     2.991 ns |     1.16 |    0.24 |         - |          NA |
-| &#39;Text.Contains UTF-16&#39;      | 65536 | Mixed  |     8.847 ns |      0.1407 ns |     0.0077 ns |     8.843 ns |     3.44 |    0.71 |         - |          NA |
-| &#39;Text.Contains UTF-32&#39;      | 65536 | Mixed  |     9.580 ns |      0.1147 ns |     0.0063 ns |     9.579 ns |     3.72 |    0.77 |         - |          NA |
-| &#39;string.Contains miss&#39;      | 65536 | Mixed  | 3,961.813 ns |    214.7748 ns |    11.7725 ns | 3,967.897 ns | 1,538.62 |  318.07 |         - |          NA |
-| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Mixed  | 1,924.797 ns |    609.0870 ns |    33.3861 ns | 1,923.917 ns |   747.52 |  154.94 |         - |          NA |
-| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Mixed  | 1,960.090 ns |    543.0406 ns |    29.7659 ns | 1,959.477 ns |   761.23 |  157.68 |         - |          NA |
-| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Mixed  | 1,934.194 ns |    189.9469 ns |    10.4116 ns | 1,933.877 ns |   751.17 |  155.31 |         - |          NA |
-| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Mixed  | 1,986.424 ns |     15.9435 ns |     0.8739 ns | 1,986.621 ns |   771.45 |  159.46 |         - |          NA |
+| Method                      | N     | Locale | Mean          | Error       | StdDev      | Ratio    | RatioSD | Allocated | Alloc Ratio |
+|---------------------------- |------ |------- |--------------:|------------:|------------:|---------:|--------:|----------:|------------:|
+| **string.Contains**             | **64**    | **Ascii**  |      **2.689 ns** |   **0.0284 ns** |   **0.0266 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 64    | Ascii  |      2.141 ns |   0.0338 ns |   0.0316 ns |     0.80 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 64    | Ascii  |     19.190 ns |   0.3717 ns |   0.3477 ns |     7.14 |    0.14 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 64    | Ascii  |     18.493 ns |   0.3279 ns |   0.3067 ns |     6.88 |    0.13 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 64    | Ascii  |      4.859 ns |   0.0504 ns |   0.0447 ns |     1.81 |    0.02 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 64    | Ascii  |      4.561 ns |   0.0730 ns |   0.0683 ns |     1.70 |    0.03 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Ascii  |      3.400 ns |   0.1426 ns |   0.1334 ns |     1.26 |    0.05 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Ascii  |     26.222 ns |   0.4830 ns |   0.4518 ns |     9.75 |    0.19 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 64    | Ascii  |     25.560 ns |   0.5536 ns |   0.4908 ns |     9.51 |    0.20 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 64    | Ascii  |     12.555 ns |   0.2022 ns |   0.1688 ns |     4.67 |    0.08 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **64**    | **Cjk**    |      **1.295 ns** |   **0.0277 ns** |   **0.0260 ns** |     **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 64    | Cjk    |      1.723 ns |   0.0241 ns |   0.0225 ns |     1.33 |    0.03 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 64    | Cjk    |     35.286 ns |   0.1835 ns |   0.1532 ns |    27.25 |    0.53 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 64    | Cjk    |     37.298 ns |   0.9963 ns |   0.9319 ns |    28.80 |    0.89 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 64    | Cjk    |      3.200 ns |   0.0137 ns |   0.0107 ns |     2.47 |    0.05 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 64    | Cjk    |      4.481 ns |   0.1006 ns |   0.0941 ns |     3.46 |    0.10 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Cjk    |      8.382 ns |   0.2135 ns |   0.1997 ns |     6.47 |    0.19 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Cjk    |     35.504 ns |   0.4269 ns |   0.3565 ns |    27.42 |    0.59 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 64    | Cjk    |     38.122 ns |   0.4069 ns |   0.3806 ns |    29.44 |    0.63 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 64    | Cjk    |     11.227 ns |   0.2395 ns |   0.2240 ns |     8.67 |    0.24 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **64**    | **Emoji**  |      **1.955 ns** |   **0.0202 ns** |   **0.0189 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 64    | Emoji  |      1.762 ns |   0.0478 ns |   0.0447 ns |     0.90 |    0.02 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 64    | Emoji  |     31.740 ns |   0.4734 ns |   0.4428 ns |    16.24 |    0.27 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 64    | Emoji  |     34.922 ns |   0.7363 ns |   0.6887 ns |    17.87 |    0.38 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 64    | Emoji  |      2.999 ns |   0.0512 ns |   0.0479 ns |     1.53 |    0.03 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 64    | Emoji  |      4.556 ns |   0.0696 ns |   0.0617 ns |     2.33 |    0.04 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Emoji  |      7.133 ns |   0.3053 ns |   0.2856 ns |     3.65 |    0.15 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Emoji  |     35.470 ns |   0.5943 ns |   0.5560 ns |    18.15 |    0.32 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 64    | Emoji  |     38.541 ns |   0.5807 ns |   0.5432 ns |    19.72 |    0.33 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 64    | Emoji  |      7.022 ns |   0.1622 ns |   0.1517 ns |     3.59 |    0.08 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **64**    | **Mixed**  |      **2.245 ns** |   **0.0120 ns** |   **0.0113 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 64    | Mixed  |      2.041 ns |   0.0151 ns |   0.0141 ns |     0.91 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 64    | Mixed  |     22.151 ns |   0.1809 ns |   0.1511 ns |     9.87 |    0.08 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 64    | Mixed  |     22.101 ns |   0.3387 ns |   0.3168 ns |     9.85 |    0.14 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 64    | Mixed  |      5.700 ns |   0.0930 ns |   0.0870 ns |     2.54 |    0.04 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 64    | Mixed  |      4.551 ns |   0.0556 ns |   0.0493 ns |     2.03 |    0.02 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 64    | Mixed  |      3.571 ns |   0.0302 ns |   0.0252 ns |     1.59 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 64    | Mixed  |     35.426 ns |   0.2665 ns |   0.2493 ns |    15.78 |    0.13 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 64    | Mixed  |     36.800 ns |   0.2965 ns |   0.2476 ns |    16.39 |    0.13 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 64    | Mixed  |     10.960 ns |   0.1608 ns |   0.1504 ns |     4.88 |    0.07 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **4096**  | **Ascii**  |      **2.694 ns** |   **0.0451 ns** |   **0.0422 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 4096  | Ascii  |      2.158 ns |   0.0216 ns |   0.0180 ns |     0.80 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 4096  | Ascii  |     19.339 ns |   0.2118 ns |   0.1981 ns |     7.18 |    0.13 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 4096  | Ascii  |     18.479 ns |   0.1568 ns |   0.1467 ns |     6.86 |    0.12 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 4096  | Ascii  |      4.878 ns |   0.0670 ns |   0.0594 ns |     1.81 |    0.03 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 4096  | Ascii  |    260.146 ns |   3.0758 ns |   2.8772 ns |    96.59 |    1.78 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Ascii  |    138.399 ns |   1.2504 ns |   1.1696 ns |    51.38 |    0.88 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Ascii  |    673.279 ns |   6.6553 ns |   6.2254 ns |   249.97 |    4.37 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Ascii  |    671.332 ns |   6.8525 ns |   6.4098 ns |   249.25 |    4.40 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Ascii  |    698.734 ns |   4.6338 ns |   4.1077 ns |   259.42 |    4.17 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **4096**  | **Cjk**    |      **1.315 ns** |   **0.0194 ns** |   **0.0181 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 4096  | Cjk    |      1.733 ns |   0.0091 ns |   0.0085 ns |     1.32 |    0.02 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 4096  | Cjk    |     35.276 ns |   0.3597 ns |   0.3365 ns |    26.83 |    0.44 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 4096  | Cjk    |     36.937 ns |   0.2042 ns |   0.1910 ns |    28.10 |    0.40 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 4096  | Cjk    |      3.233 ns |   0.0201 ns |   0.0188 ns |     2.46 |    0.04 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 4096  | Cjk    |    258.553 ns |   2.7862 ns |   2.6062 ns |   196.68 |    3.25 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Cjk    |    387.347 ns |   3.4517 ns |   3.2287 ns |   294.65 |    4.60 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Cjk    |    494.551 ns |   8.9163 ns |   7.9041 ns |   376.21 |    7.68 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Cjk    |    500.171 ns |   5.8865 ns |   5.5063 ns |   380.48 |    6.50 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Cjk    |    510.133 ns |   5.6181 ns |   4.9803 ns |   388.06 |    6.35 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **4096**  | **Emoji**  |      **1.912 ns** |   **0.0134 ns** |   **0.0125 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 4096  | Emoji  |      1.795 ns |   0.0116 ns |   0.0103 ns |     0.94 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 4096  | Emoji  |     30.985 ns |   0.3966 ns |   0.3311 ns |    16.20 |    0.20 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 4096  | Emoji  |     34.091 ns |   0.2050 ns |   0.1712 ns |    17.83 |    0.14 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 4096  | Emoji  |      2.987 ns |   0.0167 ns |   0.0157 ns |     1.56 |    0.01 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 4096  | Emoji  |    261.128 ns |   2.0929 ns |   1.8553 ns |   136.55 |    1.28 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Emoji  |    402.976 ns |   2.2532 ns |   1.9974 ns |   210.72 |    1.68 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Emoji  |    267.203 ns |   2.3202 ns |   1.9375 ns |   139.72 |    1.32 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Emoji  |    272.256 ns |   4.5368 ns |   3.7885 ns |   142.36 |    2.11 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Emoji  |    257.941 ns |   2.1995 ns |   1.9498 ns |   134.88 |    1.31 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **4096**  | **Mixed**  |      **2.275 ns** |   **0.0176 ns** |   **0.0164 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 4096  | Mixed  |      2.037 ns |   0.0195 ns |   0.0173 ns |     0.90 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 4096  | Mixed  |     22.075 ns |   0.2413 ns |   0.2257 ns |     9.71 |    0.12 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 4096  | Mixed  |     22.082 ns |   0.3300 ns |   0.3087 ns |     9.71 |    0.15 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 4096  | Mixed  |      5.621 ns |   0.0738 ns |   0.0691 ns |     2.47 |    0.03 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 4096  | Mixed  |    263.496 ns |   1.1706 ns |   1.0377 ns |   115.85 |    0.92 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 4096  | Mixed  |    169.691 ns |   1.2603 ns |   1.1789 ns |    74.61 |    0.73 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 4096  | Mixed  |    478.990 ns |   4.7382 ns |   4.4321 ns |   210.60 |    2.40 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 4096  | Mixed  |    477.143 ns |   4.7603 ns |   3.9751 ns |   209.79 |    2.24 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 4096  | Mixed  |    483.867 ns |   3.1832 ns |   2.9776 ns |   212.74 |    1.96 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **65536** | **Ascii**  |      **2.707 ns** |   **0.0503 ns** |   **0.0470 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 65536 | Ascii  |      2.096 ns |   0.0139 ns |   0.0123 ns |     0.77 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 65536 | Ascii  |     19.189 ns |   0.1640 ns |   0.1534 ns |     7.09 |    0.13 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 65536 | Ascii  |     18.348 ns |   0.1329 ns |   0.1243 ns |     6.78 |    0.12 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 65536 | Ascii  |      4.825 ns |   0.0336 ns |   0.0315 ns |     1.78 |    0.03 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 65536 | Ascii  |  4,100.311 ns | 115.7165 ns | 102.5797 ns | 1,515.10 |   44.54 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Ascii  |  2,075.954 ns |  46.9376 ns |  43.9054 ns |   767.08 |   20.29 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Ascii  | 10,971.443 ns | 143.7754 ns | 127.4532 ns | 4,054.03 |   81.70 |       1 B |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Ascii  | 10,852.443 ns | 211.8987 ns | 198.2102 ns | 4,010.06 |   97.64 |       1 B |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Ascii  | 11,344.390 ns | 193.9579 ns | 181.4283 ns | 4,191.84 |   95.58 |       1 B |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **65536** | **Cjk**    |      **1.368 ns** |   **0.0346 ns** |   **0.0323 ns** |     **1.00** |    **0.03** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 65536 | Cjk    |      1.768 ns |   0.0215 ns |   0.0201 ns |     1.29 |    0.03 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 65536 | Cjk    |     36.286 ns |   0.2806 ns |   0.2343 ns |    26.53 |    0.62 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 65536 | Cjk    |     37.902 ns |   0.3885 ns |   0.3634 ns |    27.71 |    0.67 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 65536 | Cjk    |      3.285 ns |   0.0294 ns |   0.0275 ns |     2.40 |    0.06 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 65536 | Cjk    |  4,100.553 ns |  66.7225 ns |  62.4122 ns | 2,997.92 |   80.47 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Cjk    |  6,088.152 ns |  58.2818 ns |  54.5168 ns | 4,451.06 |  107.05 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Cjk    |  8,077.992 ns | 100.0167 ns |  83.5184 ns | 5,905.83 |  145.00 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Cjk    |  8,117.593 ns | 210.7767 ns | 176.0081 ns | 5,934.78 |  181.95 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Cjk    |  8,157.432 ns |  68.5563 ns |  64.1276 ns | 5,963.91 |  141.28 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **65536** | **Emoji**  |      **1.934 ns** |   **0.0290 ns** |   **0.0271 ns** |     **1.00** |    **0.02** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 65536 | Emoji  |      1.805 ns |   0.0192 ns |   0.0180 ns |     0.93 |    0.02 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 65536 | Emoji  |     31.349 ns |   0.2993 ns |   0.2800 ns |    16.21 |    0.26 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 65536 | Emoji  |     34.601 ns |   0.3606 ns |   0.3373 ns |    17.90 |    0.29 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 65536 | Emoji  |      3.047 ns |   0.0176 ns |   0.0165 ns |     1.58 |    0.02 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 65536 | Emoji  |  4,057.517 ns |  36.2691 ns |  33.9261 ns | 2,098.61 |   32.95 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Emoji  |  6,428.286 ns |  40.1783 ns |  37.5828 ns | 3,324.81 |   48.53 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Emoji  |  3,932.378 ns |  71.7696 ns |  63.6219 ns | 2,033.88 |   41.95 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Emoji  |  3,959.868 ns | 121.0673 ns | 113.2464 ns | 2,048.10 |   63.06 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Emoji  |  4,080.092 ns |  67.0142 ns |  62.6852 ns | 2,110.28 |   42.33 |         - |          NA |
+|                             |       |        |               |             |             |          |         |           |             |
+| **string.Contains**             | **65536** | **Mixed**  |      **2.232 ns** |   **0.0140 ns** |   **0.0124 ns** |     **1.00** |    **0.01** |         **-** |          **NA** |
+| &#39;Span.Contains UTF-8&#39;       | 65536 | Mixed  |      2.073 ns |   0.0345 ns |   0.0323 ns |     0.93 |    0.01 |         - |          NA |
+| &#39;Text.Contains UTF-8&#39;       | 65536 | Mixed  |     21.999 ns |   0.2781 ns |   0.2323 ns |     9.86 |    0.11 |         - |          NA |
+| &#39;Text.Contains UTF-16&#39;      | 65536 | Mixed  |     23.156 ns |   0.2076 ns |   0.1941 ns |    10.38 |    0.10 |         - |          NA |
+| &#39;Text.Contains UTF-32&#39;      | 65536 | Mixed  |      5.721 ns |   0.0870 ns |   0.0814 ns |     2.56 |    0.04 |         - |          NA |
+| &#39;string.Contains miss&#39;      | 65536 | Mixed  |  4,162.920 ns |  20.6483 ns |  19.3145 ns | 1,865.51 |   13.04 |         - |          NA |
+| &#39;Span.Contains UTF-8 miss&#39;  | 65536 | Mixed  |  2,644.944 ns |  30.5837 ns |  27.1117 ns | 1,185.26 |   13.34 |         - |          NA |
+| &#39;Text.Contains UTF-8 miss&#39;  | 65536 | Mixed  |  7,523.393 ns | 145.7883 ns | 129.2375 ns | 3,371.42 |   58.79 |         - |          NA |
+| &#39;Text.Contains UTF-16 miss&#39; | 65536 | Mixed  |  8,500.212 ns | 298.1224 ns | 278.8639 ns | 3,809.15 |  122.72 |         - |          NA |
+| &#39;Text.Contains UTF-32 miss&#39; | 65536 | Mixed  |  7,652.764 ns |  54.0815 ns |  47.9419 ns | 3,429.39 |   27.71 |         - |          NA |

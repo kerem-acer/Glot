@@ -28,13 +28,13 @@ public class EndsWithUtf32Benchmarks
     public bool SpanEndsWith() => _haystack.RawBytes.AsSpan().EndsWith(_needle.RawBytes);
 
     [Benchmark(Description = "Text.EndsWith UTF-8")]
-    public bool TextEndsWith_Utf8() => _haystack.Utf8.EndsWith(_needle.Utf8);
+    public bool TextEndsWith_Utf8() => _haystack.Utf32.EndsWith(_needle.Utf8);
 
     [Benchmark(Description = "Text.EndsWith UTF-16")]
-    public bool TextEndsWith_Utf16() => _haystack.Utf8.EndsWith(_needle.Utf16);
+    public bool TextEndsWith_Utf16() => _haystack.Utf32.EndsWith(_needle.Utf16);
 
     [Benchmark(Description = "Text.EndsWith UTF-32")]
-    public bool TextEndsWith_Utf32() => _haystack.Utf8.EndsWith(_needle.Utf32);
+    public bool TextEndsWith_Utf32() => _haystack.Utf32.EndsWith(_needle.Utf32);
 
     [Benchmark(Description = "string.EndsWith miss")]
     public bool StringEndsWith_Miss() => _haystack.Str.EndsWith(_missingNeedle.Str, StringComparison.Ordinal);
@@ -43,11 +43,11 @@ public class EndsWithUtf32Benchmarks
     public bool SpanEndsWith_Miss() => _haystack.RawBytes.AsSpan().EndsWith(_missingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.EndsWith UTF-8 miss")]
-    public bool TextEndsWith_Utf8_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf8);
+    public bool TextEndsWith_Utf8_Miss() => _haystack.Utf32.EndsWith(_missingNeedle.Utf8);
 
     [Benchmark(Description = "Text.EndsWith UTF-16 miss")]
-    public bool TextEndsWith_Utf16_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf16);
+    public bool TextEndsWith_Utf16_Miss() => _haystack.Utf32.EndsWith(_missingNeedle.Utf16);
 
     [Benchmark(Description = "Text.EndsWith UTF-32 miss")]
-    public bool TextEndsWith_Utf32_Miss() => _haystack.Utf8.EndsWith(_missingNeedle.Utf32);
+    public bool TextEndsWith_Utf32_Miss() => _haystack.Utf32.EndsWith(_missingNeedle.Utf32);
 }

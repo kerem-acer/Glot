@@ -158,7 +158,18 @@ public readonly ref partial struct TextSpan
             return Bytes.EndsWith(value.Bytes);
         }
 
-        // Cross-encoding: compare from the end, rune by rune. No offset calculation needed.
+        // Cross-encoding fast path: transcode the needle once into haystack encoding
+        // and fall back to SIMD Bytes.EndsWith. Well-formed text has matching rune
+        // boundaries, so a byte-exact tail match implies a rune-exact tail match.
+        Span<byte> needleBuf = stackalloc byte[CrossEncodingPatternLimit];
+        var needleSrc = new TextSpan(value.Bytes, value.Encoding, 0);
+        var needleLen = needleSrc.Transcode(needleBuf, Encoding, out var fullyEncoded, out _);
+        if (fullyEncoded)
+        {
+            return Bytes.EndsWith(needleBuf[..needleLen]);
+        }
+
+        // Needle doesn't fit the stackalloc budget — fall back to rune-by-rune from the end.
         var s = Bytes;
         var v = value.Bytes;
 

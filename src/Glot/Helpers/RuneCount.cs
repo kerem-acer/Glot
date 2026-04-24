@@ -27,13 +27,33 @@ static class RuneCount
             return bytePos >> 2;
         }
 
-        // Ascii-only UTF-8: rune count equals byte length, so rune index equals byte offset.
-        // Detected via the invariant that Text populates `totalRuneLength` at construction.
-        if (encoding == TextEncoding.Utf8 && totalRuneLength > 0 && totalRuneLength == bytes.Length)
+        if (totalRuneLength > 0)
         {
-            return bytePos;
+            var len = bytes.Length;
+
+            // Ascii-only UTF-8: rune count equals byte length, so rune index equals byte offset.
+            if (encoding == TextEncoding.Utf8 && totalRuneLength == len)
+            {
+                return bytePos;
+            }
+
+            // All-BMP UTF-16: every char is one rune, so rune index equals bytePos / 2.
+            if (encoding == TextEncoding.Utf16 && (totalRuneLength << 1) == len)
+            {
+                return bytePos >> 1;
+            }
         }
 
+        return CountPrefixSlow(bytes, encoding, bytePos, totalRuneLength);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static int CountPrefixSlow(
+        ReadOnlySpan<byte> bytes,
+        TextEncoding encoding,
+        int bytePos,
+        int totalRuneLength)
+    {
         if (totalRuneLength > 0 && bytePos > (bytes.Length >> 1))
         {
             return totalRuneLength - Count(bytes[bytePos..], encoding);

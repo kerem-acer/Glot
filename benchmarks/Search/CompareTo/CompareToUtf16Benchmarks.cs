@@ -27,11 +27,11 @@ public class CompareToUtf16Benchmarks
     public int SpanSequenceCompareTo() => A.RawBytes.AsSpan().SequenceCompareTo(Diff.RawBytes);
 
     [Benchmark(Description = "Text.CompareTo UTF-8")]
-    public int TextCompareTo_Utf8() => A.Utf8.CompareTo(Diff.Utf8);
+    public int TextCompareTo_Utf8() => A.Utf16.CompareTo(Diff.Utf8);
 
     [Benchmark(Description = "Text.CompareTo UTF-16")]
-    public int TextCompareTo_Utf16() => A.Utf8.CompareTo(Diff.Utf16);
+    public int TextCompareTo_Utf16() => A.Utf16.CompareTo(Diff.Utf16);
 
     [Benchmark(Description = "Text.CompareTo UTF-32")]
-    public int TextCompareTo_Utf32() => A.Utf8.CompareTo(Diff.Utf32);
+    public int TextCompareTo_Utf32() => A.Utf16.CompareTo(Diff.Utf32);
 }

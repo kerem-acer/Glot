@@ -28,13 +28,13 @@ public class RuneIndexOfUtf16Benchmarks
     public int SpanIndexOf() => Haystack.RawBytes.AsSpan().IndexOf(Needle.RawBytes);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-8")]
-    public int TextRuneIndexOf_Utf8() => Haystack.Utf8.RuneIndexOf(Needle.Utf8);
+    public int TextRuneIndexOf_Utf8() => Haystack.Utf16.RuneIndexOf(Needle.Utf8);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-16")]
-    public int TextRuneIndexOf_Utf16() => Haystack.Utf8.RuneIndexOf(Needle.Utf16);
+    public int TextRuneIndexOf_Utf16() => Haystack.Utf16.RuneIndexOf(Needle.Utf16);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-32")]
-    public int TextRuneIndexOf_Utf32() => Haystack.Utf8.RuneIndexOf(Needle.Utf32);
+    public int TextRuneIndexOf_Utf32() => Haystack.Utf16.RuneIndexOf(Needle.Utf32);
 
     [Benchmark(Description = "string.IndexOf miss")]
     public int StringIndexOf_Miss() => Haystack.Str.IndexOf(MissingNeedle.Str, StringComparison.Ordinal);
@@ -43,11 +43,11 @@ public class RuneIndexOfUtf16Benchmarks
     public int SpanIndexOf_Miss() => Haystack.RawBytes.AsSpan().IndexOf(MissingNeedle.RawBytes);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-8 miss")]
-    public int TextRuneIndexOf_Utf8_Miss() => Haystack.Utf8.RuneIndexOf(MissingNeedle.Utf8);
+    public int TextRuneIndexOf_Utf8_Miss() => Haystack.Utf16.RuneIndexOf(MissingNeedle.Utf8);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-16 miss")]
-    public int TextRuneIndexOf_Utf16_Miss() => Haystack.Utf8.RuneIndexOf(MissingNeedle.Utf16);
+    public int TextRuneIndexOf_Utf16_Miss() => Haystack.Utf16.RuneIndexOf(MissingNeedle.Utf16);
 
     [Benchmark(Description = "Text.RuneIndexOf UTF-32 miss")]
-    public int TextRuneIndexOf_Utf32_Miss() => Haystack.Utf8.RuneIndexOf(MissingNeedle.Utf32);
+    public int TextRuneIndexOf_Utf32_Miss() => Haystack.Utf16.RuneIndexOf(MissingNeedle.Utf32);
 }

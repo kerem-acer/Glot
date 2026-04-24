@@ -34,6 +34,28 @@ public partial class OwnedTextTests
         await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
     }
 
+    // Factory — FromAscii
+
+    [Test]
+    public Task FromAscii_StoresUtf8_WithoutRuneCount()
+    {
+        // Arrange & Act
+        using var owned = OwnedText.FromAscii("Hello"u8)!;
+
+        // Assert — ASCII: runes == bytes, so RuneLength == ByteLength == 5
+        return Verify(new { owned.Encoding, owned.RuneLength, owned.ByteLength });
+    }
+
+    [Test]
+    public async Task FromAscii_Empty_ReturnsSingletonEmpty()
+    {
+        // Act
+        var owned = OwnedText.FromAscii([]);
+
+        // Assert
+        await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
+    }
+
     // Factory — FromChars
 
     [Test]

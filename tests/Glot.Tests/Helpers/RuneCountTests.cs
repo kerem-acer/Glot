@@ -208,4 +208,148 @@ public class RuneCountTests
         // Assert
         await Assert.That(caught).IsTypeOf<InvalidEncodingException>();
     }
+
+    // CountPrefix — UTF-32 short-circuit
+
+    [Test]
+    public async Task CountPrefix_Utf32_AlwaysDividesByFour()
+    {
+        // Arrange — 10-rune UTF-32 span, prefix of 8 bytes = 2 runes
+        var bytes = TestHelpers.Encode("0123456789", TextEncoding.Utf32);
+        const int bytePos = 8;
+        const int expected = 2;
+
+        // Act — totalRuneLength ignored for UTF-32
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf32, bytePos, totalRuneLength: 0);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    // CountPrefix — UTF-8 fast paths
+
+    [Test]
+    public async Task CountPrefix_Utf8_AllAscii_ReturnsBytePos()
+    {
+        // Arrange — "Hello" = 5 bytes, 5 runes, totalRuneLength == bytes.Length hits fast path
+        ReadOnlySpan<byte> bytes = "Hello"u8;
+        const int bytePos = 3;
+        const int expected = 3;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf8, bytePos, totalRuneLength: 5);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async Task CountPrefix_Utf8_MultiByte_UsesSlowPath()
+    {
+        // Arrange — "café" = 5 bytes, 4 runes; prefix "caf" = 3 bytes = 3 runes (é starts at byte 3)
+        ReadOnlySpan<byte> bytes = "café"u8;
+        const int bytePos = 3;
+        const int expected = 3;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf8, bytePos, totalRuneLength: 4);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async Task CountPrefix_Utf8_MultiByteIncludingRune_CountsIt()
+    {
+        // Arrange — "café" = 5 bytes, 4 runes; prefix "café" = all 5 bytes = 4 runes
+        ReadOnlySpan<byte> bytes = "café"u8;
+        const int bytePos = 5;
+        const int expected = 4;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf8, bytePos, totalRuneLength: 4);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async Task CountPrefix_Utf8_LazyRuneLength_UsesSlowPath()
+    {
+        // Arrange — totalRuneLength = 0 (lazy sentinel) forces the slow path even for ASCII
+        ReadOnlySpan<byte> bytes = "Hello"u8;
+        const int bytePos = 3;
+        const int expected = 3;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf8, bytePos, totalRuneLength: 0);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    // CountPrefix — UTF-16 fast path (NEW)
+
+    [Test]
+    public async Task CountPrefix_Utf16_AllBmp_ReturnsHalfBytePos()
+    {
+        // Arrange — "Hello" UTF-16 = 10 bytes, 5 runes; totalRuneLength * 2 == bytes.Length hits BMP fast path
+        var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf16);
+        const int bytePos = 4;
+        const int expected = 2;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf16, bytePos, totalRuneLength: 5);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async Task CountPrefix_Utf16_WithSurrogatePair_UsesSlowPath()
+    {
+        // Arrange — "A🎉B" UTF-16 = 2 + 4 + 2 = 8 bytes, 3 runes. 3 * 2 != 8 so BMP fast path misses.
+        // Prefix of 2 bytes = "A" = 1 rune. Prefix of 6 bytes = "A🎉" = 2 runes.
+        var bytes = TestHelpers.Encode("A🎉B", TextEncoding.Utf16);
+
+        // Act
+        var prefixOne = RuneCount.CountPrefix(bytes, TextEncoding.Utf16, bytePos: 2, totalRuneLength: 3);
+        var prefixTwo = RuneCount.CountPrefix(bytes, TextEncoding.Utf16, bytePos: 6, totalRuneLength: 3);
+
+        // Assert
+        await Assert.That(prefixOne).IsEqualTo(1);
+        await Assert.That(prefixTwo).IsEqualTo(2);
+    }
+
+    [Test]
+    public async Task CountPrefix_Utf16_LazyRuneLength_UsesSlowPath()
+    {
+        // Arrange — totalRuneLength = 0 (lazy sentinel) forces the slow path even for all-BMP input
+        var bytes = TestHelpers.Encode("Hello", TextEncoding.Utf16);
+        const int bytePos = 4;
+        const int expected = 2;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf16, bytePos, totalRuneLength: 0);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
+
+    // CountPrefix — slow-path suffix optimization
+
+    [Test]
+    public async Task CountPrefix_Utf8_PrefixPastHalf_CountsFromTail()
+    {
+        // Arrange — "日本語" = 9 bytes (3 bytes each), 3 runes; prefix of 6 bytes is past-half, triggers tail-count path
+        ReadOnlySpan<byte> bytes = "日本語"u8;
+        const int bytePos = 6;
+        const int expected = 2;
+
+        // Act
+        var result = RuneCount.CountPrefix(bytes, TextEncoding.Utf8, bytePos, totalRuneLength: 3);
+
+        // Assert
+        await Assert.That(result).IsEqualTo(expected);
+    }
 }
