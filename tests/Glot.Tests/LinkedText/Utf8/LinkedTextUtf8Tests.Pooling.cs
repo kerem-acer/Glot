@@ -3,6 +3,7 @@ namespace Glot.Tests;
 public partial class LinkedTextUtf8Tests
 {
     [Test]
+    [NotInParallel]
     public Task Create_Dispose_ResetsInstance()
     {
         // Arrange
@@ -13,7 +14,7 @@ public partial class LinkedTextUtf8Tests
         // Act
         owned.Dispose();
 
-        // Assert
+        // Assert — reads pool-returned instance's reset state; NotInParallel prevents a concurrent Create from repopulating it
         return Verify(new { data.SegmentCount, data.Length, data.IsEmpty });
     }
 
