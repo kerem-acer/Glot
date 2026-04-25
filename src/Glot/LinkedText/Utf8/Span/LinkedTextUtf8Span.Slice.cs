@@ -52,6 +52,7 @@ public readonly partial struct LinkedTextUtf8Span
         return new LinkedTextUtf8Span(_data!, startSeg, startIdx, endSeg, endIdx, count);
     }
 
+#if NET6_0_OR_GREATER
     /// <summary>Slices by range.</summary>
     public LinkedTextUtf8Span this[Range range]
     {
@@ -61,6 +62,7 @@ public readonly partial struct LinkedTextUtf8Span
             return Slice(offset, count);
         }
     }
+#endif
 
     (int segment, int index) FindPosition(int byteOffset)
     {

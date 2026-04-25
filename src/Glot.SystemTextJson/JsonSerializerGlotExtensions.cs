@@ -1,4 +1,6 @@
+#if NET6_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Text.Json;
 
 namespace Glot.SystemTextJson;
@@ -25,8 +27,10 @@ public static class JsonSerializerGlotExtensions
         /// return GlotResults.Json(json);
         /// </code>
         /// </example>
+#if NET6_0_OR_GREATER
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext.")]
         [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+#endif
         public static OwnedText SerializeToUtf8OwnedText<T>(T value, JsonSerializerOptions? options = null)
         {
             var writer = WriterCache.Rent(options, out var bufferWriter);
@@ -54,8 +58,10 @@ public static class JsonSerializerGlotExtensions
         /// Text json = JsonSerializer.SerializeToUtf8Text(data);
         /// </code>
         /// </example>
+#if NET6_0_OR_GREATER
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext.")]
         [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+#endif
         public static Text SerializeToUtf8Text<T>(T value, JsonSerializerOptions? options = null)
             => Text.FromUtf8(JsonSerializer.SerializeToUtf8Bytes(value, options));
     }
