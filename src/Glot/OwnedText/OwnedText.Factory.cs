@@ -5,6 +5,36 @@ namespace Glot;
 
 public sealed partial class OwnedText
 {
+    /// <summary>Creates an <see cref="OwnedText"/> by copying the bytes of an existing <see cref="Text"/>.</summary>
+    /// <param name="value">The source <see cref="Text"/> to copy.</param>
+    /// <returns>A new <see cref="OwnedText"/> containing the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>
+    /// Copies the underlying bytes into a buffer rented from <see cref="System.Buffers.ArrayPool{T}"/>,
+    /// preserving the source encoding and rune count. Useful for transferring a non-owned <see cref="Text"/>
+    /// (e.g. a slice of a string or pooled buffer) into an owned, disposable form.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// Text view = Text.From("hello world");
+    /// using var owned = OwnedText.From(view);
+    /// </code>
+    /// </example>
+    public static OwnedText From(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return Empty;
+        }
+
+        var bytes = value.Bytes;
+        var buffer = ArrayPool<byte>.Shared.Rent(bytes.Length);
+        bytes.CopyTo(buffer);
+
+        var owned = GetFromPool();
+        owned.Initialize(buffer, bytes.Length, value.Encoding, value.RuneLength, BackingType.ByteArray);
+        return owned;
+    }
+
     /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying the bytes.</summary>
     /// <param name="value">The UTF-8 bytes to copy.</param>
     /// <param name="countRunes">Whether to count runes during construction.</param>
