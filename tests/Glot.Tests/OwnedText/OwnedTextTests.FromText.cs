@@ -70,8 +70,8 @@ public partial class OwnedTextTests
     [Test]
     public async Task FromText_DefaultText_ReturnsSingletonEmpty()
     {
-        // Act
-        var owned = OwnedText.From(default);
+        // Act — explicit type to disambiguate From(Text) from From(string)
+        var owned = OwnedText.From(default(Text));
 
         // Assert
         await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);

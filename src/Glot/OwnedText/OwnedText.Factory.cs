@@ -31,6 +31,32 @@ public sealed partial class OwnedText
         return owned;
     }
 
+    /// <summary>Creates a UTF-16 <see cref="OwnedText"/> that wraps a <see cref="string"/> without copying.</summary>
+    /// <param name="value">The source string.</param>
+    /// <param name="countRunes">Whether to count runes during construction.</param>
+    /// <returns>A new <see cref="OwnedText"/> wrapping the provided data, or <see cref="OwnedText.Empty"/> if the input is null or empty.</returns>
+    /// <remarks>
+    /// Zero-copy: the resulting <see cref="OwnedText"/> references the source <see cref="string"/> directly.
+    /// <see cref="Dispose"/> returns the wrapper to its pool but does not affect the string.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// using var owned = OwnedText.From("hello world");
+    /// Text text = owned.Text; // valid until disposed
+    /// </code>
+    /// </example>
+    public static OwnedText From(string value, bool countRunes = true)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return Empty;
+        }
+
+        var owned = GetFromPool();
+        owned.InitializeView(Text.From(value, countRunes));
+        return owned;
+    }
+
     /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying the bytes.</summary>
     /// <param name="value">The UTF-8 bytes to copy.</param>
     /// <param name="countRunes">Whether to count runes during construction.</param>

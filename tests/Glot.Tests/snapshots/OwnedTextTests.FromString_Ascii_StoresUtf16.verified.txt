@@ -1,0 +1,6 @@
+﻿{
+  Encoding: Utf16,
+  RuneLength: 5,
+  ByteLength: 10,
+  IsEmpty: false
+}
