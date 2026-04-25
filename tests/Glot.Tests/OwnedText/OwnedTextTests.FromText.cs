@@ -47,7 +47,8 @@ public partial class OwnedTextTests
     public Task FromText_Utf32_IntArrayBacked_PreservesEverything()
     {
         // Arrange — H, e, l
-        var source = Text.FromUtf32(new[] { 0x48, 0x65, 0x6C });
+        ReadOnlySpan<int> codePoints = [0x48, 0x65, 0x6C];
+        var source = Text.FromUtf32(codePoints);
 
         // Act
         using var owned = OwnedText.From(source);
@@ -116,7 +117,8 @@ public partial class OwnedTextTests
     public async Task FromText_PreservesUtf32Encoding()
     {
         // Arrange
-        var source = Text.FromUtf32(new[] { 0x48, 0x69 });
+        ReadOnlySpan<int> codePoints = [0x48, 0x69];
+        var source = Text.FromUtf32(codePoints);
 
         // Act
         using var owned = OwnedText.From(source);
@@ -187,7 +189,8 @@ public partial class OwnedTextTests
     public async Task FromText_RoundTripsContent_Utf32()
     {
         // Arrange — H, i, !
-        var source = Text.FromUtf32(new[] { 0x48, 0x69, 0x21 });
+        ReadOnlySpan<int> codePoints = [0x48, 0x69, 0x21];
+        var source = Text.FromUtf32(codePoints);
 
         // Act
         using var owned = OwnedText.From(source);
@@ -217,7 +220,7 @@ public partial class OwnedTextTests
     public async Task FromText_DoesNotAliasSourceArray()
     {
         // Arrange — start with a mutable byte[]-backed Text
-        var sourceBytes = new byte[] { 0x48, 0x65, 0x6C, 0x6C, 0x6F }; // Hello
+        byte[] sourceBytes = [0x48, 0x65, 0x6C, 0x6C, 0x6F]; // Hello
         var source = Text.FromUtf8(sourceBytes);
 
         // Act — copy into owned, then mutate the source array
