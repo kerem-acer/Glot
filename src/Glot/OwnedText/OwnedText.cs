@@ -22,6 +22,7 @@ public sealed partial class OwnedText : IDisposable
         new DefaultObjectPool<OwnedText>(new Policy(), 32);
 
     Text _text;
+    bool _ownsBuffer;
 
     OwnedText() { }
 
@@ -57,6 +58,13 @@ public sealed partial class OwnedText : IDisposable
             encoding,
             runeLength,
             backingType);
+        _ownsBuffer = true;
+    }
+
+    internal void InitializeView(Text value)
+    {
+        _text = value;
+        _ownsBuffer = false;
     }
 
     /// <summary>
@@ -78,7 +86,13 @@ public sealed partial class OwnedText : IDisposable
     }
 
     /// <summary>Finalizer — returns the data buffer if Dispose was not called. Does not return the wrapper to the pool.</summary>
-    ~OwnedText() => ReturnBuffer();
+    ~OwnedText()
+    {
+        if (_ownsBuffer)
+        {
+            ReturnBuffer();
+        }
+    }
 
     /// <summary>Releases the pooled buffer and returns this instance to the pool.</summary>
     /// <remarks>Returns the backing array to <see cref="System.Buffers.ArrayPool{T}"/> and the wrapper to the object pool. Calling <see cref="Dispose"/> multiple times is safe.</remarks>
@@ -90,7 +104,14 @@ public sealed partial class OwnedText : IDisposable
         }
 
         IsDisposed = true;
-        ReturnBuffer();
+        if (_ownsBuffer)
+        {
+            ReturnBuffer();
+        }
+        else
+        {
+            _text = default;
+        }
         GC.SuppressFinalize(this);
         Pool.Return(this);
     }

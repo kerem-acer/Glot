@@ -217,19 +217,19 @@ public partial class OwnedTextTests
     }
 
     [Test]
-    public async Task FromText_DoesNotAliasSourceArray()
+    public async Task FromText_DoesNotCopy_AliasesSourceArray()
     {
         // Arrange — start with a mutable byte[]-backed Text
         byte[] sourceBytes = [0x48, 0x65, 0x6C, 0x6C, 0x6F]; // Hello
         var source = Text.FromUtf8(sourceBytes);
 
-        // Act — copy into owned, then mutate the source array
+        // Act — wrap as a view, then mutate the source array
         using var owned = OwnedText.From(source);
         sourceBytes[0] = 0x4A; // 'J'
-        var stillHello = owned.Text.ToString();
+        var aliased = owned.Text.ToString();
 
-        // Assert — owned should hold an independent copy unaffected by the mutation
-        await Assert.That(stillHello).IsEqualTo("Hello");
+        // Assert — no-copy semantics: owned shares the source array and sees the mutation
+        await Assert.That(aliased).IsEqualTo("Jello");
     }
 
     [Test]
