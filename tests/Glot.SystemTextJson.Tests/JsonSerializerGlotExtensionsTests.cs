@@ -19,6 +19,7 @@ public class JsonSerializerGlotExtensionsTests
     }
 
     [Test]
+    [NotInParallel]
     public async Task SerializeToUtf8OwnedText_AfterDispose_IsEmpty()
     {
         // Arrange
@@ -28,7 +29,7 @@ public class JsonSerializerGlotExtensionsTests
         // Act
         owned.Dispose();
 
-        // Assert
+        // Assert — reads pool-returned instance's reset state; NotInParallel prevents a concurrent rent from repopulating it
         await Assert.That(owned.IsEmpty).IsTrue();
     }
 
