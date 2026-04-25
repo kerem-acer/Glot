@@ -5,6 +5,32 @@ namespace Glot;
 
 public sealed partial class OwnedText
 {
+    /// <summary>Creates an <see cref="OwnedText"/> that wraps an existing <see cref="Text"/> without copying.</summary>
+    /// <param name="value">The source <see cref="Text"/> to wrap.</param>
+    /// <returns>A new <see cref="OwnedText"/> wrapping the provided data, or <see cref="OwnedText.Empty"/> if the input is empty.</returns>
+    /// <remarks>
+    /// Zero-copy: the resulting <see cref="OwnedText"/> shares its backing memory with the source <see cref="Text"/>.
+    /// <see cref="Dispose"/> returns the wrapper to its pool but does not affect the source backing.
+    /// The caller is responsible for ensuring the source remains valid for the lifetime of the returned instance.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// Text view = Text.From("hello world");
+    /// using var owned = OwnedText.From(view);
+    /// </code>
+    /// </example>
+    public static OwnedText From(Text value)
+    {
+        if (value.IsEmpty)
+        {
+            return Empty;
+        }
+
+        var owned = GetFromPool();
+        owned.InitializeView(value);
+        return owned;
+    }
+
     /// <summary>Creates a UTF-8 <see cref="OwnedText"/> by copying the bytes.</summary>
     /// <param name="value">The UTF-8 bytes to copy.</param>
     /// <param name="countRunes">Whether to count runes during construction.</param>

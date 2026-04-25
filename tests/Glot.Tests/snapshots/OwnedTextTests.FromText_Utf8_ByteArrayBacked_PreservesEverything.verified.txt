@@ -1,0 +1,5 @@
+﻿{
+  RuneLength: 5,
+  ByteLength: 5,
+  IsEmpty: false
+}
