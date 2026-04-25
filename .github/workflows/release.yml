@@ -26,11 +26,11 @@ jobs:
 
       - run: dotnet restore
 
-      - run: dotnet build --no-restore -c Release
+      - run: dotnet build --no-restore -c Release -p:Version=${{ steps.version.outputs.VERSION }}
 
-      - run: dotnet test --solution Glot.slnx --no-build -c Release
+      - run: dotnet test --solution Glot.slnx --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }}
 
-      - run: dotnet pack Glot.slnx --no-build -c Release -p:PackageVersion=${{ steps.version.outputs.VERSION }} -o ./artifacts
+      - run: dotnet pack Glot.slnx --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
 
       - name: Push to NuGet
         run: >
