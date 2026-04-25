@@ -59,6 +59,7 @@ public readonly ref partial struct TextSpan
         return new TextSpan(Bytes.Slice(byteOffset, byteCount), Encoding);
     }
 
+#if NET6_0_OR_GREATER
     /// <summary>Slices by rune range. Equivalent to <c>RuneSlice(offset, count)</c>.</summary>
     public TextSpan this[Range range]
     {
@@ -68,4 +69,5 @@ public readonly ref partial struct TextSpan
             return RuneSlice(offset, count);
         }
     }
+#endif
 }

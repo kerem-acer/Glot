@@ -5,7 +5,6 @@
     <!-- Match ObjectPool version to the target ASP.NET shared framework to avoid MSB3277 -->
     <AspNetCoreObjectPoolVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.11</AspNetCoreObjectPoolVersion>
     <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.7</AspNetCoreObjectPoolVersion>
-    <PolyPublic>true</PolyPublic>
   </PropertyGroup>
 
   <!-- NuGet package metadata -->

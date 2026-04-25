@@ -40,7 +40,7 @@ public sealed class TextJsonConverter : JsonConverter<Text>
         try
         {
             var written = reader.CopyString(buffer);
-            return Text.FromUtf8(buffer[..written]);
+            return Text.FromUtf8(buffer.Slice(0, written));
         }
         finally
         {
@@ -78,7 +78,7 @@ public sealed class TextJsonConverter : JsonConverter<Text>
         try
         {
             var written = value.EncodeToUtf8(buffer);
-            writer.WriteStringValue(buffer[..written]);
+            writer.WriteStringValue(buffer.Slice(0, written));
         }
         finally
         {

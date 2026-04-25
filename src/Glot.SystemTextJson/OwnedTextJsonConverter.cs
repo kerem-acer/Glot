@@ -71,7 +71,7 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
         try
         {
             var written = text.EncodeToUtf8(buffer);
-            writer.WriteStringValue(buffer[..written]);
+            writer.WriteStringValue(buffer.Slice(0, written));
         }
         finally
         {
