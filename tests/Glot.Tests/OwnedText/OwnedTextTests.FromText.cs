@@ -71,7 +71,7 @@ public partial class OwnedTextTests
     public async Task FromText_DefaultText_ReturnsSingletonEmpty()
     {
         // Act
-        var owned = OwnedText.From(default(Text));
+        var owned = OwnedText.From(default);
 
         // Assert
         await Assert.That(owned).IsSameReferenceAs(OwnedText.Empty);
