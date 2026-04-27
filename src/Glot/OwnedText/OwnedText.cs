@@ -13,7 +13,12 @@ namespace Glot;
 /// <para>Read content through <see cref="Text"/>. The <see cref="Text"/> view is valid only while this
 /// instance has not been disposed.</para>
 /// </remarks>
-public sealed partial class OwnedText : IDisposable
+public sealed partial class OwnedText :
+    IDisposable,
+    IEquatable<OwnedText>,
+    IEquatable<Text>,
+    IComparable<OwnedText>,
+    IComparable<Text>
 {
     /// <summary>A shared empty <see cref="OwnedText"/> instance.</summary>
     public static readonly OwnedText Empty = new();
