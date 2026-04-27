@@ -16,7 +16,11 @@ namespace Glot;
 #if NET6_0_OR_GREATER
 [InterpolatedStringHandler]
 #endif
-public sealed partial class LinkedTextUtf16
+public sealed partial class LinkedTextUtf16 :
+    IEquatable<LinkedTextUtf16>,
+    IEquatable<Text>,
+    IComparable<LinkedTextUtf16>,
+    IComparable<Text>
 {
 #if NET8_0_OR_GREATER
     InlineSegmentBuffer _inlineSegments;

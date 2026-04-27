@@ -9,7 +9,14 @@ namespace Glot;
 /// <para>Both the <see cref="LinkedTextUtf8"/> and its overflow segment array are rented from pools.
 /// This wrapper is itself pooled via <see cref="Microsoft.Extensions.ObjectPool.ObjectPool{T}"/>.</para>
 /// </remarks>
-public sealed partial class OwnedLinkedTextUtf8 : IDisposable
+public sealed partial class OwnedLinkedTextUtf8 :
+    IDisposable,
+    IEquatable<OwnedLinkedTextUtf8>,
+    IEquatable<LinkedTextUtf8>,
+    IEquatable<Text>,
+    IComparable<OwnedLinkedTextUtf8>,
+    IComparable<LinkedTextUtf8>,
+    IComparable<Text>
 {
     static readonly ObjectPool<OwnedLinkedTextUtf8> Pool =
         new DefaultObjectPool<OwnedLinkedTextUtf8>(new Policy(), 32);
