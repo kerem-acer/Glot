@@ -277,6 +277,34 @@ public class TextJsonConverterTests
     }
 
     [Test]
+    public async Task Serialize_SourceGeneratedContext_WritesString()
+    {
+        // Arrange
+        const string value = "hello";
+        var model = new TextRecord(Text.From(value));
+
+        // Act
+        var json = JsonSerializer.Serialize(model, TextJsonContext.Default.TextRecord);
+
+        // Assert
+        await Assert.That(json).IsEqualTo($$"""{"Name":"{{value}}"}""");
+    }
+
+    [Test]
+    public async Task Deserialize_SourceGeneratedContext_ReadsString()
+    {
+        // Arrange
+        const string value = "hello";
+        const string json = $$"""{"Name":"{{value}}"}""";
+
+        // Act
+        var model = JsonSerializer.Deserialize(json, TextJsonContext.Default.TextRecord);
+
+        // Assert
+        await Assert.That(model!.Name.ToString()).IsEqualTo(value);
+    }
+
+    [Test]
     public async Task Deserialize_MultiSegment_ReturnsText()
     {
         // Arrange — split JSON across segments so HasValueSequence is true

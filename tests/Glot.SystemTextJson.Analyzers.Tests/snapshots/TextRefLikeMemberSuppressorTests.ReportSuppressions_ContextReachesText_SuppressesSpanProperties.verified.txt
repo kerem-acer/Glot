@@ -1,0 +1,14 @@
+﻿[
+  {
+    Message: The type 'Text' includes the ref like property, field or constructor parameter 'Bytes'. No source code will be generated for the property, field or constructor.,
+    IsSuppressed: true
+  },
+  {
+    Message: The type 'Text' includes the ref like property, field or constructor parameter 'Chars'. No source code will be generated for the property, field or constructor.,
+    IsSuppressed: true
+  },
+  {
+    Message: The type 'Text' includes the ref like property, field or constructor parameter 'Ints'. No source code will be generated for the property, field or constructor.,
+    IsSuppressed: true
+  }
+]

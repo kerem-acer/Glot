@@ -343,6 +343,16 @@ Text text = JsonSerializer.Deserialize<Text>(json, options);
 
 Reads UTF-8 JSON bytes directly into `Text` without allocating an intermediate string. Writes UTF-8/UTF-16 backed text without transcoding.
 
+With a source-generated `JsonSerializerContext`, register the converters on the context:
+
+```csharp
+[JsonSourceGenerationOptions(Converters = [typeof(TextJsonConverter), typeof(OwnedTextJsonConverter)])]
+[JsonSerializable(typeof(Person))]
+public partial class AppJsonContext : JsonSerializerContext;
+```
+
+The source generator warns about `Text`'s span properties (SYSLIB1225), even though the converter never reads them. The package includes a suppressor that silences those three warnings and nothing else.
+
 ### Newtonsoft.Json
 
 ```

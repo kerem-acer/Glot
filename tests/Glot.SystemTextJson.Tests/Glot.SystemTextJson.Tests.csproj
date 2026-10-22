@@ -11,5 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Glot.SystemTextJson/Glot.SystemTextJson.csproj" />
+    <!-- Package consumers get the suppressor from the package; a project reference has to load it explicitly. -->
+    <ProjectReference Include="../../src/Glot.SystemTextJson.Analyzers/Glot.SystemTextJson.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>
