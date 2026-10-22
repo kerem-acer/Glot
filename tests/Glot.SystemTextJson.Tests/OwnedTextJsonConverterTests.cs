@@ -163,6 +163,23 @@ public class OwnedTextJsonConverterTests
     }
 
     [Test]
+    [Arguments("1.2", "Number")]
+    [Arguments("true", "True")]
+    [Arguments("false", "False")]
+    [Arguments("{}", "StartObject")]
+    [Arguments("[]", "StartArray")]
+    public async Task Deserialize_NonString_ThrowsNamingToken(string json, string token)
+    {
+        // Arrange
+        var expected = $"The JSON value could not be converted to Glot.OwnedText. Expected a string, but the token is {token}.";
+
+        // Act & Assert
+        await Assert.That(() => JsonSerializer.Deserialize<OwnedText>(json, _options))
+            .Throws<JsonException>()
+            .WithMessage(expected);
+    }
+
+    [Test]
     public async Task Deserialize_EmptyString_ReturnsEmpty()
     {
         // Arrange

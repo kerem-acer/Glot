@@ -9,7 +9,8 @@ namespace Glot.SystemTextJson;
 /// The caller is responsible for disposing deserialized <see cref="OwnedText"/> values.
 /// </summary>
 /// <remarks>
-/// <para>On read, decodes JSON UTF-8 bytes directly into a pooled buffer. The caller must dispose deserialized <see cref="OwnedText"/> values.</para>
+/// <para>On read, decodes JSON UTF-8 bytes directly into a pooled buffer. The caller must dispose deserialized <see cref="OwnedText"/> values.
+/// A JSON <c>null</c> reads as <see langword="null"/>; any other token that isn't a string throws a <see cref="JsonException"/>.</para>
 /// <para>On write, UTF-8 and UTF-16 texts are written directly. Other encodings are transcoded through a stack- or pool-allocated buffer.</para>
 /// </remarks>
 public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
@@ -22,6 +23,11 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
         if (reader.TokenType == JsonTokenType.Null)
         {
             return null;
+        }
+
+        if (reader.TokenType != JsonTokenType.String)
+        {
+            throw ConverterExceptions.NotAString(reader.TokenType, typeof(OwnedText));
         }
 
         if (!reader.ValueIsEscaped)
