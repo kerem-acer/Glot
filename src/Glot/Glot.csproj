@@ -3,8 +3,8 @@
     <TargetFrameworks>net10.0;net8.0;netstandard2.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>Glot</RootNamespace>
     <!-- Match ObjectPool version to the target ASP.NET shared framework to avoid MSB3277 -->
-    <AspNetCoreObjectPoolVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.11</AspNetCoreObjectPoolVersion>
-    <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.7</AspNetCoreObjectPoolVersion>
+    <AspNetCoreObjectPoolVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.32</AspNetCoreObjectPoolVersion>
+    <AspNetCoreObjectPoolVersion Condition="'$(AspNetCoreObjectPoolVersion)' == ''">10.0.13</AspNetCoreObjectPoolVersion>
   </PropertyGroup>
 
   <!-- NuGet package metadata -->
