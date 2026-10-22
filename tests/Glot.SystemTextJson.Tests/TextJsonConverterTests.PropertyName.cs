@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 
 namespace Glot.SystemTextJson.Tests;
@@ -14,7 +13,7 @@ public partial class TextJsonConverterTests
         // Arrange
         const string key = "tr";
         const string value = "Merhaba";
-        var dictionary = new Dictionary<Text, Text> { [Encode(key, encoding)] = Text.From(value) };
+        var dictionary = new Dictionary<Text, Text> { [TestText.Encode(key, encoding)] = Text.From(value) };
 
         // Act
         var json = JsonSerializer.Serialize(dictionary, _options);
@@ -28,7 +27,7 @@ public partial class TextJsonConverterTests
     {
         // Arrange — long enough that transcoding rents a buffer
         var key = new string('k', 200);
-        var dictionary = new Dictionary<Text, int> { [Encode(key, TextEncoding.Utf32)] = 1 };
+        var dictionary = new Dictionary<Text, int> { [TestText.Encode(key, TextEncoding.Utf32)] = 1 };
 
         // Act
         var json = JsonSerializer.Serialize(dictionary, _options);
@@ -92,11 +91,4 @@ public partial class TextJsonConverterTests
         // Assert
         await Assert.That(dictionary!.ContainsKey(Text.From("a\"b"))).IsTrue();
     }
-
-    static Text Encode(string value, TextEncoding encoding) => encoding switch
-    {
-        TextEncoding.Utf8 => Text.FromUtf8(Encoding.UTF8.GetBytes(value)),
-        TextEncoding.Utf16 => Text.From(value),
-        _ => Text.FromBytes(Encoding.UTF32.GetBytes(value), TextEncoding.Utf32),
-    };
 }
