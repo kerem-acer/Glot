@@ -101,6 +101,8 @@ public readonly ref partial struct TextSpan
     /// <summary>Returns an encoding-independent hash code based on the rune sequence.</summary>
     public override int GetHashCode() => ComputeHashCode(Bytes, Encoding);
 
+    /// <summary>Hashes the UTF-8 form of the content, so equal text hashes equal in every encoding.</summary>
+    /// <remarks>Shared by <see cref="Text"/>, <see cref="TextSpan"/> and the linked texts — they must all agree.</remarks>
     internal static int ComputeHashCode(ReadOnlySpan<byte> bytes, TextEncoding encoding)
     {
         if (bytes.IsEmpty)
@@ -108,45 +110,40 @@ public readonly ref partial struct TextSpan
             return 0;
         }
 
-        // UTF-32: each 4-byte int is a rune value — hash directly.
-        if (encoding == TextEncoding.Utf32)
+        // UTF-8 is already canonical: hash the bytes in place.
+        if (encoding == TextEncoding.Utf8)
         {
-            var hash = XxHash3.HashToUInt64(bytes);
-            return (int)hash ^ (int)(hash >> 32);
+            return FoldHash(XxHash3.HashToUInt64(bytes));
         }
 
-        // UTF-8/UTF-16: decode runes to int values, then XxHash3 the buffer.
-        var maxRunes = encoding == TextEncoding.Utf8 ? bytes.Length : bytes.Length / 2;
+        return ComputeHashCodeTranscoded(bytes, encoding);
+    }
 
-        int[]? rented = null;
-        Span<int> runes = maxRunes <= 256
-            ? stackalloc int[maxRunes]
-            : (rented = ArrayPool<int>.Shared.Rent(maxRunes));
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static int ComputeHashCodeTranscoded(ReadOnlySpan<byte> bytes, TextEncoding encoding)
+    {
+        var maxBytes = TranscodeSize.Estimate(bytes.Length, encoding, TextEncoding.Utf8);
+
+        byte[]? rented = null;
+        Span<byte> utf8 = maxBytes <= 1024
+            ? stackalloc byte[maxBytes]
+            : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
 
         try
         {
-            var count = 0;
-            var remaining = bytes;
-
-            while (!remaining.IsEmpty)
-            {
-                Rune.TryDecodeFirst(remaining, encoding, out var rune, out var consumed);
-                runes[count++] = rune.Value;
-                remaining = remaining[consumed..];
-            }
-
-            var runeBytes = MemoryMarshal.AsBytes(runes[..count]);
-            var hash = XxHash3.HashToUInt64(runeBytes);
-            return (int)hash ^ (int)(hash >> 32);
+            var written = new TextSpan(bytes, encoding, 0).EncodeToUtf8(utf8);
+            return FoldHash(XxHash3.HashToUInt64(utf8[..written]));
         }
         finally
         {
             if (rented is not null)
             {
-                ArrayPool<int>.Shared.Return(rented);
+                ArrayPool<byte>.Shared.Return(rented);
             }
         }
     }
+
+    internal static int FoldHash(ulong hash) => (int)hash ^ (int)(hash >> 32);
 
     /// <summary>Compares two spans lexicographically by rune value, regardless of encoding.</summary>
     public int CompareTo(TextSpan other)

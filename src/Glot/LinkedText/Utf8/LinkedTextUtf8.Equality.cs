@@ -152,8 +152,8 @@ public sealed partial class LinkedTextUtf8
         _ => false,
     };
 
-    /// <summary>Returns a hash code based on the raw UTF-8 byte content.</summary>
-    /// <remarks>Uses streaming XxHash3 over all segment bytes with a UTF-8 seed. Matches <see cref="Text.GetHashCode"/> for the same UTF-8 content.</remarks>
+    /// <summary>Returns a hash code based on the rune sequence, regardless of encoding.</summary>
+    /// <remarks>Uses streaming XxHash3 over all segment bytes. Matches <see cref="Text.GetHashCode"/> for equal content in any encoding.</remarks>
     public override int GetHashCode()
     {
         if (Length == 0)
@@ -161,14 +161,13 @@ public sealed partial class LinkedTextUtf8
             return 0;
         }
 
-        var hasher = new XxHash3((long)TextEncoding.Utf8);
+        var hasher = new XxHash3();
         foreach (var seg in EnumerateSegments())
         {
             hasher.Append(seg.Span);
         }
 
-        var hash = hasher.GetCurrentHashAsUInt64();
-        return (int)hash ^ (int)(hash >> 32);
+        return TextSpan.FoldHash(hasher.GetCurrentHashAsUInt64());
     }
 
     /// <summary>Compares this and <paramref name="other"/> lexicographically by byte order.</summary>

@@ -44,8 +44,8 @@ public sealed partial class OwnedText
         _ => false,
     };
 
-    /// <summary>Returns a hash code based on the raw byte content of the wrapped <see cref="Text"/>.</summary>
-    /// <remarks>The hash is encoding-dependent — two values with the same rune content but different encodings produce different hash codes.</remarks>
+    /// <summary>Returns a hash code based on the rune sequence of the wrapped <see cref="Text"/>, regardless of encoding.</summary>
+    /// <remarks>Matches <see cref="Text.GetHashCode"/> for equal content in any encoding.</remarks>
     public override int GetHashCode() => _text.GetHashCode();
 
     /// <summary>Compares this and <paramref name="other"/> lexicographically by rune value, regardless of encoding.</summary>

@@ -1,5 +1,4 @@
 using System.Buffers;
-using System.IO.Hashing;
 using System.Runtime.InteropServices;
 
 namespace Glot;
@@ -154,8 +153,8 @@ public sealed partial class LinkedTextUtf16
         _ => false,
     };
 
-    /// <summary>Returns a hash code based on the raw UTF-16 byte content.</summary>
-    /// <remarks>Uses streaming XxHash3 over all segment bytes with a UTF-16 seed. Matches <see cref="Text.GetHashCode"/> for the same UTF-16 content.</remarks>
+    /// <summary>Returns a hash code based on the rune sequence, regardless of encoding.</summary>
+    /// <remarks>Hashes the UTF-8 form of the content. Matches <see cref="Text.GetHashCode"/> for equal content in any encoding.</remarks>
     public override int GetHashCode()
     {
         if (Length == 0)
@@ -163,14 +162,17 @@ public sealed partial class LinkedTextUtf16
             return 0;
         }
 
-        var hasher = new XxHash3((long)TextEncoding.Utf16);
-        foreach (var seg in EnumerateSegments())
+        // Copy to one buffer so a surrogate pair split across segments transcodes as one rune.
+        var rented = ArrayPool<char>.Shared.Rent(Length);
+        try
         {
-            hasher.Append(MemoryMarshal.AsBytes(seg.Span));
+            CopyTo(rented);
+            return TextSpan.ComputeHashCode(MemoryMarshal.AsBytes(rented.AsSpan(0, Length)), TextEncoding.Utf16);
         }
-
-        var hash = hasher.GetCurrentHashAsUInt64();
-        return (int)hash ^ (int)(hash >> 32);
+        finally
+        {
+            ArrayPool<char>.Shared.Return(rented);
+        }
     }
 
     /// <summary>Compares this and <paramref name="other"/> lexicographically by UTF-16 char order.</summary>

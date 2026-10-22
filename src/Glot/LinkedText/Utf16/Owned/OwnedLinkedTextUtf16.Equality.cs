@@ -49,7 +49,7 @@ public sealed partial class OwnedLinkedTextUtf16
         _ => false,
     };
 
-    /// <summary>Returns a hash code based on the raw UTF-16 byte content. Disposed instances hash as empty.</summary>
+    /// <summary>Returns a hash code based on the rune sequence, regardless of encoding. Disposed instances hash as empty.</summary>
     public override int GetHashCode() => DataOrEmpty.GetHashCode();
 
     /// <summary>Compares this and <paramref name="other"/> lexicographically by UTF-16 char order. Disposed instances compare as empty; <c>null</c> sorts before any non-null instance.</summary>

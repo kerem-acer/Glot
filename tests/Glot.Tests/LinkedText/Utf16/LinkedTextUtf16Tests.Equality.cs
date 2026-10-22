@@ -99,7 +99,38 @@ public partial class LinkedTextUtf16Tests
         var linkedHash = linked.GetHashCode();
         var textHash = text.GetHashCode();
 
-        // Assert — streaming XxHash3 over segment bytes must match contiguous hash
+        // Assert — hash over segments must match contiguous hash
+        await Assert.That(linkedHash).IsEqualTo(textHash);
+    }
+
+    [Test]
+    public async Task GetHashCode_MatchesUtf8Text()
+    {
+        // Arrange
+        var linked = LinkedTextUtf16.Create("Hello", " 世界");
+        var text = Text.FromUtf8("Hello 世界"u8);
+
+        // Act
+        var linkedHash = linked.GetHashCode();
+        var textHash = text.GetHashCode();
+
+        // Assert
+        await Assert.That(linkedHash).IsEqualTo(textHash);
+    }
+
+    [Test]
+    public async Task GetHashCode_SurrogatePairSplitAcrossSegments_MatchesText()
+    {
+        // Arrange
+        const string emoji = "🎉";
+        var linked = LinkedTextUtf16.Create(emoji[..1], emoji[1..]);
+        var text = Text.FromUtf8(System.Text.Encoding.UTF8.GetBytes(emoji));
+
+        // Act
+        var linkedHash = linked.GetHashCode();
+        var textHash = text.GetHashCode();
+
+        // Assert
         await Assert.That(linkedHash).IsEqualTo(textHash);
     }
 
