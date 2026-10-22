@@ -354,6 +354,14 @@ options.Converters.Add(new OwnedTextJsonConverter(allowNumbersAndBooleans: false
 
 Rejected tokens throw a `JsonException` that names the token found. A `Text?` still reads `null` as `null`, and `OwnedText` always does.
 
+Code that reads or writes `Text` by hand, such as another converter or a reader helper, can use the reader and writer extensions that `TextJsonConverter` is built on. They need no `JsonSerializerOptions`, so they're safe in AOT-compatible code:
+
+```csharp
+Text name = reader.GetText();          // a string or property name, unescaped; any other token throws
+writer.WriteTextPropertyName(name);    // from the text's own encoding
+writer.WriteTextValue(text);
+```
+
 With a source-generated `JsonSerializerContext`, register the converters on the context:
 
 ```csharp

@@ -16,8 +16,6 @@ namespace Glot.SystemTextJson;
 /// </remarks>
 public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
 {
-    const int StackAllocThreshold = 512;
-
     readonly bool _allowNumbersAndBooleans;
 
     /// <summary>
@@ -73,39 +71,6 @@ public sealed class OwnedTextJsonConverter : JsonConverter<OwnedText>
             return;
         }
 
-        var text = value.Text;
-        switch (text.Encoding)
-        {
-            case TextEncoding.Utf8:
-                writer.WriteStringValue(text.Bytes);
-                break;
-
-            case TextEncoding.Utf16:
-                writer.WriteStringValue(text.Chars);
-                break;
-
-            default:
-                WriteTranscoded(writer, text);
-                break;
-        }
-    }
-
-    static void WriteTranscoded(Utf8JsonWriter writer, Text text)
-    {
-        var maxBytes = text.RuneLength * 4;
-        byte[]? rented = null;
-        var buffer = maxBytes <= StackAllocThreshold ? stackalloc byte[StackAllocThreshold] : (rented = ArrayPool<byte>.Shared.Rent(maxBytes));
-        try
-        {
-            var written = text.EncodeToUtf8(buffer);
-            writer.WriteStringValue(buffer.Slice(0, written));
-        }
-        finally
-        {
-            if (rented is not null)
-            {
-                ArrayPool<byte>.Shared.Return(rented);
-            }
-        }
+        writer.WriteTextValue(value.Text);
     }
 }
