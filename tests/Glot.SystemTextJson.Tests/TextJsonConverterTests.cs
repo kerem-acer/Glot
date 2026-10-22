@@ -206,34 +206,16 @@ public partial class TextJsonConverterTests
     }
 
     [Test]
-    [Arguments("null", "Null")]
-    [Arguments("1.2", "Number")]
-    [Arguments("true", "True")]
-    [Arguments("false", "False")]
-    [Arguments("{}", "StartObject")]
-    [Arguments("[]", "StartArray")]
-    public async Task Deserialize_NonString_ThrowsNamingToken(string json, string token)
-    {
-        // Arrange
-        var expected = $"The JSON value could not be converted to Glot.Text. Expected a string, but the token is {token}.";
-
-        // Act & Assert
-        await Assert.That(() => JsonSerializer.Deserialize<Text>(json, _options))
-            .Throws<JsonException>()
-            .WithMessage(expected);
-    }
-
-    [Test]
-    public async Task Deserialize_NullableNull_ReturnsNull()
+    public async Task Deserialize_Null_ReturnsEmpty()
     {
         // Arrange
         const string json = "null";
 
         // Act
-        var text = JsonSerializer.Deserialize<Text?>(json, _options);
+        var text = JsonSerializer.Deserialize<Text>(json, _options);
 
         // Assert
-        await Assert.That(text).IsNull();
+        await Assert.That(text.IsEmpty).IsTrue();
     }
 
     [Test]

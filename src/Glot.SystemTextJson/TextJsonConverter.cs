@@ -9,22 +9,55 @@ namespace Glot.SystemTextJson;
 /// </summary>
 /// <remarks>
 /// <para>On read, decodes JSON UTF-8 bytes directly into a <see cref="Text"/> without creating an intermediate string.
-/// Only JSON strings are accepted: any other token, including <c>null</c> for a non-nullable <see cref="Text"/>, throws a <see cref="JsonException"/>.</para>
+/// By default, <c>null</c> reads as an empty <see cref="Text"/> and numbers and booleans read as their raw JSON text;
+/// the constructor parameters turn either off. Objects and arrays always throw a <see cref="JsonException"/>.</para>
 /// <para>On write, UTF-8 and UTF-16 texts are written directly. Other encodings are transcoded through a stack- or pool-allocated buffer.</para>
 /// </remarks>
 public sealed class TextJsonConverter : JsonConverter<Text>
 {
     const int StackAllocThreshold = 512;
 
+    readonly bool _allowNull;
+    readonly bool _allowNumbersAndBooleans;
+
+    /// <summary>
+    /// Creates a converter that reads <c>null</c> as an empty <see cref="Text"/> and numbers and booleans as their raw JSON text.
+    /// </summary>
+    public TextJsonConverter()
+        : this(allowNull: true, allowNumbersAndBooleans: true)
+    {
+    }
+
+    /// <summary>
+    /// Creates a converter that reads JSON strings, and optionally <c>null</c>, numbers and booleans.
+    /// </summary>
+    /// <param name="allowNull">
+    /// <see langword="true"/> to read <c>null</c> as an empty <see cref="Text"/>; <see langword="false"/> to throw a <see cref="JsonException"/>.
+    /// A <c>null</c> for <see cref="Nullable{T}"/> of <see cref="Text"/> reads as <see langword="null"/> either way.
+    /// </param>
+    /// <param name="allowNumbersAndBooleans">
+    /// <see langword="true"/> to read a number or boolean as its raw JSON text, so <c>1.2</c> reads as <c>"1.2"</c>;
+    /// <see langword="false"/> to throw a <see cref="JsonException"/>.
+    /// </param>
+    public TextJsonConverter(bool allowNull = true, bool allowNumbersAndBooleans = true)
+    {
+        _allowNull = allowNull;
+        _allowNumbersAndBooleans = allowNumbersAndBooleans;
+    }
+
     /// <inheritdoc/>
     public override Text Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.String)
+        switch (reader.TokenType)
         {
-            throw ConverterExceptions.NotAString(reader.TokenType, typeof(Text));
+            case JsonTokenType.String:
+            case JsonTokenType.Number or JsonTokenType.True or JsonTokenType.False when _allowNumbersAndBooleans:
+                return ReadUtf8(ref reader);
+            case JsonTokenType.Null when _allowNull:
+                return default;
+            default:
+                throw ConverterExceptions.NotAString(reader.TokenType, typeof(Text));
         }
-
-        return ReadUtf8(ref reader);
     }
 
     /// <inheritdoc/>
@@ -65,7 +98,7 @@ public sealed class TextJsonConverter : JsonConverter<Text>
         }
     }
 
-    /// <summary>Reads the current string or property name token, unescaping it if needed.</summary>
+    /// <summary>Reads the current token's UTF-8 value, unescaping a string or property name if needed.</summary>
     static Text ReadUtf8(ref Utf8JsonReader reader)
     {
         if (!reader.ValueIsEscaped)
