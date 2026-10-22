@@ -241,18 +241,58 @@ public partial class TextTests
     }
 
     [Test]
-    public async Task GetHashCode_SameContentDifferentEncoding_DifferentHash()
+    [Arguments("acme")]
+    [Arguments("café")]
+    [Arguments("日本語")]
+    [Arguments("🎉")]
+    public async Task GetHashCode_SameContentDifferentEncoding_ReturnsSameHash(string input)
     {
-        // Arrange — hash is byte-level, so different encodings produce different hashes
-        var utf8 = Text.FromUtf8("Hello"u8);
-        var utf16 = Text.From("Hello");
+        // Arrange
+        var utf8 = Text.FromUtf8(Encoding.UTF8.GetBytes(input));
+        var utf16 = Text.From(input);
+        var utf32 = Text.FromBytes(Encoding.UTF32.GetBytes(input), TextEncoding.Utf32);
 
         // Act
-        var hash1 = utf8.GetHashCode();
-        var hash2 = utf16.GetHashCode();
+        var hash8 = utf8.GetHashCode();
+        var hash16 = utf16.GetHashCode();
+        var hash32 = utf32.GetHashCode();
 
         // Assert
-        await Assert.That(hash1).IsNotEqualTo(hash2);
+        await Assert.That(hash16).IsEqualTo(hash8);
+        await Assert.That(hash32).IsEqualTo(hash8);
+    }
+
+    [Test]
+    public async Task GetHashCode_LargeInputDifferentEncoding_ReturnsSameHash()
+    {
+        // Arrange — large enough that the transcode buffer is rented, not stackalloc'd
+        var input = string.Concat(Enumerable.Repeat("abc日本語🎉", 200));
+        var utf8 = Text.FromUtf8(Encoding.UTF8.GetBytes(input));
+        var utf16 = Text.From(input);
+        var utf32 = Text.FromBytes(Encoding.UTF32.GetBytes(input), TextEncoding.Utf32);
+
+        // Act
+        var hash8 = utf8.GetHashCode();
+        var hash16 = utf16.GetHashCode();
+        var hash32 = utf32.GetHashCode();
+
+        // Assert
+        await Assert.That(hash16).IsEqualTo(hash8);
+        await Assert.That(hash32).IsEqualTo(hash8);
+    }
+
+    [Test]
+    public async Task GetHashCode_DictionaryKeyFromString_FoundByUtf8Lookup()
+    {
+        // Arrange
+        const string key = "acme";
+        var map = new Dictionary<Text, int> { [Text.From(key)] = 1 };
+
+        // Act
+        var found = map.ContainsKey(Text.FromUtf8(Encoding.UTF8.GetBytes(key)));
+
+        // Assert
+        await Assert.That(found).IsTrue();
     }
 
     [Test]

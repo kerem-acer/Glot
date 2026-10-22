@@ -1,4 +1,3 @@
-using System.IO.Hashing;
 using System.Runtime.InteropServices;
 
 namespace Glot;
@@ -79,20 +78,10 @@ public readonly partial struct Text
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Text other && Equals(other);
 
-    /// <summary>Returns a hash code based on the raw byte content.</summary>
+    /// <summary>Returns a hash code based on the rune sequence, regardless of encoding.</summary>
     /// <returns>A 32-bit hash code.</returns>
-    /// <remarks>Uses XxHash3 over the raw bytes. The hash is encoding-dependent — two texts with the same rune content but different encodings may produce different hash codes.</remarks>
-    public override int GetHashCode()
-    {
-        var bytes = Bytes;
-        if (bytes.IsEmpty)
-        {
-            return 0;
-        }
-
-        var hash = XxHash3.HashToUInt64(bytes, (long)Encoding);
-        return (int)hash ^ (int)(hash >> 32);
-    }
+    /// <remarks>Uses XxHash3 over the UTF-8 form of the content. UTF-8 text hashes its bytes directly; UTF-16 and UTF-32 text is transcoded first. Texts that are equal produce the same hash code whatever their encoding.</remarks>
+    public override int GetHashCode() => TextSpan.ComputeHashCode(Bytes, Encoding);
 
     /// <summary>Compares two texts lexicographically by rune value, regardless of encoding.</summary>
     /// <param name="other">The text to compare with.</param>

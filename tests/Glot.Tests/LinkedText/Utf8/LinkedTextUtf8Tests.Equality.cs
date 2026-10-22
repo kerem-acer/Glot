@@ -124,6 +124,21 @@ public partial class LinkedTextUtf8Tests
     }
 
     [Test]
+    public async Task GetHashCode_MatchesUtf16Text()
+    {
+        // Arrange
+        var linked = Create("Hello", " 世界");
+        var text = Text.From("Hello 世界");
+
+        // Act
+        var linkedHash = linked.GetHashCode();
+        var textHash = text.GetHashCode();
+
+        // Assert
+        await Assert.That(linkedHash).IsEqualTo(textHash);
+    }
+
+    [Test]
     public async Task GetHashCode_Empty_ReturnsZero()
     {
         // Arrange

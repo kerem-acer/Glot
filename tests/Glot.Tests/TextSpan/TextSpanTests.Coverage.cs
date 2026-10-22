@@ -388,15 +388,15 @@ public partial class TextSpanTests
         await Assert.That(bytesWritten).IsEqualTo(4);
     }
 
-    // GetHashCode with large input — exercises rented array path (>256 runes)
+    // GetHashCode with large input — exercises rented transcode buffer path (>1024 UTF-8 bytes)
 
     [Test]
     public async Task GetHashCode_LargeInput_UsesRentedArray()
     {
-        // Arrange — 300 ASCII chars, more than 256 runes
-        var largeStr = new string('A', 300);
-        var bytes = TestHelpers.Encode(largeStr, TextEncoding.Utf8);
-        var hash = new TextSpan(bytes, TextEncoding.Utf8).GetHashCode();
+        // Arrange — 400 UTF-16 chars, up to 1200 UTF-8 bytes
+        var largeStr = new string('A', 400);
+        var bytes = TestHelpers.Encode(largeStr, TextEncoding.Utf16);
+        var hash = new TextSpan(bytes, TextEncoding.Utf16).GetHashCode();
 
         // Assert — just verify it produces a consistent non-zero hash
         await Assert.That(hash).IsNotEqualTo(0);
