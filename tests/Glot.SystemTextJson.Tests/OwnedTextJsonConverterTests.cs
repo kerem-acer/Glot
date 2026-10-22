@@ -163,6 +163,49 @@ public class OwnedTextJsonConverterTests
     }
 
     [Test]
+    [Arguments("1.2")]
+    [Arguments("true")]
+    [Arguments("false")]
+    public async Task Deserialize_NumberOrBoolean_ReadsRawJson(string json)
+    {
+        // Act
+        using var owned = JsonSerializer.Deserialize<OwnedText>(json, _options);
+
+        // Assert
+        await Assert.That(owned!.Text.ToString()).IsEqualTo(json);
+    }
+
+    [Test]
+    [Arguments("{}", "StartObject")]
+    [Arguments("[]", "StartArray")]
+    public async Task Deserialize_ObjectOrArray_ThrowsNamingToken(string json, string token)
+    {
+        // Arrange
+        var expected = $"The JSON value could not be converted to Glot.OwnedText. Expected a string, but the token is {token}.";
+
+        // Act & Assert
+        await Assert.That(() => JsonSerializer.Deserialize<OwnedText>(json, _options))
+            .Throws<JsonException>()
+            .WithMessage(expected);
+    }
+
+    [Test]
+    [Arguments("1.2", "Number")]
+    [Arguments("true", "True")]
+    [Arguments("false", "False")]
+    public async Task Deserialize_NumberOrBooleanWhenNotAllowed_ThrowsNamingToken(string json, string token)
+    {
+        // Arrange
+        var options = new JsonSerializerOptions { Converters = { new OwnedTextJsonConverter(allowNumbersAndBooleans: false) } };
+        var expected = $"The JSON value could not be converted to Glot.OwnedText. Expected a string, but the token is {token}.";
+
+        // Act & Assert
+        await Assert.That(() => JsonSerializer.Deserialize<OwnedText>(json, options))
+            .Throws<JsonException>()
+            .WithMessage(expected);
+    }
+
+    [Test]
     public async Task Deserialize_EmptyString_ReturnsEmpty()
     {
         // Arrange

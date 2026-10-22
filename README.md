@@ -343,6 +343,17 @@ Text text = JsonSerializer.Deserialize<Text>(json, options);
 
 Reads UTF-8 JSON bytes directly into `Text` without allocating an intermediate string. Writes UTF-8/UTF-16 backed text without transcoding.
 
+`Text` also works as a dictionary key (`Dictionary<Text, T>`).
+
+By default, `null` reads as an empty `Text`, and a number or boolean reads as its raw JSON text (`1.2` becomes `"1.2"`). Objects and arrays always throw a `JsonException`. To accept only JSON strings, turn the defaults off:
+
+```csharp
+options.Converters.Add(new TextJsonConverter(allowNull: false, allowNumbersAndBooleans: false));
+options.Converters.Add(new OwnedTextJsonConverter(allowNumbersAndBooleans: false));
+```
+
+Rejected tokens throw a `JsonException` that names the token found. A `Text?` still reads `null` as `null`, and `OwnedText` always does.
+
 With a source-generated `JsonSerializerContext`, register the converters on the context:
 
 ```csharp

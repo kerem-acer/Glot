@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Glot.SystemTextJson.Tests;
 
-public class TextJsonConverterTests
+public partial class TextJsonConverterTests
 {
     readonly JsonSerializerOptions _options = new()
     {
