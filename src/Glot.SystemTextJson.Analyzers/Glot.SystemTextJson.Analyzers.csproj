@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Glot.SystemTextJson.Analyzers</RootNamespace>
+    <!-- Ships inside the Glot.SystemTextJson package (analyzers/dotnet/cs), never as a package of its own. -->
+    <IsPackable>false</IsPackable>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The oldest Roslyn the System.Text.Json source generator runs on (its roslyn3.11 build), so the
+         suppressor loads in every compiler that can report SYSLIB1225. Don't bump it with the other packages. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="3.11.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

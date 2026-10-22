@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <!-- Analyzer-authoring rules target shipped analyzers; the tests' ReplayAnalyzer is created directly, never loaded by a compiler. -->
+    <NoWarn>$(NoWarn);RS1001;RS1036;RS1041</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="TUnit" />
+    <PackageReference Include="Verify.TUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Glot/Glot.csproj" />
+    <ProjectReference Include="../../src/Glot.SystemTextJson.Analyzers/Glot.SystemTextJson.Analyzers.csproj" />
+  </ItemGroup>
+
+  <!-- The tests run the real System.Text.Json source generator: record its path from the SDK's analyzer list. -->
+  <Target Name="AddJsonSourceGeneratorPath" BeforeTargets="GetAssemblyAttributes">
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>JsonSourceGeneratorPath</_Parameter1>
+        <_Parameter2>@(Analyzer->WithMetadataValue('Filename', 'System.Text.Json.SourceGeneration')->'%(FullPath)')</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+</Project>

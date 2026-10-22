@@ -20,6 +20,12 @@
     <ProjectReference Include="../Glot/Glot.csproj" />
   </ItemGroup>
 
+  <!-- Ship the SYSLIB1225 suppressor as an analyzer of this package, not as a package dependency. -->
+  <ItemGroup>
+    <ProjectReference Include="../Glot.SystemTextJson.Analyzers/Glot.SystemTextJson.Analyzers.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <None Include="../Glot.SystemTextJson.Analyzers/bin/$(Configuration)/netstandard2.0/Glot.SystemTextJson.Analyzers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>

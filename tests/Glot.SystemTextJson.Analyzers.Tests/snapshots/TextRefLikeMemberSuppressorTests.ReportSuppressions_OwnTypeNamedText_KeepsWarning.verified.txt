@@ -1,0 +1,6 @@
+﻿[
+  {
+    Message: The type 'Text' includes the ref like property, field or constructor parameter 'Bytes'. No source code will be generated for the property, field or constructor.,
+    IsSuppressed: false
+  }
+]

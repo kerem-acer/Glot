@@ -1,0 +1,6 @@
+﻿[
+  {
+    Message: The type 'Blob' includes the ref like property, field or constructor parameter 'Data'. No source code will be generated for the property, field or constructor.,
+    IsSuppressed: false
+  }
+]
