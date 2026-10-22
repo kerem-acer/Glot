@@ -34,6 +34,9 @@
 
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
         <NoWarn>$(NoWarn);CA1707;CA2012;MA0042;S6966;S2068;S5445;EPC29;IDE0370</NoWarn>
+        <!-- Verify 33+ fails the build without a SponsorCheck declaration. The OpenSource exemption lasts at most 12 months: renew before it lapses. -->
+        <Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+        <Verify_SponsorshipExemptionUntil>2027-10</Verify_SponsorshipExemptionUntil>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(IsPackable)' != 'false'">
